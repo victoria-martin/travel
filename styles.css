@@ -261,43 +261,6 @@ tr:last-child td {
 tr:hover td {
   background: #f6efe0;
 }
-.tag {
-  display: inline-flex;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 9px;
-  border-radius: 20px;
-  color: var(--white);
-  max-height: 20px;
-}
-.tag-hotel {
-  background: var(--rust);
-}
-.tag-home {
-  background: var(--sage);
-}
-.tag-house {
-  background: var(--stone);
-}
-.tag-to-check {
-  background: var(--ochre);
-}
-.tag-contacted {
-  background: var(--stone);
-}
-.tag-go {
-  background: var(--sage);
-}
-.tag-not-available {
-  background: var(--rust);
-}
-.tag-rejected {
-  background: var(--ink-soft);
-}
-.tag-booked {
-  background: var(--stone-dark);
-}
 
 /* ---------- Cards ---------- */
 .card-grid {
@@ -325,6 +288,21 @@ tr:hover td {
   font-weight: 600;
   font-size: 17px;
   margin: 0;
+}
+.card-selects {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.inline-select {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--ink);
+  max-width: 100%;
 }
 .card-meta {
   font-size: 12.5px;

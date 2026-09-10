@@ -32,4 +32,16 @@ function toggleFavorite(id) {
   render();
 }
 
+function setAccommodationType(id, type) {
+  getAccommodation(id).type = type;
+  saveNow();
+  render();
+}
+
+function setAccommodationStatus(id, status) {
+  getAccommodation(id).status = status;
+  saveNow();
+  render();
+}
+
 // Add filters

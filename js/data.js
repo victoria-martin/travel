@@ -6,26 +6,20 @@ const NIGHTS_OPTIONS = Array.from({ length: MAX_STEP_NIGHTS + 1 }, (_, n) => n);
 const ACCOMMODATION_TYPES = {
   hotel: {
     label: 'Hôtel',
-    short: 'Hôtel',
     emoji: '🏨',
     color: '#A6462E',
-    tagClass: 'tag-hotel',
     aliases: ['hotel', 'hôtel'],
   },
   homeExchange: {
     label: 'Home exchange',
-    short: 'HE',
     emoji: '🔁',
     color: '#7C8B5E',
-    tagClass: 'tag-home',
     aliases: ['home', 'exchange', 'échange'],
   },
   house: {
     label: 'Maison',
-    short: 'Maison',
     emoji: '🏡',
     color: '#3E6259',
-    tagClass: 'tag-house',
     aliases: ['maison', 'house'],
   },
 };
@@ -33,12 +27,12 @@ const ACCOMMODATION_TYPES = {
 const DEFAULT_ACCOMMODATION_STATUS = 'toCheck';
 
 const ACCOMMODATION_STATUSES = {
-  toCheck: { label: 'À voir', emoji: '👀', tagClass: 'tag-to-check' },
-  contacted: { label: 'Contacté', emoji: '✉️', tagClass: 'tag-contacted' },
-  go: { label: 'Go', emoji: '✅', tagClass: 'tag-go' },
-  notAvailable: { label: 'Pas dispo', emoji: '🚫', tagClass: 'tag-not-available' },
-  rejected: { label: 'Écarté', emoji: '👎', tagClass: 'tag-rejected' },
-  booked: { label: 'Réservé', emoji: '🔒', tagClass: 'tag-booked' },
+  toCheck: { label: 'À voir', emoji: '👀' },
+  contacted: { label: 'Contacté', emoji: '✉️' },
+  go: { label: 'Go', emoji: '✅' },
+  notAvailable: { label: 'Pas dispo', emoji: '🚫' },
+  rejected: { label: 'Écarté', emoji: '👎' },
+  booked: { label: 'Réservé', emoji: '🔒' },
 };
 
 function accType(type) {

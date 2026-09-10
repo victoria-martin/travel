@@ -2,18 +2,17 @@ function accommodationCard(a) {
   return /* HTML */ `<div class="card">
     <div class="card-top">
       <p class="card-name">${escapeHtml(a.name)}</p>
-      <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
-        <span class="tag ${accType(a.type).tagClass}">${accType(a.type).short}</span>
-        <span class="tag ${accStatus(a.status).tagClass}">${accStatus(a.status).label}</span>
-        <button
-          class="icon-btn"
-          style="border:none; font-size:16px; color:${a.favorite ? '#C98A3E' : 'var(--line)'};"
-          onclick="toggleFavorite('${a.id}')"
-          title="${a.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
-        >
-          ${a.favorite ? '★' : '☆'}
-        </button>
-      </div>
+      <button
+        class="icon-btn"
+        style="border:none; font-size:16px; flex-shrink:0; color:${a.favorite ? '#C98A3E' : 'var(--line)'};"
+        onclick="toggleFavorite('${a.id}')"
+        title="${a.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
+      >
+        ${a.favorite ? '★' : '☆'}
+      </button>
+    </div>
+    <div class="card-selects">
+      ${accommodationTypeSelect(a)}${accommodationStatusSelect(a)}
     </div>
     <div class="card-meta">
       <span

@@ -14,6 +14,7 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: addressCell },
   { key: 'price', label: 'Prix', cell: (a) => (a.price ? `${escapeHtml(a.price)} €` : '—') },
   { key: 'dates', label: 'Dates', cell: (a) => escapeHtml(a.dates) || '—' },
+  { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: notesCell },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: bookingLinkCell },
   { key: 'actions', label: '', locked: true, cell: actionsCell },
@@ -39,12 +40,16 @@ function nameCell(a) {
   return `<strong>${escapeHtml(a.name)}</strong>${notes}`;
 }
 
+function notesCell(a) {
+  return escapeHtml(a.notes) || '—';
+}
+
 function typeCell(a) {
-  return `<span class="tag ${accType(a.type).tagClass}">${accType(a.type).label}</span>`;
+  return accommodationTypeSelect(a);
 }
 
 function statusCell(a) {
-  return `<span class="tag ${accStatus(a.status).tagClass}">${accStatus(a.status).label}</span>`;
+  return accommodationStatusSelect(a);
 }
 
 function addressCell(a) {
