@@ -20,6 +20,9 @@ function scenarioDetailHeader(s) {
         renommer
       </p>
     </div>
-    <button class="btn" onclick="openModal('step','${s.id}')">+ Ajouter une étape</button>
+    <div class="view-header-actions">
+      ${s.steps.length > 0 ? scenarioMapToggleBtn() : ''}
+      <button class="btn" onclick="openModal('step','${s.id}')">+ Ajouter une étape</button>
+    </div>
   </div>`;
 }

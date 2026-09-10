@@ -13,6 +13,18 @@ function scenarioMapBlock(scenario) {
   </div>`;
 }
 
+function scenarioMapToggleBtn() {
+  return /* HTML */ `<button class="btn-ghost btn btn-small" onclick="toggleScenarioMap()">
+    ${prefs.showScenarioMap ? '🗺️ Masquer la carte' : '🗺️ Afficher la carte'}
+  </button>`;
+}
+
+function toggleScenarioMap() {
+  prefs.showScenarioMap = !prefs.showScenarioMap;
+  persistPrefs();
+  render();
+}
+
 function initScenarioDetailMap() {
   const el = document.getElementById('scenario-map');
   if (!el || typeof L === 'undefined') return;

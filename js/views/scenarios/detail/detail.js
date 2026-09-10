@@ -4,13 +4,24 @@ function renderScenarioDetailView() {
     view = 'scenarios';
     return renderScenariosView();
   }
+  if (s.steps.length === 0) {
+    return (
+      scenarioDetailHeader(s) +
+      emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
+    );
+  }
   return /* HTML */ `
     ${scenarioDetailHeader(s)}
-    ${
-      s.steps.length === 0
-        ? emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
-        : stepList(s) + scenarioCarBlock(s) + scenarioMapBlock(s) + scenarioRecap(s)
-    }
+    <div class="scenario-detail-cols">
+      <div class="scenario-detail-main">
+        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioRecap(s)}
+      </div>
+      ${
+        prefs.showScenarioMap
+          ? /* HTML */ `<aside class="scenario-detail-side">${scenarioMapBlock(s)}</aside>`
+          : ''
+      }
+    </div>
   `;
 }
 

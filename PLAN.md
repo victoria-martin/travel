@@ -52,7 +52,13 @@ Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
 pnpm run push-script
 ```
 
-### 8. Mettre la Map a droite dans la page scenario et on bouton pour toggle affichage
+### 8. Carte à droite dans la page scénario — ✅ fait
+
+Détail d'un scénario en 2 colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
+colonne de droite sticky ([detail.js](js/views/scenarios/detail/detail.js)). Bouton
+« Masquer / Afficher la carte » dans l'en-tête ; l'état vit dans `prefs.showScenarioMap`
+([prefs.js](js/prefs.js)), donc il est retenu d'une session à l'autre. Sous 1100px, la carte
+repasse sous les étapes.
 
 ### 9. Favori sur un scénario — ✅ fait
 
@@ -66,6 +72,10 @@ pnpm run push-script
 ### Colonnes hebergement triables : type, status, ville ? — ⏳ à planifier
 
 ### variables du scénario ou generales ? — ⏳ à étudier
+
+### ajouter d autres valeurs possible pour status : Attente réponse ? — ⏳ à faire
+
+### on utilise pas tags pour pour les hebergements ? — ⏳ à étudier
 
 ## NTH
 

@@ -5,7 +5,7 @@
 
 const PREFS_KEY = 'voyage-toscane-prefs';
 
-let prefs = { hiddenColumns: {} };
+let prefs = { hiddenColumns: {}, showScenarioMap: true };
 
 function loadPrefs() {
   try {
