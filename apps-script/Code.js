@@ -28,7 +28,7 @@ const COLLECTIONS = {
   cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
-  scenarios: ['id', 'name', 'carId', 'costIds'],
+  scenarios: ['id', 'name', 'carId', 'costIds', 'favorite'],
   steps: [
     'id',
     'scenarioId',
@@ -299,4 +299,3 @@ function fingerprint(data) {
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
-

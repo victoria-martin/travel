@@ -45,19 +45,27 @@ Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
 
 ### 7. Sheet + README — ✅ fait côté code
 
-`COLLECTIONS.scenarios` = `id, name, carId, costIds` dans [Code.js](apps-script/Code.js).
-👉 Demande un **nouveau déploiement Apps Script** pour être pris en compte :
-`pbcopy < apps-script/Code.js`
+`COLLECTIONS.scenarios` = `id, name, carId, costIds, favorite` dans [Code.js](apps-script/Code.js).
+👉 À pousser sur le déploiement existant (l'URL `/exec` ne change pas) :
+
+```sh
+pnpm run push-script
+```
 
 ### 8. Mettre la Map a droite dans la page scenario et on bouton pour toggle affichage
 
-### 9. Favori sur un scénario — ⏳ à faire
+### 9. Favori sur un scénario — ✅ fait
 
-- Champ `favorite` sur le scénario, étoile cliquable dans la liste des scénarios et dans l'en-tête
-  du détail, comme sur les hébergements.
+- Champ `favorite` sur le scénario, étoile cliquable dans la liste
+  ([row.js](js/views/scenarios/list/row.js)) et dans l'en-tête du détail
+  ([header.js](js/views/scenarios/detail/header.js)). Étoile partagée :
+  [favorite-star.js](js/views/favorite-star.js).
 - Les favoris remontent en tête de la liste.
-- `COLLECTIONS.scenarios` gagne `favorite` dans [Code.js](apps-script/Code.js) (`BOOL_FIELDS`
-  contient déjà `favorite`) → **nouveau déploiement Apps Script**.
+- `COLLECTIONS.scenarios` gagne `favorite` → `pnpm run push-script` (cf. lot 7).
+
+### Colonnes hebergement triables : type, status, ville ? — ⏳ à planifier
+
+### variables du scénario ou generales ? — ⏳ à étudier
 
 ## NTH
 

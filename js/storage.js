@@ -32,6 +32,7 @@ function migrateData(data) {
   (data.scenarios || []).forEach((s) => {
     if (s.carId === undefined) s.carId = null;
     if (!Array.isArray(s.costIds)) s.costIds = [];
+    if (s.favorite === undefined) s.favorite = false;
   });
   data.cities.forEach((c) => {
     if (c.geoAddress === undefined) {

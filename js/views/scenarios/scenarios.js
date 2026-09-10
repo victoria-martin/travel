@@ -1,16 +1,31 @@
 function renderScenariosView() {
+  const items = [...state.scenarios].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
   return /* HTML */ `
     ${scenariosHeader()}
     ${
-      state.scenarios.length === 0
+      items.length === 0
         ? emptyState('Aucun scénario', 'Crée un premier scénario pour poser tes étapes.')
-        : scenarioList(state.scenarios)
+        : scenarioList(items)
     }
   `;
 }
 
+function toggleScenarioFavorite(id) {
+  const s = getScenario(id);
+  s.favorite = !s.favorite;
+  saveNow();
+  render();
+}
+
 function createScenario() {
-  const s = { id: uid(), name: 'Nouveau scénario', carId: null, costIds: [], steps: [] };
+  const s = {
+    id: uid(),
+    name: 'Nouveau scénario',
+    carId: null,
+    costIds: [],
+    favorite: false,
+    steps: [],
+  };
   state.scenarios.push(s);
   saveNow();
   openScenario(s.id);

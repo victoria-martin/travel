@@ -8,7 +8,8 @@ function scenarioDetailHeader(s) {
       >
         ← Tous les scénarios
       </button>
-      <h2 class="view-title">
+      <h2 class="view-title" style="display:flex; gap:10px; align-items:center;">
+        ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
         ${editableText(s.name, `renameScenario('${s.id}', this.innerText)`, {
           key: `scenario:${s.id}:name`,
           placeholder: 'nom du scénario…',
