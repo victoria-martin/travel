@@ -251,8 +251,6 @@ async function pushToSheet() {
   sync.busy = true;
   setSyncStatus('pushing');
   try {
-    // La réponse du Sheet est fusionnée avec l'état courant, pas appliquée en bloc :
-    // le snapshot envoyé sert de base, donc ce qui a été modifié ici pendant la requête gagne.
     let pushed = deepClone(state);
     let payload = await sheetPost({ action: 'push', baseRev: sync.rev, data: pushed });
     if (payload.conflict) {
@@ -267,13 +265,11 @@ async function pushToSheet() {
       if (payload.conflict)
         throw new Error('Le Sheet change en même temps, nouvelle tentative dans un instant');
     }
-    const before = deepClone(state);
-    state = mergeStates(payload.data, state, pushed);
-    persist();
+    // La réponse d'un push dit seulement ce que le Sheet a écrit : elle sert de nouvelle base,
+    // jamais à rafraîchir `state`. Seul un pull apporte de la donnée venue d'ailleurs.
     saveSyncBase(payload.rev, payload.data);
     setSyncStatus('ok');
-    renderIfChanged(before);
-    if (!sameJson(state, payload.data)) schedulePush();
+    if (!sameJson(state, pushed)) schedulePush();
   } catch (e) {
     setSyncStatus('error', e.message);
     sync.pushTimer = setTimeout(pushToSheet, 15000);

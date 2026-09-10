@@ -64,8 +64,11 @@ function doPost(e) {
     if (body.baseRev && body.baseRev !== current.rev) {
       return json({ conflict: true, rev: current.rev, data: current.data });
     }
-    writeState(body.data || {});
-    return json(readState());
+    // On renvoie ce qu'on écrit, pas une relecture de l'onglet : une relecture peut ne pas
+    // encore voir l'écriture, et le client adopterait alors l'ancienne valeur.
+    var written = normalizeState(body.data || {});
+    writeState(written);
+    return json({ rev: fingerprint(written), data: written });
   } finally {
     lock.releaseLock();
   }
@@ -137,6 +140,66 @@ function readSheet(name) {
     });
 }
 
+// Le client doit recevoir exactement ce qu'une relecture donnerait : on fait passer chaque
+// entrée par l'encodage d'écriture puis le décodage de lecture.
+function normalizeState(data) {
+  var scenarios = [];
+  (data.scenarios || []).forEach(function (scenario) {
+    var normalized = normalizeItem('scenarios', scenario);
+    if (!normalized) return;
+    normalized.steps = [];
+    (scenario.steps || []).forEach(function (step) {
+      var flat = { scenarioId: normalized.id };
+      COLLECTIONS.steps.forEach(function (column) {
+        if (column !== 'scenarioId') flat[column] = step[column];
+      });
+      var normalizedStep = normalizeItem('steps', flat);
+      if (!normalizedStep) return;
+      delete normalizedStep.scenarioId;
+      normalized.steps.push(normalizedStep);
+    });
+    scenarios.push(normalized);
+  });
+
+  return {
+    accommodations: normalizeCollection('accommodations', data.accommodations),
+    cars: normalizeCollection('cars', data.cars),
+    fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
+    cities: normalizeCollection('cities', data.cities),
+    scenarios: scenarios,
+  };
+}
+
+function normalizeCollection(name, items) {
+  return (items || [])
+    .map(function (item) {
+      return normalizeItem(name, item);
+    })
+    .filter(function (item) {
+      return !!item;
+    });
+}
+
+function normalizeItem(name, item) {
+  var columns = COLLECTIONS[name];
+  var cells = columns.map(function (column) {
+    return encodeCell(item ? item[column] : '');
+  });
+  if (cells.join('').trim() === '') return null; // ligne vide : ignorée à la relecture
+  var out = {};
+  columns.forEach(function (column, index) {
+    out[column] = decodeCell(column, cells[index]);
+  });
+  if (!out.id) out.id = uid();
+  return out;
+}
+
+function encodeCell(value) {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  return String(value);
+}
+
 function decodeCell(column, raw) {
   var value = String(raw == null ? '' : raw).trim();
   if (BOOL_FIELDS.indexOf(column) >= 0) return /^(true|vrai|oui|1|x)$/i.test(value);
@@ -183,10 +246,7 @@ function writeSheet(name, items) {
 
   var rows = items.map(function (item) {
     return columns.map(function (column) {
-      var value = item[column];
-      if (value === undefined || value === null) return '';
-      if (typeof value === 'boolean') return value ? 'true' : 'false';
-      return String(value);
+      return encodeCell(item[column]);
     });
   });
   var range = sheet.getRange(2, 1, rows.length, columns.length);
