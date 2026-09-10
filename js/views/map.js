@@ -13,8 +13,14 @@ function renderMapView() {
           <div class="filter-title">Type de liste</div>
           ${Object.entries(ACCOMMODATION_TYPES)
             .map(
-              ([key, t]) => `
-            <label class="filter-option"><input type="checkbox" ${mapFilters.types.has(key) ? 'checked' : ''} onchange="toggleMapType('${key}')"><span class="legend-dot" style="background:${t.color};"></span>${t.label}</label>`,
+              ([key, t]) =>
+                /* HTML */ ` <label class="filter-option"
+                  ><input
+                    type="checkbox"
+                    ${mapFilters.types.has(key) ? 'checked' : ''}
+                    onchange="toggleMapType('${key}')"
+                  /><span class="legend-dot" style="background:${t.color};"></span>${t.label}</label
+                >`,
             )
             .join('')}
         </div>

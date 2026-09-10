@@ -1,6 +1,10 @@
 loadSyncConfig();
 loadData();
 initSync();
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && syncActive() && !modal) pullFromSheet({ silent: true });
-});
+
+function pullIfIdle() {
+  if (syncActive() && !modal && !document.hidden) pullFromSheet({ silent: true });
+}
+
+document.addEventListener('visibilitychange', pullIfIdle);
+window.addEventListener('focus', pullIfIdle);

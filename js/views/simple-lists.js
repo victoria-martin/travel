@@ -82,14 +82,26 @@ function simpleTable(kind, items) {
       <tbody>
         ${items
           .map(
-            (it) => `
-        <tr>
-          ${cols.map((c) => `<td>${escapeHtml(it[c.key]) || '—'}</td>`).join('')}
-          <td style="white-space:nowrap;">
-            <button class="icon-btn" onclick="openModal('${kind}','${it.id}')" title="Modifier">✎</button>
-            <button class="icon-btn" onclick="deleteItem('${cfg.dataKey}','${it.id}')" title="Supprimer">🗑</button>
-          </td>
-        </tr>`,
+            (it) =>
+              /* HTML */ ` <tr>
+                ${cols.map((c) => `<td>${escapeHtml(it[c.key]) || '—'}</td>`).join('')}
+                <td style="white-space:nowrap;">
+                  <button
+                    class="icon-btn"
+                    onclick="openModal('${kind}','${it.id}')"
+                    title="Modifier"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    class="icon-btn"
+                    onclick="deleteItem('${cfg.dataKey}','${it.id}')"
+                    title="Supprimer"
+                  >
+                    🗑
+                  </button>
+                </td>
+              </tr>`,
           )
           .join('')}
       </tbody>
@@ -103,20 +115,27 @@ function simpleCards(kind, items) {
   return /* HTML */ `<div class="card-grid">
     ${items
       .map(
-        (it) => `
-      <div class="card">
-        <p class="card-name">${escapeHtml(it[titleKey]) || 'Sans nom'}</p>
-        <div class="card-meta">
-          ${cfg.fields
-            .slice(1)
-            .map((f) => (it[f.key] ? `<span>${f.label} : ${escapeHtml(it[f.key])}</span>` : ''))
-            .join('')}
-        </div>
-        <div class="card-actions">
-          <button class="btn-ghost btn btn-small" onclick="openModal('${kind}','${it.id}')">Modifier</button>
-          <button class="btn-danger btn btn-small" onclick="deleteItem('${cfg.dataKey}','${it.id}')">Suppr.</button>
-        </div>
-      </div>`,
+        (it) =>
+          /* HTML */ ` <div class="card">
+            <p class="card-name">${escapeHtml(it[titleKey]) || 'Sans nom'}</p>
+            <div class="card-meta">
+              ${cfg.fields
+                .slice(1)
+                .map((f) => (it[f.key] ? `<span>${f.label} : ${escapeHtml(it[f.key])}</span>` : ''))
+                .join('')}
+            </div>
+            <div class="card-actions">
+              <button class="btn-ghost btn btn-small" onclick="openModal('${kind}','${it.id}')">
+                Modifier
+              </button>
+              <button
+                class="btn-danger btn btn-small"
+                onclick="deleteItem('${cfg.dataKey}','${it.id}')"
+              >
+                Suppr.
+              </button>
+            </div>
+          </div>`,
       )
       .join('')}
   </div>`;

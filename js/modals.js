@@ -130,15 +130,14 @@ function runPasteImport() {
     );
     if (!name && !city) return;
     const type = accTypeFromText(typeRaw);
-    const preset = CITY_PRESETS[city];
     state.accommodations.push({
       id: uid(),
       type,
       name: name || city || 'Sans nom',
       city: city || '',
       region: region || '',
-      lat: preset ? String(preset[0]) : '',
-      lng: preset ? String(preset[1]) : '',
+      lat: '',
+      lng: '',
       price: price || '',
       dates: dates || '',
       link: link || '',
@@ -147,7 +146,7 @@ function runPasteImport() {
     });
     added++;
   });
-  scheduleSave();
+  saveNow();
   closeModal();
   alert(
     added + ' hébergement(s) importé(s). Pense à vérifier/compléter les coordonnées GPS si besoin.',
@@ -156,9 +155,6 @@ function runPasteImport() {
 }
 
 function accommodationForm(p) {
-  const cityOptions = Object.keys(CITY_PRESETS)
-    .map((c) => `<option value="${c}" ${p.city === c ? 'selected' : ''}>${c}</option>`)
-    .join('');
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un hébergement</h3>
     <div class="field-row">
@@ -180,20 +176,13 @@ function accommodationForm(p) {
     </div>
     <div class="field-row">
       <div class="field">
-        <label>Ville (preset coordonnées)</label>
-        <select id="f-citypreset" onchange="applyCityPreset()">
-          <option value="">— choisir —</option>
-          ${cityOptions}
-        </select>
+        <label>Ville</label
+        ><input id="f-city" type="text" value="${escapeHtml(p.city)}" placeholder="Sovicille" />
       </div>
       <div class="field">
         <label>Région (pour filtrer)</label
         ><input id="f-region" type="text" value="${escapeHtml(p.region)}" placeholder="Sienne" />
       </div>
-    </div>
-    <div class="field">
-      <label>Ville (libre)</label
-      ><input id="f-city" type="text" value="${escapeHtml(p.city)}" placeholder="Sovicille" />
     </div>
     <div class="field-row">
       <div class="field">
@@ -236,15 +225,6 @@ function accommodationForm(p) {
   `;
 }
 
-function applyCityPreset() {
-  const val = document.getElementById('f-citypreset').value;
-  if (val && CITY_PRESETS[val]) {
-    document.getElementById('f-city').value = val;
-    document.getElementById('f-lat').value = CITY_PRESETS[val][0];
-    document.getElementById('f-lng').value = CITY_PRESETS[val][1];
-  }
-}
-
 function saveAccommodation(id) {
   const item = {
     id: id || uid(),
@@ -266,7 +246,7 @@ function saveAccommodation(id) {
   } else {
     state.accommodations.push(item);
   }
-  scheduleSave();
+  saveNow();
   closeModal();
 }
 
@@ -301,23 +281,13 @@ function saveSimple(kind, id) {
   } else {
     arr.push(item);
   }
-  scheduleSave();
+  saveNow();
   closeModal();
 }
 
 function stepForm(p) {
-  const cityOptions = Object.keys(CITY_PRESETS)
-    .map((c) => `<option value="${c}" ${p.city === c ? 'selected' : ''}>${c}</option>`)
-    .join('');
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
-    <div class="field">
-      <label>Ville (preset)</label>
-      <select id="s-citypreset" onchange="document.getElementById('s-city').value=this.value">
-        <option value="">— libre —</option>
-        ${cityOptions}
-      </select>
-    </div>
     <div class="field">
       <label>Ville</label
       ><input id="s-city" type="text" value="${escapeHtml(p.city)}" placeholder="Sienne" />
@@ -361,14 +331,14 @@ function saveStep(id) {
   } else {
     s.steps.push(item);
   }
-  scheduleSave();
+  saveNow();
   closeModal();
 }
 
 function deleteItem(dataKey, id) {
   if (!confirm('Supprimer cet élément ?')) return;
   state[dataKey] = state[dataKey].filter((x) => x.id !== id);
-  scheduleSave();
+  saveNow();
   render();
 }
 

@@ -25,7 +25,6 @@ function distinctRegions() {
 function coordsFor(step) {
   const acc = step.accommodationId ? getAccommodation(step.accommodationId) : null;
   if (acc && acc.lat && acc.lng) return [parseFloat(acc.lat), parseFloat(acc.lng)];
-  if (CITY_PRESETS[step.city]) return CITY_PRESETS[step.city];
   return null;
 }
 

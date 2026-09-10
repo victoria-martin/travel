@@ -8,7 +8,6 @@
 
 const SYNC_URL_KEY = 'voyage-toscane-sync-url';
 const SYNC_BASE_KEY = 'voyage-toscane-sync-base';
-const POLL_MS = 5000;
 const PUSH_DEBOUNCE_MS = 900;
 
 let sync = {
@@ -18,9 +17,7 @@ let sync = {
   status: 'off', // off | pulling | pushing | ok | error | choice
   message: '',
   pushTimer: null,
-  pollTimer: null,
   busy: false,
-  dirty: false,
   pendingRemote: null,
 };
 
@@ -230,9 +227,14 @@ function applyRemote(rev, data) {
   if (needsPush) schedulePush();
 }
 
+function pushNow() {
+  if (!syncActive()) return;
+  clearTimeout(sync.pushTimer);
+  pushToSheet();
+}
+
 function schedulePush() {
   if (!syncActive()) return;
-  sync.dirty = true;
   clearTimeout(sync.pushTimer);
   sync.pushTimer = setTimeout(pushToSheet, PUSH_DEBOUNCE_MS);
 }
@@ -259,7 +261,6 @@ async function pushToSheet() {
     state = payload.data;
     persist();
     saveSyncBase(payload.rev, payload.data);
-    sync.dirty = false;
     setSyncStatus('ok');
     if (!modal) render();
   } catch (e) {
@@ -268,15 +269,6 @@ async function pushToSheet() {
   } finally {
     sync.busy = false;
   }
-}
-
-function startPolling() {
-  clearInterval(sync.pollTimer);
-  if (!syncActive()) return;
-  sync.pollTimer = setInterval(() => {
-    if (document.hidden || modal || sync.dirty) return;
-    pullFromSheet({ silent: true });
-  }, POLL_MS);
 }
 
 async function initSync() {
@@ -302,7 +294,6 @@ async function initSync() {
   } catch (e) {
     setSyncStatus('error', e.message);
   }
-  startPolling();
 }
 
 /* ------------------------------ réglages ------------------------------ */
@@ -334,14 +325,20 @@ function syncForm() {
     </p>
     ${
       choice
-        ? `
-      <div style="border-top:1px solid var(--line); padding-top:12px; margin-top:4px;">
-        <p style="font-size:13px;"><strong>Tes données locales et celles du Sheet diffèrent.</strong> Que garde-t-on comme point de départ ?</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn" onclick="resolveSyncChoice('remote')">Prendre le Sheet</button>
-          <button class="btn btn-ghost" onclick="resolveSyncChoice('local')">Envoyer mes données locales</button>
-        </div>
-      </div>`
+        ? /* HTML */ ` <div
+            style="border-top:1px solid var(--line); padding-top:12px; margin-top:4px;"
+          >
+            <p style="font-size:13px;">
+              <strong>Tes données locales et celles du Sheet diffèrent.</strong> Que garde-t-on
+              comme point de départ ?
+            </p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn" onclick="resolveSyncChoice('remote')">Prendre le Sheet</button>
+              <button class="btn btn-ghost" onclick="resolveSyncChoice('local')">
+                Envoyer mes données locales
+              </button>
+            </div>
+          </div>`
         : ''
     }
     <div class="modal-actions">
@@ -387,13 +384,11 @@ function resolveSyncChoice(side) {
     saveSyncBase(pending.rev, pending.data);
     schedulePush();
   }
-  startPolling();
 }
 
 function disconnectSync() {
   if (!confirm('Arrêter la synchro avec le Sheet ? Tes données restent dans ce navigateur.'))
     return;
-  clearInterval(sync.pollTimer);
   clearTimeout(sync.pushTimer);
   sync.url = '';
   sync.pendingRemote = null;

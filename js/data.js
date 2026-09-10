@@ -1,15 +1,3 @@
-const CITY_PRESETS = {
-  Marseille: [43.2965, 5.3698],
-  Sarzana: [44.1069, 9.9599],
-  Sienne: [43.3188, 11.3308],
-  Sovicille: [43.2833, 11.2],
-  Grosseto: [42.7628, 11.1122],
-  Florence: [43.7696, 11.2558],
-  'Finale Ligure': [44.1706, 8.3416],
-  Pise: [43.7228, 10.4017],
-  Lucques: [43.843, 10.5027],
-};
-
 const DEFAULT_ACCOMMODATION_TYPE = 'hotel';
 
 const ACCOMMODATION_TYPES = {
@@ -68,5 +56,4 @@ let mapFilters = {
   favOnly: false,
 };
 let leafletMap = null;
-let saveTimer = null;
 const LOCAL_KEY = 'voyage-toscane-local-data';

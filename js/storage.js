@@ -21,12 +21,9 @@ function readLocalStorage() {
   }
 }
 
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    persist();
-    schedulePush();
-  }, 300);
+function saveNow() {
+  persist();
+  pushNow();
 }
 
 function persist() {
