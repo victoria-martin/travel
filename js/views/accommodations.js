@@ -7,7 +7,7 @@ function renderAccommodationsView(){
     <div class="view-header">
       <div>
         <h2 class="view-title">Hébergements</h2>
-        <p class="view-sub">Hôtels et home exchanges — ${items.length} enregistré${items.length>1?'s':''}</p>
+        <p class="view-sub">${Object.values(ACCOMMODATION_TYPES).map(t=>t.label).join(' · ')} — ${items.length} enregistré${items.length>1?'s':''}</p>
       </div>
       <div style="display:flex; gap:10px; align-items:center;">
         ${(!state.importsDone || !state.importsDone.batch1) ? `<button class="btn-ghost btn" onclick="applyImportBatch1()">⬆ Importer mes recherches (12 hébergements + 1 voiture)</button>` : ''}
@@ -20,7 +20,7 @@ function renderAccommodationsView(){
         <button class="btn" onclick="openModal('accommodation')">+ Ajouter</button>
       </div>
     </div>
-    ${items.length===0 ? emptyState("Aucun hébergement", favOnly ? "Aucun favori pour l'instant — clique sur l'étoile d'un hébergement pour le marquer." : "Ajoute tes premiers hôtels ou home exchanges pour pouvoir les rattacher à tes étapes.") :
+    ${items.length===0 ? emptyState("Aucun hébergement", favOnly ? "Aucun favori pour l'instant — clique sur l'étoile d'un hébergement pour le marquer." : "Ajoute tes premiers hébergements pour pouvoir les rattacher à tes étapes.") :
       (mode==='table' ? accommodationTable(items) : accommodationCards(items))}
   `;
 }
@@ -46,7 +46,7 @@ function accommodationTable(items){
           <td>
             <button class="icon-btn" style="border:none; font-size:15px; color:${a.favorite?'#C98A3E':'var(--line)'};" onclick="toggleFavorite('${a.id}')" title="${a.favorite?'Retirer des favoris':'Ajouter aux favoris'}">${a.favorite?'★':'☆'}</button>
             <strong>${escapeHtml(a.name)}</strong>${a.notes?`<div style="color:var(--ink-soft); font-size:12px; margin-top:2px; margin-left:26px;">${escapeHtml(a.notes)}</div>`:''}</td>
-          <td><span class="tag ${a.type==='hotel'?'tag-hotel':'tag-home'}">${a.type==='hotel'?'Hôtel':'Home Exchange'}</span></td>
+          <td><span class="tag ${accType(a.type).tagClass}">${accType(a.type).label}</span></td>
           <td>${escapeHtml(a.city)}${a.region?` · ${escapeHtml(a.region)}`:''}</td>
           <td>${a.price?escapeHtml(a.price)+' €':'—'}</td>
           <td>${escapeHtml(a.dates)||'—'}</td>
@@ -67,7 +67,7 @@ function accommodationCards(items){
         <div class="card-top">
           <p class="card-name">${escapeHtml(a.name)}</p>
           <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
-            <span class="tag ${a.type==='hotel'?'tag-hotel':'tag-home'}">${a.type==='hotel'?'Hôtel':'HE'}</span>
+            <span class="tag ${accType(a.type).tagClass}">${accType(a.type).short}</span>
             <button class="icon-btn" style="border:none; font-size:16px; color:${a.favorite?'#C98A3E':'var(--line)'};" onclick="toggleFavorite('${a.id}')" title="${a.favorite?'Retirer des favoris':'Ajouter aux favoris'}">${a.favorite?'★':'☆'}</button>
           </div>
         </div>

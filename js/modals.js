@@ -5,7 +5,7 @@ function setListMode(kind, mode){
 
 function openModal(type, a, b){
   if(type==='accommodation'){
-    modal = {type, payload: a ? {...getAccommodation(a)} : {id:null, type:'hotel', name:'', city:'', region:'', lat:'', lng:'', price:'', dates:'', link:'', notes:'', favorite:false}};
+    modal = {type, payload: a ? {...getAccommodation(a)} : {id:null, type:DEFAULT_ACCOMMODATION_TYPE, name:'', city:'', region:'', lat:'', lng:'', price:'', dates:'', link:'', notes:'', favorite:false}};
   } else if(type==='voitures' || type==='charges'){
     const cfg = SIMPLE_CONFIG[type];
     const existing = a ? state[cfg.dataKey].find(x=>x.id===a) : null;
@@ -51,7 +51,7 @@ function pasteImportForm(){
     <p style="font-size:13px; color:var(--ink-soft); margin-top:-8px;">
       Dans Google Sheets ou Excel, mets tes colonnes dans cet ordre (une ligne par hébergement) :
       <br><strong>Type · Nom · Ville · Région · Prix · Dates · Lien · Notes</strong><br>
-      Type accepte "hotel" ou "home exchange" (par défaut : hôtel). Sélectionne tes lignes, copie (Ctrl+C), puis colle ci-dessous.
+      Type accepte ${Object.values(ACCOMMODATION_TYPES).map(t=>`"${t.label}"`).join(', ')} (par défaut : ${accType(DEFAULT_ACCOMMODATION_TYPE).label.toLowerCase()}). Sélectionne tes lignes, copie (Ctrl+C), puis colle ci-dessous.
     </p>
     <div class="field"><textarea id="paste-area" rows="10" placeholder="hotel	Antico Casale	Sarzana	Ligurie	152	21/09	https://...	Super, pack remboursable" style="font-family:monospace; font-size:12px;"></textarea></div>
     <div id="paste-preview" style="font-size:12.5px; color:var(--ink-soft);"></div>
@@ -71,8 +71,7 @@ function runPasteImport(){
     const cells = line.split('\t').length>1 ? line.split('\t') : line.split(',');
     const [typeRaw, name, city, region, price, dates, link, notes] = cells.map(c=>(c||'').trim());
     if(!name && !city) return;
-    const typeLower = (typeRaw||'').toLowerCase();
-    const type = (typeLower.includes('home') || typeLower.includes('exchange') || typeLower.includes('échange')) ? 'homeExchange' : 'hotel';
+    const type = accTypeFromText(typeRaw);
     const preset = CITY_PRESETS[city];
     state.accommodations.push({
       id: uid(), type, name: name || city || 'Sans nom', city: city||'', region: region||'',
@@ -93,7 +92,7 @@ function accommodationForm(p){
     <h3>${p.id?'Modifier':'Ajouter'} un hébergement</h3>
     <div class="field-row">
       <div class="field"><label>Type</label>
-        <select id="f-type"><option value="hotel" ${p.type==='hotel'?'selected':''}>Hôtel</option><option value="homeExchange" ${p.type==='homeExchange'?'selected':''}>Home exchange</option></select>
+        <select id="f-type">${Object.entries(ACCOMMODATION_TYPES).map(([key,t])=>`<option value="${key}" ${p.type===key?'selected':''}>${t.label}</option>`).join('')}</select>
       </div>
       <div class="field"><label>Nom</label><input id="f-name" type="text" value="${escapeHtml(p.name)}" placeholder="Antico Casale"></div>
     </div>

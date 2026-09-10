@@ -11,8 +11,8 @@ function renderMapView(){
       <div class="map-filters">
         <div class="filter-block">
           <div class="filter-title">Type de liste</div>
-          <label class="filter-option"><input type="checkbox" ${mapFilters.hotel?'checked':''} onchange="toggleMapType('hotel')"><span class="legend-dot" style="background:var(--rust);"></span>Hôtels</label>
-          <label class="filter-option"><input type="checkbox" ${mapFilters.homeExchange?'checked':''} onchange="toggleMapType('homeExchange')"><span class="legend-dot" style="background:var(--sage);"></span>Home exchange</label>
+          ${Object.entries(ACCOMMODATION_TYPES).map(([key,t])=>`
+            <label class="filter-option"><input type="checkbox" ${mapFilters.types.has(key)?'checked':''} onchange="toggleMapType('${key}')"><span class="legend-dot" style="background:${t.color};"></span>${t.label}</label>`).join('')}
         </div>
         <div class="filter-block">
           <div class="filter-title">Région</div>
@@ -40,7 +40,7 @@ function renderMapView(){
 }
 
 function toggleMapType(t){
-  mapFilters[t] = !mapFilters[t];
+  if(mapFilters.types.has(t)) mapFilters.types.delete(t); else mapFilters.types.add(t);
   render(); setTimeout(initMap,30);
 }
 function toggleMapRegion(r){
@@ -99,17 +99,16 @@ function initMap(){
   const bounds = [];
   state.accommodations.forEach(a=>{
     if(!a.lat || !a.lng) return;
-    if(a.type==='hotel' && !mapFilters.hotel) return;
-    if(a.type==='homeExchange' && !mapFilters.homeExchange) return;
+    if(!mapFilters.types.has(a.type)) return;
     if(regionFilterActive && a.region && mapFilters.regions.has(a.region)===false) return;
     if(scenarioAccIds && !scenarioAccIds.has(a.id)) return;
     if(mapFilters.favOnly && !a.favorite) return;
 
-    const color = a.type==='hotel' ? '#A6462E' : '#7C8B5E';
+    const color = accType(a.type).color;
     const c = [parseFloat(a.lat), parseFloat(a.lng)];
     bounds.push(c);
     L.circleMarker(c, {radius:8, color:'#24312B', weight:1, fillColor:color, fillOpacity:0.9})
-      .bindPopup(`<strong>${a.favorite?'★ ':''}${escapeHtml(a.name)}</strong><br/>${a.type==='hotel'?'Hôtel':'Home exchange'} · ${escapeHtml(a.city)}${a.price?`<br/>${escapeHtml(a.price)} €`:''}`)
+      .bindPopup(`<strong>${a.favorite?'★ ':''}${escapeHtml(a.name)}</strong><br/>${accType(a.type).label} · ${escapeHtml(a.city)}${a.price?`<br/>${escapeHtml(a.price)} €`:''}`)
       .addTo(leafletMap);
   });
 

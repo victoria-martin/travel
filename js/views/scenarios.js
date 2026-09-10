@@ -85,7 +85,7 @@ function renderStepCard(scenario, step, idx){
         <div style="margin-top:8px;">
           <select onchange="setStepAccommodation('${scenario.id}','${step.id}', this.value)" style="font-size:12.5px; padding:5px 8px; border-radius:6px; border:1px solid var(--line); background:var(--white);">
             <option value="">— Aucun hébergement choisi —</option>
-            ${state.accommodations.map(a=>`<option value="${a.id}" ${step.accommodationId===a.id?'selected':''}>${a.type==='hotel'?'🏨':'🔁'} ${escapeHtml(a.name)} (${escapeHtml(a.city)})</option>`).join('')}
+            ${state.accommodations.map(a=>`<option value="${a.id}" ${step.accommodationId===a.id?'selected':''}>${accType(a.type).emoji} ${escapeHtml(a.name)} (${escapeHtml(a.city)})</option>`).join('')}
           </select>
         </div>
       </div>
