@@ -3,14 +3,40 @@
 ## Déployer sur GitHub Pages (une fois)
 
 1. Va sur [github.com/new](https://github.com/new) et crée un repo (ex: `voyage-toscane`). Peut être privé ou public.
-2. Ajoute les 2 fichiers de ce dossier à la racine du repo : `index.html` et `data.json`.
-   - Via l'interface web GitHub : bouton "Add file" → "Upload files", glisse les deux fichiers, commit.
+2. Ajoute tout le contenu de ce dossier à la racine du repo, en gardant l'arborescence : `index.html`, `styles.css`, `data.json`, le dossier `js/` et le dossier `apps-script/`.
+   - Via l'interface web GitHub : bouton "Add file" → "Upload files", puis glisse le **dossier entier** (les sous-dossiers sont conservés), commit.
 3. Va dans **Settings** (du repo) → **Pages** (menu de gauche).
 4. Sous "Build and deployment" → Source : **Deploy from a branch**. Branch : **main**, dossier : **/ (root)**. Sauvegarde.
 5. Attends 1–2 minutes, puis ton site est en ligne à :
    `https://TON-PSEUDO-GITHUB.github.io/voyage-toscane/`
 
 Envoie ce lien à qui tu veux.
+
+## Structure des fichiers
+
+Une app statique, sans build ni bundler : chaque fichier est chargé tel quel par `index.html`, dans l'ordre.
+
+```
+index.html                    balises + ordre de chargement
+styles.css                    tout le style
+data.json                     données de départ (source « officielle »)
+js/data.js                    presets de villes, état global, données par défaut
+js/storage.js                 data.json, localStorage, export / import
+js/sync.js                    synchro Google Sheets (voir plus bas)
+js/helpers.js                 utilitaires
+js/render.js                  rendu de la coquille + barre latérale
+js/views/accommodations.js    vue Hébergements
+js/views/simple-lists.js      vues Voitures et Charges fixes
+js/views/scenarios.js         vues Scénarios
+js/views/map.js               vue Carte (Leaflet)
+js/modals.js                  modales et formulaires
+js/init.js                    démarrage — doit rester chargé en dernier
+apps-script/Code.gs           le script à coller dans Google Apps Script
+```
+
+Les boutons de l'app appellent les fonctions directement dans le HTML (`onclick="..."`), donc les
+fichiers JS sont des scripts classiques et **pas** des modules ES : ajouter un fichier = ajouter une
+balise `<script src>` dans `index.html`, avant `js/init.js`.
 
 ## Comment ça marche
 
