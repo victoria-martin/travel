@@ -1,3 +1,11 @@
+function distinctCounties() {
+  const set = new Set();
+  state.accommodations.forEach((a) => {
+    if (a.county) set.add(a.county);
+  });
+  return Array.from(set).sort();
+}
+
 function renderMapView() {
   const counties = distinctCounties();
   return /* HTML */ `

@@ -30,8 +30,23 @@ const ACCOMMODATION_TYPES = {
   },
 };
 
+const DEFAULT_ACCOMMODATION_STATUS = 'toCheck';
+
+const ACCOMMODATION_STATUSES = {
+  toCheck: { label: 'À voir', emoji: '👀', tagClass: 'tag-to-check' },
+  contacted: { label: 'Contacté', emoji: '✉️', tagClass: 'tag-contacted' },
+  go: { label: 'Go', emoji: '✅', tagClass: 'tag-go' },
+  notAvailable: { label: 'Pas dispo', emoji: '🚫', tagClass: 'tag-not-available' },
+  rejected: { label: 'Écarté', emoji: '👎', tagClass: 'tag-rejected' },
+  booked: { label: 'Réservé', emoji: '🔒', tagClass: 'tag-booked' },
+};
+
 function accType(type) {
   return ACCOMMODATION_TYPES[type] || ACCOMMODATION_TYPES[DEFAULT_ACCOMMODATION_TYPE];
+}
+
+function accStatus(status) {
+  return ACCOMMODATION_STATUSES[status] || ACCOMMODATION_STATUSES[DEFAULT_ACCOMMODATION_STATUS];
 }
 
 function accTypeFromText(text) {

@@ -12,9 +12,9 @@ function stepCard(scenario, step, idx) {
           ${step.notes ? ` · ${escapeHtml(step.notes)}` : ''}
         </div>
         <div class="step-acc">
-          <select onchange="setStepAccommodation('${scenario.id}','${step.id}', this.value)">
-            <option value="">— Aucun hébergement choisi —</option>
-            ${state.accommodations.map((a) => `<option value="${a.id}" ${step.accommodationId === a.id ? 'selected' : ''}>${accType(a.type).emoji} ${escapeHtml(a.name)} (${escapeHtml(a.city)})</option>`).join('')}
+          <select onchange="setStepPlace('${scenario.id}','${step.id}', this.value)">
+            <option value="">— Aucun lieu choisi —</option>
+            ${stepPlaceOptions(step)}
           </select>
           <select onchange="setStepNights('${scenario.id}','${step.id}', this.value)">
             ${NIGHTS_OPTIONS.map((n) => `<option value="${n}" ${(parseInt(step.nights) || 0) === n ? 'selected' : ''}>${nightsLabel(n)}</option>`).join('')}

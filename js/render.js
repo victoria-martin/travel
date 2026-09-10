@@ -5,8 +5,8 @@ function render() {
       <p class="brand">Voyage Toscane</p>
       <p class="brand-sub">Carnet de préparation</p>
       ${navBtn('hebergements', '🏠', 'Hébergements')} ${navBtn('voitures', '🚗', 'Voitures')}
-      ${navBtn('charges', '💶', 'Charges fixes')} ${navBtn('scenarios', '🧭', 'Scénarios')}
-      ${navBtn('carte', '🗺️', 'Carte')}
+      ${navBtn('charges', '💶', 'Charges fixes')} ${navBtn('villes', '📍', 'Villes')}
+      ${navBtn('scenarios', '🧭', 'Scénarios')} ${navBtn('carte', '🗺️', 'Carte')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
@@ -41,6 +41,7 @@ function renderMain() {
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'voitures') main.innerHTML = renderSimpleListView('voitures');
   else if (view === 'charges') main.innerHTML = renderSimpleListView('charges');
+  else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
   else if (view === 'scenario-detail') main.innerHTML = renderScenarioDetailView();
   else if (view === 'carte') main.innerHTML = renderMapView();

@@ -4,7 +4,7 @@
 */
 
 function emptyData() {
-  return { accommodations: [], cars: [], fixedCosts: [], scenarios: [] };
+  return { accommodations: [], cars: [], fixedCosts: [], cities: [], scenarios: [] };
 }
 
 function loadData() {
@@ -18,11 +18,20 @@ function loadData() {
   "Florence") — the same granularity the map filter now reads from `county`.
 */
 function migrateData(data) {
+  if (!data.cities) data.cities = [];
   (data.accommodations || []).forEach((a) => {
+    if (!a.status) a.status = DEFAULT_ACCOMMODATION_STATUS;
     if (a.address === undefined) a.address = '';
+    if (a.geoAddress === undefined) a.geoAddress = a.address;
     if (a.county === undefined) {
       a.county = a.region || '';
       a.region = '';
+    }
+  });
+  data.cities.forEach((c) => {
+    if (c.geoAddress === undefined) {
+      c.geoAddress = c.address || '';
+      delete c.address;
     }
   });
   return data;

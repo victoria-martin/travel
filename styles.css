@@ -280,6 +280,24 @@ tr:hover td {
 .tag-house {
   background: var(--stone);
 }
+.tag-to-check {
+  background: var(--ochre);
+}
+.tag-contacted {
+  background: var(--stone);
+}
+.tag-go {
+  background: var(--sage);
+}
+.tag-not-available {
+  background: var(--rust);
+}
+.tag-rejected {
+  background: var(--ink-soft);
+}
+.tag-booked {
+  background: var(--stone-dark);
+}
 
 /* ---------- Cards ---------- */
 .card-grid {

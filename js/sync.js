@@ -119,6 +119,9 @@ function parseSheetResponse(text) {
     );
   }
   if (payload.error) throw new Error(payload.error);
+  // Le Sheet peut ne pas encore avoir l'onglet d'une collection récente : on le complète ici,
+  // pour que tous les chemins (GET, push, conflit) rendent un état complet.
+  if (payload.data) payload.data = migrateData(payload.data);
   return payload;
 }
 
@@ -185,13 +188,14 @@ function mergeStates(remote, local, base) {
     ),
     cars: mergeCollections(remote.cars, local.cars, base.cars),
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
+    cities: mergeCollections(remote.cities, local.cities, base.cities),
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
   };
 }
 
 function isEmptyState(data) {
   if (!data) return true;
-  return ['accommodations', 'cars', 'fixedCosts', 'scenarios'].every(
+  return ['accommodations', 'cars', 'fixedCosts', 'cities', 'scenarios'].every(
     (k) => !(data[k] || []).length,
   );
 }

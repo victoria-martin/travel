@@ -9,19 +9,25 @@ const COLLECTIONS = {
   accommodations: [
     'id',
     'type',
+    'status',
     'name',
+    'address',
+    'geoAddress',
     'city',
+    'county',
     'region',
     'lat',
     'lng',
     'price',
     'dates',
     'link',
+    'bookingLink',
     'notes',
     'favorite',
   ],
   cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
+  cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
   scenarios: ['id', 'name'],
   steps: [
     'id',
@@ -30,6 +36,7 @@ const COLLECTIONS = {
     'region',
     'arrivalDate',
     'nights',
+    'cityId',
     'accommodationId',
     'notes',
   ],
@@ -90,6 +97,7 @@ function readState() {
     accommodations: rows.accommodations,
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
+    cities: rows.cities,
     scenarios: rows.scenarios.map(function (scenario) {
       scenario.steps = stepsByScenario[scenario.id] || [];
       return scenario;
@@ -123,7 +131,7 @@ function decodeCell(column, raw) {
   var value = String(raw == null ? '' : raw).trim();
   if (BOOL_FIELDS.indexOf(column) >= 0) return /^(true|vrai|oui|1|x)$/i.test(value);
   if (NUM_FIELDS.indexOf(column) >= 0) return parseInt(value, 10) || 0;
-  if (column === 'accommodationId') return value || null;
+  if (column === 'accommodationId' || column === 'cityId') return value || null;
   return value;
 }
 
@@ -145,6 +153,7 @@ function writeState(data) {
   writeSheet('accommodations', data.accommodations || []);
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
+  writeSheet('cities', data.cities || []);
   writeSheet('scenarios', scenarios);
   writeSheet('steps', steps);
 }

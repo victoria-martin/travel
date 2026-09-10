@@ -2,6 +2,7 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'favorite', label: '', pickerLabel: '⭐ Favori', locked: true, cell: favoriteCell },
   { key: 'name', label: 'Nom', locked: true, cell: nameCell },
   { key: 'type', label: 'Type', cell: typeCell },
+  { key: 'status', label: 'Statut', cell: statusCell },
   { key: 'city', label: 'Ville', cell: (a) => escapeHtml(a.city) || '—' },
   { key: 'county', label: 'Province', cell: (a) => escapeHtml(a.county) || '—' },
   {
@@ -14,6 +15,7 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'price', label: 'Prix', cell: (a) => (a.price ? `${escapeHtml(a.price)} €` : '—') },
   { key: 'dates', label: 'Dates', cell: (a) => escapeHtml(a.dates) || '—' },
   { key: 'link', label: 'Lien', cell: linkCell },
+  { key: 'bookingLink', label: 'Booking', cell: bookingLinkCell },
   { key: 'actions', label: '', locked: true, cell: actionsCell },
 ];
 
@@ -41,14 +43,22 @@ function typeCell(a) {
   return `<span class="tag ${accType(a.type).tagClass}">${accType(a.type).label}</span>`;
 }
 
+function statusCell(a) {
+  return `<span class="tag ${accStatus(a.status).tagClass}">${accStatus(a.status).label}</span>`;
+}
+
 function addressCell(a) {
-  if (a.address) return escapeHtml(a.address);
-  return `<span style="color:var(--ink-soft);">${a.lat && a.lng ? '—' : 'non localisé'}</span>`;
+  return escapeHtml(a.address) || '—';
 }
 
 function linkCell(a) {
   if (!a.link) return '—';
   return `<a href="${escapeHtml(a.link)}" target="_blank" style="color:var(--stone-dark);">Voir</a>`;
+}
+
+function bookingLinkCell(a) {
+  if (!a.bookingLink) return '—';
+  return `<a href="${escapeHtml(a.bookingLink)}" target="_blank" style="color:var(--stone-dark);">Booking</a>`;
 }
 
 function actionsCell(a) {

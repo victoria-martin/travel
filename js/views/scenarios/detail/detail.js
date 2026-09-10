@@ -45,9 +45,13 @@ function setStepNights(scenarioId, stepId, nights) {
   render();
 }
 
-function setStepAccommodation(scenarioId, stepId, accId) {
+// Une étape se rattache soit à une ville, soit à un hébergement : le même select porte les deux.
+function setStepPlace(scenarioId, stepId, value) {
   const s = getScenario(scenarioId);
   const st = s.steps.find((x) => x.id === stepId);
-  st.accommodationId = accId || null;
+  const [kind, placeId] = value.split(':');
+  st.cityId = kind === 'ville' ? placeId : null;
+  st.accommodationId = kind === 'heb' ? placeId : null;
   saveNow();
+  render();
 }
