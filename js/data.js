@@ -51,6 +51,15 @@ function accTypeFromText(text) {
   return found || DEFAULT_ACCOMMODATION_TYPE;
 }
 
+function accStatusFromText(text) {
+  const wanted = (text || '').trim().toLowerCase();
+  if (!wanted) return DEFAULT_ACCOMMODATION_STATUS;
+  const found = Object.keys(ACCOMMODATION_STATUSES).find(
+    (key) => key.toLowerCase() === wanted || accStatus(key).label.toLowerCase() === wanted,
+  );
+  return found || DEFAULT_ACCOMMODATION_STATUS;
+}
+
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
