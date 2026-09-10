@@ -299,3 +299,31 @@ function fingerprint(data) {
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
+
+/* ------------------------------- réparation ------------------------------- */
+
+// One-shot: run from the Apps Script editor when the accommodations header no longer
+// matches its rows. Rewrites row 1 only, then delete this function.
+function fixAccommodationsHeader() {
+  var columns = [
+    'id',
+    'type',
+    'name',
+    'status',
+    'address',
+    'geoAddress',
+    'city',
+    'county',
+    'region',
+    'lat',
+    'lng',
+    'price',
+    'link',
+    'bookingLink',
+    'notes',
+    'favorite',
+  ];
+  var sheet = ensureSheet('accommodations');
+  sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), columns.length)).clearContent();
+  sheet.getRange(1, 1, 1, columns.length).setValues([columns]).setFontWeight('bold');
+}
