@@ -44,7 +44,7 @@ js/views/scenarios/detail/recap-row.js     une ligne du récap
 js/views/map.js                            vue Carte (Leaflet)
 js/modals.js                               modales et formulaires
 js/init.js                                 démarrage — doit rester chargé en dernier
-apps-script/Code.gs                        le backend Apps Script (voir plus bas)
+apps-script/Code.js                        le backend Apps Script (voir plus bas)
 ```
 
 Les boutons de l'app appellent les fonctions directement dans le HTML (`onclick="..."`), donc les
@@ -62,7 +62,7 @@ table, une ligne par entrée).
 
 1. Crée un Google Sheet vide (n'importe quel nom).
 2. Dans ce Sheet : menu **Extensions** → **Apps Script**.
-3. Supprime le contenu de `Code.gs` et colle à la place tout le fichier [apps-script/Code.gs](apps-script/Code.gs). Enregistre.
+3. Supprime le contenu de `Code.gs` et colle à la place tout le fichier [apps-script/Code.js](apps-script/Code.js). Enregistre.
 4. Bouton **Déployer** → **Nouveau déploiement** → type **Application web**, puis :
    - Description : ce que tu veux
    - Exécuter en tant que : **moi**
@@ -77,7 +77,7 @@ départ.
 
 ### Mettre à jour le script déployé
 
-`apps-script/Code.gs` est la source de vérité : ne modifie plus le code dans l'éditeur web, le
+`apps-script/Code.js` est la source de vérité : ne modifie plus le code dans l'éditeur web, le
 prochain push l'écraserait.
 
 Une fois, sur chaque machine :
@@ -117,5 +117,5 @@ donne `pnpm exec clasp list-deployments`.
 
 ### Limites
 
-- Les onglets du Sheet ont des colonnes fixes (voir `COLLECTIONS` en haut de [apps-script/Code.gs](apps-script/Code.gs)). Si tu ajoutes un champ dans l'app, ajoute-le aussi dans cette liste, sinon il ne sera pas conservé côté Sheet.
+- Les onglets du Sheet ont des colonnes fixes (voir `COLLECTIONS` en haut de [apps-script/Code.js](apps-script/Code.js)). Si tu ajoutes un champ dans l'app, ajoute-le aussi dans cette liste, sinon il ne sera pas conservé côté Sheet.
 - Ce n'est pas du temps réel à la milliseconde (5 secondes de latence), et le Sheet est ouvert à qui a l'URL : ne mets rien de sensible dedans.

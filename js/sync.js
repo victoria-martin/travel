@@ -1,5 +1,5 @@
 /*
-  Le Google Sheet (via l'Apps Script de apps-script/Code.gs) devient la source de vérité
+  Le Google Sheet (via l'Apps Script de apps-script/Code.js) devient la source de vérité
   partagée. localStorage reste le cache local : l'app marche hors ligne, et tout ce qui
   a été modifié pendant la coupure est renvoyé au Sheet à la reconnexion.
   `sync.base` = dernier état reçu du Sheet, ce qui permet de fusionner entrée par entrée
@@ -316,7 +316,7 @@ function syncForm() {
     <h3>Synchro Google Sheets</h3>
     <p style="font-size:13px; color:var(--ink-soft); margin-top:-8px;">
       Colle l'URL de ton application web Apps Script (celle qui finit par <strong>/exec</strong>).
-      Voir <strong>apps-script/Code.gs</strong> et le README pour la mise en place.
+      Voir <strong>apps-script/Code.js</strong> et le README pour la mise en place.
     </p>
     <div class="field">
       <label>URL de l'application web</label>

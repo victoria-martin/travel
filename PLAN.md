@@ -45,9 +45,9 @@ Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
 
 ### 7. Sheet + README — ✅ fait côté code
 
-`COLLECTIONS.scenarios` = `id, name, carId, costIds` dans [Code.gs](apps-script/Code.gs).
+`COLLECTIONS.scenarios` = `id, name, carId, costIds` dans [Code.js](apps-script/Code.js).
 👉 Demande un **nouveau déploiement Apps Script** pour être pris en compte :
-`pbcopy < apps-script/Code.gs`
+`pbcopy < apps-script/Code.js`
 
 ### 8. Mettre la Map a droite dans la page scenario et on bouton pour toggle affichage
 
@@ -56,7 +56,7 @@ Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
 - Champ `favorite` sur le scénario, étoile cliquable dans la liste des scénarios et dans l'en-tête
   du détail, comme sur les hébergements.
 - Les favoris remontent en tête de la liste.
-- `COLLECTIONS.scenarios` gagne `favorite` dans [Code.gs](apps-script/Code.gs) (`BOOL_FIELDS`
+- `COLLECTIONS.scenarios` gagne `favorite` dans [Code.js](apps-script/Code.js) (`BOOL_FIELDS`
   contient déjà `favorite`) → **nouveau déploiement Apps Script**.
 
 ## NTH
@@ -68,7 +68,7 @@ Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
 
 **Vue Hébergements cassée** (constatée le 10/09) : les noms affichent des valeurs de statut
 (`toCheck`, `go`) et il ne reste que 3 colonnes. Deux causes distinctes, aucune liée aux lots
-ci-dessus, et le redéploiement du Code.gs ne les corrige pas :
+ci-dessus, et le redéploiement du Code.js ne les corrige pas :
 
 1. Champs décalés d'un cran (`name` reçoit `status`) — hypothèse : l'en-tête de l'onglet
    `accommodations` du Sheet ne correspond plus aux valeurs des lignes (la lecture se fait par nom
