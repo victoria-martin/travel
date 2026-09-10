@@ -9,11 +9,7 @@ function stepCard(scenario, step, idx) {
             placeholder: 'ville…',
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
         </div>
-        <div class="step-detail">
-          ${step.nights ? nightsLabel(step.nights) : 'passage'}
-          ${step.arrivalDate ? ` · arrivée le ${escapeHtml(step.arrivalDate)}` : ''}
-          ${step.notes ? ` · ${escapeHtml(step.notes)}` : ''}
-        </div>
+        ${stepDetailLine(step)}
         <div class="step-acc">
           <select onchange="setStepPlace('${scenario.id}','${step.id}', this.value)">
             <option value="">— Aucun lieu choisi —</option>
@@ -56,4 +52,13 @@ function stepCard(scenario, step, idx) {
       </div>
     </div>
   `;
+}
+
+function stepDetailLine(step) {
+  const parts = [
+    step.arrivalDate ? `arrivée le ${escapeHtml(step.arrivalDate)}` : '',
+    step.notes ? escapeHtml(step.notes) : '',
+  ].filter(Boolean);
+  if (parts.length === 0) return '';
+  return `<div class="step-detail">${parts.join(' · ')}</div>`;
 }

@@ -30,7 +30,7 @@ async function fetchRoute(points) {
   return route;
 }
 
-function setRouteNotice(message) {
-  const notice = document.getElementById('route-notice');
+function setRouteNotice(id, message) {
+  const notice = document.getElementById(id);
   if (notice) notice.textContent = message;
 }

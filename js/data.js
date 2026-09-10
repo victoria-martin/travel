@@ -68,4 +68,5 @@ let mapFilters = {
   favOnly: false,
 };
 let leafletMap = null;
+let scenarioDetailMap = null;
 const LOCAL_KEY = 'voyage-toscane-local-data';

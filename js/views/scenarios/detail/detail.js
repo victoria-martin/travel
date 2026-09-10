@@ -9,7 +9,7 @@ function renderScenarioDetailView() {
     ${
       s.steps.length === 0
         ? emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
-        : stepList(s) + scenarioRecap(s)
+        : stepList(s) + scenarioCarBlock(s) + scenarioMapBlock(s) + scenarioRecap(s)
     }
   `;
 }

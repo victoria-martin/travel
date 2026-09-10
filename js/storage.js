@@ -29,6 +29,10 @@ function migrateData(data) {
       a.region = '';
     }
   });
+  (data.scenarios || []).forEach((s) => {
+    if (s.carId === undefined) s.carId = null;
+    if (!Array.isArray(s.costIds)) s.costIds = [];
+  });
   data.cities.forEach((c) => {
     if (c.geoAddress === undefined) {
       c.geoAddress = c.address || '';

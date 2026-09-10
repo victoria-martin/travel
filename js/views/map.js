@@ -111,11 +111,7 @@ function initMap() {
     leafletMap = null;
   }
 
-  leafletMap = L.map('map').setView([44.3, 9.5], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 18,
-  }).addTo(leafletMap);
+  leafletMap = createLeafletMap('map');
 
   const countyFilterActive = mapFilters.counties.size > 0;
   let scenarioAccIds = null;
@@ -124,24 +120,7 @@ function initMap() {
     const s = getScenario(mapFilters.scenarioId);
     if (s) {
       scenarioAccIds = new Set(s.steps.map((st) => st.accommodationId).filter(Boolean));
-      const linePoints = s.steps.map(coordsFor).filter(Boolean);
-      if (linePoints.length > 1) drawScenarioRoute(linePoints);
-      s.steps.forEach((st, idx) => {
-        const c = coordsFor(st);
-        if (c) {
-          L.circleMarker(c, {
-            radius: 7,
-            color: '#24312B',
-            weight: 1,
-            fillColor: '#C98A3E',
-            fillOpacity: 0.95,
-          })
-            .bindPopup(
-              `<strong>${escapeHtml(st.city)}</strong><br/>Étape ${idx + 1}${st.nights ? ` · ${st.nights} nuit(s)` : ''}`,
-            )
-            .addTo(leafletMap);
-        }
-      });
+      drawScenarioOnMap(leafletMap, s, 'route-notice', ROUTE_HELP);
     }
   }
 
@@ -169,21 +148,5 @@ function initMap() {
       .addTo(leafletMap);
   });
 
-  if (bounds.length > 0) {
-    leafletMap.fitBounds(bounds, { padding: [40, 40] });
-  }
-}
-
-async function drawScenarioRoute(points) {
-  const map = leafletMap;
-  setRouteNotice('⏳ Calcul du trajet routier…');
-  try {
-    const route = await fetchRoute(points);
-    if (map !== leafletMap) return;
-    L.polyline(route, { color: '#3E6259', weight: 4, opacity: 0.9 }).addTo(map);
-    setRouteNotice(ROUTE_HELP);
-  } catch (e) {
-    console.warn('Trajet routier indisponible', e);
-    if (map === leafletMap) setRouteNotice('⚠️ Trajet routier indisponible — réessaie plus tard.');
-  }
+  fitToPoints(leafletMap, bounds);
 }

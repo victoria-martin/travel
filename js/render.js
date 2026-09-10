@@ -43,6 +43,8 @@ function renderMain() {
   else if (view === 'charges') main.innerHTML = renderSimpleListView('charges');
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
-  else if (view === 'scenario-detail') main.innerHTML = renderScenarioDetailView();
-  else if (view === 'carte') main.innerHTML = renderMapView();
+  else if (view === 'scenario-detail') {
+    main.innerHTML = renderScenarioDetailView();
+    setTimeout(initScenarioDetailMap, 30);
+  } else if (view === 'carte') main.innerHTML = renderMapView();
 }

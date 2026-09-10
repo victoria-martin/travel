@@ -44,7 +44,7 @@ js/views/scenarios/detail/recap-row.js     une ligne du récap
 js/views/map.js                            vue Carte (Leaflet)
 js/modals.js                               modales et formulaires
 js/init.js                                 démarrage — doit rester chargé en dernier
-apps-script/Code.gs                        le script à coller dans Google Apps Script
+apps-script/Code.gs                        le backend Apps Script (voir plus bas)
 ```
 
 Les boutons de l'app appellent les fonctions directement dans le HTML (`onclick="..."`), donc les
@@ -75,6 +75,38 @@ Le Sheet vide est amorcé automatiquement à la première connexion. Si le cache
 navigateur et le Sheet diffèrent, l'app te demande laquelle des deux versions sert de point de
 départ.
 
+### Mettre à jour le script déployé
+
+`apps-script/Code.gs` est la source de vérité : ne modifie plus le code dans l'éditeur web, le
+prochain push l'écraserait.
+
+Une fois, sur chaque machine :
+
+```
+pnpm install
+pnpm exec clasp login
+pnpm exec clasp pull
+```
+
+Il faut aussi activer l'API Apps Script sur
+[script.google.com/home/usersettings](https://script.google.com/home/usersettings).
+
+`clasp pull` récupère le manifeste `appsscript.json` du projet, indispensable pour pousser — mais il
+récupère aussi le code distant : vérifie avec `git diff` qu'il n'a pas écrasé ta version locale.
+
+Ensuite, après chaque modification :
+
+```
+pnpm run push-script
+```
+
+Le code part et le déploiement existant est mis à jour : l'URL `/exec` ne change pas, personne n'a à
+reconnecter son app.
+
+L'identifiant du déploiement vit dans `.clasp-deployment`, non versionné : c'est la partie secrète de
+l'URL `/exec` et ce repo est public. Sur une nouvelle machine, le recréer avec l'identifiant que
+donne `pnpm exec clasp list-deployments`.
+
 ### Ce que fait la synchro
 
 - Les modifications sont envoyées au Sheet ~1 seconde après chaque édition, et l'app relit le Sheet toutes les 5 secondes.
@@ -86,5 +118,4 @@ départ.
 ### Limites
 
 - Les onglets du Sheet ont des colonnes fixes (voir `COLLECTIONS` en haut de [apps-script/Code.gs](apps-script/Code.gs)). Si tu ajoutes un champ dans l'app, ajoute-le aussi dans cette liste, sinon il ne sera pas conservé côté Sheet.
-- Une nouvelle version du script Apps Script demande un **nouveau déploiement** (ou « Gérer les déploiements » → modifier la version) pour être prise en compte.
 - Ce n'est pas du temps réel à la milliseconde (5 secondes de latence), et le Sheet est ouvert à qui a l'URL : ne mets rien de sensible dedans.

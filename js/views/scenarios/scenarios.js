@@ -10,7 +10,7 @@ function renderScenariosView() {
 }
 
 function createScenario() {
-  const s = { id: uid(), name: 'Nouveau scénario', steps: [] };
+  const s = { id: uid(), name: 'Nouveau scénario', carId: null, costIds: [], steps: [] };
   state.scenarios.push(s);
   saveNow();
   openScenario(s.id);

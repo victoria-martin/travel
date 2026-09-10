@@ -28,7 +28,7 @@ const COLLECTIONS = {
   cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
-  scenarios: ['id', 'name'],
+  scenarios: ['id', 'name', 'carId', 'costIds'],
   steps: [
     'id',
     'scenarioId',
@@ -43,6 +43,8 @@ const COLLECTIONS = {
 };
 const BOOL_FIELDS = ['favorite'];
 const NUM_FIELDS = ['nights'];
+// Listes d'identifiants : une seule cellule, séparée par des virgules.
+const LIST_FIELDS = ['costIds'];
 
 function doGet() {
   return json(readState());
@@ -197,6 +199,7 @@ function normalizeItem(name, item) {
 function encodeCell(value) {
   if (value === undefined || value === null) return '';
   if (typeof value === 'boolean') return value ? 'true' : 'false';
+  if (Array.isArray(value)) return value.join(',');
   return String(value);
 }
 
@@ -204,7 +207,19 @@ function decodeCell(column, raw) {
   var value = String(raw == null ? '' : raw).trim();
   if (BOOL_FIELDS.indexOf(column) >= 0) return /^(true|vrai|oui|1|x)$/i.test(value);
   if (NUM_FIELDS.indexOf(column) >= 0) return parseInt(value, 10) || 0;
-  if (column === 'accommodationId' || column === 'cityId') return value || null;
+  if (LIST_FIELDS.indexOf(column) >= 0) {
+    return value
+      .split(',')
+      .map(function (part) {
+        return part.trim();
+      })
+      .filter(function (part) {
+        return part !== '';
+      });
+  }
+  if (column === 'accommodationId' || column === 'cityId' || column === 'carId') {
+    return value || null;
+  }
   return value;
 }
 

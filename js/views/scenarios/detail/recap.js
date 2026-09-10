@@ -24,7 +24,12 @@ function scenarioRecap(scenario) {
   const rows = nightsByPlace(scenario);
   if (rows.length === 0) return '';
   return /* HTML */ `<div class="acc-recap">
-    <div class="acc-recap-title">Nuits par lieu — ${nightsLabel(totalNights(scenario))}</div>
+    <div class="acc-recap-title">Hébergements</div>
     ${rows.map((r) => scenarioRecapRow(r)).join('')}
+    <div class="acc-recap-row acc-recap-total">
+      <span>Total hébergements</span>
+      <span class="acc-recap-nights">${nightsLabel(totalNights(scenario))}</span>
+      <strong>${formatEuros(accommodationsTotal(scenario))}</strong>
+    </div>
   </div>`;
 }
