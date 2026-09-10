@@ -159,6 +159,23 @@ tr:hover td{background:#F6EFE0;}
 .step-title{font-weight:600; font-size:14.5px;}
 .step-detail{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
 .step-actions{display:flex; gap:4px; flex-shrink:0;}
+.step-acc{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px;}
+.step-acc select{
+  font-size:12.5px; padding:5px 8px; border-radius:6px;
+  border:1px solid var(--line); background:var(--white); color:var(--ink); font-family:inherit;
+}
+.step-acc-nights{font-size:12.5px; color:var(--ink-soft);}
+
+.acc-recap{
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+}
+.acc-recap-title{font-size:12px; font-weight:700; color:var(--ink-soft); margin-bottom:8px;}
+.acc-recap-row{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  font-size:13.5px; padding:4px 0; border-top:1px solid var(--line);
+}
+.acc-recap-row:first-of-type{border-top:none;}
+.acc-recap-city{color:var(--ink-soft); font-weight:400;}
 .icon-btn{
   background:none; border:1px solid var(--line); border-radius:6px; width:26px; height:26px;
   cursor:pointer; color:var(--ink-soft); font-size:12px; display:flex; align-items:center; justify-content:center;

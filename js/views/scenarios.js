@@ -13,7 +13,7 @@ function renderScenariosView(){
           <div class="scenario-row" onclick="openScenario('${s.id}')">
             <div>
               <h4>${escapeHtml(s.name)}</h4>
-              <span>${s.steps.length} étape${s.steps.length>1?'s':''} — ${s.steps.reduce((sum,st)=>sum+(parseInt(st.nights)||0),0)} nuits</span>
+              <span>${s.steps.length} étape${s.steps.length>1?'s':''} — ${nightsLabel(totalNights(s))}</span>
             </div>
             <div style="display:flex; gap:6px;" onclick="event.stopPropagation();">
               <button class="icon-btn" onclick="duplicateScenario('${s.id}')" title="Dupliquer">⧉</button>
@@ -66,7 +66,36 @@ function renderScenarioDetailView(){
       <div class="step-list">
         ${s.steps.map((st,idx)=>renderStepCard(s, st, idx)).join('')}
       </div>
+      ${renderScenarioAccommodations(s)}
     `}
+  `;
+}
+
+function nightsByAccommodation(scenario){
+  const rows = new Map();
+  scenario.steps.forEach(st=>{
+    const nights = parseInt(st.nights)||0;
+    if(nights===0) return;
+    const key = st.accommodationId || "";
+    rows.set(key, (rows.get(key)||0) + nights);
+  });
+  return Array.from(rows, ([id, nights])=>({acc: id ? getAccommodation(id) : null, nights}))
+    .sort((a,b)=>b.nights-a.nights);
+}
+
+function renderScenarioAccommodations(scenario){
+  const rows = nightsByAccommodation(scenario);
+  if(rows.length===0) return '';
+  return `
+    <div class="acc-recap">
+      <div class="acc-recap-title">Hébergements du scénario — ${nightsLabel(totalNights(scenario))}</div>
+      ${rows.map(r=>`
+        <div class="acc-recap-row">
+          <span>${r.acc ? `${accType(r.acc.type).emoji} ${escapeHtml(r.acc.name)} <span class="acc-recap-city">· ${escapeHtml(r.acc.city)}</span>` : '<span class="acc-recap-city">Sans hébergement</span>'}</span>
+          <strong>${nightsLabel(r.nights)}</strong>
+        </div>
+      `).join('')}
+    </div>
   `;
 }
 
@@ -78,15 +107,16 @@ function renderStepCard(scenario, step, idx){
       <div class="step-body">
         <div class="step-title">${escapeHtml(step.city)}${step.region?` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>`:''}</div>
         <div class="step-detail">
-          ${step.nights ? `${step.nights} nuit${step.nights>1?'s':''}` : 'passage'}
+          ${step.nights ? nightsLabel(step.nights) : 'passage'}
           ${step.arrivalDate ? ` · arrivée le ${escapeHtml(step.arrivalDate)}` : ''}
           ${step.notes ? ` · ${escapeHtml(step.notes)}` : ''}
         </div>
-        <div style="margin-top:8px;">
-          <select onchange="setStepAccommodation('${scenario.id}','${step.id}', this.value)" style="font-size:12.5px; padding:5px 8px; border-radius:6px; border:1px solid var(--line); background:var(--white);">
+        <div class="step-acc">
+          <select onchange="setStepAccommodation('${scenario.id}','${step.id}', this.value)">
             <option value="">— Aucun hébergement choisi —</option>
             ${state.accommodations.map(a=>`<option value="${a.id}" ${step.accommodationId===a.id?'selected':''}>${accType(a.type).emoji} ${escapeHtml(a.name)} (${escapeHtml(a.city)})</option>`).join('')}
           </select>
+          ${acc ? `<span class="step-acc-nights">${accType(acc.type).emoji} ${escapeHtml(acc.name)} — ${nightsLabel(step.nights)}</span>` : ''}
         </div>
       </div>
       <div class="step-actions">
