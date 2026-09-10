@@ -32,6 +32,42 @@ C'est un fichier texte JSON classique — éditable :
 
 Le plus simple : utilise le bouton **"📋 Importer depuis un tableau"** dans l'app (colle tes lignes copiées depuis Excel/Sheets), ça alimente directement `data.json` sans conversion manuelle.
 
-## Travailler à plusieurs en même temps
+## Travailler à plusieurs en même temps (Google Sheets)
 
-Cette version ne synchronise pas en temps réel entre plusieurs personnes (chacun a ses modifs locales tant que `data.json` n'est pas réexporté et recommité). Si tu veux du vrai temps réel partagé (ex: toi et quelqu'un d'autre modifient en même temps et voient les changements de l'autre), il faut un petit backend en plus (Google Sheets connecté via script, Firebase, Supabase...) — possible, mais c'est un chantier à part. Demande si tu veux que je le mette en place.
+L'app peut se synchroniser avec un Google Sheet qui devient la base partagée : chaque personne
+voit les modifications des autres en quelques secondes, et le Sheet reste éditable à la main
+comme un tableur normal (un onglet par table, une ligne par entrée).
+
+### Mise en place (une fois)
+
+1. Crée un Google Sheet vide (n'importe quel nom).
+2. Dans ce Sheet : menu **Extensions** → **Apps Script**.
+3. Supprime le contenu de `Code.gs` et colle à la place tout le fichier [apps-script/Code.gs](apps-script/Code.gs). Enregistre.
+4. Bouton **Déployer** → **Nouveau déploiement** → type **Application web**, puis :
+   - Description : ce que tu veux
+   - Exécuter en tant que : **moi**
+   - Qui a accès : **tout le monde**
+5. Déploie, autorise l'accès quand Google le demande, puis copie l'**URL de l'application web** (elle finit par `/exec`).
+<!-- https://script.google.com/macros/s/AKfycbx3oAbLEHq-1skoUaJQzlBXiJMatvTi74Kw5cTGkG_W_hPlDvLL1QrG1_EYkoU0UoaYfQ/exec -->
+6. Dans l'app, clique sur le bouton d'état en bas de la barre latérale (⚪ « Local seulement »), colle l'URL, **Connecter**.
+7. Chaque personne fait l'étape 6 avec la **même** URL, sur son navigateur.
+
+Le Sheet vide est amorcé automatiquement avec les données de la première personne qui se connecte.
+Si tes données locales et le Sheet diffèrent à la première connexion, l'app te demande laquelle des
+deux versions sert de point de départ.
+
+### Ce que fait la synchro
+
+- Les modifications sont envoyées au Sheet ~1 seconde après chaque édition, et l'app relit le Sheet toutes les 5 secondes.
+- **Fusion entrée par entrée** : si vous éditez deux hébergements différents en même temps, les deux modifications sont gardées. Sur _la même_ entrée, la dernière personne qui enregistre gagne.
+- Éditer directement dans le Sheet fonctionne : les changements arrivent dans l'app au prochain rafraîchissement. Ne touche pas aux colonnes `id` ni aux en-têtes.
+- Hors ligne, tout continue en localStorage ; ce qui a été modifié pendant la coupure est renvoyé à la reconnexion.
+- Le bouton d'état affiche 🟢 synchronisé / 🔄 en cours / 🔴 erreur (le détail au survol). Cliquer dessus ouvre les réglages, avec un bouton **Déconnecter**.
+
+`data.json` reste utile comme point de départ et comme sauvegarde : « 📥 Exporter data.json » marche toujours.
+
+### Limites
+
+- Les onglets du Sheet ont des colonnes fixes (voir `COLLECTIONS` en haut de [apps-script/Code.gs](apps-script/Code.gs)). Si tu ajoutes un champ dans l'app, ajoute-le aussi dans cette liste, sinon il ne sera pas conservé côté Sheet.
+- Une nouvelle version du script Apps Script demande un **nouveau déploiement** (ou « Gérer les déploiements » → modifier la version) pour être prise en compte.
+- Ce n'est pas du temps réel à la milliseconde (5 secondes de latence), et le Sheet est ouvert à qui a l'URL : ne mets rien de sensible dedans.
