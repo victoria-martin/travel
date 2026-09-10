@@ -48,7 +48,7 @@ function readLocalStorage() {
 
 function saveNow() {
   persist();
-  pushNow();
+  schedulePush();
 }
 
 function persist() {

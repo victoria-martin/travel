@@ -8,7 +8,7 @@
 
 const SYNC_URL_KEY = 'voyage-toscane-sync-url';
 const SYNC_BASE_KEY = 'voyage-toscane-sync-base';
-const PUSH_DEBOUNCE_MS = 900;
+const PUSH_DEBOUNCE_MS = 1500;
 
 let sync = {
   url: '',
@@ -80,6 +80,12 @@ function syncStatusHtml() {
   >
     <span class="nav-icon">${icon}</span>${escapeHtml(label)}
   </button>`;
+}
+
+// La réponse du Sheet ne change souvent rien : re-rendre écraserait le DOM sous la souris
+// pendant qu'on enchaîne les actions.
+function renderIfChanged(before) {
+  if (!modal && !sameJson(before, state)) render();
 }
 
 function deepClone(value) {
@@ -231,12 +237,6 @@ function applyRemote(rev, data) {
   if (needsPush) schedulePush();
 }
 
-function pushNow() {
-  if (!syncActive()) return;
-  clearTimeout(sync.pushTimer);
-  pushToSheet();
-}
-
 function schedulePush() {
   if (!syncActive()) return;
   clearTimeout(sync.pushTimer);
@@ -257,20 +257,22 @@ async function pushToSheet() {
     let payload = await sheetPost({ action: 'push', baseRev: sync.rev, data: pushed });
     if (payload.conflict) {
       // Le Sheet a bougé : on fusionne entrée par entrée, puis on renvoie.
+      const before = deepClone(state);
       state = mergeStates(payload.data, state, sync.base);
       persist();
       saveSyncBase(payload.rev, payload.data);
-      if (!modal) render();
+      renderIfChanged(before);
       pushed = deepClone(state);
       payload = await sheetPost({ action: 'push', baseRev: sync.rev, data: pushed });
       if (payload.conflict)
         throw new Error('Le Sheet change en même temps, nouvelle tentative dans un instant');
     }
+    const before = deepClone(state);
     state = mergeStates(payload.data, state, pushed);
     persist();
     saveSyncBase(payload.rev, payload.data);
     setSyncStatus('ok');
-    if (!modal) render();
+    renderIfChanged(before);
     if (!sameJson(state, payload.data)) schedulePush();
   } catch (e) {
     setSyncStatus('error', e.message);
