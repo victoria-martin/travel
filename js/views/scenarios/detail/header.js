@@ -8,12 +8,11 @@ function scenarioDetailHeader(s) {
       >
         ← Tous les scénarios
       </button>
-      <h2
-        class="view-title"
-        contenteditable="true"
-        onblur="renameScenario('${s.id}', this.innerText)"
-      >
-        ${escapeHtml(s.name)}
+      <h2 class="view-title">
+        ${editableText(s.name, `renameScenario('${s.id}', this.innerText)`, {
+          key: `scenario:${s.id}:name`,
+          placeholder: 'nom du scénario…',
+        })}
       </h2>
       <p class="view-sub">
         ${s.steps.length} étape${s.steps.length > 1 ? 's' : ''} — clique sur le titre pour le

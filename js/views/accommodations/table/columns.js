@@ -34,14 +34,12 @@ function favoriteCell(a) {
 }
 
 function nameCell(a) {
-  const notes = a.notes
-    ? `<div style="color:var(--ink-soft); font-size:12px; margin-top:2px;">${escapeHtml(a.notes)}</div>`
-    : '';
+  const notes = `<div style="color:var(--ink-soft); font-size:12px; margin-top:2px;">${notesEditable(a)}</div>`;
   return `<strong>${escapeHtml(a.name)}</strong>${notes}`;
 }
 
 function notesCell(a) {
-  return escapeHtml(a.notes) || '—';
+  return notesEditable(a);
 }
 
 function typeCell(a) {

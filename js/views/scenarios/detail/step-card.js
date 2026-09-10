@@ -4,7 +4,10 @@ function stepCard(scenario, step, idx) {
       <div class="step-order">${idx + 1}</div>
       <div class="step-body">
         <div class="step-title">
-          ${escapeHtml(step.city)}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
+          ${editableText(step.city, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
+            key: `step:${step.id}:city`,
+            placeholder: 'ville…',
+          })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
         </div>
         <div class="step-detail">
           ${step.nights ? nightsLabel(step.nights) : 'passage'}

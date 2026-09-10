@@ -663,3 +663,23 @@ tr:hover td {
     width: 100%;
   }
 }
+
+.editable {
+  border-radius: 4px;
+  padding: 0 2px;
+  margin: 0 -2px;
+  cursor: text;
+  outline: none;
+}
+.editable:hover {
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0 -1px 0 var(--line);
+}
+.editable:focus {
+  background: var(--white);
+  box-shadow: 0 0 0 2px var(--line);
+}
+.editable:empty::before {
+  content: attr(data-placeholder);
+  color: var(--line);
+}

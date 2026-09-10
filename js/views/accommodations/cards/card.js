@@ -11,9 +11,7 @@ function accommodationCard(a) {
         ${a.favorite ? '★' : '☆'}
       </button>
     </div>
-    <div class="card-selects">
-      ${accommodationTypeSelect(a)}${accommodationStatusSelect(a)}
-    </div>
+    <div class="card-selects">${accommodationTypeSelect(a)}${accommodationStatusSelect(a)}</div>
     <div class="card-meta">
       <span
         >📍
@@ -21,7 +19,7 @@ function accommodationCard(a) {
       >
       ${a.price ? `<span>💶 ${escapeHtml(a.price)} €</span>` : ''}
       ${a.dates ? `<span>📅 ${escapeHtml(a.dates)}</span>` : ''}
-      ${a.notes ? `<span>📝 ${escapeHtml(a.notes)}</span>` : ''}
+      <span>📝 ${notesEditable(a)}</span>
     </div>
     <div class="card-actions">
       <button class="btn-ghost btn btn-small" onclick="openModal('accommodation','${a.id}')">

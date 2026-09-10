@@ -20,6 +20,13 @@ function renameScenario(id, name) {
   saveNow();
 }
 
+function renameStep(scenarioId, stepId, city) {
+  const step = getStep(scenarioId, stepId);
+  step.city = city.trim() || step.city;
+  saveNow();
+  syncEditable(`step:${stepId}:city`, step.city);
+}
+
 function moveStep(scenarioId, stepId, dir) {
   const s = getScenario(scenarioId);
   const i = s.steps.findIndex((st) => st.id === stepId);

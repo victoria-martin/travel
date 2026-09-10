@@ -38,6 +38,13 @@ function setAccommodationType(id, type) {
   render();
 }
 
+function setAccommodationNotes(id, notes) {
+  const value = notes.trim();
+  getAccommodation(id).notes = value;
+  saveNow();
+  syncEditable(`accommodation:${id}:notes`, value);
+}
+
 function setAccommodationStatus(id, status) {
   getAccommodation(id).status = status;
   saveNow();
