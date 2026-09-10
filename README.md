@@ -74,7 +74,6 @@ comme un tableur normal (un onglet par table, une ligne par entrée).
    - Exécuter en tant que : **moi**
    - Qui a accès : **tout le monde**
 5. Déploie, autorise l'accès quand Google le demande, puis copie l'**URL de l'application web** (elle finit par `/exec`).
-<!-- https://script.google.com/macros/s/AKfycbx3oAbLEHq-1skoUaJQzlBXiJMatvTi74Kw5cTGkG_W_hPlDvLL1QrG1_EYkoU0UoaYfQ/exec -->
 6. Dans l'app, clique sur le bouton d'état en bas de la barre latérale (⚪ « Local seulement »), colle l'URL, **Connecter**.
 7. Chaque personne fait l'étape 6 avec la **même** URL, sur son navigateur.
 
