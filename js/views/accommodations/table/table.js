@@ -1,20 +1,14 @@
 function accommodationTable(items) {
+  const columns = visibleColumns('hebergements');
   return /* HTML */ `<div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>Type</th>
-          <th>Ville / Région</th>
-          <th>Prix</th>
-          <th>Dates</th>
-          <th>Lien</th>
-          <th>Voir</th>
-          <th></th>
+          ${columns.map((c) => `<th>${c.label}</th>`).join('')}
         </tr>
       </thead>
       <tbody>
-        ${items.map((a) => accommodationRow(a)).join('')}
+        ${items.map((a) => accommodationRow(a, columns)).join('')}
       </tbody>
     </table>
   </div>`;

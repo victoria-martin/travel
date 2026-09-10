@@ -13,7 +13,9 @@ function openModal(type, a, b) {
             id: null,
             type: DEFAULT_ACCOMMODATION_TYPE,
             name: '',
+            address: '',
             city: '',
+            county: '',
             region: '',
             lat: '',
             lng: '',
@@ -134,8 +136,10 @@ function runPasteImport() {
       id: uid(),
       type,
       name: name || city || 'Sans nom',
+      address: '',
       city: city || '',
-      region: region || '',
+      county: region || '',
+      region: '',
       lat: '',
       lng: '',
       price: price || '',
@@ -148,9 +152,7 @@ function runPasteImport() {
   });
   saveNow();
   closeModal();
-  alert(
-    added + ' hébergement(s) importé(s). Pense à vérifier/compléter les coordonnées GPS si besoin.',
-  );
+  alert(added + ' hébergement(s) importé(s). Renseigne une adresse pour les placer sur la carte.');
   render();
 }
 
@@ -174,29 +176,16 @@ function accommodationForm(p) {
         ><input id="f-name" type="text" value="${escapeHtml(p.name)}" placeholder="Antico Casale" />
       </div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Ville</label
-        ><input id="f-city" type="text" value="${escapeHtml(p.city)}" placeholder="Sovicille" />
-      </div>
-      <div class="field">
-        <label>Région (pour filtrer)</label
-        ><input id="f-region" type="text" value="${escapeHtml(p.region)}" placeholder="Sienne" />
-      </div>
+    <div class="field">
+      <label>Adresse</label
+      ><input
+        id="f-address"
+        type="text"
+        value="${escapeHtml(p.address)}"
+        placeholder="Borgo La Torre alle Tolfe, Siena"
+      />
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Latitude</label
-        ><input id="f-lat" type="text" value="${escapeHtml(p.lat)}" placeholder="43.28" />
-      </div>
-      <div class="field">
-        <label>Longitude</label
-        ><input id="f-lng" type="text" value="${escapeHtml(p.lng)}" placeholder="11.20" />
-      </div>
-    </div>
-    <div style="font-size:11.5px; color:var(--ink-soft); margin:-8px 0 14px 0;">
-      Astuce : clic droit sur Google Maps → coordonnées → coller ici.
-    </div>
+    <div id="geocode-status" class="geocode-status">${geocodeSummary(p)}</div>
     <div class="field-row">
       <div class="field">
         <label>Prix</label
@@ -220,26 +209,52 @@ function accommodationForm(p) {
     >
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
-      <button class="btn" onclick="saveAccommodation('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveAccommodation('${p.id || ''}')">
+        Enregistrer
+      </button>
     </div>
   `;
 }
 
-function saveAccommodation(id) {
+function geocodeSummary(p) {
+  if (!p.address) return "Ville, province et région sont déduites de l'adresse.";
+  if (!p.lat || !p.lng) return '⚠️ Adresse non localisée — aucun point sur la carte.';
+  return `📍 ${[p.city, p.county, p.region].filter(Boolean).join(' · ')}`;
+}
+
+async function saveAccommodation(id) {
+  const previous = id ? getAccommodation(id) : null;
+  const address = document.getElementById('f-address').value.trim();
   const item = {
     id: id || uid(),
     type: document.getElementById('f-type').value,
     name: document.getElementById('f-name').value.trim() || 'Sans nom',
-    city: document.getElementById('f-city').value.trim(),
-    region: document.getElementById('f-region').value.trim(),
-    lat: document.getElementById('f-lat').value.trim(),
-    lng: document.getElementById('f-lng').value.trim(),
+    address,
+    city: previous ? previous.city : '',
+    county: previous ? previous.county : '',
+    region: previous ? previous.region : '',
+    lat: previous ? previous.lat : '',
+    lng: previous ? previous.lng : '',
     price: document.getElementById('f-price').value.trim(),
     dates: document.getElementById('f-dates').value.trim(),
     link: document.getElementById('f-link').value.trim(),
     notes: document.getElementById('f-notes').value.trim(),
     favorite: document.getElementById('f-favorite').checked,
   };
+
+  const needsGeocoding = address && (!previous || previous.address !== address || !previous.lat);
+  if (needsGeocoding) {
+    setGeocodeStatus("⏳ Localisation de l'adresse…", true);
+    const found = await geocodeAddress(address);
+    if (found) Object.assign(item, found);
+    else {
+      Object.assign(item, { lat: '', lng: '', city: '', county: '', region: '' });
+      setGeocodeStatus('⚠️ Adresse introuvable — enregistrée sans position.', false);
+    }
+  } else if (!address) {
+    Object.assign(item, { lat: '', lng: '', city: '', county: '', region: '' });
+  }
+
   if (id) {
     const idx = state.accommodations.findIndex((a) => a.id === id);
     state.accommodations[idx] = item;
@@ -248,6 +263,13 @@ function saveAccommodation(id) {
   }
   saveNow();
   closeModal();
+}
+
+function setGeocodeStatus(message, busy) {
+  const status = document.getElementById('geocode-status');
+  if (status) status.textContent = message;
+  const button = document.getElementById('f-save');
+  if (button) button.disabled = !!busy;
 }
 
 function simpleForm(kind, p) {

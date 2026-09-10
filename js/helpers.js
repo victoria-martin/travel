@@ -14,10 +14,10 @@ function totalNights(scenario) {
   return scenario.steps.reduce((sum, st) => sum + (parseInt(st.nights) || 0), 0);
 }
 
-function distinctRegions() {
+function distinctCounties() {
   const set = new Set();
   state.accommodations.forEach((a) => {
-    if (a.region) set.add(a.region);
+    if (a.county) set.add(a.county);
   });
   return Array.from(set).sort();
 }

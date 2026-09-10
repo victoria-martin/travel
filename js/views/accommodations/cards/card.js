@@ -15,7 +15,10 @@ function accommodationCard(a) {
       </div>
     </div>
     <div class="card-meta">
-      <span>📍 ${escapeHtml(a.city)}${a.region ? ` · ${escapeHtml(a.region)}` : ''}</span>
+      <span
+        >📍
+        ${[a.city, a.county].filter(Boolean).map(escapeHtml).join(' · ') || 'non localisé'}</span
+      >
       ${a.price ? `<span>💶 ${escapeHtml(a.price)} €</span>` : ''}
       ${a.dates ? `<span>📅 ${escapeHtml(a.dates)}</span>` : ''}
       ${a.notes ? `<span>📝 ${escapeHtml(a.notes)}</span>` : ''}

@@ -1,5 +1,8 @@
 const DEFAULT_ACCOMMODATION_TYPE = 'hotel';
 
+const MAX_STEP_NIGHTS = 14;
+const NIGHTS_OPTIONS = Array.from({ length: MAX_STEP_NIGHTS + 1 }, (_, n) => n);
+
 const ACCOMMODATION_TYPES = {
   hotel: {
     label: 'Hôtel',
@@ -51,7 +54,7 @@ let activeScenarioId = null;
 let modal = null; // {type, payload}
 let mapFilters = {
   types: new Set(Object.keys(ACCOMMODATION_TYPES)),
-  regions: new Set(),
+  counties: new Set(),
   scenarioId: null,
   favOnly: false,
 };

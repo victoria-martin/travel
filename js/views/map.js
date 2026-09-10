@@ -1,5 +1,5 @@
 function renderMapView() {
-  const regions = distinctRegions();
+  const counties = distinctCounties();
   return /* HTML */ `
     <div class="view-header">
       <div>
@@ -25,14 +25,14 @@ function renderMapView() {
             .join('')}
         </div>
         <div class="filter-block">
-          <div class="filter-title">Région</div>
+          <div class="filter-title">Province</div>
           ${
-            regions.length === 0
-              ? `<div style="font-size:12.5px; color:var(--ink-soft);">Ajoute une région à tes hébergements pour filtrer ici.</div>`
-              : regions
+            counties.length === 0
+              ? `<div style="font-size:12.5px; color:var(--ink-soft);">Renseigne l'adresse de tes hébergements pour filtrer ici.</div>`
+              : counties
                   .map(
-                    (r) =>
-                      `<label class="filter-option"><input type="checkbox" ${mapFilters.regions.has(r) || mapFilters.regions.size === 0 ? 'checked' : ''} onchange="toggleMapRegion('${escapeHtml(r)}')">${escapeHtml(r)}</label>`,
+                    (c) =>
+                      `<label class="filter-option"><input type="checkbox" ${mapFilters.counties.has(c) || mapFilters.counties.size === 0 ? 'checked' : ''} onchange="toggleMapCounty('${escapeHtml(c)}')">${escapeHtml(c)}</label>`,
                   )
                   .join('')
           }
@@ -72,14 +72,14 @@ function toggleMapType(t) {
   render();
   setTimeout(initMap, 30);
 }
-function toggleMapRegion(r) {
-  if (mapFilters.regions.has(r)) mapFilters.regions.delete(r);
+function toggleMapCounty(c) {
+  if (mapFilters.counties.has(c)) mapFilters.counties.delete(c);
   else {
-    // if nothing was excluded yet (size 0 = "all"), start explicit set with everything except r
-    if (mapFilters.regions.size === 0) {
-      distinctRegions().forEach((x) => mapFilters.regions.add(x));
+    // if nothing was excluded yet (size 0 = "all"), start explicit set with everything except c
+    if (mapFilters.counties.size === 0) {
+      distinctCounties().forEach((x) => mapFilters.counties.add(x));
     }
-    mapFilters.regions.delete(r);
+    mapFilters.counties.delete(c);
   }
   render();
   setTimeout(initMap, 30);
@@ -109,7 +109,7 @@ function initMap() {
     maxZoom: 18,
   }).addTo(leafletMap);
 
-  const regionFilterActive = mapFilters.regions.size > 0;
+  const countyFilterActive = mapFilters.counties.size > 0;
   let scenarioAccIds = null;
 
   if (mapFilters.scenarioId) {
@@ -143,7 +143,7 @@ function initMap() {
   state.accommodations.forEach((a) => {
     if (!a.lat || !a.lng) return;
     if (!mapFilters.types.has(a.type)) return;
-    if (regionFilterActive && a.region && mapFilters.regions.has(a.region) === false) return;
+    if (countyFilterActive && a.county && mapFilters.counties.has(a.county) === false) return;
     if (scenarioAccIds && !scenarioAccIds.has(a.id)) return;
     if (mapFilters.favOnly && !a.favorite) return;
 

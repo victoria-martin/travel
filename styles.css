@@ -155,6 +155,49 @@ body {
   font-size: 12px;
 }
 
+/* ---------- Column picker ---------- */
+.col-picker {
+  position: relative;
+}
+.col-picker > summary {
+  list-style: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--stone-dark);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.col-picker > summary::-webkit-details-marker {
+  display: none;
+}
+.col-picker[open] > summary {
+  background: var(--stone);
+  color: var(--white);
+  border-color: var(--stone);
+}
+.col-picker-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  min-width: 180px;
+  padding: 10px 14px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(36, 49, 43, 0.14);
+}
+
+.geocode-status {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin: -8px 0 14px 0;
+}
+
 .toggle-group {
   display: inline-flex;
   border: 1px solid var(--line);
@@ -445,10 +488,6 @@ tr:hover td {
   background: var(--white);
   color: var(--ink);
   font-family: inherit;
-}
-.step-acc-nights {
-  font-size: 12.5px;
-  color: var(--ink-soft);
 }
 
 .acc-recap {

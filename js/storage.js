@@ -8,8 +8,24 @@ function emptyData() {
 }
 
 function loadData() {
-  state = readLocalStorage() || emptyData();
+  loadPrefs();
+  state = migrateData(readLocalStorage() || emptyData());
   render();
+}
+
+/*
+  Before addresses, `region` was typed by hand and held province-level values ("Sienne",
+  "Florence") — the same granularity the map filter now reads from `county`.
+*/
+function migrateData(data) {
+  (data.accommodations || []).forEach((a) => {
+    if (a.address === undefined) a.address = '';
+    if (a.county === undefined) {
+      a.county = a.region || '';
+      a.region = '';
+    }
+  });
+  return data;
 }
 
 function readLocalStorage() {
