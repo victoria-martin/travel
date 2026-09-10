@@ -106,21 +106,31 @@ function readState() {
   return { rev: fingerprint(data), data: data };
 }
 
+// Les cellules se lisent par nom d'en-tête : ajouter ou déplacer une colonne dans
+// COLLECTIONS ne doit jamais décaler les lignes déjà présentes dans l'onglet.
 function readSheet(name) {
   var sheet = ensureSheet(name);
   var lastRow = sheet.getLastRow();
+  var lastColumn = sheet.getLastColumn();
   var columns = COLLECTIONS[name];
-  if (lastRow < 2) return [];
+  if (lastRow < 2 || lastColumn < 1) return [];
 
-  var values = sheet.getRange(2, 1, lastRow - 1, columns.length).getDisplayValues();
+  var header = sheet
+    .getRange(1, 1, 1, lastColumn)
+    .getDisplayValues()[0]
+    .map(function (cell) {
+      return String(cell == null ? '' : cell).trim();
+    });
+  var values = sheet.getRange(2, 1, lastRow - 1, lastColumn).getDisplayValues();
   return values
     .filter(function (row) {
       return row.join('').trim() !== '';
     })
     .map(function (row) {
       var item = {};
-      columns.forEach(function (column, i) {
-        item[column] = decodeCell(column, row[i]);
+      columns.forEach(function (column) {
+        var index = header.indexOf(column);
+        item[column] = decodeCell(column, index >= 0 ? row[index] : '');
       });
       if (!item.id) item.id = uid();
       return item;
@@ -161,9 +171,13 @@ function writeState(data) {
 function writeSheet(name, items) {
   var sheet = ensureSheet(name);
   var columns = COLLECTIONS[name];
+  // Une colonne retirée de COLLECTIONS laisserait sinon ses cellules orphelines à droite.
+  var width = Math.max(sheet.getLastColumn(), columns.length);
+  var lastRow = sheet.getLastRow();
+  sheet.getRange(1, 1, 1, width).clearContent();
   sheet.getRange(1, 1, 1, columns.length).setValues([columns]).setFontWeight('bold');
-  if (sheet.getLastRow() > 1) {
-    sheet.getRange(2, 1, sheet.getLastRow() - 1, columns.length).clearContent();
+  if (lastRow > 1) {
+    sheet.getRange(2, 1, lastRow - 1, width).clearContent();
   }
   if (!items.length) return;
 

@@ -198,6 +198,48 @@ body {
   margin: -8px 0 14px 0;
 }
 
+.locate-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.locate-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.locate-row .btn-small {
+  flex-shrink: 0;
+}
+
+.geocode-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: -8px 0 14px 0;
+}
+
+.geocode-matches:empty {
+  margin: 0;
+}
+
+.geocode-match {
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.geocode-match:hover {
+  border-color: var(--stone-dark);
+}
+
 .toggle-group {
   display: inline-flex;
   border: 1px solid var(--line);

@@ -60,16 +60,7 @@ function accommodationForm(p) {
         placeholder="Borgo La Torre alle Tolfe, Siena"
       />
     </div>
-    <div class="field">
-      <label>Adresse à localiser</label
-      ><input
-        id="f-geo-address"
-        type="text"
-        value="${escapeHtml(p.geoAddress)}"
-        placeholder="Borgo La Torre alle Tolfe, Siena"
-      />
-    </div>
-    <div id="geocode-status" class="geocode-status">${geocodeSummary(p)}</div>
+    ${locateFields(p)}
     <div class="field-row">
       <div class="field">
         <label>Prix</label
@@ -107,10 +98,4 @@ function accommodationForm(p) {
       </button>
     </div>
   `;
-}
-
-function geocodeSummary(p) {
-  if (!p.geoAddress) return "Ville, province et région sont déduites de l'adresse à localiser.";
-  if (!p.lat || !p.lng) return '⚠️ Adresse non localisée — aucun point sur la carte.';
-  return `📍 ${[p.city, p.county, p.region].filter(Boolean).join(' · ')}`;
 }

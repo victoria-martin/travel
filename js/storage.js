@@ -20,6 +20,7 @@ function loadData() {
 function migrateData(data) {
   if (!data.cities) data.cities = [];
   (data.accommodations || []).forEach((a) => {
+    unshiftAccommodation(a);
     if (!a.status) a.status = DEFAULT_ACCOMMODATION_STATUS;
     if (a.address === undefined) a.address = '';
     if (a.geoAddress === undefined) a.geoAddress = a.address;
@@ -35,6 +36,30 @@ function migrateData(data) {
     }
   });
   return data;
+}
+
+/*
+  The Sheet backend used to map cells by column index. Inserting city, county and region
+  pushed every pre-existing row three columns to the left, so `dates` ended up holding the
+  old `favorite` boolean — the marker used here to recognize a shifted row.
+*/
+function unshiftAccommodation(a) {
+  const shifted =
+    a.dates === true || a.dates === false || a.dates === 'true' || a.dates === 'false';
+  if (!shifted) return;
+  const shiftedRow = { ...a };
+  a.lat = shiftedRow.city;
+  a.lng = shiftedRow.county;
+  a.price = shiftedRow.region;
+  a.dates = shiftedRow.lat;
+  a.link = shiftedRow.lng;
+  a.notes = shiftedRow.price;
+  a.favorite = shiftedRow.dates === true || shiftedRow.dates === 'true';
+  a.city = '';
+  a.county = '';
+  a.region = '';
+  a.bookingLink = '';
+  if (!a.geoAddress) a.geoAddress = a.address || '';
 }
 
 function readLocalStorage() {
