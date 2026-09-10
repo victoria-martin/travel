@@ -1,0 +1,22 @@
+{
+  "name": "travel",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.3.4",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.3.4",
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}

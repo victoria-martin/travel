@@ -6,13 +6,34 @@
  */
 
 const COLLECTIONS = {
-  accommodations: ['id', 'type', 'name', 'city', 'region', 'lat', 'lng', 'price', 'dates', 'link', 'notes', 'favorite'],
+  accommodations: [
+    'id',
+    'type',
+    'name',
+    'city',
+    'region',
+    'lat',
+    'lng',
+    'price',
+    'dates',
+    'link',
+    'notes',
+    'favorite',
+  ],
   cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   scenarios: ['id', 'name'],
-  steps: ['id', 'scenarioId', 'city', 'region', 'arrivalDate', 'nights', 'accommodationId', 'notes'],
+  steps: [
+    'id',
+    'scenarioId',
+    'city',
+    'region',
+    'arrivalDate',
+    'nights',
+    'accommodationId',
+    'notes',
+  ],
 };
-const META_SHEET = 'meta';
 const BOOL_FIELDS = ['favorite'];
 const NUM_FIELDS = ['nights'];
 
@@ -44,8 +65,9 @@ function doPost(e) {
 }
 
 function json(payload) {
-  return ContentService.createTextOutput(JSON.stringify(payload))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }
 
 /* ------------------------------- lecture ------------------------------- */
@@ -72,7 +94,6 @@ function readState() {
       scenario.steps = stepsByScenario[scenario.id] || [];
       return scenario;
     }),
-    importsDone: readMeta(),
   };
   return { rev: fingerprint(data), data: data };
 }
@@ -106,20 +127,6 @@ function decodeCell(column, raw) {
   return value;
 }
 
-function readMeta() {
-  var sheet = ensureSheet(META_SHEET, ['key', 'value']);
-  var lastRow = sheet.getLastRow();
-  var importsDone = {};
-  if (lastRow < 2) return importsDone;
-  sheet.getRange(2, 1, lastRow - 1, 2).getDisplayValues().forEach(function (row) {
-    var key = String(row[0]).trim();
-    if (key.indexOf('importsDone.') === 0) {
-      importsDone[key.slice('importsDone.'.length)] = /^(true|vrai|oui|1|x)$/i.test(String(row[1]).trim());
-    }
-  });
-  return importsDone;
-}
-
 /* ------------------------------- écriture ------------------------------- */
 
 function writeState(data) {
@@ -140,7 +147,6 @@ function writeState(data) {
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('scenarios', scenarios);
   writeSheet('steps', steps);
-  writeMeta(data.importsDone || {});
 }
 
 function writeSheet(name, items) {
@@ -165,27 +171,14 @@ function writeSheet(name, items) {
   range.setValues(rows);
 }
 
-function writeMeta(importsDone) {
-  var sheet = ensureSheet(META_SHEET, ['key', 'value']);
-  sheet.getRange(1, 1, 1, 2).setValues([['key', 'value']]).setFontWeight('bold');
-  if (sheet.getLastRow() > 1) sheet.getRange(2, 1, sheet.getLastRow() - 1, 2).clearContent();
-  var rows = Object.keys(importsDone).map(function (key) {
-    return ['importsDone.' + key, importsDone[key] ? 'true' : 'false'];
-  });
-  if (!rows.length) return;
-  var range = sheet.getRange(2, 1, rows.length, 2);
-  range.setNumberFormat('@');
-  range.setValues(rows);
-}
-
 /* ------------------------------- utilitaires ------------------------------- */
 
-function ensureSheet(name, header) {
+function ensureSheet(name) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName(name);
   if (!sheet) {
     sheet = spreadsheet.insertSheet(name);
-    var columns = header || COLLECTIONS[name];
+    var columns = COLLECTIONS[name];
     sheet.getRange(1, 1, 1, columns.length).setValues([columns]).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
@@ -193,10 +186,16 @@ function ensureSheet(name, header) {
 }
 
 function fingerprint(data) {
-  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(data), Utilities.Charset.UTF_8);
-  return bytes.map(function (b) {
-    return ((b & 0xff) + 0x100).toString(16).slice(1);
-  }).join('');
+  var bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.MD5,
+    JSON.stringify(data),
+    Utilities.Charset.UTF_8,
+  );
+  return bytes
+    .map(function (b) {
+      return ((b & 0xff) + 0x100).toString(16).slice(1);
+    })
+    .join('');
 }
 
 function uid() {
