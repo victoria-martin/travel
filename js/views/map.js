@@ -64,8 +64,8 @@ function renderMapView() {
             <option value="">Tous les hébergements</option>
             ${state.scenarios.map((s) => `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}
           </select>
-          <div style="font-size:12px; color:var(--ink-soft); margin-top:8px;">
-            Choisir un scénario trace son trajet et n'affiche que les hébergements qu'il utilise.
+          <div id="route-notice" style="font-size:12px; color:var(--ink-soft); margin-top:8px;">
+            ${ROUTE_HELP}
           </div>
         </div>
       </div>
@@ -125,9 +125,7 @@ function initMap() {
     if (s) {
       scenarioAccIds = new Set(s.steps.map((st) => st.accommodationId).filter(Boolean));
       const linePoints = s.steps.map(coordsFor).filter(Boolean);
-      if (linePoints.length > 1) {
-        L.polyline(linePoints, { color: '#3E6259', weight: 3, dashArray: '6 6' }).addTo(leafletMap);
-      }
+      if (linePoints.length > 1) drawScenarioRoute(linePoints);
       s.steps.forEach((st, idx) => {
         const c = coordsFor(st);
         if (c) {
@@ -173,5 +171,19 @@ function initMap() {
 
   if (bounds.length > 0) {
     leafletMap.fitBounds(bounds, { padding: [40, 40] });
+  }
+}
+
+async function drawScenarioRoute(points) {
+  const map = leafletMap;
+  setRouteNotice('⏳ Calcul du trajet routier…');
+  try {
+    const route = await fetchRoute(points);
+    if (map !== leafletMap) return;
+    L.polyline(route, { color: '#3E6259', weight: 4, opacity: 0.9 }).addTo(map);
+    setRouteNotice(ROUTE_HELP);
+  } catch (e) {
+    console.warn('Trajet routier indisponible', e);
+    if (map === leafletMap) setRouteNotice('⚠️ Trajet routier indisponible — réessaie plus tard.');
   }
 }

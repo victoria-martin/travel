@@ -94,6 +94,9 @@ body {
   max-width: 1180px;
   min-width: 0;
 }
+.main:has(.table-wrap) {
+  max-width: none;
+}
 .view-header {
   display: flex;
   align-items: baseline;
