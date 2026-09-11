@@ -113,6 +113,7 @@ function runPasteImport() {
     if (!fields.name && !fields.city) return;
     state.accommodations.push({
       id: uid(),
+      travelId: currentTravelId(),
       type: accTypeFromText(fields.type),
       status: accStatusFromText(fields.status),
       name: fields.name || fields.city || 'Sans nom',

@@ -1,5 +1,5 @@
 function renderCarsView() {
-  const items = sortItems('voitures', state.cars);
+  const items = sortItems('voitures', ofCurrentTravel(state.cars));
   return /* HTML */ `
     ${carsHeader(items)}
     ${

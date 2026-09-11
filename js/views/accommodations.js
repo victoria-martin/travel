@@ -2,7 +2,7 @@ let listFilters = { favOnly: false, tags: [] };
 
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
-  let items = sortItems('hebergements', state.accommodations);
+  let items = sortItems('hebergements', ofCurrentTravel(state.accommodations));
   const favOnly = !!listFilters.favOnly;
   if (favOnly) items = items.filter((a) => a.favorite);
   const tagFilter = activeTagFilter();

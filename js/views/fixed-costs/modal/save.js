@@ -1,6 +1,7 @@
 function saveFixedCost(id) {
   const cost = {
     id: id || uid(),
+    travelId: currentTravelId(),
     label: document.getElementById('cost-label').value.trim(),
     amount: document.getElementById('cost-amount').value.trim(),
     category: document.getElementById('cost-category').value.trim(),

@@ -61,7 +61,7 @@ function locateFields(p) {
 /* Existing values from both located collections, so a place can reuse one or introduce its own. */
 function locateOptions(id, key) {
   const values = new Set();
-  [...state.accommodations, ...state.cities].forEach((place) => {
+  [...ofCurrentTravel(state.accommodations), ...ofCurrentTravel(state.cities)].forEach((place) => {
     if (place[key]) values.add(place[key]);
   });
   return /* HTML */ `<datalist id="${id}">

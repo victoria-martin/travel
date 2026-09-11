@@ -4,7 +4,9 @@
 */
 function allTags() {
   const set = new Set();
-  state.accommodations.forEach((a) => (a.tags || []).forEach((tag) => set.add(tag)));
+  ofCurrentTravel(state.accommodations).forEach((a) =>
+    (a.tags || []).forEach((tag) => set.add(tag)),
+  );
   return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
 }
 

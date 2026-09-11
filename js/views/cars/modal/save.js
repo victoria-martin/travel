@@ -2,6 +2,7 @@ function saveCar(id) {
   const existing = id ? getCar(id) : null;
   const car = {
     id: id || uid(),
+    travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
     name: document.getElementById('car-name').value.trim(),
     model: document.getElementById('car-model').value.trim(),

@@ -1,13 +1,13 @@
 // Une seule voiture par défaut : la marquer démarque les autres, la re-cliquer n'en laisse aucune.
 function setDefaultCar(id) {
   const wasDefault = !!getCar(id).isDefault;
-  state.cars.forEach((c) => (c.isDefault = !wasDefault && c.id === id));
+  ofCurrentTravel(state.cars).forEach((c) => (c.isDefault = !wasDefault && c.id === id));
   saveNow();
   render();
 }
 
 function defaultCar() {
-  return state.cars.find((c) => c.isDefault) || null;
+  return ofCurrentTravel(state.cars).find((c) => c.isDefault) || null;
 }
 
 function defaultCarCell(car) {

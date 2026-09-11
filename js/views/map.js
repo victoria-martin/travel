@@ -8,7 +8,7 @@ let leafletMap = null;
 
 function distinctCounties() {
   const set = new Set();
-  state.accommodations.forEach((a) => {
+  ofCurrentTravel(state.accommodations).forEach((a) => {
     if (a.county) set.add(a.county);
   });
   return Array.from(set).sort();
@@ -70,7 +70,12 @@ function renderMapView() {
             style="width:100%; font-size:13px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;"
           >
             <option value="">Tous les hébergements</option>
-            ${state.scenarios.map((s) => `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}
+            ${ofCurrentTravel(state.scenarios)
+              .map(
+                (s) =>
+                  `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
+              )
+              .join('')}
           </select>
           <div id="route-notice" style="font-size:12px; color:var(--ink-soft); margin-top:8px;">
             ${ROUTE_HELP}
@@ -133,7 +138,7 @@ function initMap() {
   }
 
   const bounds = [];
-  state.accommodations.forEach((a) => {
+  ofCurrentTravel(state.accommodations).forEach((a) => {
     if (!a.lat || !a.lng) return;
     if (!mapFilters.types.has(a.type)) return;
     if (countyFilterActive && a.county && mapFilters.counties.has(a.county) === false) return;

@@ -8,7 +8,8 @@ function placeOptionLabel(place) {
 }
 
 function stepPlaceOptions(step) {
-  const cities = [...state.cities].sort((a, b) => a.name.localeCompare(b.name));
+  const accommodations = ofCurrentTravel(state.accommodations);
+  const cities = ofCurrentTravel(state.cities).sort((a, b) => a.name.localeCompare(b.name));
   return /* HTML */ `
     ${
       cities.length
@@ -21,8 +22,8 @@ function stepPlaceOptions(step) {
         : ''
     }
     ${
-      state.accommodations.length
-        ? `<optgroup label="Hébergements">${state.accommodations
+      accommodations.length
+        ? `<optgroup label="Hébergements">${accommodations
             .map(
               (a) =>
                 `<option value="heb:${a.id}" ${step.accommodationId === a.id ? 'selected' : ''}>${accType(a.type).emoji} ${placeOptionLabel(a)}</option>`,

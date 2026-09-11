@@ -1,12 +1,10 @@
 /*
-  Un seul bloc-notes, stocké comme une collection d'une entrée : il passe ainsi par la
+  Un bloc-notes par voyage, stocké comme une collection d'une entrée : il passe ainsi par la
   fusion par id de js/sync.js, comme le reste de l'état.
 */
 
-const TRIP_NOTE_ID = 'trip';
-
 function tripNote() {
-  return (state.tripNotes || []).find((n) => n.id === TRIP_NOTE_ID) || null;
+  return ofCurrentTravel(state.tripNotes)[0] || null;
 }
 
 function renderNotesView() {
@@ -31,6 +29,6 @@ ${escapeHtml(note && note.text)}</textarea>
 function setTripNote(text) {
   const note = tripNote();
   if (note) note.text = text;
-  else state.tripNotes.push({ id: TRIP_NOTE_ID, text });
+  else state.tripNotes.push({ id: uid(), travelId: currentTravelId(), text });
   saveNow();
 }

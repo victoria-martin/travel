@@ -1,7 +1,9 @@
 let activeScenarioId = null;
 
 function renderScenariosView() {
-  const items = [...state.scenarios].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
+  const items = ofCurrentTravel(state.scenarios).sort(
+    (a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0),
+  );
   return /* HTML */ `
     ${scenariosHeader()}
     ${
@@ -22,6 +24,7 @@ function toggleScenarioFavorite(id) {
 function createScenario() {
   const s = {
     id: uid(),
+    travelId: currentTravelId(),
     name: 'Nouveau scénario',
     startDate: '',
     carId: defaultCar()?.id || null,

@@ -1,5 +1,5 @@
 function renderFixedCostsView() {
-  const items = sortItems('charges', state.fixedCosts);
+  const items = sortItems('charges', ofCurrentTravel(state.fixedCosts));
   return /* HTML */ `
     ${fixedCostsHeader(items)}
     ${

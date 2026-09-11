@@ -2,6 +2,7 @@ function readCityForm(id) {
   const located = readLocateFields();
   return {
     id: id || uid(),
+    travelId: currentTravelId(),
     name: document.getElementById('c-name').value.trim() || 'Sans nom',
     geoAddress: located.geoAddress,
     lat: located.lat,

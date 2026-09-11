@@ -2,6 +2,7 @@ function readAccommodationForm(id) {
   const located = readLocateFields();
   return {
     id: id || uid(),
+    travelId: currentTravelId(),
     type: document.getElementById('f-type').value,
     status: document.getElementById('f-status').value,
     name: document.getElementById('f-name').value.trim() || 'Sans nom',
