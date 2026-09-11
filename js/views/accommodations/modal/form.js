@@ -79,6 +79,7 @@ function accommodationForm(p) {
         type="text"
         value="${escapeHtml(p.link)}"
         placeholder="https://..."
+        onpaste="importHomeExchangePaste()"
         onchange="importHomeExchangeLink()"
       />
     </div>

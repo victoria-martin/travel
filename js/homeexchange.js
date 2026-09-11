@@ -19,18 +19,26 @@ function isHomeExchangeUrl(url) {
   return HOME_EXCHANGE_URL.test(url);
 }
 
+// The field still holds its old value while the paste event runs.
+function importHomeExchangePaste() {
+  setTimeout(importHomeExchangeLink, 0);
+}
+
+// Pasting imports right away, so leaving the field must not read the same listing twice.
 async function importHomeExchangeLink() {
   const field = document.getElementById('f-link');
   const url = field ? field.value.trim() : '';
-  if (!isHomeExchangeUrl(url)) return;
+  if (!isHomeExchangeUrl(url) || field.dataset.imported === url) return;
   if (!syncActive()) {
     setGeocodeStatus('⚠️ Import HomeExchange indisponible : configure la synchro du Sheet.', false);
     return;
   }
+  field.dataset.imported = url;
   setGeocodeStatus("⏳ Lecture de l'annonce HomeExchange…", true);
   try {
     applyHomeExchange(await fetchHomeExchange(url));
   } catch (e) {
+    delete field.dataset.imported;
     setGeocodeStatus('⚠️ Import HomeExchange impossible — ' + e.message, false);
   }
 }
