@@ -16,6 +16,7 @@ function emptyAccommodation() {
     link: '',
     bookingLink: '',
     notes: '',
+    tags: [],
     favorite: false,
   };
 }
@@ -84,6 +85,7 @@ function accommodationForm(p) {
         placeholder="https://www.booking.com/..."
       />
     </div>
+    ${accommodationTagsField(p)}
     <div class="field">
       <label>Notes</label><textarea id="f-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>

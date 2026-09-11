@@ -21,6 +21,7 @@ function accommodationCard(a) {
       ${a.dates ? `<span>📅 ${escapeHtml(a.dates)}</span>` : ''}
       <span>📝 ${notesEditable(a)}</span>
     </div>
+    ${tagChips(a.tags)}
     <div class="card-actions">
       <button class="btn-ghost btn btn-small" onclick="openModal('accommodation','${a.id}')">
         Modifier

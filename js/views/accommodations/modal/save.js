@@ -17,6 +17,7 @@ function saveAccommodation(id) {
     link: document.getElementById('f-link').value.trim(),
     bookingLink: document.getElementById('f-booking-link').value.trim(),
     notes: document.getElementById('f-notes').value.trim(),
+    tags: [...modal.payload.tags],
     favorite: document.getElementById('f-favorite').checked,
   };
 

@@ -23,6 +23,7 @@ const COLLECTIONS = {
     'link',
     'bookingLink',
     'notes',
+    'tags',
     'favorite',
   ],
   cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
@@ -46,7 +47,7 @@ const COLLECTIONS = {
 const BOOL_FIELDS = ['favorite'];
 const NUM_FIELDS = ['nights'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
-const LIST_FIELDS = ['costIds'];
+const LIST_FIELDS = ['costIds', 'tags'];
 
 function doGet() {
   return json(readState());

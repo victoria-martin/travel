@@ -78,7 +78,7 @@ function uid() {
 let state = null;
 let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte | notes
 let listViewMode = { hebergements: 'table', voitures: 'table', charges: 'table' };
-let listFilters = { favOnly: false };
+let listFilters = { favOnly: false, tags: [] };
 let activeScenarioId = null;
 let modal = null; // {type, payload}
 let mapFilters = {

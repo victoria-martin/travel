@@ -863,3 +863,58 @@ tr:hover td {
   outline: none;
   box-shadow: 0 0 0 2px var(--line);
 }
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.tag-chip-remove {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.tag-chip-remove:hover {
+  color: var(--rust);
+}
+.tags-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.tags-field input {
+  flex: 1;
+  min-width: 120px;
+  border: none;
+  padding: 2px 0;
+  background: none;
+}
+.tags-field input:focus {
+  outline: none;
+}
+.sort-panel .filter-block {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}

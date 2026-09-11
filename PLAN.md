@@ -14,10 +14,6 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 
 # À faire
 
-## Hébergements
-
-- **Des tags sur les hébergements ?** — ⏳ à étudier
-
 ## Voitures
 
 - **Valeur par défaut** — ⏳ à faire
@@ -56,6 +52,25 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 # Fait
 
 ## Hébergements
+
+### Tags — ✅
+
+Champ `tags` sur l'hébergement, tableau de chaînes. Pas de liste d'options à administrer : les
+options proposées sont l'union des tags déjà saisis ([tags.js](js/views/tags.js)), donc un tag
+existe dès qu'il est tapé quelque part et disparaît avec son dernier porteur.
+
+- Saisie dans la modale : chips avec une croix, un champ en dessous, Entrée ou virgule ajoute, la
+  `datalist` propose les tags existants ([tags-field.js](js/views/accommodations/modal/tags-field.js)).
+  Le champ écrit dans `modal.payload` et ne repeint que son bloc, sinon les autres champs déjà
+  saisis seraient perdus.
+- Affichés en chips dans la colonne « Tags » de la table et sur les cartes.
+- Filtre par tag dans le panneau « Trier & filtrer » de l'en-tête : un hébergement sort dès qu'il
+  porte **un** des tags cochés. Le panneau de tri accueille un bloc de filtre passé par la liste
+  ([sort.js](js/sort.js)) — il n'est affiché qu'en mode tableau, donc le filtre ne l'est pas non
+  plus en mode cartes.
+- Côté Sheet : colonne `tags` sur `accommodations`, rangée dans `LIST_FIELDS` (une cellule, valeurs
+  séparées par des virgules) comme `costIds` ([Code.js](apps-script/Code.js)).
+  👉 À pousser : `pnpm run push-script`
 
 ### Trois statuts de plus — ✅
 

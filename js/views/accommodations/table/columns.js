@@ -34,6 +34,7 @@ const ACCOMMODATION_COLUMNS = [
     hiddenByDefault: true,
     cell: (a) => escapeHtml(a.region) || '—',
   },
+  { key: 'tags', label: 'Tags', cell: (a) => tagChips(a.tags) || '—' },
   { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: addressCell },
   { key: 'price', label: 'Prix', cell: (a) => (a.price ? `${escapeHtml(a.price)} €` : '—') },
   { key: 'dates', label: 'Dates', cell: (a) => escapeHtml(a.dates) || '—' },

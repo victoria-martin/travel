@@ -29,6 +29,7 @@ function migrateData(data) {
       a.county = a.region || '';
       a.region = '';
     }
+    if (!Array.isArray(a.tags)) a.tags = [];
   });
   (data.scenarios || []).forEach((s) => {
     if (s.carId === undefined) s.carId = null;

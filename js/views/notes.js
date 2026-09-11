@@ -18,7 +18,12 @@ function renderNotesView() {
         <p class="view-sub">Bloc-notes libre, partagé via le Sheet</p>
       </div>
     </div>
-    <textarea class="notes-area" placeholder="Idées, liens, questions à trancher…" oninput="setTripNote(this.value)">${escapeHtml(note && note.text)}</textarea>
+    <textarea
+      class="notes-area"
+      placeholder="Idées, liens, questions à trancher…"
+      oninput="setTripNote(this.value)"
+    >
+${escapeHtml(note && note.text)}</textarea>
   `;
 }
 

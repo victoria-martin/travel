@@ -110,16 +110,22 @@ function columnHeader(kind, column) {
 
 let sortPanelOpen = false;
 
-function sortPanel(kind) {
+/*
+  `filters` is the caller's own block — {html, count} — dropped above the sort levels: the panel
+  owns the disclosure and the sort, the list owns what it filters on.
+*/
+function sortPanel(kind, filters) {
   const criteria = sortCriteria(kind);
   const canAdd = criteria.length < sortableColumns(kind).length;
+  const active = criteria.length + (filters ? filters.count : 0);
   return /* HTML */ `<details
     class="col-picker"
     ${sortPanelOpen ? 'open' : ''}
     ontoggle="sortPanelOpen = this.open"
   >
-    <summary>Trier${criteria.length ? ` (${criteria.length})` : ''}</summary>
+    <summary>${filters ? 'Trier & filtrer' : 'Trier'}${active ? ` (${active})` : ''}</summary>
     <div class="col-picker-panel sort-panel">
+      ${filters ? filters.html : ''}
       ${
         criteria.length
           ? criteria.map((c, i) => sortLevelRow(kind, c, i, criteria.length)).join('')
