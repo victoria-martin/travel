@@ -1,6 +1,6 @@
 /*
-  Un bloc-notes par voyage, stocké comme une collection d'une entrée : il passe ainsi par la
-  fusion par id de js/sync.js, comme le reste de l'état.
+  One note per travel, stored as a one-entry collection: it then goes through the per-id merge of
+  js/sync.js like the rest of the state.
 */
 
 function tripNote() {

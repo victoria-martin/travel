@@ -1,7 +1,7 @@
 /*
-  La couleur du voyage remplace les deux verts structurants du thème — barre latérale, boutons,
-  états actifs — pour qu'on voie d'un coup d'œil dans quel voyage on est. La nuance foncée se
-  calcule, le voyage ne stocke qu'une couleur.
+  The travel colour replaces the two structural greens of the theme — sidebar, buttons, active
+  states — so the open travel is obvious at a glance. The darker shade is computed, so a travel
+  stores a single colour.
 */
 function applyTravelAccent() {
   const travel = currentTravel();

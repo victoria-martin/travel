@@ -1,5 +1,5 @@
-// Une palette fermée : la couleur d'accent doit tenir avec le reste de l'app.
-const TRAVEL_ACCENTS = ['#2c4740', '#c98a3e', '#a6462e', '#7c8b5e', '#3e6259', '#6b5b95'];
+// A closed palette: an accent colour has to hold up next to the rest of the app.
+const TRAVEL_ACCENTS = ['#35607d', '#c98a3e', '#a6462e', '#7c8b5e', '#3e6259', '#6b5b95'];
 
 function emptyTravel() {
   return {
@@ -115,7 +115,8 @@ function travelForm(p) {
   `;
 }
 
-// Le clic ne re-rend pas la modale : les autres champs sont saisis, un re-render les perdrait.
+// Clicking does not re-render the modal: it is built from modal.payload, which would drop
+// whatever the other fields already hold.
 function pickTravelAccent(color) {
   document.getElementById('travel-accent').value = color;
   document

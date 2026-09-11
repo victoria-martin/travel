@@ -28,7 +28,7 @@ function emptyData() {
 
 function loadData() {
   loadPrefs();
-  state = migrateData(readLocalStorage() || emptyData());
+  state = migrateData(readStore(LOCAL_KEY) || emptyData());
   render();
 }
 
@@ -67,17 +67,25 @@ function migrateData(data) {
   return data;
 }
 
-// Every entry predates the Voyage entity, so the ones without a travelId are adopted by the
-// first travel, created here when there is none yet.
+/*
+  Two ways an entry ends up unreachable: it predates the Voyage entity and carries no travelId,
+  or it names a travel the data no longer holds. Both are adopted by the first travel — but a
+  dangling one only by a travel that already exists, never by one invented here: a pull that
+  came back without its travels would otherwise overwrite a real link with a brand new id.
+*/
 function attachOrphansToFirstTravel(data) {
-  const orphans = TRAVEL_COLLECTIONS.flatMap((name) =>
-    (data[name] || []).filter((item) => !item.travelId),
-  );
-  if (!orphans.length) return;
-  if (!data.travels.length) data.travels.push(firstTravel());
-  const travelId = data.travels[0].id;
-  orphans.forEach((item) => {
-    item.travelId = travelId;
+  const known = new Set(data.travels.map((t) => t.id));
+  const pick = (isOrphan) =>
+    TRAVEL_COLLECTIONS.flatMap((name) => (data[name] || []).filter(isOrphan));
+
+  const unattached = pick((item) => !item.travelId);
+  if (unattached.length && !data.travels.length) data.travels.push(firstTravel());
+  const first = data.travels[0];
+  if (!first) return;
+
+  const dangling = known.size ? pick((item) => item.travelId && !known.has(item.travelId)) : [];
+  [...unattached, ...dangling].forEach((item) => {
+    item.travelId = first.id;
   });
 }
 
@@ -122,24 +130,11 @@ function unshiftAccommodation(a) {
   if (!a.geoAddress) a.geoAddress = a.address || '';
 }
 
-function readLocalStorage() {
-  try {
-    const raw = localStorage.getItem(LOCAL_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) {
-    return null;
-  }
-}
-
 function saveNow() {
-  persist();
+  persistState();
   schedulePush();
 }
 
-function persist() {
-  try {
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
-  } catch (e) {
-    console.error('Erreur de sauvegarde locale', e);
-  }
+function persistState() {
+  writeStore(LOCAL_KEY, state);
 }

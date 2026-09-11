@@ -1,11 +1,12 @@
 /*
-  Le voyage ouvert est une préférence locale (js/prefs.js) : chacun ouvre le sien dans son
-  navigateur, rien n'en part dans le Sheet. Toutes les vues lisent ses données à travers
-  ofCurrentTravel().
+  The open travel is a local preference (js/prefs.js): everyone opens their own in their own
+  browser, nothing about it reaches the Sheet. Every view reads its data through ofCurrentTravel().
 */
 
+// A preference naming a travel that is gone would empty every screen: fall back to the first.
 function currentTravelId() {
-  if (prefs.travelId) return prefs.travelId;
+  const known = state.travels.some((t) => t.id === prefs.travelId);
+  if (known) return prefs.travelId;
   return state.travels.length ? state.travels[0].id : null;
 }
 

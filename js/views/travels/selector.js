@@ -49,7 +49,7 @@ function travelMenu(current) {
   </div>`;
 }
 
-// Sous le nom : les dates si elles sont saisies, sinon la destination.
+// Under the name: the dates when they are filled in, the destination otherwise.
 function travelSubtitle(travel) {
   if (!travel) return 'Crée ton premier voyage';
   const parts = [travelDateRange(travel), travel.region || travel.country];
@@ -63,7 +63,7 @@ function travelDateRange(travel) {
   return start || end || '';
 }
 
-// Les dates sont saisies en YYYY-MM-DD : les découper évite le décalage UTC de new Date(iso).
+// Dates are stored as YYYY-MM-DD: splitting them avoids the UTC shift of new Date(iso).
 function monthLabel(iso) {
   if (!iso) return '';
   const [y, m, d] = iso.split('-').map(Number);

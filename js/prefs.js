@@ -5,23 +5,13 @@
 
 const PREFS_KEY = 'voyage-toscane-prefs';
 
-let prefs = { hiddenColumns: {}, showScenarioMap: true, sort: {}, travelId: null };
+let prefs = { hiddenColumns: {}, showScenarioMap: true, sort: {} };
 
 function loadPrefs() {
-  try {
-    const raw = localStorage.getItem(PREFS_KEY);
-    if (raw) prefs = { ...prefs, ...JSON.parse(raw) };
-  } catch (e) {
-    console.warn('Préférences illisibles', e);
-  }
+  const stored = readStore(PREFS_KEY);
+  if (stored) prefs = { ...prefs, ...stored };
 }
 
 function persistPrefs() {
-  try {
-    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
-  } catch (e) {
-    console.error('Erreur de sauvegarde des préférences', e);
-  }
+  writeStore(PREFS_KEY, prefs);
 }
-
-// TODO: à renommer pour indiquer qu'no parle du storage ou autre chose pas juste "prefs"

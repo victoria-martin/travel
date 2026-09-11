@@ -26,33 +26,29 @@ function syncActive() {
 }
 
 function loadSyncConfig() {
-  try {
-    sync.url = localStorage.getItem(SYNC_URL_KEY) || '';
-    const raw = localStorage.getItem(SYNC_BASE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      sync.base = parsed.data || null;
-      sync.rev = parsed.rev || null;
-    }
-  } catch (e) {
-    /* config illisible : on repart sans synchro */
+  sync.url = readStoreString(SYNC_URL_KEY);
+  const stored = readStore(SYNC_BASE_KEY);
+  if (stored) {
+    sync.base = stored.data || null;
+    sync.rev = stored.rev || null;
   }
 }
 
-function saveSyncBase(rev, data) {
+function persistSyncUrl(url) {
+  if (url) writeStoreString(SYNC_URL_KEY, url);
+  else removeStore(SYNC_URL_KEY);
+}
+
+function persistSyncBase(rev, data) {
   sync.rev = rev;
   sync.base = deepClone(data);
-  try {
-    localStorage.setItem(SYNC_BASE_KEY, JSON.stringify({ rev, data }));
-  } catch (e) {}
+  writeStore(SYNC_BASE_KEY, { rev, data });
 }
 
 function clearSyncBase() {
   sync.rev = null;
   sync.base = null;
-  try {
-    localStorage.removeItem(SYNC_BASE_KEY);
-  } catch (e) {}
+  removeStore(SYNC_BASE_KEY);
 }
 
 function setSyncStatus(status, message) {
@@ -230,8 +226,8 @@ function applyRemote(rev, data) {
   const merged = sync.base ? mergeStates(data, state, sync.base) : data;
   const needsPush = !sameJson(merged, data);
   state = merged;
-  persist();
-  saveSyncBase(rev, data);
+  persistState();
+  persistSyncBase(rev, data);
   setSyncStatus('ok');
   if (!modal) render();
   if (needsPush) schedulePush();
@@ -257,8 +253,8 @@ async function pushToSheet() {
       // Le Sheet a bougé : on fusionne entrée par entrée, puis on renvoie.
       const before = deepClone(state);
       state = mergeStates(payload.data, state, sync.base);
-      persist();
-      saveSyncBase(payload.rev, payload.data);
+      persistState();
+      persistSyncBase(payload.rev, payload.data);
       renderIfChanged(before);
       pushed = deepClone(state);
       payload = await sheetPost({ action: 'push', baseRev: sync.rev, data: pushed });
@@ -267,7 +263,7 @@ async function pushToSheet() {
     }
     // La réponse d'un push dit seulement ce que le Sheet a écrit : elle sert de nouvelle base,
     // jamais à rafraîchir `state`. Seul un pull apporte de la donnée venue d'ailleurs.
-    saveSyncBase(payload.rev, payload.data);
+    persistSyncBase(payload.rev, payload.data);
     setSyncStatus('ok');
     if (!sameJson(state, pushed)) schedulePush();
   } catch (e) {
@@ -288,7 +284,7 @@ async function initSync() {
     const { rev, data } = await sheetGet();
     if (isEmptyState(data) && !isEmptyState(state)) {
       // Sheet vierge : on l'amorce avec ce qu'on a en local.
-      saveSyncBase(rev, data);
+      persistSyncBase(rev, data);
       await pushToSheet();
     } else if (!sync.base && !isEmptyState(state) && !sameJson(state, data)) {
       // Première connexion avec des données des deux côtés : à elle de trancher.
@@ -368,10 +364,7 @@ function saveSyncUrl() {
   }
   const changed = url !== sync.url;
   sync.url = url;
-  try {
-    if (url) localStorage.setItem(SYNC_URL_KEY, url);
-    else localStorage.removeItem(SYNC_URL_KEY);
-  } catch (e) {}
+  persistSyncUrl(url);
   if (changed) clearSyncBase();
   sync.pendingRemote = null;
   closeModal();
@@ -388,7 +381,7 @@ function resolveSyncChoice(side) {
     applyRemote(pending.rev, pending.data);
   } else {
     // base = état du Sheet : tout ce qui diffère en local gagne, le reste du Sheet est retiré.
-    saveSyncBase(pending.rev, pending.data);
+    persistSyncBase(pending.rev, pending.data);
     schedulePush();
   }
 }
@@ -399,9 +392,7 @@ function disconnectSync() {
   clearTimeout(sync.pushTimer);
   sync.url = '';
   sync.pendingRemote = null;
-  try {
-    localStorage.removeItem(SYNC_URL_KEY);
-  } catch (e) {}
+  persistSyncUrl('');
   clearSyncBase();
   setSyncStatus('off');
   closeModal();
