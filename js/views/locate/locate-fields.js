@@ -31,9 +31,45 @@ function locateFields(p) {
       </div>
     </div>
     <input type="hidden" id="geo-city" value="${escapeHtml(p.city || '')}" />
-    <input type="hidden" id="geo-county" value="${escapeHtml(p.county || '')}" />
-    <input type="hidden" id="geo-region" value="${escapeHtml(p.region || '')}" />
+    <div class="field-row">
+      <div class="field">
+        <label>Province</label
+        ><input
+          id="geo-county"
+          type="text"
+          list="geo-county-options"
+          value="${escapeHtml(p.county || '')}"
+          placeholder="Sienne"
+        />
+        ${locateOptions('geo-county-options', 'county')}
+      </div>
+      <div class="field">
+        <label>Région</label
+        ><input
+          id="geo-region"
+          type="text"
+          list="geo-region-options"
+          value="${escapeHtml(p.region || '')}"
+          placeholder="Toscane"
+        />
+        ${locateOptions('geo-region-options', 'region')}
+      </div>
+    </div>
   `;
+}
+
+/* Existing values from both located collections, so a place can reuse one or introduce its own. */
+function locateOptions(id, key) {
+  const values = new Set();
+  [...state.accommodations, ...state.cities].forEach((place) => {
+    if (place[key]) values.add(place[key]);
+  });
+  return /* HTML */ `<datalist id="${id}">
+    ${Array.from(values)
+      .sort()
+      .map((value) => `<option value="${escapeHtml(value)}"></option>`)
+      .join('')}
+  </datalist>`;
 }
 
 function locateSummary(p) {

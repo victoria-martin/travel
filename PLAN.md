@@ -1,6 +1,6 @@
 # Plan de travail
 
-Suivi des lots en cours sur l'app. Mettre à jour l'état ici à chaque lot terminé.
+Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaque lot terminé.
 
 ## Décisions actées
 
@@ -8,68 +8,71 @@ Suivi des lots en cours sur l'app. Mettre à jour l'état ici à chaque lot term
 - Le prix d'une voiture et le montant d'une charge sont pris **tels quels**.
 - Un scénario porte **une** voiture (`carId`) et **plusieurs** charges fixes (`costIds`), en
   référence aux tables `cars` et `fixedCosts` — jamais des copies.
+- Un home exchange se paie en GuestPoints : ces montants ne s'additionnent jamais aux euros.
 
-## Lots
+---
 
-### 1. Nuits retirées de la ligne de détail d'une étape — ✅ fait
+# À faire
 
-Sous le titre d'une étape : date d'arrivée et notes seulement. Le select à droite est la seule
-source pour les nuits.
+## Hébergements
 
-### 2. Total par lieu dans le récap — ✅ fait
+- **Des tags sur les hébergements ?** — ⏳ à étudier
 
-Récap en 3 colonnes (lieu · nuits · total) + ligne « Total hébergements ».
+## Voitures
 
-### 3. Carte du scénario — ✅ fait
+- **Valeur par défaut** — ⏳ à faire
+- **Notes en champ modifiable** — ⏳ à faire : même édition en ligne que sur les hébergements.
 
-Bloc « Trajet » sous les étapes : marqueurs des étapes + tracé routier réel. Le tracé est partagé
-avec la vue Carte ([scenario-map.js](js/views/scenarios/scenario-map.js)).
+## Attractions
 
-### 4. Voiture du scénario — ✅ fait (sans le bouton d'ajout)
+- **Créer la page** — ⏳ à faire : pas encore spécifiée (colonnes, place dans la barre latérale,
+  rattachement à une étape ?).
 
-Bloc « Voiture » : select des voitures de la table + coût. Reste à faire : bouton
-**« + Ajouter une voiture »** qui ouvre la modale Voitures et rattache la nouvelle voiture au
-scénario.
+## Scénarios
 
-### 5. Charges fixes du scénario — ⏳ à faire
+- **Charges fixes** — ⏳ à faire
+  - Bloc sous les étapes, **dans une autre couleur** que les étapes.
+  - Une ligne par charge rattachée (libellé, montant, retirer).
+  - « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
+    alimente la table Charges fixes).
+  - Un select pour rattacher une charge déjà existante.
+- **Total général** — ⏳ à faire : hébergements + voiture + charges, en tête du récap, avec le
+  détail par bloc.
+- **Totaliser par étape, pas par hébergement** — ⏳ à faire : le récap somme aujourd'hui prix/nuit ×
+  nuits par lieu, donc un budget saisi sur une étape n'entre pas dans le total.
+- **Date de départ du scénario** — ⏳ à faire
+- **Bouton « + Ajouter une voiture »** — ⏳ à faire : ouvre la modale Voitures et rattache la
+  nouvelle voiture au scénario.
+- **Variables du scénario ou générales ?** — ⏳ à étudier
 
-- Bloc sous les étapes, **dans une autre couleur** que les étapes.
-- Une ligne par charge rattachée (libellé, montant, retirer).
-- « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
-  alimente la table Charges fixes).
-- Un select pour rattacher une charge déjà existante.
+### Plus tard
 
-### 6. Total général du scénario — ⏳ à faire
+- Distance entre deux étapes.
+- Estimation de l'essence.
+- Estimation des péages.
 
-Hébergements + voiture + charges, en tête du récap, avec le détail par bloc.
+---
 
-### 7. Sheet + README — ✅ fait côté code
+# Fait
 
-`COLLECTIONS.scenarios` = `id, name, carId, costIds, favorite` dans [Code.js](apps-script/Code.js).
-👉 À pousser sur le déploiement existant (l'URL `/exec` ne change pas) :
+## Hébergements
 
-```sh
-pnpm run push-script
-```
+### Trois statuts de plus — ✅
 
-### 8. Carte à droite dans la page scénario — ✅ fait
+Intéressé 👍, Attente réponse ⏳ et À booker 💳 s'ajoutent à `ACCOMMODATION_STATUSES`
+([data.js](js/data.js)), qui pilote seule le select de la modale, le select en ligne et le tri de la
+colonne Statut. Les statuts y sont rangés dans l'ordre du workflow (à voir → réservé, puis les deux
+sorties pas dispo / écarté), c'est cet ordre que suit le tri.
 
-Détail d'un scénario en 2 colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
-colonne de droite sticky ([detail.js](js/views/scenarios/detail/detail.js)). Bouton
-« Masquer / Afficher la carte » dans l'en-tête ; l'état vit dans `prefs.showScenarioMap`
-([prefs.js](js/prefs.js)), donc il est retenu d'une session à l'autre. Sous 1100px, la carte
-repasse sous les étapes.
+### Province et région saisissables — ✅
 
-### 9. Favori sur un scénario — ✅ fait
+Les deux champs, jusqu'ici cachés et remplis par la seule géolocalisation, sont visibles et
+modifiables dans le bloc de localisation partagé par les modales hébergement et ville
+([locate-fields.js](js/views/locate/locate-fields.js)). Chacun propose en `datalist` les valeurs
+déjà présentes dans les hébergements et les villes, sans empêcher d'en saisir une nouvelle. Le
+choix d'un résultat de géocodage écrase toujours les deux champs.
 
-- Champ `favorite` sur le scénario, étoile cliquable dans la liste
-  ([row.js](js/views/scenarios/list/row.js)) et dans l'en-tête du détail
-  ([header.js](js/views/scenarios/detail/header.js)). Étoile partagée :
-  [favorite-star.js](js/views/favorite-star.js).
-- Les favoris remontent en tête de la liste.
-- `COLLECTIONS.scenarios` gagne `favorite` → `pnpm run push-script` (cf. lot 7).
-
-### Colonnes hébergement triables : type, statut, ville — ✅ fait
+### Colonnes triables : type, statut, ville — ✅
 
 - Une colonne devient triable en déclarant `sortValue` dans son descripteur ; le tri, le cycle
   croissant → décroissant → aucun et l'en-tête cliquable vivent dans [columns.js](js/columns.js),
@@ -79,36 +82,85 @@ repasse sous les étapes.
 - Tant qu'aucun tri n'est actif, la liste garde les favoris en tête ; un tri explicite prend le
   relais. Il n'est pas retenu d'une session à l'autre (`listSort` dans [data.js](js/data.js)).
 
-### variables du scénario ou generales ? — ⏳ à étudier
+## Scénarios
 
-### ajouter d autres valeurs possible pour status : Attente réponse, A booker, Interessé ? — ⏳ à faire
+### Nuits retirées de la ligne de détail d'une étape — ✅
 
-### ajouter une date de depart dans les scenarios
+Sous le titre d'une étape : date d'arrivée et notes seulement. Le select à droite est la seule
+source pour les nuits.
 
-### Total sur la ligne d'une étape — ✅ fait
+### Total par lieu dans le récap — ✅
+
+Récap en 3 colonnes (lieu · nuits · total) + ligne « Total hébergements ».
+
+### Totaux séparés euros / GuestPoints — ✅
+
+Les nuits en home exchange s'additionnent en GP sur leur propre ligne du récap, jamais avec les
+euros ([money.js](js/views/scenarios/money.js), [recap.js](js/views/scenarios/detail/recap.js)).
+
+### Total sur la ligne d'une étape — ✅
 
 Au bout de la ligne, à droite du select de nuits : prix par nuit × nuits
 ([step-card.js](js/views/scenarios/detail/step-card.js), `stepCost` dans
 [money.js](js/views/scenarios/money.js)). Rien d'affiché quand l'étape est rattachée à une ville
 ou quand le total est nul — seul un hébergement porte un prix.
 
-### dans les etapes; pouvoir mettre un budget sur une etape — ✅ fait
+### Budget sur une étape — ✅
 
 Champ `budget` sur l'étape, saisi à la main : rempli, il remplace le prix de l'hébergement dans le
 total de la ligne (`stepCost` dans [money.js](js/views/scenarios/money.js)). Éditable en bout de
 ligne, où le total calculé reste affiché en gris tant qu'aucun budget n'est saisi
 ([step-card.js](js/views/scenarios/detail/step-card.js)), et dans la modale de l'étape à côté de
-Nuits. Toujours en euros, même sur une étape en GuestPoints. Le récap « Hébergements » reste
-calculé par lieu (prix/nuit × nuits) : il n'intègre pas les budgets d'étape.
+Nuits. Toujours en euros, même sur une étape en GuestPoints.
 
-### on utilise pas tags pour pour les hebergements ? — ⏳ à étudier
+### Carte du scénario — ✅
 
-## NTH
+Bloc « Trajet » sous les étapes : marqueurs des étapes + tracé routier réel. Le tracé est partagé
+avec la vue Carte ([scenario-map.js](js/views/scenarios/scenario-map.js)).
 
-- **Nouvelle liste « Attractions »** — pas encore spécifiée (colonnes, place dans la barre
-  latérale, rattachement à une étape ?).
+### Carte à droite dans la page scénario — ✅
 
-## Problème ouvert
+Détail d'un scénario en 2 colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
+colonne de droite sticky ([detail.js](js/views/scenarios/detail/detail.js)). Bouton
+« Masquer / Afficher la carte » dans l'en-tête ; l'état vit dans `prefs.showScenarioMap`
+([prefs.js](js/prefs.js)), donc il est retenu d'une session à l'autre. Sous 1100px, la carte
+repasse sous les étapes.
+
+### Voiture du scénario — ✅ (sans le bouton d'ajout)
+
+Bloc « Voiture » : select des voitures de la table + coût.
+
+### Favori sur un scénario — ✅
+
+- Champ `favorite` sur le scénario, étoile cliquable dans la liste
+  ([row.js](js/views/scenarios/list/row.js)) et dans l'en-tête du détail
+  ([header.js](js/views/scenarios/detail/header.js)). Étoile partagée :
+  [favorite-star.js](js/views/favorite-star.js).
+- Les favoris remontent en tête de la liste.
+
+## Notes
+
+### Bloc-notes partagé — ✅
+
+Onglet « Notes » : une zone de texte libre, stockée comme une collection d'une entrée
+(`tripNotes`) pour passer par la fusion par id de [sync.js](js/sync.js)
+([notes.js](js/views/notes.js)).
+
+## Transverse
+
+### Sheet + README — ✅ côté code
+
+`COLLECTIONS` dans [Code.js](apps-script/Code.js) porte `scenarios` (`id, name, carId, costIds,
+favorite`), la colonne `budget` des étapes et l'onglet `tripNotes`.
+👉 À pousser sur le déploiement existant (l'URL `/exec` ne change pas) :
+
+```sh
+pnpm run push-script
+```
+
+---
+
+# Problème ouvert
 
 **Vue Hébergements cassée** (constatée le 10/09) : les noms affichent des valeurs de statut
 (`toCheck`, `go`) et il ne reste que 3 colonnes. Deux causes distinctes, aucune liée aux lots

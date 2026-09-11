@@ -28,11 +28,14 @@ const DEFAULT_ACCOMMODATION_STATUS = 'toCheck';
 
 const ACCOMMODATION_STATUSES = {
   toCheck: { label: 'À voir', emoji: '👀' },
+  interested: { label: 'Intéressé', emoji: '👍' },
   contacted: { label: 'Contacté', emoji: '✉️' },
+  awaitingReply: { label: 'Attente réponse', emoji: '⏳' },
   go: { label: 'Go', emoji: '✅' },
+  toBook: { label: 'À booker', emoji: '💳' },
+  booked: { label: 'Réservé', emoji: '🔒' },
   notAvailable: { label: 'Pas dispo', emoji: '🚫' },
   rejected: { label: 'Écarté', emoji: '👎' },
-  booked: { label: 'Réservé', emoji: '🔒' },
 };
 
 function accType(type) {
