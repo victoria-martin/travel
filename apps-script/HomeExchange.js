@@ -56,3 +56,10 @@ function decodeEntities(text) {
       return known === undefined ? whole : known;
     });
 }
+
+// À lancer depuis l'éditeur : force la demande d'autorisation UrlFetchApp et journalise le résultat.
+function testHomeExchange() {
+  var home = scrapeHomeExchange('https://www.homeexchange.fr/homes/view/427143');
+  Logger.log(JSON.stringify(home, null, 2));
+  return home;
+}
