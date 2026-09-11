@@ -3,7 +3,7 @@ function scenarioRecapRow(r) {
   return /* HTML */ `<div class="acc-recap-row">
     <span>${recapPlaceLabel(r)}</span>
     <span class="acc-recap-nights">${nightsLabel(r.nights)}</span>
-    <strong>${cost ? formatEuros(cost) : '—'}</strong>
+    <strong>${cost ? formatAccommodationCost(r.acc, cost) : '—'}</strong>
   </div>`;
 }
 

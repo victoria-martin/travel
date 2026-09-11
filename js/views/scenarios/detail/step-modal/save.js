@@ -6,6 +6,7 @@ function saveStep(id) {
     region: document.getElementById('s-region').value.trim(),
     nights: parseInt(document.getElementById('s-nights').value) || 0,
     arrivalDate: document.getElementById('s-date').value.trim(),
+    budget: document.getElementById('s-budget').value.trim(),
     notes: document.getElementById('s-notes').value.trim(),
     cityId: id ? s.steps.find((x) => x.id === id).cityId || null : null,
     accommodationId: id ? s.steps.find((x) => x.id === id).accommodationId || null : null,

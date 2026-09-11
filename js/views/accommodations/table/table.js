@@ -4,7 +4,7 @@ function accommodationTable(items) {
     <table>
       <thead>
         <tr>
-          ${columns.map((c) => `<th>${c.label}</th>`).join('')}
+          ${columns.map((c) => columnHeader('hebergements', c)).join('')}
         </tr>
       </thead>
       <tbody>

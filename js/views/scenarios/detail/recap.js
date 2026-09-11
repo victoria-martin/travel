@@ -25,11 +25,26 @@ function scenarioRecap(scenario) {
   if (rows.length === 0) return '';
   return /* HTML */ `<div class="acc-recap">
     <div class="acc-recap-title">Hébergements</div>
-    ${rows.map((r) => scenarioRecapRow(r)).join('')}
-    <div class="acc-recap-row acc-recap-total">
-      <span>Total hébergements</span>
-      <span class="acc-recap-nights">${nightsLabel(totalNights(scenario))}</span>
-      <strong>${formatEuros(accommodationsTotal(scenario))}</strong>
-    </div>
+    ${rows.map((r) => scenarioRecapRow(r)).join('')} ${scenarioRecapTotals(scenario)}
+  </div>`;
+}
+
+function scenarioRecapTotals(scenario) {
+  const { euros, guestPoints } = accommodationTotals(scenario);
+  return [
+    euros.amount || !guestPoints.amount
+      ? scenarioRecapTotalRow('Total hébergements', euros.nights, formatEuros(euros.amount))
+      : '',
+    guestPoints.amount
+      ? scenarioRecapTotalRow('Total GP', guestPoints.nights, formatGuestPoints(guestPoints.amount))
+      : '',
+  ].join('');
+}
+
+function scenarioRecapTotalRow(label, nights, amount) {
+  return /* HTML */ `<div class="acc-recap-row acc-recap-total">
+    <span>${label}</span>
+    <span class="acc-recap-nights">${nightsLabel(nights)}</span>
+    <strong>${amount}</strong>
   </div>`;
 }

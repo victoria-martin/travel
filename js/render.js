@@ -7,6 +7,7 @@ function render() {
       ${navBtn('hebergements', '🏠', 'Hébergements')} ${navBtn('voitures', '🚗', 'Voitures')}
       ${navBtn('charges', '💶', 'Charges fixes')} ${navBtn('villes', '📍', 'Villes')}
       ${navBtn('scenarios', '🧭', 'Scénarios')} ${navBtn('carte', '🗺️', 'Carte')}
+      ${navBtn('notes', '📝', 'Notes')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
@@ -47,4 +48,5 @@ function renderMain() {
     main.innerHTML = renderScenarioDetailView();
     setTimeout(initScenarioDetailMap, 30);
   } else if (view === 'carte') main.innerHTML = renderMapView();
+  else if (view === 'notes') main.innerHTML = renderNotesView();
 }

@@ -38,3 +38,4 @@ function accommodationsHeader(items) {
     </div>
   </div>`;
 }
+// btn should have same height as columnPicker

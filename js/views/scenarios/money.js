@@ -16,16 +16,51 @@ function nightPrice(acc) {
   return acc ? priceNumber(acc.price) : 0;
 }
 
+function accommodationCost(step) {
+  return nightPrice(getAccommodation(step.accommodationId)) * (parseInt(step.nights) || 0);
+}
+
+function hasStepBudget(step) {
+  return String(step.budget == null ? '' : step.budget).trim() !== '';
+}
+
+// Un budget saisi sur l'étape remplace le prix de l'hébergement.
+function stepCost(step) {
+  return hasStepBudget(step) ? priceNumber(step.budget) : accommodationCost(step);
+}
+
 function placeCost(row) {
   return nightPrice(row.acc) * row.nights;
 }
 
-function accommodationsTotal(scenario) {
-  return nightsByPlace(scenario).reduce((sum, r) => sum + placeCost(r), 0);
+// Un home exchange se paie en GuestPoints : ces montants ne s'additionnent jamais aux euros.
+function isGuestPointsAccommodation(acc) {
+  return !!acc && acc.type === 'homeExchange';
+}
+
+// Nuits et montant par monnaie, pour les additionner séparément.
+function accommodationTotals(scenario) {
+  return nightsByPlace(scenario).reduce(
+    (totals, r) => {
+      const bucket = isGuestPointsAccommodation(r.acc) ? totals.guestPoints : totals.euros;
+      bucket.amount += placeCost(r);
+      bucket.nights += r.nights;
+      return totals;
+    },
+    { euros: { amount: 0, nights: 0 }, guestPoints: { amount: 0, nights: 0 } },
+  );
 }
 
 function formatEuros(amount) {
   return `${Math.round(amount).toLocaleString('fr-FR')} €`;
+}
+
+function formatGuestPoints(amount) {
+  return `${Math.round(amount).toLocaleString('fr-FR')} GP`;
+}
+
+function formatAccommodationCost(acc, amount) {
+  return isGuestPointsAccommodation(acc) ? formatGuestPoints(amount) : formatEuros(amount);
 }
 
 function carCost(scenario) {

@@ -55,3 +55,45 @@ function columnPicker(kind) {
     </div>
   </details>`;
 }
+
+/*
+  A column is sortable as soon as it declares `sortValue`. Clicking its header cycles
+  ascending → descending → unsorted, so the list can always go back to its natural order.
+*/
+
+function toggleSort(kind, key) {
+  const current = listSort[kind];
+  if (!current || current.key !== key) listSort[kind] = { key, dir: 'asc' };
+  else if (current.dir === 'asc') listSort[kind] = { key, dir: 'desc' };
+  else delete listSort[kind];
+  render();
+}
+
+function sortItems(kind, items) {
+  const sort = listSort[kind];
+  const column = sort && columnsFor(kind).find((c) => c.key === sort.key);
+  if (!column || !column.sortValue) return [...items];
+  const factor = sort.dir === 'desc' ? -1 : 1;
+  return [...items].sort((a, b) => {
+    const left = column.sortValue(a);
+    const right = column.sortValue(b);
+    if (typeof left === 'number' && typeof right === 'number') return (left - right) * factor;
+    return String(left).localeCompare(String(right), 'fr') * factor;
+  });
+}
+
+function columnHeader(kind, column) {
+  if (!column.sortValue) return `<th>${column.label}</th>`;
+  const sort = listSort[kind];
+  const active = sort && sort.key === column.key;
+  const arrow = active ? (sort.dir === 'asc' ? '↑' : '↓') : '↕';
+  return /* HTML */ `<th>
+    <button
+      class="th-sort ${active ? 'active' : ''}"
+      onclick="toggleSort('${kind}','${column.key}')"
+      title="Trier par ${escapeHtml(column.label)}"
+    >
+      ${column.label}<span class="th-sort-arrow">${arrow}</span>
+    </button>
+  </th>`;
+}

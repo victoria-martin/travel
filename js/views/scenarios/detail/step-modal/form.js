@@ -7,6 +7,7 @@ function emptyStep() {
     nights: 1,
     cityId: null,
     accommodationId: null,
+    budget: '',
     notes: '',
   };
 }
@@ -24,6 +25,15 @@ function stepForm(p) {
       </div>
       <div class="field">
         <label>Nuits</label><input id="s-nights" type="number" min="0" value="${p.nights || 0}" />
+      </div>
+      <div class="field">
+        <label>Budget</label
+        ><input
+          id="s-budget"
+          type="text"
+          value="${escapeHtml(p.budget)}"
+          placeholder="remplace le prix de l'hébergement"
+        />
       </div>
     </div>
     <div class="field">

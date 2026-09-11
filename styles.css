@@ -91,11 +91,7 @@ body {
 .main {
   flex: 1;
   padding: 32px 40px;
-  max-width: 1180px;
   min-width: 0;
-}
-.main:has(.table-wrap) {
-  max-width: none;
 }
 .view-header {
   display: flex;
@@ -291,6 +287,28 @@ th {
   font-weight: 600;
   font-size: 12px;
   border-bottom: 1px solid var(--line);
+}
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.th-sort:hover,
+.th-sort.active {
+  color: var(--ink);
+}
+.th-sort-arrow {
+  font-size: 10px;
+  opacity: 0.45;
+}
+.th-sort.active .th-sort-arrow {
+  opacity: 1;
 }
 
 .test-red {
@@ -506,6 +524,7 @@ tr:hover td {
 }
 .step-body {
   flex: 1;
+  min-width: 0;
 }
 .step-title {
   font-weight: 600;
@@ -528,7 +547,29 @@ tr:hover td {
   flex-wrap: wrap;
   margin-top: 8px;
 }
+.step-acc-place {
+  flex: 1 1 180px;
+}
+.step-total {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.step-total-auto {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.step-budget {
+  min-width: 62px;
+  text-align: right;
+  font-weight: 600;
+}
 .step-acc select {
+  min-width: 0;
+  max-width: 100%;
   font-size: 12.5px;
   padding: 5px 8px;
   border-radius: 6px;
@@ -770,4 +811,23 @@ tr:hover td {
 .editable:empty::before {
   content: attr(data-placeholder);
   color: var(--line);
+}
+
+/* ---------- Notes ---------- */
+.notes-area {
+  width: 100%;
+  min-height: 62vh;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+}
+.notes-area:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--line);
 }

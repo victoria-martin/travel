@@ -196,12 +196,13 @@ function mergeStates(remote, local, base) {
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
     cities: mergeCollections(remote.cities, local.cities, base.cities),
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
+    tripNotes: mergeCollections(remote.tripNotes, local.tripNotes, base.tripNotes),
   };
 }
 
 function isEmptyState(data) {
   if (!data) return true;
-  return ['accommodations', 'cars', 'fixedCosts', 'cities', 'scenarios'].every(
+  return ['accommodations', 'cars', 'fixedCosts', 'cities', 'scenarios', 'tripNotes'].every(
     (k) => !(data[k] || []).length,
   );
 }

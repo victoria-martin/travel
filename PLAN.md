@@ -69,11 +69,37 @@ repasse sous les étapes.
 - Les favoris remontent en tête de la liste.
 - `COLLECTIONS.scenarios` gagne `favorite` → `pnpm run push-script` (cf. lot 7).
 
-### Colonnes hebergement triables : type, status, ville ? — ⏳ à planifier
+### Colonnes hébergement triables : type, statut, ville — ✅ fait
+
+- Une colonne devient triable en déclarant `sortValue` dans son descripteur ; le tri, le cycle
+  croissant → décroissant → aucun et l'en-tête cliquable vivent dans [columns.js](js/columns.js),
+  donc n'importe quelle liste en profitera.
+- `sortValue` posé sur type (libellé), statut (ordre du workflow `ACCOMMODATION_STATUSES`) et ville
+  ([columns.js](js/views/accommodations/table/columns.js)).
+- Tant qu'aucun tri n'est actif, la liste garde les favoris en tête ; un tri explicite prend le
+  relais. Il n'est pas retenu d'une session à l'autre (`listSort` dans [data.js](js/data.js)).
 
 ### variables du scénario ou generales ? — ⏳ à étudier
 
-### ajouter d autres valeurs possible pour status : Attente réponse ? — ⏳ à faire
+### ajouter d autres valeurs possible pour status : Attente réponse, A booker, Interessé ? — ⏳ à faire
+
+### ajouter une date de depart dans les scenarios
+
+### Total sur la ligne d'une étape — ✅ fait
+
+Au bout de la ligne, à droite du select de nuits : prix par nuit × nuits
+([step-card.js](js/views/scenarios/detail/step-card.js), `stepCost` dans
+[money.js](js/views/scenarios/money.js)). Rien d'affiché quand l'étape est rattachée à une ville
+ou quand le total est nul — seul un hébergement porte un prix.
+
+### dans les etapes; pouvoir mettre un budget sur une etape — ✅ fait
+
+Champ `budget` sur l'étape, saisi à la main : rempli, il remplace le prix de l'hébergement dans le
+total de la ligne (`stepCost` dans [money.js](js/views/scenarios/money.js)). Éditable en bout de
+ligne, où le total calculé reste affiché en gris tant qu'aucun budget n'est saisi
+([step-card.js](js/views/scenarios/detail/step-card.js)), et dans la modale de l'étape à côté de
+Nuits. Toujours en euros, même sur une étape en GuestPoints. Le récap « Hébergements » reste
+calculé par lieu (prix/nuit × nuits) : il n'intègre pas les budgets d'étape.
 
 ### on utilise pas tags pour pour les hebergements ? — ⏳ à étudier
 

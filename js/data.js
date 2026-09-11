@@ -43,6 +43,10 @@ function accStatus(status) {
   return ACCOMMODATION_STATUSES[status] || ACCOMMODATION_STATUSES[DEFAULT_ACCOMMODATION_STATUS];
 }
 
+function accStatusKey(status) {
+  return ACCOMMODATION_STATUSES[status] ? status : DEFAULT_ACCOMMODATION_STATUS;
+}
+
 function accTypeFromText(text) {
   const lower = (text || '').toLowerCase();
   const found = Object.keys(ACCOMMODATION_TYPES).find((key) =>
@@ -65,9 +69,10 @@ function uid() {
 }
 
 let state = null;
-let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte
+let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte | notes
 let listViewMode = { hebergements: 'table', voitures: 'table', charges: 'table' };
 let listFilters = { favOnly: false };
+let listSort = {}; // kind -> {key, dir} while the user keeps a column sorted
 let activeScenarioId = null;
 let modal = null; // {type, payload}
 let mapFilters = {

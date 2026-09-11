@@ -4,7 +4,7 @@
 */
 
 function emptyData() {
-  return { accommodations: [], cars: [], fixedCosts: [], cities: [], scenarios: [] };
+  return { accommodations: [], cars: [], fixedCosts: [], cities: [], scenarios: [], tripNotes: [] };
 }
 
 function loadData() {
@@ -19,6 +19,7 @@ function loadData() {
 */
 function migrateData(data) {
   if (!data.cities) data.cities = [];
+  if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
     unshiftAccommodation(a);
     if (!a.status) a.status = DEFAULT_ACCOMMODATION_STATUS;

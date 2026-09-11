@@ -29,6 +29,7 @@ const COLLECTIONS = {
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
   scenarios: ['id', 'name', 'carId', 'costIds', 'favorite'],
+  tripNotes: ['id', 'text'],
   steps: [
     'id',
     'scenarioId',
@@ -38,6 +39,7 @@ const COLLECTIONS = {
     'nights',
     'cityId',
     'accommodationId',
+    'budget',
     'notes',
   ],
 };
@@ -107,6 +109,7 @@ function readState() {
       scenario.steps = stepsByScenario[scenario.id] || [];
       return scenario;
     }),
+    tripNotes: rows.tripNotes,
   };
   return { rev: fingerprint(data), data: data };
 }
@@ -169,6 +172,7 @@ function normalizeState(data) {
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
     scenarios: scenarios,
+    tripNotes: normalizeCollection('tripNotes', data.tripNotes),
   };
 }
 
@@ -242,6 +246,7 @@ function writeState(data) {
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);
+  writeSheet('tripNotes', data.tripNotes || []);
   writeSheet('scenarios', scenarios);
   writeSheet('steps', steps);
 }

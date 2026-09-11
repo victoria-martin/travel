@@ -1,6 +1,8 @@
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
-  let items = [...state.accommodations].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
+  let items = listSort.hebergements
+    ? sortItems('hebergements', state.accommodations)
+    : [...state.accommodations].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
   const favOnly = !!listFilters.favOnly;
   if (favOnly) items = items.filter((a) => a.favorite);
   return /* HTML */ `
@@ -32,6 +34,7 @@ function toggleFavorite(id) {
   render();
 }
 
+// dans dossier  accomodation/type/ ou
 function setAccommodationType(id, type) {
   getAccommodation(id).type = type;
   saveNow();

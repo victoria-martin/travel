@@ -1,9 +1,19 @@
 const ACCOMMODATION_COLUMNS = [
   { key: 'favorite', label: '', pickerLabel: '⭐ Favori', locked: true, cell: favoriteCell },
   { key: 'name', label: 'Nom', locked: true, cell: nameCell },
-  { key: 'type', label: 'Type', cell: typeCell },
-  { key: 'status', label: 'Statut', cell: statusCell },
-  { key: 'city', label: 'Ville', cell: (a) => escapeHtml(a.city) || '—' },
+  { key: 'type', label: 'Type', cell: typeCell, sortValue: (a) => accType(a.type).label },
+  {
+    key: 'status',
+    label: 'Statut',
+    cell: statusCell,
+    sortValue: (a) => Object.keys(ACCOMMODATION_STATUSES).indexOf(accStatusKey(a.status)),
+  },
+  {
+    key: 'city',
+    label: 'Ville',
+    cell: (a) => escapeHtml(a.city) || '—',
+    sortValue: (a) => (a.city || '').toLowerCase(),
+  },
   { key: 'county', label: 'Province', cell: (a) => escapeHtml(a.county) || '—' },
   {
     key: 'region',
