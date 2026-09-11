@@ -8,10 +8,12 @@
 
 const SYNC_URL_KEY = 'voyage-toscane-sync-url';
 const SYNC_BASE_KEY = 'voyage-toscane-sync-base';
+const SYNC_LAST_URL_KEY = 'voyage-toscane-sync-last-url';
 const PUSH_DEBOUNCE_MS = 1500;
 
 let sync = {
   url: '',
+  lastUrl: '', // kept across a disconnect, to prefill the modal field
   rev: null,
   base: null,
   status: 'off', // off | pulling | pushing | ok | error | choice
@@ -27,6 +29,7 @@ function syncActive() {
 
 function loadSyncConfig() {
   sync.url = readStoreString(SYNC_URL_KEY);
+  sync.lastUrl = readStoreString(SYNC_LAST_URL_KEY);
   const stored = readStore(SYNC_BASE_KEY);
   if (stored) {
     sync.base = stored.data || null;
@@ -319,7 +322,7 @@ function syncForm() {
       <input
         id="sync-url"
         type="text"
-        value="${escapeHtml(sync.url)}"
+        value="${escapeHtml(sync.url || sync.lastUrl)}"
         placeholder="https://script.google.com/macros/s/.../exec"
       />
     </div>
@@ -390,6 +393,10 @@ function disconnectSync() {
   if (!confirm('Arrêter la synchro avec le Sheet ? Tes données restent dans ce navigateur.'))
     return;
   clearTimeout(sync.pushTimer);
+  if (sync.url) {
+    sync.lastUrl = sync.url;
+    writeStoreString(SYNC_LAST_URL_KEY, sync.url);
+  }
   sync.url = '';
   sync.pendingRemote = null;
   persistSyncUrl('');

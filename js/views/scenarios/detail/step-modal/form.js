@@ -44,7 +44,7 @@ function stepForm(p) {
       <label>Notes</label><textarea id="s-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" onclick="saveStep('${p.id || ''}')">Enregistrer</button>
     </div>
   `;

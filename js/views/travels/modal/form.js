@@ -109,7 +109,7 @@ function travelForm(p) {
       ><textarea id="travel-description" rows="2">${escapeHtml(p.description)}</textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" onclick="saveTravel('${p.id || ''}')">Enregistrer</button>
     </div>
   `;

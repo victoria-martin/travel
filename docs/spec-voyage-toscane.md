@@ -271,6 +271,9 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 ## 5. Règles transverses
 
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Fermeture d'une modale de saisie** (création comme modification) : confirmée dès qu'un champ a
+  été touché, que la fermeture vienne du clic sur le fond ou du bouton « Annuler ». Une modale
+  restée telle qu'ouverte se ferme sans rien demander.
 - **Duplication** : hébergements, villes, voitures, charges et scénarios se dupliquent depuis leur
   ligne. La copie reprend tous les champs, prend un nouvel identifiant et son nom est suffixé
   « (copie) » — une voiture dupliquée ne reprend pas le statut « par défaut ».

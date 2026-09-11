@@ -23,7 +23,7 @@ function cityForm(p) {
       <label>Notes</label><textarea id="c-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" id="f-save" onclick="saveCity('${p.id || ''}')">Enregistrer</button>
     </div>
   `;

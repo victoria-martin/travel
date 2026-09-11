@@ -101,7 +101,7 @@ function accommodationForm(p) {
       cœur</label
     >
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" id="f-save" onclick="saveAccommodation('${p.id || ''}')">
         Enregistrer
       </button>
