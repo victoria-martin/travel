@@ -1,7 +1,20 @@
 const ACCOMMODATION_COLUMNS = [
-  { key: 'favorite', label: '', pickerLabel: '⭐ Favori', locked: true, cell: favoriteCell },
+  {
+    key: 'favorite',
+    label: '',
+    pickerLabel: '⭐ Favori',
+    locked: true,
+    cell: favoriteCell,
+    sortValue: (a) => (a.favorite ? 0 : 1),
+    sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
+  },
   { key: 'name', label: 'Nom', locked: true, cell: nameCell },
-  { key: 'type', label: 'Type', cell: typeCell, sortValue: (a) => accType(a.type).label },
+  {
+    key: 'type',
+    label: 'Type',
+    cell: typeCell,
+    sortValue: (a) => Object.keys(ACCOMMODATION_TYPES).indexOf(accTypeKey(a.type)),
+  },
   {
     key: 'status',
     label: 'Statut',
@@ -31,6 +44,12 @@ const ACCOMMODATION_COLUMNS = [
 ];
 
 COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
+
+SORT_DEFAULTS.hebergements = [
+  { key: 'favorite', dir: 'asc' },
+  { key: 'type', dir: 'asc' },
+  { key: 'status', dir: 'asc' },
+];
 
 function favoriteCell(a) {
   return /* HTML */ `<button

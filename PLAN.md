@@ -74,13 +74,24 @@ choix d'un résultat de géocodage écrase toujours les deux champs.
 
 ### Colonnes triables : type, statut, ville — ✅
 
-- Une colonne devient triable en déclarant `sortValue` dans son descripteur ; le tri, le cycle
-  croissant → décroissant → aucun et l'en-tête cliquable vivent dans [columns.js](js/columns.js),
-  donc n'importe quelle liste en profitera.
-- `sortValue` posé sur type (libellé), statut (ordre du workflow `ACCOMMODATION_STATUSES`) et ville
-  ([columns.js](js/views/accommodations/table/columns.js)).
-- Tant qu'aucun tri n'est actif, la liste garde les favoris en tête ; un tri explicite prend le
-  relais. Il n'est pas retenu d'une session à l'autre (`listSort` dans [data.js](js/data.js)).
+- Une colonne devient triable en déclarant `sortValue` dans son descripteur. Tout le tri vit dans
+  [sort.js](js/sort.js), à côté de [columns.js](js/columns.js) qui garde la visibilité des
+  colonnes — donc n'importe quelle liste en profitera.
+- Le tri est une liste ordonnée de critères : le premier qui sépare deux lignes l'emporte
+  (« statut, puis ville »). Panneau **Trier** dans l'en-tête de la vue : un niveau par ligne,
+  colonne + sens, ↑/↓ pour réordonner, ✕ pour retirer. Le clic sur un en-tête reste le raccourci
+  — il remplace tout par un tri simple et cycle croissant → décroissant → aucun.
+- `sortValue` posé sur type, statut et ville
+  ([columns.js](js/views/accommodations/table/columns.js)). Type et statut se trient sur l'**ordre
+  de leur map** dans [data.js](js/data.js) : réorganiser `ACCOMMODATION_TYPES` ou
+  `ACCOMMODATION_STATUSES` change le tri.
+- Les favoris sont un critère comme un autre : ⭐ se retire, se combine ou s'inverse comme les
+  autres colonnes. Une colonne peut nommer ses deux sens via `sortLabels`.
+- Le tri de départ est déclaré en liste ordonnée dans `SORT_DEFAULTS`, à côté du jeu de colonnes
+  ([columns.js](js/views/accommodations/table/columns.js)) : favoris, puis type, puis statut. Il
+  tient tant que le panneau n'a pas été touché.
+- Les critères sont retenus d'une session à l'autre (`prefs.sort`, cf. [prefs.js](js/prefs.js)) ;
+  une liste vide veut dire « aucun tri », la liste garde alors son ordre d'origine.
 
 ## Scénarios
 

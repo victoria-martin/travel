@@ -19,6 +19,7 @@ function accommodationsHeader(items) {
         ><input type="checkbox" ${favOnly ? 'checked' : ''} onchange="toggleFavOnly()" /> ⭐ Favoris
         uniquement</label
       >
+      ${mode === 'table' ? sortPanel('hebergements') : ''}
       ${mode === 'table' ? columnPicker('hebergements') : ''}
       <div class="toggle-group">
         <button

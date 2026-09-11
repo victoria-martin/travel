@@ -1,8 +1,6 @@
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
-  let items = listSort.hebergements
-    ? sortItems('hebergements', state.accommodations)
-    : [...state.accommodations].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
+  let items = sortItems('hebergements', state.accommodations);
   const favOnly = !!listFilters.favOnly;
   if (favOnly) items = items.filter((a) => a.favorite);
   return /* HTML */ `
