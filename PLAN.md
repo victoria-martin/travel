@@ -60,14 +60,6 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
   `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`, `cars`, `fixedCosts`,
   `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes aligne le tout ; les
   prefs stockées étant indexées par vue, les colonnes masquées et le tri repartent à zéro une fois.
-- **Séparer les colonnes du formulaire dans `registerList`** — ⏳ à faire : `fields` sert à la fois
-  à générer le formulaire de la modale ([form.js](js/views/list/modal/form.js)) et à dériver les
-  colonnes ([config.js](js/views/list/config.js)). Les deux divergent déjà — `type` n'intéresse que
-  le formulaire, `cell` et `sortValue` que la table.
-- **Le formulaire des villes reste écrit à la main** — ⏳ à trancher : Villes passe par le moteur de
-  table mais pas par `registerList`, parce que son formulaire contient le bloc de géolocalisation
-  ([locate-fields.js](js/views/locate/locate-fields.js)) que `fields` ne sait pas décrire. Même
-  question pour les hébergements. Un type de champ `locate` lèverait les deux.
 - **Libellés de colonnes encore dans `<vue>.js`** — ⏳ à faire : `cityCoordsLabel` et
   `cityPlaceLabel` ([cities.js:9-17](js/views/cities/cities.js#L9-L17)) ne servent qu'à
   [cities/columns.js](js/views/cities/columns.js) et doivent y descendre.

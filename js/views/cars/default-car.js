@@ -1,6 +1,6 @@
 // Une seule voiture par défaut : la marquer démarque les autres, la re-cliquer n'en laisse aucune.
 function setDefaultCar(id) {
-  const wasDefault = !!getListItem('voitures', id).isDefault;
+  const wasDefault = !!getCar(id).isDefault;
   state.cars.forEach((c) => (c.isDefault = !wasDefault && c.id === id));
   saveNow();
   render();

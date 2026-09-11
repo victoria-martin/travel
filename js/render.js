@@ -34,6 +34,7 @@ function navBtn(key, icon, label) {
   </button>`;
 }
 
+// function goToView(v) {
 function goTo(v) {
   view = v;
   if (v === 'carte') {
@@ -47,8 +48,8 @@ function goTo(v) {
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
-  else if (view === 'voitures') main.innerHTML = renderListView('voitures');
-  else if (view === 'charges') main.innerHTML = renderListView('charges');
+  else if (view === 'voitures') main.innerHTML = renderCarsView();
+  else if (view === 'charges') main.innerHTML = renderFixedCostsView();
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
   else if (view === 'scenario-detail') {

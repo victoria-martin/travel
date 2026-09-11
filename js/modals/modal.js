@@ -5,14 +5,6 @@
 
 let modal = null; // {type, payload}
 
-const LIST_MODAL = {
-  open: (id, _stepId, kind) => {
-    const existing = getListItem(kind, id);
-    return { payload: existing ? { ...existing } : emptyListItem(kind) };
-  },
-  body: (m) => listForm(m.type, m.payload),
-};
-
 const MODAL_TYPES = {
   accommodation: {
     open: (id) => ({ payload: id ? { ...getAccommodation(id) } : emptyAccommodation() }),
@@ -22,8 +14,14 @@ const MODAL_TYPES = {
     open: (id) => ({ payload: id ? { ...getCity(id) } : emptyCity() }),
     body: (m) => cityForm(m.payload),
   },
-  voitures: LIST_MODAL,
-  charges: LIST_MODAL,
+  voiture: {
+    open: (id) => ({ payload: id ? { ...getCar(id) } : emptyCar() }),
+    body: (m) => carForm(m.payload),
+  },
+  charge: {
+    open: (id) => ({ payload: id ? { ...getFixedCost(id) } : emptyFixedCost() }),
+    body: (m) => fixedCostForm(m.payload),
+  },
   step: {
     open: (scenarioId, stepId) => ({
       scenarioId,
