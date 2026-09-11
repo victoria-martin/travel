@@ -801,18 +801,27 @@ tr:hover td {
 }
 
 @media (max-width: 900px) {
-  #app {
-    flex-direction: column;
-  }
   .sidebar {
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 16px;
+    width: 64px;
+    padding: 20px 10px;
+    align-items: center;
   }
   .brand,
   .brand-sub {
     display: none;
+  }
+  .nav-btn {
+    justify-content: center;
+    padding: 10px 6px;
+    gap: 0;
+    width: 100%;
+  }
+  .nav-label {
+    display: none;
+  }
+  .nav-icon {
+    font-size: 19px;
+    width: auto;
   }
   .main {
     padding: 20px;
@@ -822,27 +831,6 @@ tr:hover td {
   }
   .map-filters {
     width: 100%;
-  }
-}
-
-@media (max-width: 700px) {
-  .sidebar {
-    justify-content: space-between;
-    gap: 4px;
-    overflow-x: visible;
-  }
-  .nav-btn {
-    flex: 1;
-    justify-content: center;
-    padding: 10px 6px;
-    gap: 0;
-  }
-  .nav-label {
-    display: none;
-  }
-  .nav-icon {
-    font-size: 19px;
-    width: auto;
   }
 }
 

@@ -78,7 +78,7 @@ function syncStatusHtml() {
     onclick="openSyncModal()"
     title="${escapeHtml(sync.message)}"
   >
-    <span class="nav-icon">${icon}</span>${escapeHtml(label)}
+    <span class="nav-icon">${icon}</span><span class="nav-label">${escapeHtml(label)}</span>
   </button>`;
 }
 
