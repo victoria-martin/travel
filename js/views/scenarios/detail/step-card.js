@@ -17,7 +17,7 @@ function stepCard(scenario, step, idx) {
             placeholder: 'ville…',
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
         </div>
-        ${stepDetailLine(step)}
+        ${stepDetailLine(scenario, step, idx)}
         <div class="step-acc">
           <select onchange="setStepPlace('${scenario.id}','${step.id}', this.value)">
             <option value="">— Aucun lieu choisi —</option>
@@ -82,8 +82,9 @@ function stepBudgetSlot(scenario, step) {
   </span>`;
 }
 
-function stepDetailLine(step) {
+function stepDetailLine(scenario, step, idx) {
   const parts = [
+    stepDateRange(scenario, idx),
     step.arrivalDate ? `arrivée le ${escapeHtml(step.arrivalDate)}` : '',
     step.notes ? escapeHtml(step.notes) : '',
   ].filter(Boolean);

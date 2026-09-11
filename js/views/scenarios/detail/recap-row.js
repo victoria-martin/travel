@@ -2,7 +2,9 @@ function scenarioRecapRow(r) {
   const cost = placeCost(r);
   return /* HTML */ `<div class="acc-recap-row">
     <span>${recapPlaceLabel(r)}</span>
-    <span class="acc-recap-nights">${nightsLabel(r.nights)}</span>
+    <span class="acc-recap-nights"
+      >${nightsLabel(r.nights)}${r.dates.length ? ` · ${r.dates.join(', ')}` : ''}</span
+    >
     <strong>${cost ? formatAccommodationCost(r.acc, cost) : '—'}</strong>
   </div>`;
 }

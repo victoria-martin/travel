@@ -9,7 +9,7 @@ function drawScenarioOnMap(map, scenario, noticeId, idleMessage) {
   const points = scenario.steps.map((st) => coordsFor(st)).filter(Boolean);
   stepsByCoords(scenario.steps).forEach(({ coords, stops }) => {
     L.marker(coords, { icon: stepPin(stops.map((s) => stepLetter(s.idx))) })
-      .bindPopup(stepPinPopup(stops))
+      .bindPopup(stepPinPopup(scenario, stops))
       .addTo(map);
   });
   if (points.length > 1) drawScenarioRoute(map, points, noticeId, idleMessage);
@@ -37,12 +37,14 @@ function stepPin(letters) {
   });
 }
 
-function stepPinPopup(stops) {
+function stepPinPopup(scenario, stops) {
   return stops
-    .map(
-      ({ step, idx }) =>
-        `<strong>${stepLetter(idx)} · ${escapeHtml(step.city)}</strong>${step.nights ? `<br/>${nightsLabel(step.nights)}` : ''}`,
-    )
+    .map(({ step, idx }) => {
+      const lines = [stepDateRange(scenario, idx), step.nights ? nightsLabel(step.nights) : '']
+        .filter(Boolean)
+        .join(' · ');
+      return `<strong>${stepLetter(idx)} · ${escapeHtml(step.city)}</strong>${lines ? `<br/>${lines}` : ''}`;
+    })
     .join('<div class="step-pin-sep"></div>');
 }
 

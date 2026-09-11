@@ -1,6 +1,7 @@
+// Un lieu revisité tient sur une ligne : ses nuits s'additionnent et ses séjours se listent.
 function nightsByPlace(scenario) {
   const rows = new Map();
-  scenario.steps.forEach((st) => {
+  scenario.steps.forEach((st, idx) => {
     const nights = parseInt(st.nights) || 0;
     if (nights === 0) return;
     const key = st.cityId
@@ -8,14 +9,18 @@ function nightsByPlace(scenario) {
       : st.accommodationId
         ? `heb:${st.accommodationId}`
         : '';
-    rows.set(key, (rows.get(key) || 0) + nights);
+    if (!rows.has(key)) rows.set(key, { nights: 0, stays: [] });
+    const row = rows.get(key);
+    row.nights += nights;
+    row.stays.push(idx);
   });
-  return Array.from(rows, ([key, nights]) => {
+  return Array.from(rows, ([key, { nights, stays }]) => {
     const [kind, id] = key.split(':');
     return {
       city: kind === 'ville' ? getCity(id) : null,
       acc: kind === 'heb' ? getAccommodation(id) : null,
       nights,
+      dates: stays.map((idx) => stepArrivalDay(scenario, idx)).filter(Boolean),
     };
   }).sort((a, b) => b.nights - a.nights);
 }
