@@ -45,7 +45,7 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: notesCell },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: bookingLinkCell },
-  { key: 'actions', label: '', locked: true, cell: actionsCell },
+  { key: 'actions', label: '', locked: true, nowrap: true, cell: actionsCell },
 ];
 
 COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;

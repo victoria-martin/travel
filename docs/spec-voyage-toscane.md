@@ -44,13 +44,13 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori | la fiche de référence ; c'est elle qui porte le prix |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                        | une étape de passage sans nuit, ou un repère         |
-| **Voiture**         | loueur/modèle, prix, dates, lieu de prise en charge, notes                                                                         | liste simple                                         |
+| **Voiture**         | loueur, modèle, prix, dates, lieu de prise en charge, lien, notes, **par défaut**                                                  | liste simple ; une seule voiture par défaut          |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
 | **Scénario**        | nom, favori, voiture, charges, **étapes**                                                                                          | un itinéraire candidat                               |
 | **Étape**           | lieu (une ville **ou** un hébergement), date d'arrivée, nuits, budget, notes                                                       | appartient à un scénario, l'ordre compte             |
 | **Notes de voyage** | texte libre                                                                                                                        | un seul bloc, partagé                                |
 
-**Type d'hébergement** — Home exchange 🔁 · Hôtel 🏨 · Maison 🏡.
+**Type d'hébergement** — Home exchange 🔁 · Hôtel 🏨 · Maison 🏡 · Camping ⛺.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
 Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎.
 
@@ -84,11 +84,13 @@ La vue principale, en **tableau ou en cartes**.
   propose des résultats ; le choix d'un résultat écrase ville, province, région et coordonnées.
   Ville, province et région restent saisissables à la main, avec les valeurs déjà présentes en
   suggestion.
-- **Import d'un lien HomeExchange** : coller le lien dans le champ pré-remplit nom, GuestPoints/nuit,
-  ville, province et région. Nécessite la synchro configurée : la page est lue par l'Apps Script,
-  le navigateur ne peut pas la lire lui-même.
+- **Import d'un lien HomeExchange** : coller le lien dans le champ pré-remplit type, nom,
+  GuestPoints/nuit, ville, province et région — **seuls les champs vides**, jamais une saisie déjà
+  faite. Nécessite la synchro configurée : la page est lue par l'Apps Script, le navigateur ne peut
+  pas la lire lui-même.
 - **Import depuis un tableau** : coller des lignes copiées d'un tableur crée les hébergements
-  correspondants ; type et statut sont reconnus depuis le texte, sinon valeurs par défaut.
+  correspondants ; type et statut sont reconnus depuis le texte, sinon valeurs par défaut. Le
+  formulaire existe mais **aucun bouton ne l'ouvre aujourd'hui** (cf. [PLAN.md](../PLAN.md)).
 
 ### Villes
 
@@ -99,6 +101,12 @@ bloc de localisation que les hébergements. Sert à poser une étape de passage 
 
 Deux listes simples, mêmes gestes : tableau ou cartes, ajout/modification en modale, suppression
 confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'est pas présenté.
+
+- **Notes éditables en ligne**, comme sur les hébergements : sous le libellé dans le tableau, sur la
+  ligne 📝 des cartes.
+- **Voiture par défaut** : un rond ◉ en tête de ligne. Une seule voiture à la fois — la marquer
+  démarque les autres, la re-cliquer n'en laisse aucune.
+- Le **lien** d'une voiture s'ouvre depuis la ligne (« Voir ») ou depuis sa carte (« Lien »).
 
 ### Scénarios
 
@@ -114,7 +122,9 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix.
-- **Voiture** : un select parmi les voitures de la table, et son coût.
+- **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût. Un
+  scénario créé naît avec la **voiture par défaut** déjà rattachée : c'est une valeur de départ, pas
+  un repli — « Aucune voiture » reste un choix qui tient, et les scénarios existants ne bougent pas.
 - **Récap** : une ligne par lieu (lieu · nuits · total), puis « Total hébergements ». Les nuits en
   home exchange ont **leur propre ligne en GuestPoints**.
 - **Trajet** : marqueurs des étapes et tracé routier réel, partagé avec la vue Carte.

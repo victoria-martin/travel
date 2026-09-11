@@ -1,18 +1,8 @@
-# Plan de travail
-
-Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaque lot terminé.
-
-## Décisions actées
-
-- Le prix d'un hébergement est un prix **par nuit** → total d'un lieu = prix × nuits.
-- Le prix d'une voiture et le montant d'une charge sont pris **tels quels**.
-- Un scénario porte **une** voiture (`carId`) et **plusieurs** charges fixes (`costIds`), en
-  référence aux tables `cars` et `fixedCosts` — jamais des copies.
-- Un home exchange se paie en GuestPoints : ces montants ne s'additionnent jamais aux euros.
-
----
-
 # À faire
+
+Le backlog, rangé par page. Un item terminé **sort d'ici** et va décrire l'app dans
+[docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : ce fichier n'archive pas ce qui est
+fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées » de la spec.
 
 ## Hébergements
 
@@ -65,201 +55,36 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 
 ## Transverse
 
+- **Nommer les vues en anglais** — ⏳ à faire - pas grave : deux espaces de noms cohabitent, les vues en
+  français (`hebergements`, `voitures`, `charges`, `villes` — clés de `view`, `listViewMode`,
+  `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`, `cars`, `fixedCosts`,
+  `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes aligne le tout ; les
+  prefs stockées étant indexées par vue, les colonnes masquées et le tri repartent à zéro une fois.
+- **Séparer les colonnes du formulaire dans `registerList`** — ⏳ à faire : `fields` sert à la fois
+  à générer le formulaire de la modale ([form.js](js/views/list/modal/form.js)) et à dériver les
+  colonnes ([config.js](js/views/list/config.js)). Les deux divergent déjà — `type` n'intéresse que
+  le formulaire, `cell` et `sortValue` que la table.
+- **Le formulaire des villes reste écrit à la main** — ⏳ à trancher : Villes passe par le moteur de
+  table mais pas par `registerList`, parce que son formulaire contient le bloc de géolocalisation
+  ([locate-fields.js](js/views/locate/locate-fields.js)) que `fields` ne sait pas décrire. Même
+  question pour les hébergements. Un type de champ `locate` lèverait les deux.
+- **Libellés de colonnes encore dans `<vue>.js`** — ⏳ à faire : `cityCoordsLabel` et
+  `cityPlaceLabel` ([cities.js:9-17](js/views/cities/cities.js#L9-L17)) ne servent qu'à
+  [cities/columns.js](js/views/cities/columns.js) et doivent y descendre.
+- **Redécouper `accommodations.js`** — ⏳ à faire : 95 lignes à plat alors que
+  `js/views/accommodations/` existe, et trois responsabilités dans le même fichier — le render, les
+  filtres (`listFilters`, `tagFilterBlock`, `toggleTagFilter`, `toggleFavOnly`, tous lus par
+  [header.js](js/views/accommodations/header.js)) et les setters (`setAccommodationType`/`Status` →
+  [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
+  [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
+  columns).
+- **`scenarios/list/` et `list/` portent le même nom** — ⏳ à trancher : l'un est la liste des
+  scénarios, l'autre le mécanisme générique de liste.
+- **La structure des fichiers du README est périmée** — ⏳ à faire : le bloc de
+  [README.md](README.md#L17) liste `data.js`, `helpers.js` et `simple-lists.js`, tous disparus.
 - **Découpage de `data.js`** — 🚧 en cours : un fichier par sujet
   ([accommodation-types.js](js/accommodation-types.js),
   [accommodation-statuses.js](js/accommodation-statuses.js), [uid.js](js/uid.js),
   [state.js](js/state.js)), et le reste de l'état posé auprès de son seul consommateur — les nuits
   dans [nights.js](js/views/scenarios/nights.js), `LOCAL_KEY` dans [storage.js](js/storage.js),
   les filtres de la carte dans [map.js](js/views/map.js).
-
----
-
-# Fait
-
-## Hébergements
-
-### Tags — ✅
-
-Champ `tags` sur l'hébergement, tableau de chaînes. Pas de liste d'options à administrer : les
-options proposées sont l'union des tags déjà saisis ([tags.js](js/views/tags.js)), donc un tag
-existe dès qu'il est tapé quelque part et disparaît avec son dernier porteur.
-
-- Saisie dans la modale : chips avec une croix, un champ en dessous, Entrée ou virgule ajoute, la
-  `datalist` propose les tags existants ([tags-field.js](js/views/accommodations/modal/tags-field.js)).
-  Le champ écrit dans `modal.payload` et ne repeint que son bloc, sinon les autres champs déjà
-  saisis seraient perdus.
-- Affichés en chips dans la colonne « Tags » de la table et sur les cartes.
-- Filtre par tag dans le panneau « Trier & filtrer » de l'en-tête : un hébergement sort dès qu'il
-  porte **un** des tags cochés. Le panneau de tri accueille un bloc de filtre passé par la liste
-  ([sort.js](js/sort.js)) — il n'est affiché qu'en mode tableau, donc le filtre ne l'est pas non
-  plus en mode cartes.
-- Côté Sheet : colonne `tags` sur `accommodations`, rangée dans `LIST_FIELDS` (une cellule, valeurs
-  séparées par des virgules) comme `costIds` ([Code.js](apps-script/Code.js)).
-
-### Trois statuts de plus — ✅
-
-Intéressé 👍, Attente réponse ⏳ et À booker 💳 s'ajoutent à `ACCOMMODATION_STATUSES`
-([accommodation-statuses.js](js/accommodation-statuses.js)), qui pilote seule le select de la
-modale, le select en ligne et le tri de la colonne Statut. Les statuts y sont rangés dans l'ordre du workflow (à voir → réservé, puis les deux
-sorties pas dispo / écarté), c'est cet ordre que suit le tri.
-
-### Import d'un lien HomeExchange — ✅
-
-Coller une URL homeexchange.fr/.com dans le champ Lien de la modale remplit le type, le nom, les
-GuestPoints par nuit, la ville, la province et la région. La page est lue par l'Apps Script
-([HomeExchange.js](apps-script/HomeExchange.js)) et pas par le navigateur : homeexchange.fr ne
-renvoie aucun en-tête CORS. L'import demande donc la synchro du Sheet configurée.
-
-- Ville, province et région sortent des trois niveaux du fil d'Ariane de l'annonce.
-- Les GP/nuit se rangent dans `price` : c'est le type de l'hébergement qui dit la monnaie.
-- Un titre « … - chez Rosanna » est retourné en « Chez Rosanna - … », l'hôte passe devant.
-- Seuls les champs vides sont remplis, jamais ceux déjà saisis
-  ([homeexchange.js](js/homeexchange.js)).
-
-### Type Camping — ✅
-
-⛺ s'ajoute à `ACCOMMODATION_TYPES` ([accommodation-types.js](js/accommodation-types.js)), donc au
-select de la modale, aux chips de la table et des cartes, aux filtres de la vue Carte et au tri de
-la colonne Type.
-
-### Province et région saisissables — ✅
-
-Les deux champs, jusqu'ici cachés et remplis par la seule géolocalisation, sont visibles et
-modifiables dans le bloc de localisation partagé par les modales hébergement et ville
-([locate-fields.js](js/views/locate/locate-fields.js)). Chacun propose en `datalist` les valeurs
-déjà présentes dans les hébergements et les villes, sans empêcher d'en saisir une nouvelle. Le
-choix d'un résultat de géocodage écrase toujours les deux champs.
-
-### Colonnes triables : type, statut, ville — ✅
-
-- Une colonne devient triable en déclarant `sortValue` dans son descripteur. Tout le tri vit dans
-  [sort.js](js/sort.js), à côté de [columns.js](js/columns.js) qui garde la visibilité des
-  colonnes — donc n'importe quelle liste en profitera.
-- Le tri est une liste ordonnée de critères : le premier qui sépare deux lignes l'emporte
-  (« statut, puis ville »). Panneau **Trier** dans l'en-tête de la vue : un niveau par ligne,
-  colonne + sens, ↑/↓ pour réordonner, ✕ pour retirer. Le clic sur un en-tête reste le raccourci
-  — il remplace tout par un tri simple et cycle croissant → décroissant → aucun.
-- `sortValue` posé sur type, statut et ville
-  ([columns.js](js/views/accommodations/table/columns.js)). Type et statut se trient sur l'**ordre
-  de leur map** dans [accommodation-types.js](js/accommodation-types.js) et
-  [accommodation-statuses.js](js/accommodation-statuses.js) : réorganiser `ACCOMMODATION_TYPES` ou
-  `ACCOMMODATION_STATUSES` change le tri.
-- Les favoris sont un critère comme un autre : ⭐ se retire, se combine ou s'inverse comme les
-  autres colonnes. Une colonne peut nommer ses deux sens via `sortLabels`.
-- Le tri de départ est déclaré en liste ordonnée dans `SORT_DEFAULTS`, à côté du jeu de colonnes
-  ([columns.js](js/views/accommodations/table/columns.js)) : favoris, puis type, puis statut. Il
-  tient tant que le panneau n'a pas été touché.
-- Les critères sont retenus d'une session à l'autre (`prefs.sort`, cf. [prefs.js](js/prefs.js)) ;
-  une liste vide veut dire « aucun tri », la liste garde alors son ordre d'origine.
-
-## Scénarios
-
-### Nuits retirées de la ligne de détail d'une étape — ✅
-
-Sous le titre d'une étape : date d'arrivée et notes seulement. Le select à droite est la seule
-source pour les nuits.
-
-### Total par lieu dans le récap — ✅
-
-Récap en 3 colonnes (lieu · nuits · total) + ligne « Total hébergements ».
-
-### Totaux séparés euros / GuestPoints — ✅
-
-Les nuits en home exchange s'additionnent en GP sur leur propre ligne du récap, jamais avec les
-euros ([money.js](js/views/scenarios/money.js), [recap.js](js/views/scenarios/detail/recap.js)).
-
-### Total sur la ligne d'une étape — ✅
-
-Au bout de la ligne, à droite du select de nuits : prix par nuit × nuits
-([step-card.js](js/views/scenarios/detail/step-card.js), `stepCost` dans
-[money.js](js/views/scenarios/money.js)). Rien d'affiché quand l'étape est rattachée à une ville
-ou quand le total est nul — seul un hébergement porte un prix.
-
-### Budget sur une étape — ✅
-
-Champ `budget` sur l'étape, saisi à la main : rempli, il remplace le prix de l'hébergement dans le
-total de la ligne (`stepCost` dans [money.js](js/views/scenarios/money.js)). Éditable en bout de
-ligne, où le total calculé reste affiché en gris tant qu'aucun budget n'est saisi
-([step-card.js](js/views/scenarios/detail/step-card.js)), et dans la modale de l'étape à côté de
-Nuits. Toujours en euros, même sur une étape en GuestPoints.
-
-### Carte du scénario — ✅
-
-Bloc « Trajet » sous les étapes : marqueurs des étapes + tracé routier réel. Le tracé est partagé
-avec la vue Carte ([scenario-map.js](js/views/scenarios/scenario-map.js)).
-
-### Carte à droite dans la page scénario — ✅
-
-Détail d'un scénario en 2 colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
-colonne de droite sticky ([detail.js](js/views/scenarios/detail/detail.js)). Bouton
-« Masquer / Afficher la carte » dans l'en-tête ; l'état vit dans `prefs.showScenarioMap`
-([prefs.js](js/prefs.js)), donc il est retenu d'une session à l'autre. Sous 1100px, la carte
-repasse sous les étapes.
-
-### Voiture du scénario — ✅ (sans le bouton d'ajout)
-
-Bloc « Voiture » : select des voitures de la table + coût.
-
-### Favori sur un scénario — ✅
-
-- Champ `favorite` sur le scénario, étoile cliquable dans la liste
-  ([row.js](js/views/scenarios/list/row.js)) et dans l'en-tête du détail
-  ([header.js](js/views/scenarios/detail/header.js)). Étoile partagée :
-  [favorite-star.js](js/views/favorite-star.js).
-- Les favoris remontent en tête de la liste.
-
-## Voitures
-
-### Voiture par défaut — ✅
-
-Champ `isDefault` sur la voiture, une seule à la fois : le rond ◉ en tête de ligne (et en tête de
-carte) marque la voiture par défaut et démarque les autres, le re-cliquer n'en laisse aucune
-([default-car.js](js/views/cars/default-car.js)). Un scénario créé naît avec elle déjà rattachée
-([scenarios.js](js/views/scenarios/scenarios.js)) — c'est une valeur de départ, pas un repli : le
-choix « — Aucune voiture — » tient, et les scénarios existants ne bougent pas.
-
-Le rond est passé à la liste simple par `leadCell` dans `SIMPLE_CONFIG`, comme une colonne
-d'hébergement déclare sa `cell` ([simple-lists.js](js/views/simple-lists/simple-lists.js)).
-
-### Loueur, modèle et lien — ✅
-
-« Loueur / modèle » se sépare en deux colonnes : `name` garde le loueur, `model` s'ajoute — les
-valeurs déjà saisies restent donc entières dans « Loueur », rien n'est découpé automatiquement.
-Une colonne `link` s'ajoute aussi, rendue en « Voir » dans le tableau et en bouton « Lien » sur les
-cartes ([link-cell.js](js/views/link-cell.js), partagé avec les hébergements). Un champ de la liste
-simple peut déclarer sa `cell` pour sortir du texte brut. Le select du bloc Voiture d'un scénario
-affiche « loueur · modèle » ([car-label.js](js/views/cars/car-label.js)).
-
-Côté Sheet : `model`, `link` et `isDefault` s'ajoutent à `cars`, `isDefault` dans `BOOL_FIELDS`
-([Code.js](apps-script/Code.js)). Les cellules se lisant par nom d'en-tête, les lignes existantes
-ne se décalent pas.
-
-## Voitures · Charges fixes
-
-### Notes en champ modifiable — ✅
-
-Les notes s'éditent en ligne, comme sur les hébergements : sous le libellé dans le tableau, sur la
-ligne 📝 des cartes ([notes-editable.js](js/views/simple-lists/notes-editable.js)). Le blur
-enregistre sans re-render. Le code vit dans la liste simple partagée, donc les Charges fixes en
-profitent aussi ([simple-lists.js](js/views/simple-lists/simple-lists.js)).
-
-## Notes
-
-### Bloc-notes partagé — ✅
-
-Onglet « Notes » : une zone de texte libre, stockée comme une collection d'une entrée
-(`tripNotes`) pour passer par la fusion par id de [sync.js](js/sync.js)
-([notes.js](js/views/notes.js)).
-
-## Transverse
-
-### Sheet + README — ✅
-
-`COLLECTIONS` dans [Code.js](apps-script/Code.js) porte `scenarios` (`id, name, carId, costIds,
-favorite`), la colonne `budget` des étapes et l'onglet `tripNotes`.
-
-### Déploiement de l'Apps Script à chaque push — ✅
-
-Le hook [pre-push](.githooks/pre-push) lance `pnpm push-script` dès qu'un push emporte des
-changements dans `apps-script/` — l'URL `/exec` ne change pas. Il faut avoir pointé git dessus une
-fois : `git config core.hooksPath .githooks`.

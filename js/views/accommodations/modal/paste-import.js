@@ -1,3 +1,6 @@
+// To review: predates the Sheet sync, which is now the way to bring rows in. The list only offers
+// it while no Sheet is connected.
+
 const IMPORT_FIELDS = [
   { key: 'type', labels: ['type'] },
   { key: 'status', labels: ['statut', 'status'] },
@@ -43,6 +46,7 @@ function headerMapping(cells) {
   return mapping.includes('name') ? mapping : null;
 }
 
+//  est ce que ce flow fonctionne avec le code actuel : j importe un fichier : ca créé un nouveau google sheet avec le structure avec nom actuel du fichier + "-data" à la fin. j imagine qu il faudra re rentrer un google script url ? a verifier tout ca
 // function openPasteImport() {
 //   openModal('paste-import');
 // }

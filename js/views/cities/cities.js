@@ -1,8 +1,8 @@
 function renderCitiesView() {
-  const items = [...state.cities].sort((a, b) => a.name.localeCompare(b.name));
+  const items = sortItems('villes', state.cities);
   return /* HTML */ `
     ${citiesHeader(items)}
-    ${items.length === 0 ? emptyState('Aucune ville', 'Ajoute une première ville à visiter.') : citiesTable(items)}
+    ${items.length === 0 ? emptyState('Aucune ville', 'Ajoute une première ville à visiter.') : listTable('villes', items)}
   `;
 }
 

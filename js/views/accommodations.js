@@ -21,7 +21,7 @@ function renderAccommodationsView() {
                 : 'Ajoute tes premiers hébergements pour pouvoir les rattacher à tes étapes.',
           )
         : mode === 'table'
-          ? accommodationTable(items)
+          ? listTable('hebergements', items)
           : accommodationCards(items)
     }
   `;

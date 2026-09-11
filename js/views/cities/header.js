@@ -6,6 +6,9 @@ function citiesHeader(items) {
         Étapes possibles en Italie — ${items.length} ville${items.length > 1 ? 's' : ''}
       </p>
     </div>
-    <button class="btn" onclick="openModal('ville')">+ Ajouter</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      ${sortPanel('villes')} ${columnPicker('villes')}
+      <button class="btn" onclick="openModal('ville')">+ Ajouter</button>
+    </div>
   </div>`;
 }

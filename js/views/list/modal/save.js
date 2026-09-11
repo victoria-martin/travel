@@ -1,5 +1,5 @@
-function saveSimple(kind, id) {
-  const cfg = SIMPLE_CONFIG[kind];
+function saveListItem(kind, id) {
+  const cfg = LIST_CONFIG[kind];
   const item = { id: id || uid() };
   cfg.fields.forEach((f) => {
     item[f.key] = document.getElementById('f-' + f.key).value.trim();

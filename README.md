@@ -106,6 +106,13 @@ pnpm run push-script
 Le code part et le déploiement existant est mis à jour : l'URL `/exec` ne change pas, personne n'a à
 reconnecter son app.
 
+Ce push est automatique : le hook [pre-push](.githooks/pre-push) lance `pnpm push-script` dès qu'un
+push emporte des changements dans `apps-script/`. Il faut avoir pointé git dessus une fois :
+
+```
+git config core.hooksPath .githooks
+```
+
 L'identifiant du déploiement vit dans `.clasp-deployment`, non versionné : c'est la partie secrète de
 l'URL `/exec` et ce repo est public. Sur une nouvelle machine, le recréer avec l'identifiant que
 donne `pnpm exec clasp list-deployments`.

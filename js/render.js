@@ -47,8 +47,8 @@ function goTo(v) {
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
-  else if (view === 'voitures') main.innerHTML = renderSimpleListView('voitures');
-  else if (view === 'charges') main.innerHTML = renderSimpleListView('charges');
+  else if (view === 'voitures') main.innerHTML = renderListView('voitures');
+  else if (view === 'charges') main.innerHTML = renderListView('charges');
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
   else if (view === 'scenario-detail') {

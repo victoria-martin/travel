@@ -35,6 +35,11 @@ function accommodationsHeader(items) {
           Cartes
         </button>
       </div>
+      ${
+        syncActive()
+          ? ''
+          : `<button class="btn btn-ghost" onclick="openModal('paste-import')">Importer</button>`
+      }
       <button class="btn" onclick="openModal('accommodation')">+ Ajouter</button>
     </div>
   </div>`;
