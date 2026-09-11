@@ -1,0 +1,28 @@
+#!/bin/sh
+# Deploy apps-script/ to Google Apps Script when the push carries changes to it.
+
+deploy=0
+
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  # all-zero local sha means the ref is being deleted
+  case "$local_sha" in *[!0]*) ;; *) continue ;; esac
+
+  case "$remote_sha" in
+    *[!0]*) set -- "$remote_sha..$local_sha" ;;
+    *) set -- "$local_sha" --not --remotes=origin ;;
+  esac
+
+  if [ -n "$(git log --format= --name-only "$@" -- apps-script)" ]; then
+    deploy=1
+  fi
+done
+
+[ "$deploy" -eq 1 ] || exit 0
+
+if [ ! -f .clasp-deployment ]; then
+  echo "pre-push: .clasp-deployment is missing, skipping the Apps Script deploy" >&2
+  exit 0
+fi
+
+echo "pre-push: apps-script/ changed, running pnpm push-script"
+pnpm push-script
