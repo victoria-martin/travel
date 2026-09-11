@@ -67,3 +67,8 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 - **2026-09-11** — `js/views/list/` démantelé : Voitures et Charges fixes écrivent leurs fichiers
   en clair comme Villes et Hébergements, le tableau partagé remonte dans
   [table.js](js/views/table.js).
+- **2026-09-12** — un seul accès à `localStorage`, dans [local-store.js](js/local-store.js) :
+  `readStore` / `writeStore` / `removeStore` (+ variantes `…String` pour l'URL de synchro, stockée
+  en texte brut). Lecture muette, écriture bruyante. Les quatre clés passent par là ;
+  `readLocalStorage` disparaît, `persist` devient `persistState`, `saveSyncBase` devient
+  `persistSyncBase`, et `persistSyncUrl` remplace les deux écritures inline de `sync.js`.
