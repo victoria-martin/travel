@@ -28,9 +28,21 @@ function nightsByPlace(scenario) {
 function scenarioRecap(scenario) {
   const rows = nightsByPlace(scenario);
   if (rows.length === 0) return '';
+  const last = scenario.steps.length - 1;
   return /* HTML */ `<div class="acc-recap">
     <div class="acc-recap-title">Hébergements</div>
-    ${rows.map((r) => scenarioRecapRow(r)).join('')} ${scenarioRecapTotals(scenario)}
+    ${scenarioRecapStepRow(scenario, 0)} ${rows.map((r) => scenarioRecapRow(r)).join('')}
+    ${last > 0 ? scenarioRecapStepRow(scenario, last) : ''} ${scenarioRecapTotals(scenario)}
+  </div>`;
+}
+
+// Le récap trie les lieux par nuits : les deux bouts du trajet l'encadrent dans leur ordre.
+function scenarioRecapStepRow(scenario, idx) {
+  const step = scenario.steps[idx];
+  return /* HTML */ `<div class="acc-recap-row">
+    <span>${escapeHtml(step.city || 'Sans nom')}</span>
+    <span class="acc-recap-nights">${stepArrivalDay(scenario, idx)}</span>
+    <span></span>
   </div>`;
 }
 
