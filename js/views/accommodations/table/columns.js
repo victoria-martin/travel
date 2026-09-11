@@ -4,48 +4,39 @@ const ACCOMMODATION_COLUMNS = [
     label: '',
     pickerLabel: '⭐ Favori',
     locked: true,
-    cell: favoriteCell,
+    cell: accommodationFavoriteCell,
     sortValue: (a) => (a.favorite ? 0 : 1),
     sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
   },
-  { key: 'name', label: 'Nom', locked: true, cell: nameCell },
+  { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
   {
     key: 'type',
     label: 'Type',
-    cell: typeCell,
+    cell: accommodationTypeCell,
     sortValue: (a) => Object.keys(ACCOMMODATION_TYPES).indexOf(accTypeKey(a.type)),
   },
   {
     key: 'status',
     label: 'Statut',
-    cell: statusCell,
+    cell: accommodationStatusCell,
     sortValue: (a) => Object.keys(ACCOMMODATION_STATUSES).indexOf(accStatusKey(a.status)),
   },
   {
     key: 'city',
     label: 'Ville',
-    cell: (a) => escapeHtml(a.city) || '—',
+    cell: accommodationCityCell,
     sortValue: (a) => (a.city || '').toLowerCase(),
   },
-  { key: 'county', label: 'Province', cell: (a) => escapeHtml(a.county) || '—' },
-  {
-    key: 'region',
-    label: 'Région',
-    hiddenByDefault: true,
-    cell: (a) => escapeHtml(a.region) || '—',
-  },
+  { key: 'county', label: 'Province', cell: accommodationCountyCell },
+  { key: 'region', label: 'Région', hiddenByDefault: true, cell: accommodationRegionCell },
   { key: 'tags', label: 'Tags', cell: tagsCell },
-  { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: addressCell },
-  {
-    key: 'price',
-    label: 'Prix',
-    cell: (a) => (a.price ? `${escapeHtml(a.price)} ${accommodationPriceUnit(a)}` : '—'),
-  },
-  { key: 'dates', label: 'Dates', cell: (a) => escapeHtml(a.dates) || '—' },
-  { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: notesCell },
+  { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: accommodationAddressCell },
+  { key: 'price', label: 'Prix', nowrap: true, cell: accommodationPriceCell },
+  { key: 'dates', label: 'Dates', cell: accommodationDatesCell },
+  { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: accommodationNotesCell },
   { key: 'link', label: 'Lien', cell: linkCell },
-  { key: 'bookingLink', label: 'Booking', cell: bookingLinkCell },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: actionsCell },
+  { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
+  { key: 'actions', label: '', locked: true, nowrap: true, cell: accommodationActionsCell },
 ];
 
 COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
@@ -56,52 +47,58 @@ SORT_DEFAULTS.hebergements = [
   { key: 'status', dir: 'asc' },
 ];
 
-function favoriteCell(a) {
-  return /* HTML */ `<button
-    class="icon-btn"
-    style="border:none; font-size:15px; color:${a.favorite ? '#C98A3E' : 'var(--line)'};"
-    onclick="toggleFavorite('${a.id}')"
-    title="${a.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
-  >
-    ${a.favorite ? '★' : '☆'}
-  </button>`;
+function accommodationFavoriteCell(a) {
+  return favoriteStar(a.favorite, `toggleFavorite('${a.id}')`);
 }
 
-function nameCell(a) {
+function accommodationNameCell(a) {
   const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
   return `<strong>${escapeHtml(a.name)}</strong>${notes}`;
 }
 
-function notesCell(a) {
-  return notesEditable(a);
-}
-
-function typeCell(a) {
+function accommodationTypeCell(a) {
   return accommodationTypeSelect(a);
 }
 
-function statusCell(a) {
+function accommodationStatusCell(a) {
   return accommodationStatusSelect(a);
 }
 
-function addressCell(a) {
-  return escapeHtml(a.address) || '—';
+function accommodationCityCell(a) {
+  return textCell(a.city);
 }
 
-function bookingLinkCell(a) {
+function accommodationCountyCell(a) {
+  return textCell(a.county);
+}
+
+function accommodationRegionCell(a) {
+  return textCell(a.region);
+}
+
+function accommodationAddressCell(a) {
+  return textCell(a.address);
+}
+
+function accommodationPriceCell(a) {
+  if (!a.price) return '—';
+  return `${escapeHtml(a.price)} ${accommodationPriceUnit(a)}`;
+}
+
+function accommodationDatesCell(a) {
+  return textCell(a.dates);
+}
+
+function accommodationNotesCell(a) {
+  return notesEditable(a);
+}
+
+function accommodationBookingLinkCell(a) {
   if (!a.bookingLink) return '—';
   return `<a href="${escapeHtml(a.bookingLink)}" target="_blank" style="color:var(--stone-dark);">Booking</a>`;
 }
 
-function actionsCell(a) {
-  return /* HTML */ `<button
-      class="icon-btn"
-      onclick="openModal('accommodation','${a.id}')"
-      title="Modifier"
-    >
-      ✎
-    </button>
-    <button class="icon-btn" onclick="deleteItem('accommodations','${a.id}')" title="Supprimer">
-      🗑
-    </button>`;
+function accommodationActionsCell(a) {
+  const duplicate = duplicateButton(`duplicateAccommodation('${a.id}')`);
+  return `${editButton('accommodation', a.id)}${duplicate}${deleteButton('accommodations', a.id)}`;
 }

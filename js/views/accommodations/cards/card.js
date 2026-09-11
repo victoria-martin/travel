@@ -2,14 +2,7 @@ function accommodationCard(a) {
   return /* HTML */ `<div class="card">
     <div class="card-top">
       <p class="card-name">${escapeHtml(a.name)}</p>
-      <button
-        class="icon-btn"
-        style="border:none; font-size:16px; flex-shrink:0; color:${a.favorite ? '#C98A3E' : 'var(--line)'};"
-        onclick="toggleFavorite('${a.id}')"
-        title="${a.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
-      >
-        ${a.favorite ? '★' : '☆'}
-      </button>
+      ${favoriteStar(a.favorite, `toggleFavorite('${a.id}')`)}
     </div>
     <div class="card-selects">${accommodationTypeSelect(a)}${accommodationStatusSelect(a)}</div>
     <div class="card-meta">

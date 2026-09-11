@@ -34,6 +34,7 @@ function migrateData(data) {
     if (!Array.isArray(a.tags)) a.tags = [];
   });
   (data.scenarios || []).forEach((s) => {
+    if (s.startDate === undefined) s.startDate = '';
     if (s.carId === undefined) s.carId = null;
     if (!Array.isArray(s.costIds)) s.costIds = [];
     if (s.favorite === undefined) s.favorite = false;

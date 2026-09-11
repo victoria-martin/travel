@@ -21,8 +21,24 @@ function scenarioDetailHeader(s) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${s.steps.length > 0 ? scenarioMapToggleBtn() : ''}
+      ${scenarioStartDateField(s)} ${s.steps.length > 0 ? scenarioMapToggleBtn() : ''}
       <button class="btn" onclick="openModal('step','${s.id}')">+ Ajouter une étape</button>
     </div>
   </div>`;
+}
+
+function scenarioStartDateField(s) {
+  return /* HTML */ `<label class="header-field">
+    Départ
+    <input
+      type="date"
+      value="${s.startDate || ''}"
+      onchange="setScenarioStartDate('${s.id}', this.value)"
+    />
+  </label>`;
+}
+
+function setScenarioStartDate(id, date) {
+  getScenario(id).startDate = date;
+  saveNow();
 }

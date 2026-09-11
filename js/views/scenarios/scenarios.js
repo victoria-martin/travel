@@ -23,6 +23,7 @@ function createScenario() {
   const s = {
     id: uid(),
     name: 'Nouveau scénario',
+    startDate: '',
     carId: defaultCar()?.id || null,
     costIds: [],
     favorite: false,
@@ -31,17 +32,6 @@ function createScenario() {
   state.scenarios.push(s);
   saveNow();
   openScenario(s.id);
-}
-
-function duplicateScenario(id) {
-  const s = getScenario(id);
-  const copy = JSON.parse(JSON.stringify(s));
-  copy.id = uid();
-  copy.name = s.name + ' (copie)';
-  copy.steps.forEach((st) => (st.id = uid()));
-  state.scenarios.push(copy);
-  saveNow();
-  render();
 }
 
 function openScenario(id) {

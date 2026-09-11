@@ -107,6 +107,22 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
+.header-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.header-field input {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--white);
+}
 /* Every control sitting in a view header shares one height. */
 .view-header .btn,
 .filter-toggle,
@@ -759,7 +775,7 @@ tr:hover td {
   cursor: pointer;
   color: var(--ink-soft);
   font-size: 12px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }

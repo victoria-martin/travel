@@ -29,7 +29,7 @@ const COLLECTIONS = {
   cars: ['id', 'name', 'model', 'price', 'dates', 'location', 'link', 'notes', 'isDefault'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
-  scenarios: ['id', 'name', 'carId', 'costIds', 'favorite'],
+  scenarios: ['id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
   tripNotes: ['id', 'text'],
   steps: [
     'id',

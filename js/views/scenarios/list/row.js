@@ -13,10 +13,7 @@ function scenarioRow(s) {
       </div>
     </div>
     <div style="display:flex; gap:6px;" onclick="event.stopPropagation();">
-      <button class="icon-btn" onclick="duplicateScenario('${s.id}')" title="Dupliquer">⧉</button>
-      <button class="icon-btn" onclick="deleteItem('scenarios','${s.id}')" title="Supprimer">
-        🗑
-      </button>
+      ${duplicateButton(`duplicateScenario('${s.id}')`)} ${deleteButton('scenarios', s.id)}
     </div>
   </div>`;
 }
