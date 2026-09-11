@@ -41,9 +41,16 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
-- **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`.
+- **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`,
+  placée en première colonne de chaque onglet pour trier et filtrer d'un coup d'œil — y compris sur
+  l'onglet `steps`, où elle est recopiée depuis le scénario parent.
   Un classeur par voyage a été écarté : l'Apps Script travaille sur `getActiveSpreadsheet()`, donc
   il aurait fallu dupliquer le classeur et redéployer le script à la main à chaque nouveau voyage.
+- **Aucune reprise automatique des entrées orphelines** : une entrée sans `travelId`, ou qui en
+  porte un que la liste des voyages ne contient pas, n'apparaît simplement dans aucun voyage. L'app
+  n'invente jamais de voyage pour les accueillir — une réponse du Sheet à laquelle il manque
+  l'onglet `travels` ou la colonne `travelId` créait sinon un voyage fantôme qui repartait dans la
+  synchro et détournait les entrées des autres.
 
 ---
 
@@ -88,7 +95,9 @@ Créer un voyage l'ouvre aussitôt. Tant qu'il n'y en a aucun, le bouton affiche
 le menu ne propose que la création.
 
 **Voyage** — les champs de la modale : emoji, nom, pays, région, dates de début et de fin, statut,
-nombre de voyageurs, couleur d'accent (une palette fermée, ou aucune), image, description.
+nombre de voyageurs, couleur d'accent (une palette fermée, ou aucune), image, description. Le titre
+de la modale est posé sur un bandeau de la couleur d'accent choisie, qui suit le clic sur les
+pastilles ; sans couleur, le bandeau reste celui du fond.
 
 ### Hébergements
 
@@ -291,6 +300,8 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
   entrée. Ne pas toucher aux colonnes `id` ni aux en-têtes.
 - **L'app marche sans synchro** : elle démarre vide, tout fonctionne en local, et la connexion au
   Sheet peut arriver plus tard.
+- **Se déconnecter n'oublie pas l'adresse** : l'URL du Sheet quitté reste proposée dans le champ de
+  la modale de synchro, pour se reconnecter sans la recoller.
 
 ---
 

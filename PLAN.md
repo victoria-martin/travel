@@ -80,6 +80,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 - Distance entre deux étapes.
 - Estimation de l'essence.
 - Estimation des péages.
+- Vérifier flow gestion de la création de sheet à la 1ere utilisation, voir si on créé bien les données qd il faut, qd on créé le ficiher etc
 
 ## Toobar
 

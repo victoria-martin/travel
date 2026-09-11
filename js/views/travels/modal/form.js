@@ -20,7 +20,13 @@ function emptyTravel() {
 
 function travelForm(p) {
   return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Nouveau'} voyage</h3>
+    <div
+      class="travel-modal-header ${p.accentColor ? 'accented' : ''}"
+      id="travel-modal-header"
+      style="${p.accentColor ? `background:${p.accentColor};` : ''}"
+    >
+      <h3>${p.id ? 'Modifier' : 'Nouveau'} voyage</h3>
+    </div>
     <div class="field-row">
       <div class="field" style="flex:0 0 90px;">
         <label>Emoji</label
@@ -119,6 +125,9 @@ function travelForm(p) {
 // whatever the other fields already hold.
 function pickTravelAccent(color) {
   document.getElementById('travel-accent').value = color;
+  const header = document.getElementById('travel-modal-header');
+  header.classList.toggle('accented', Boolean(color));
+  header.style.background = color;
   document
     .querySelectorAll('.accent-swatch')
     .forEach((el) => el.classList.toggle('selected', el.dataset.accent === color));

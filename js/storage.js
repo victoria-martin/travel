@@ -63,47 +63,7 @@ function migrateData(data) {
       delete c.address;
     }
   });
-  attachOrphansToFirstTravel(data);
   return data;
-}
-
-/*
-  Two ways an entry ends up unreachable: it predates the Voyage entity and carries no travelId,
-  or it names a travel the data no longer holds. Both are adopted by the first travel — but a
-  dangling one only by a travel that already exists, never by one invented here: a pull that
-  came back without its travels would otherwise overwrite a real link with a brand new id.
-*/
-function attachOrphansToFirstTravel(data) {
-  const known = new Set(data.travels.map((t) => t.id));
-  const pick = (isOrphan) =>
-    TRAVEL_COLLECTIONS.flatMap((name) => (data[name] || []).filter(isOrphan));
-
-  const unattached = pick((item) => !item.travelId);
-  if (unattached.length && !data.travels.length) data.travels.push(firstTravel());
-  const first = data.travels[0];
-  if (!first) return;
-
-  const dangling = known.size ? pick((item) => item.travelId && !known.has(item.travelId)) : [];
-  [...unattached, ...dangling].forEach((item) => {
-    item.travelId = first.id;
-  });
-}
-
-function firstTravel() {
-  return {
-    id: uid(),
-    name: 'Voyage Toscane',
-    emoji: '🌿',
-    image: '',
-    description: '',
-    status: DEFAULT_TRAVEL_STATUS,
-    startDate: '',
-    endDate: '',
-    country: 'Italie',
-    region: 'Toscane',
-    accentColor: '',
-    travelers: 0,
-  };
 }
 
 /*

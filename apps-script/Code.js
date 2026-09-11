@@ -21,6 +21,7 @@ const COLLECTIONS = {
     'travelers',
   ],
   accommodations: [
+    'travelId',
     'id',
     'type',
     'status',
@@ -39,9 +40,9 @@ const COLLECTIONS = {
     'notes',
     'tags',
     'favorite',
-    'travelId',
   ],
   cars: [
+    'travelId',
     'id',
     'name',
     'model',
@@ -51,13 +52,13 @@ const COLLECTIONS = {
     'link',
     'notes',
     'isDefault',
-    'travelId',
   ],
-  fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes', 'travelId'],
-  cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes', 'travelId'],
-  scenarios: ['id', 'name', 'startDate', 'carId', 'costIds', 'favorite', 'travelId'],
-  tripNotes: ['id', 'text', 'travelId'],
+  fixedCosts: ['travelId', 'id', 'label', 'amount', 'category', 'recurrence', 'notes'],
+  cities: ['travelId', 'id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
+  scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
+  tripNotes: ['travelId', 'id', 'text'],
   steps: [
+    'travelId',
     'id',
     'scenarioId',
     'city',
@@ -126,6 +127,7 @@ function readState() {
     var key = step.scenarioId || '';
     if (!stepsByScenario[key]) stepsByScenario[key] = [];
     delete step.scenarioId;
+    delete step.travelId;
     stepsByScenario[key].push(step);
   });
 
@@ -184,13 +186,11 @@ function normalizeState(data) {
     if (!normalized) return;
     normalized.steps = [];
     (scenario.steps || []).forEach(function (step) {
-      var flat = { scenarioId: normalized.id };
-      COLLECTIONS.steps.forEach(function (column) {
-        if (column !== 'scenarioId') flat[column] = step[column];
-      });
+      var flat = flattenStep(normalized, step);
       var normalizedStep = normalizeItem('steps', flat);
       if (!normalizedStep) return;
       delete normalizedStep.scenarioId;
+      delete normalizedStep.travelId;
       normalized.steps.push(normalizedStep);
     });
     scenarios.push(normalized);
@@ -258,6 +258,15 @@ function decodeCell(column, raw) {
   return value;
 }
 
+// Une étape n'existe que dans son scénario : ses deux colonnes de rattachement viennent du parent.
+function flattenStep(scenario, step) {
+  var flat = { scenarioId: scenario.id, travelId: scenario.travelId };
+  COLLECTIONS.steps.forEach(function (column) {
+    if (column !== 'scenarioId' && column !== 'travelId') flat[column] = step[column];
+  });
+  return flat;
+}
+
 /* ------------------------------- écriture ------------------------------- */
 
 function writeState(data) {
@@ -265,11 +274,7 @@ function writeState(data) {
   var steps = [];
   scenarios.forEach(function (scenario) {
     (scenario.steps || []).forEach(function (step) {
-      var flat = { scenarioId: scenario.id };
-      COLLECTIONS.steps.forEach(function (column) {
-        if (column !== 'scenarioId') flat[column] = step[column];
-      });
-      steps.push(flat);
+      steps.push(flattenStep(scenario, step));
     });
   });
 
