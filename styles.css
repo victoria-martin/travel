@@ -384,6 +384,11 @@ td {
 tr:last-child td {
   border-bottom: none;
 }
+.row-notes {
+  color: var(--ink-soft);
+  font-size: 12px;
+  margin-top: 2px;
+}
 tr:hover td {
   background: #f6efe0;
 }
@@ -424,7 +429,8 @@ tr:hover td {
   font-family: inherit;
   font-size: 12px;
   padding: 4px 6px;
-  border: 1px solid var(--line);
+  /* border: 1px solid var(--line); */
+  border: 1px solid red;
   border-radius: 6px;
   background: var(--white);
   color: var(--ink);

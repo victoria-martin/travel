@@ -14,15 +14,23 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 
 # À faire
 
-## Voitures
+## Hébergements
 
-- **Valeur par défaut** — ⏳ à faire
-- **Notes en champ modifiable** — ⏳ à faire : même édition en ligne que sur les hébergements.
+- **Modale « Importer depuis un tableau » injoignable** — ⏳ à trancher : `openPasteImport()` est
+  commentée ([paste-import.js](js/views/accommodations/modal/paste-import.js)) et rien n'appelle
+  `openModal('paste-import')`, donc aucun geste de l'app n'ouvre le formulaire — qui reste chargé
+  et enregistré dans [modal.js](js/modals/modal.js). À rebrancher sur un bouton ou à supprimer.
 
 ## Attractions
 
 - **Créer la page** — ⏳ à faire : pas encore spécifiée (colonnes, place dans la barre latérale,
   rattachement à une étape ?).
+
+## Browse
+
+- **Créer la page** — ⏳ plus tard : des propositions d'hôtels dans la page, et des intégrations
+  qui partent des villes déjà choisies — par exemple les villes des étapes d'un scénario. Sources
+  et point d'entrée à préciser.
 
 ## Scénarios
 
@@ -55,6 +63,15 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 - tous les boutons trier, display favorites deviennent icon-button, le view card/table devientun toggle-group je crois et ajouter juste icone +
 - créer un bouton "trier"
 
+## Transverse
+
+- **Découpage de `data.js`** — 🚧 en cours : un fichier par sujet
+  ([accommodation-types.js](js/accommodation-types.js),
+  [accommodation-statuses.js](js/accommodation-statuses.js), [uid.js](js/uid.js),
+  [state.js](js/state.js)), et le reste de l'état posé auprès de son seul consommateur — les nuits
+  dans [nights.js](js/views/scenarios/nights.js), `LOCAL_KEY` dans [storage.js](js/storage.js),
+  les filtres de la carte dans [map.js](js/views/map.js).
+
 ---
 
 # Fait
@@ -78,7 +95,6 @@ existe dès qu'il est tapé quelque part et disparaît avec son dernier porteur.
   plus en mode cartes.
 - Côté Sheet : colonne `tags` sur `accommodations`, rangée dans `LIST_FIELDS` (une cellule, valeurs
   séparées par des virgules) comme `costIds` ([Code.js](apps-script/Code.js)).
-  👉 À pousser : `pnpm run push-script`
 
 ### Trois statuts de plus — ✅
 
@@ -86,6 +102,25 @@ Intéressé 👍, Attente réponse ⏳ et À booker 💳 s'ajoutent à `ACCOMMOD
 ([accommodation-statuses.js](js/accommodation-statuses.js)), qui pilote seule le select de la
 modale, le select en ligne et le tri de la colonne Statut. Les statuts y sont rangés dans l'ordre du workflow (à voir → réservé, puis les deux
 sorties pas dispo / écarté), c'est cet ordre que suit le tri.
+
+### Import d'un lien HomeExchange — ✅
+
+Coller une URL homeexchange.fr/.com dans le champ Lien de la modale remplit le type, le nom, les
+GuestPoints par nuit, la ville, la province et la région. La page est lue par l'Apps Script
+([HomeExchange.js](apps-script/HomeExchange.js)) et pas par le navigateur : homeexchange.fr ne
+renvoie aucun en-tête CORS. L'import demande donc la synchro du Sheet configurée.
+
+- Ville, province et région sortent des trois niveaux du fil d'Ariane de l'annonce.
+- Les GP/nuit se rangent dans `price` : c'est le type de l'hébergement qui dit la monnaie.
+- Un titre « … - chez Rosanna » est retourné en « Chez Rosanna - … », l'hôte passe devant.
+- Seuls les champs vides sont remplis, jamais ceux déjà saisis
+  ([homeexchange.js](js/homeexchange.js)).
+
+### Type Camping — ✅
+
+⛺ s'ajoute à `ACCOMMODATION_TYPES` ([accommodation-types.js](js/accommodation-types.js)), donc au
+select de la modale, aux chips de la table et des cartes, aux filtres de la vue Carte et au tri de
+la colonne Type.
 
 ### Province et région saisissables — ✅
 
@@ -173,6 +208,41 @@ Bloc « Voiture » : select des voitures de la table + coût.
   [favorite-star.js](js/views/favorite-star.js).
 - Les favoris remontent en tête de la liste.
 
+## Voitures
+
+### Voiture par défaut — ✅
+
+Champ `isDefault` sur la voiture, une seule à la fois : le rond ◉ en tête de ligne (et en tête de
+carte) marque la voiture par défaut et démarque les autres, le re-cliquer n'en laisse aucune
+([default-car.js](js/views/cars/default-car.js)). Un scénario créé naît avec elle déjà rattachée
+([scenarios.js](js/views/scenarios/scenarios.js)) — c'est une valeur de départ, pas un repli : le
+choix « — Aucune voiture — » tient, et les scénarios existants ne bougent pas.
+
+Le rond est passé à la liste simple par `leadCell` dans `SIMPLE_CONFIG`, comme une colonne
+d'hébergement déclare sa `cell` ([simple-lists.js](js/views/simple-lists/simple-lists.js)).
+
+### Loueur, modèle et lien — ✅
+
+« Loueur / modèle » se sépare en deux colonnes : `name` garde le loueur, `model` s'ajoute — les
+valeurs déjà saisies restent donc entières dans « Loueur », rien n'est découpé automatiquement.
+Une colonne `link` s'ajoute aussi, rendue en « Voir » dans le tableau et en bouton « Lien » sur les
+cartes ([link-cell.js](js/views/link-cell.js), partagé avec les hébergements). Un champ de la liste
+simple peut déclarer sa `cell` pour sortir du texte brut. Le select du bloc Voiture d'un scénario
+affiche « loueur · modèle » ([car-label.js](js/views/cars/car-label.js)).
+
+Côté Sheet : `model`, `link` et `isDefault` s'ajoutent à `cars`, `isDefault` dans `BOOL_FIELDS`
+([Code.js](apps-script/Code.js)). Les cellules se lisant par nom d'en-tête, les lignes existantes
+ne se décalent pas.
+
+## Voitures · Charges fixes
+
+### Notes en champ modifiable — ✅
+
+Les notes s'éditent en ligne, comme sur les hébergements : sous le libellé dans le tableau, sur la
+ligne 📝 des cartes ([notes-editable.js](js/views/simple-lists/notes-editable.js)). Le blur
+enregistre sans re-render. Le code vit dans la liste simple partagée, donc les Charges fixes en
+profitent aussi ([simple-lists.js](js/views/simple-lists/simple-lists.js)).
+
 ## Notes
 
 ### Bloc-notes partagé — ✅
@@ -183,36 +253,13 @@ Onglet « Notes » : une zone de texte libre, stockée comme une collection d'un
 
 ## Transverse
 
-### Sheet + README — ✅ côté code
+### Sheet + README — ✅
 
 `COLLECTIONS` dans [Code.js](apps-script/Code.js) porte `scenarios` (`id, name, carId, costIds,
 favorite`), la colonne `budget` des étapes et l'onglet `tripNotes`.
-👉 À pousser sur le déploiement existant (l'URL `/exec` ne change pas) :
 
-```sh
-pnpm run push-script
-```
+### Déploiement de l'Apps Script à chaque push — ✅
 
----
-
-# Problème ouvert
-
-**Vue Hébergements cassée** (constatée le 10/09) : les noms affichent des valeurs de statut
-(`toCheck`, `go`) et il ne reste que 3 colonnes. Deux causes distinctes, aucune liée aux lots
-ci-dessus, et le redéploiement du Code.js ne les corrige pas :
-
-1. Champs décalés d'un cran (`name` reçoit `status`) — hypothèse : l'en-tête de l'onglet
-   `accommodations` du Sheet ne correspond plus aux valeurs des lignes (la lecture se fait par nom
-   d'en-tête).
-2. Colonnes masquées : `prefs.hiddenColumns.hebergements` dans le localStorage — à recocher dans
-   « Colonnes ».
-
-Diagnostic en attente, à lancer dans la console du navigateur :
-
-```js
-JSON.parse(localStorage.getItem('voyage-toscane-prefs'));
-```
-
-```js
-JSON.parse(localStorage.getItem('voyage-toscane-local-data')).accommodations[0];
-```
+Le hook [pre-push](.githooks/pre-push) lance `pnpm push-script` dès qu'un push emporte des
+changements dans `apps-script/` — l'URL `/exec` ne change pas. Il faut avoir pointé git dessus une
+fois : `git config core.hooksPath .githooks`.

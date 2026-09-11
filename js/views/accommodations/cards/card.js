@@ -29,8 +29,8 @@ function accommodationCard(a) {
       <button class="btn-danger btn btn-small" onclick="deleteItem('accommodations','${a.id}')">
         Suppr.
       </button>
-      ${a.link ? `<a href="${escapeHtml(a.link)}" target="_blank" class="btn-ghost btn btn-small" style="text-decoration:none;">Lien</a>` : ''}
-      ${a.bookingLink ? `<a href="${escapeHtml(a.bookingLink)}" target="_blank" class="btn-ghost btn btn-small" style="text-decoration:none;">Booking</a>` : ''}
+      ${a.link ? linkButton(a.link, 'Lien') : ''}
+      ${a.bookingLink ? linkButton(a.bookingLink, 'Booking') : ''}
     </div>
   </div>`;
 }

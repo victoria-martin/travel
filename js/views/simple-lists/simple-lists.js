@@ -3,11 +3,14 @@ const SIMPLE_CONFIG = {
     dataKey: 'cars',
     title: 'Voitures',
     subtitle: 'Options de location',
+    leadCell: defaultCarCell,
     fields: [
-      { key: 'name', label: 'Loueur / modèle', type: 'text' },
+      { key: 'name', label: 'Loueur', type: 'text' },
+      { key: 'model', label: 'Modèle', type: 'text' },
       { key: 'price', label: 'Prix', type: 'text' },
       { key: 'dates', label: 'Dates', type: 'text' },
       { key: 'location', label: 'Lieu de prise en charge', type: 'text' },
+      { key: 'link', label: 'Lien', type: 'text', cell: linkCell },
       { key: 'notes', label: 'Notes', type: 'textarea' },
     ],
   },
@@ -75,7 +78,7 @@ function simpleTable(kind, items) {
     <table>
       <thead>
         <tr>
-          ${cols.map((c) => `<th>${c.label}</th>`).join('')}
+          ${cfg.leadCell ? '<th></th>' : ''} ${cols.map((c) => `<th>${c.label}</th>`).join('')}
           <th></th>
         </tr>
       </thead>
@@ -84,7 +87,13 @@ function simpleTable(kind, items) {
           .map(
             (it) =>
               /* HTML */ ` <tr>
-                ${cols.map((c) => `<td>${escapeHtml(it[c.key]) || '—'}</td>`).join('')}
+                ${cfg.leadCell ? `<td>${cfg.leadCell(it)}</td>` : ''}
+                ${cols
+                  .map(
+                    (c, i) =>
+                      `<td>${simpleCellContent(c, it)}${i === 0 ? `<div class="row-notes">${simpleNotesEditable(kind, it)}</div>` : ''}</td>`,
+                  )
+                  .join('')}
                 <td style="white-space:nowrap;">
                   <button
                     class="icon-btn"
@@ -109,20 +118,28 @@ function simpleTable(kind, items) {
   </div>`;
 }
 
+function simpleCellContent(field, item) {
+  return field.cell ? field.cell(item) : escapeHtml(item[field.key]) || '—';
+}
+
 function simpleCards(kind, items) {
   const cfg = SIMPLE_CONFIG[kind];
   const titleKey = cfg.fields[0].key;
+  const metaFields = cfg.fields.slice(1).filter((f) => f.key !== 'notes' && f.key !== 'link');
   return /* HTML */ `<div class="card-grid">
     ${items
       .map(
         (it) =>
           /* HTML */ ` <div class="card">
-            <p class="card-name">${escapeHtml(it[titleKey]) || 'Sans nom'}</p>
+            <div class="card-top">
+              <p class="card-name">${escapeHtml(it[titleKey]) || 'Sans nom'}</p>
+              ${cfg.leadCell ? cfg.leadCell(it) : ''}
+            </div>
             <div class="card-meta">
-              ${cfg.fields
-                .slice(1)
+              ${metaFields
                 .map((f) => (it[f.key] ? `<span>${f.label} : ${escapeHtml(it[f.key])}</span>` : ''))
                 .join('')}
+              <span>📝 ${simpleNotesEditable(kind, it)}</span>
             </div>
             <div class="card-actions">
               <button class="btn-ghost btn btn-small" onclick="openModal('${kind}','${it.id}')">
@@ -134,6 +151,7 @@ function simpleCards(kind, items) {
               >
                 Suppr.
               </button>
+              ${it.link ? linkButton(it.link, 'Lien') : ''}
             </div>
           </div>`,
       )

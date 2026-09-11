@@ -68,7 +68,7 @@ function favoriteCell(a) {
 }
 
 function nameCell(a) {
-  const notes = `<div style="color:var(--ink-soft); font-size:12px; margin-top:2px;">${notesEditable(a)}</div>`;
+  const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
   return `<strong>${escapeHtml(a.name)}</strong>${notes}`;
 }
 
@@ -86,11 +86,6 @@ function statusCell(a) {
 
 function addressCell(a) {
   return escapeHtml(a.address) || '—';
-}
-
-function linkCell(a) {
-  if (!a.link) return '—';
-  return `<a href="${escapeHtml(a.link)}" target="_blank" style="color:var(--stone-dark);">Voir</a>`;
 }
 
 function bookingLinkCell(a) {

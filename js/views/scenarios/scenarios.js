@@ -23,7 +23,7 @@ function createScenario() {
   const s = {
     id: uid(),
     name: 'Nouveau scénario',
-    carId: null,
+    carId: defaultCar()?.id || null,
     costIds: [],
     favorite: false,
     steps: [],

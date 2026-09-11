@@ -26,7 +26,7 @@ const COLLECTIONS = {
     'tags',
     'favorite',
   ],
-  cars: ['id', 'name', 'price', 'dates', 'location', 'notes'],
+  cars: ['id', 'name', 'model', 'price', 'dates', 'location', 'link', 'notes', 'isDefault'],
   fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
   scenarios: ['id', 'name', 'carId', 'costIds', 'favorite'],
@@ -44,7 +44,7 @@ const COLLECTIONS = {
     'notes',
   ],
 };
-const BOOL_FIELDS = ['favorite'];
+const BOOL_FIELDS = ['favorite', 'isDefault'];
 const NUM_FIELDS = ['nights'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'tags'];

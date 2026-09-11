@@ -17,7 +17,7 @@ function scenarioCarBlock(scenario) {
             ${state.cars
               .map(
                 (c) =>
-                  `<option value="${c.id}" ${scenario.carId === c.id ? 'selected' : ''}>${escapeHtml(c.name) || 'Sans nom'}${c.price ? ` · ${escapeHtml(c.price)} €` : ''}</option>`,
+                  `<option value="${c.id}" ${scenario.carId === c.id ? 'selected' : ''}>${escapeHtml(carLabel(c))}${c.price ? ` · ${escapeHtml(c.price)} €` : ''}</option>`,
               )
               .join('')}
           </select>`
@@ -29,4 +29,8 @@ function setScenarioCar(scenarioId, carId) {
   getScenario(scenarioId).carId = carId || null;
   saveNow();
   render();
+}
+
+function carLabel(car) {
+  return [car.name, car.model].filter(Boolean).join(' · ') || 'Sans nom';
 }
