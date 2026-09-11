@@ -22,8 +22,13 @@ function render() {
 
 function navBtn(key, icon, label) {
   const isActive = view === key || (key === 'scenarios' && view === 'scenario-detail');
-  return /* HTML */ `<button class="nav-btn ${isActive ? 'active' : ''}" onclick="goTo('${key}')">
-    <span class="nav-icon">${icon}</span>${label}
+  return /* HTML */ `<button
+    class="nav-btn ${isActive ? 'active' : ''}"
+    title="${label}"
+    aria-label="${label}"
+    onclick="goTo('${key}')"
+  >
+    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span>
   </button>`;
 }
 

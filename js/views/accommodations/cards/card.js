@@ -17,7 +17,7 @@ function accommodationCard(a) {
         >📍
         ${[a.city, a.county].filter(Boolean).map(escapeHtml).join(' · ') || 'non localisé'}</span
       >
-      ${a.price ? `<span>💶 ${escapeHtml(a.price)} €</span>` : ''}
+      ${a.price ? `<span>💶 ${escapeHtml(a.price)} ${accommodationPriceUnit(a)}</span>` : ''}
       ${a.dates ? `<span>📅 ${escapeHtml(a.dates)}</span>` : ''}
       <span>📝 ${notesEditable(a)}</span>
     </div>

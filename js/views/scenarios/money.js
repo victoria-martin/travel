@@ -24,11 +24,6 @@ function hasStepBudget(step) {
   return String(step.budget == null ? '' : step.budget).trim() !== '';
 }
 
-// Un budget saisi sur l'étape remplace le prix de l'hébergement.
-function stepCost(step) {
-  return hasStepBudget(step) ? priceNumber(step.budget) : accommodationCost(step);
-}
-
 function placeCost(row) {
   return nightPrice(row.acc) * row.nights;
 }
@@ -57,6 +52,11 @@ function formatEuros(amount) {
 
 function formatGuestPoints(amount) {
   return `${Math.round(amount).toLocaleString('fr-FR')} GP`;
+}
+
+// Le prix saisi à la main s'affiche tel quel : il ne manque que sa monnaie.
+function accommodationPriceUnit(acc) {
+  return isGuestPointsAccommodation(acc) ? 'GP' : '€';
 }
 
 function formatAccommodationCost(acc, amount) {

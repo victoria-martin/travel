@@ -43,6 +43,7 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 
 ### Plus tard
 
+- ajout type de transport entre étapes - à réfléchir
 - Distance entre deux étapes.
 - Estimation de l'essence.
 - Estimation des péages.

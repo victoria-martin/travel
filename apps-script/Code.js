@@ -49,7 +49,9 @@ const NUM_FIELDS = ['nights'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'tags'];
 
-function doGet() {
+function doGet(e) {
+  var homeExchangeUrl = e && e.parameter ? e.parameter.homeExchange : '';
+  if (homeExchangeUrl) return json(scrapeHomeExchange(homeExchangeUrl));
   return json(readState());
 }
 

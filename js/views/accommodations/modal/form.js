@@ -74,7 +74,13 @@ function accommodationForm(p) {
     </div>
     <div class="field">
       <label>Lien</label
-      ><input id="f-link" type="text" value="${escapeHtml(p.link)}" placeholder="https://..." />
+      ><input
+        id="f-link"
+        type="text"
+        value="${escapeHtml(p.link)}"
+        placeholder="https://..."
+        onchange="importHomeExchangeLink()"
+      />
     </div>
     <div class="field">
       <label>Lien Booking</label

@@ -143,7 +143,7 @@ function initMap() {
       fillOpacity: 0.9,
     })
       .bindPopup(
-        `<strong>${a.favorite ? '★ ' : ''}${escapeHtml(a.name)}</strong><br/>${accType(a.type).label} · ${escapeHtml(a.city)}${a.price ? `<br/>${escapeHtml(a.price)} €` : ''}`,
+        `<strong>${a.favorite ? '★ ' : ''}${escapeHtml(a.name)}</strong><br/>${accType(a.type).label} · ${escapeHtml(a.city)}${a.price ? `<br/>${escapeHtml(a.price)} ${accommodationPriceUnit(a)}` : ''}`,
       )
       .addTo(leafletMap);
   });

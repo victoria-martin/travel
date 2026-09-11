@@ -825,6 +825,27 @@ tr:hover td {
   }
 }
 
+@media (max-width: 700px) {
+  .sidebar {
+    justify-content: space-between;
+    gap: 4px;
+    overflow-x: visible;
+  }
+  .nav-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 6px;
+    gap: 0;
+  }
+  .nav-label {
+    display: none;
+  }
+  .nav-icon {
+    font-size: 19px;
+    width: auto;
+  }
+}
+
 .editable {
   border-radius: 4px;
   padding: 0 2px;
@@ -912,6 +933,32 @@ tr:hover td {
 }
 .tags-field input:focus {
   outline: none;
+}
+.tags-field-inline {
+  padding: 2px 6px;
+  gap: 4px;
+}
+.tags-field-inline input {
+  min-width: 90px;
+  font-size: 12px;
+}
+.tags-cell-display {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.tags-cell-add {
+  color: var(--ink-soft);
+  opacity: 0.6;
+}
+.tags-cell-display:hover .tags-cell-add {
+  opacity: 1;
 }
 .sort-panel .filter-block {
   margin-bottom: 10px;
