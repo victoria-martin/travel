@@ -107,6 +107,15 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
+/* Every control sitting in a view header shares one height. */
+.view-header .btn,
+.filter-toggle,
+.col-picker > summary,
+.toggle-group button {
+  font-size: 13px;
+  line-height: 1.3;
+  padding: 7px 14px;
+}
 .view-title {
   font-family: 'Fraunces', serif;
   font-weight: 600;
@@ -167,13 +176,11 @@ body {
 }
 .col-picker > summary {
   list-style: none;
-  font-size: 13px;
   font-weight: 500;
   color: var(--stone-dark);
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 7px 14px;
   cursor: pointer;
   user-select: none;
 }
@@ -278,6 +285,25 @@ body {
   border-color: var(--stone-dark);
 }
 
+.filter-toggle {
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--stone-dark);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.filter-toggle:hover {
+  border-color: var(--stone-dark);
+}
+.filter-toggle.active {
+  background: var(--stone);
+  color: var(--white);
+  border-color: var(--stone);
+}
+
 .toggle-group {
   display: inline-flex;
   border: 1px solid var(--line);
@@ -286,11 +312,9 @@ body {
 }
 .toggle-group button {
   font-family: inherit;
-  font-size: 13px;
   font-weight: 500;
   background: var(--paper-raised);
   border: none;
-  padding: 7px 14px;
   cursor: pointer;
   color: var(--ink-soft);
 }

@@ -12,13 +12,13 @@ function accommodationsHeader(items) {
       </p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-      <button class="btn-ghost btn" onclick="openPasteImport()">
-        📋 Importer depuis un tableau
-      </button>
-      <label class="filter-option" style="padding:0;"
-        ><input type="checkbox" ${favOnly ? 'checked' : ''} onchange="toggleFavOnly()" /> ⭐ Favoris
-        uniquement</label
+      <button
+        style="padding: 7px 7px;"
+        class="filter-toggle ${favOnly ? 'active' : ''}"
+        onclick="toggleFavOnly()"
       >
+        ⭐
+      </button>
       ${mode === 'table' ? sortPanel('hebergements', tagFilterBlock()) : ''}
       ${mode === 'table' ? columnPicker('hebergements') : ''}
       <div class="toggle-group">

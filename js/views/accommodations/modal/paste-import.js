@@ -43,9 +43,9 @@ function headerMapping(cells) {
   return mapping.includes('name') ? mapping : null;
 }
 
-function openPasteImport() {
-  openModal('paste-import');
-}
+// function openPasteImport() {
+//   openModal('paste-import');
+// }
 
 function pasteImportForm() {
   return /* HTML */ `
