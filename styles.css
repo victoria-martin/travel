@@ -600,6 +600,12 @@ tr:hover td {
   font-weight: 700;
   flex-shrink: 0;
 }
+.step-order-unmapped {
+  box-sizing: border-box;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px dashed var(--ink-soft);
+}
 .step-body {
   flex: 1;
   min-width: 0;
@@ -828,6 +834,36 @@ tr:hover td {
   border-radius: 12px;
   border: 1px solid var(--line);
   flex: 1;
+}
+.step-pin {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #c98a3e;
+  border: 1.5px solid #24312b;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.step-pin-sep {
+  border-top: 1px solid var(--line);
+  margin: 6px 0;
+}
+.route-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--stone);
+  font-size: 15px;
+  line-height: 1;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 4px #fff;
 }
 .legend-dot {
   width: 10px;

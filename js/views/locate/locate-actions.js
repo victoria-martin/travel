@@ -35,11 +35,29 @@ function applyGeocodeMatch(index) {
     document.getElementById(`geo-${key}`).value = match[key] || '';
   });
   geocodeMatches = [];
-  renderGeocodeMatches();
+  saveLocatedForm();
   setGeocodeStatus(
-    `📍 ${[match.city, match.county, match.region].filter(Boolean).join(' · ') || match.label}`,
+    `📍 ${[match.city, match.county, match.region].filter(Boolean).join(' · ') || match.label} — enregistré`,
     false,
   );
+}
+
+const LOCATED_FORMS = {
+  accommodation: {
+    read: (id) => readAccommodationForm(id),
+    upsert: (item) => upsertAccommodation(item),
+  },
+  ville: { read: (id) => readCityForm(id), upsert: (item) => upsertCity(item) },
+};
+
+/* A found position is worth keeping right away: the record is written, the modal stays on it. */
+function saveLocatedForm() {
+  const form = LOCATED_FORMS[modal.type];
+  if (!form) return;
+  const item = form.read(modal.payload.id);
+  form.upsert(item);
+  modal.payload = item;
+  render();
 }
 
 function readLocateFields() {

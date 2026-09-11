@@ -150,11 +150,22 @@ function initMap() {
       fillColor: color,
       fillOpacity: 0.9,
     })
-      .bindPopup(
-        `<strong>${a.favorite ? '★ ' : ''}${escapeHtml(a.name)}</strong><br/>${accType(a.type).label} · ${escapeHtml(a.city)}${a.price ? `<br/>${escapeHtml(a.price)} ${accommodationPriceUnit(a)}` : ''}`,
-      )
+      .bindPopup(accommodationPopup(a))
       .addTo(leafletMap);
   });
 
   fitToPoints(leafletMap, bounds);
+}
+
+function accommodationPopup(a) {
+  const place = [accType(a.type).label, escapeHtml(a.city)].filter(Boolean).join(' · ');
+  const price = a.price ? `<br/>${escapeHtml(a.price)} ${accommodationPriceUnit(a)}` : '';
+  return `<strong>${accommodationPopupName(a)}</strong><br/>${place}${price}`;
+}
+
+function accommodationPopupName(a) {
+  const name = `${a.favorite ? '★ ' : ''}${escapeHtml(a.name)}`;
+  const url = a.link || a.bookingLink;
+  if (!url) return name;
+  return `<a href="${escapeHtml(url)}" target="_blank" style="color:var(--stone-dark);">${name}</a>`;
 }

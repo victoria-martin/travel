@@ -37,6 +37,11 @@ Pas de `data.js` ni de `helpers.js` fourre-tout (démantelés en `87bc0c4`).
 
 ## Journal
 
+- **2026-09-11** — `js/views/cells/` créé pour les briques de cellule partagées : `text-cell.js`,
+  `link-cell.js` et `actions/` (`edit-button.js`, `duplicate-button.js`, `delete-button.js`).
+  `linkButton`, qui ne sert qu'aux cartes, est sorti dans [link-button.js](js/views/link-button.js).
+- **2026-09-11** — les cinq `duplicate*` regroupés dans [duplicate.js](js/views/duplicate.js),
+  sortis de `scenarios.js` et de `fixed-costs/`.
 - **2026-09-11** — `simple-lists/` éclaté en `cars/`, `fixed-costs/` et le générique `list/`.
 - **2026-09-11** — `cities/table.js` + `row.js` fondus dans le tableau générique, colonnes sorties
   dans [cities/columns.js](js/views/cities/columns.js).

@@ -1,6 +1,6 @@
-function saveCity(id) {
+function readCityForm(id) {
   const located = readLocateFields();
-  const item = {
+  return {
     id: id || uid(),
     name: document.getElementById('c-name').value.trim() || 'Sans nom',
     geoAddress: located.geoAddress,
@@ -10,13 +10,16 @@ function saveCity(id) {
     region: located.region,
     notes: document.getElementById('c-notes').value.trim(),
   };
+}
 
-  if (id) {
-    const idx = state.cities.findIndex((c) => c.id === id);
-    state.cities[idx] = item;
-  } else {
-    state.cities.push(item);
-  }
+function upsertCity(item) {
+  const idx = state.cities.findIndex((c) => c.id === item.id);
+  if (idx === -1) state.cities.push(item);
+  else state.cities[idx] = item;
   saveNow();
+}
+
+function saveCity(id) {
+  upsertCity(readCityForm(id));
   closeModal();
 }

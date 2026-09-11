@@ -1,7 +1,15 @@
+// Une étape sans lieu géolocalisé est absente du tracé : la pastille le dit sur place.
+function stepOrderBadge(step, idx) {
+  if (coordsFor(step)) return `<div class="step-order">${stepLetter(idx)}</div>`;
+  return /* HTML */ `<div class="step-order step-order-unmapped" title="Pas de lieu géolocalisé — absente de la carte">
+    ${stepLetter(idx)}
+  </div>`;
+}
+
 function stepCard(scenario, step, idx) {
   return /* HTML */ `
     <div class="step-card">
-      <div class="step-order">${idx + 1}</div>
+      ${stepOrderBadge(step, idx)}
       <div class="step-body">
         <div class="step-title">
           ${editableText(step.city, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {

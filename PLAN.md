@@ -22,6 +22,12 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
   qui partent des villes déjà choisies — par exemple les villes des étapes d'un scénario. Sources
   et point d'entrée à préciser.
 
+## Todo list de voyage
+
+- **Créer la page** — ⏳ idée : une liste de choses à préparer / emporter, cochables. Tout reste à
+  préciser : items libres ou modèle par défaut, rattachement à un scénario ou à une étape, place
+  dans la barre latérale.
+
 ## Scénarios
 
 - **Charges fixes** — ⏳ à faire
@@ -70,6 +76,11 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
   [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).
+- **Les actions des cartes sont triplées** — ⏳ à faire : la paire Modifier / Suppr. en
+  `btn-ghost` / `btn-danger` est recopiée dans [accommodations/cards/card.js](js/views/accommodations/cards/card.js#L19),
+  [cars/cards.js](js/views/cars/cards.js#L19) et [fixed-costs/cards.js](js/views/fixed-costs/cards.js#L17).
+  Même besoin que [cells/actions/](js/views/cells/actions/), mais en boutons texte : une brique à
+  part, pas un paramètre de plus sur `editButton` / `deleteButton`.
 - **`scenarios/list/` et `list/` portent le même nom** — ⏳ à trancher : l'un est la liste des
   scénarios, l'autre le mécanisme générique de liste.
 - **La structure des fichiers du README est périmée** — ⏳ à faire : le bloc de

@@ -1,6 +1,6 @@
-function saveAccommodation(id) {
+function readAccommodationForm(id) {
   const located = readLocateFields();
-  const item = {
+  return {
     id: id || uid(),
     type: document.getElementById('f-type').value,
     status: document.getElementById('f-status').value,
@@ -20,13 +20,16 @@ function saveAccommodation(id) {
     tags: [...modal.payload.tags],
     favorite: document.getElementById('f-favorite').checked,
   };
+}
 
-  if (id) {
-    const idx = state.accommodations.findIndex((a) => a.id === id);
-    state.accommodations[idx] = item;
-  } else {
-    state.accommodations.push(item);
-  }
+function upsertAccommodation(item) {
+  const idx = state.accommodations.findIndex((a) => a.id === item.id);
+  if (idx === -1) state.accommodations.push(item);
+  else state.accommodations[idx] = item;
   saveNow();
+}
+
+function saveAccommodation(id) {
+  upsertAccommodation(readAccommodationForm(id));
   closeModal();
 }
