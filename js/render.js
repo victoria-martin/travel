@@ -1,3 +1,5 @@
+let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte | notes
+
 function render() {
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `

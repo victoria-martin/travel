@@ -1,3 +1,5 @@
+let listFilters = { favOnly: false, tags: [] };
+
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
   let items = sortItems('hebergements', state.accommodations);

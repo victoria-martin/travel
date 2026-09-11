@@ -1,3 +1,5 @@
+let scenarioDetailMap = null;
+
 function scenarioMapBlock(scenario) {
   const hasPlaces = scenario.steps.some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">

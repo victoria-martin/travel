@@ -19,7 +19,10 @@ Une app statique, sans build ni bundler : chaque fichier est chargé tel quel pa
 ```
 index.html                                 balises + ordre de chargement
 styles.css                                 tout le style
-js/data.js                                 types d'hébergement, état global
+js/state.js                                état global partagé (`state`)
+js/accommodation-types.js                  types d'hébergement
+js/accommodation-statuses.js               statuts d'hébergement
+js/uid.js                                  identifiants des éléments créés
 js/storage.js                              cache localStorage
 js/sync.js                                 synchro Google Sheets (voir plus bas)
 js/helpers.js                              utilitaires

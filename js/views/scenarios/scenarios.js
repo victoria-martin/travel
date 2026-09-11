@@ -1,3 +1,5 @@
+let activeScenarioId = null;
+
 function renderScenariosView() {
   const items = [...state.scenarios].sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0));
   return /* HTML */ `

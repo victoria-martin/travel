@@ -3,6 +3,8 @@
   rendre son corps ; les formulaires eux-mêmes vivent dans le dossier de leur vue.
 */
 
+let modal = null; // {type, payload}
+
 const SIMPLE_MODAL = {
   open: (id, _stepId, kind) => {
     const existing = getSimple(kind, id);

@@ -11,10 +11,7 @@ function stepCard(scenario, step, idx) {
         </div>
         ${stepDetailLine(step)}
         <div class="step-acc">
-          <select
-            class="step-acc-place"
-            onchange="setStepPlace('${scenario.id}','${step.id}', this.value)"
-          >
+          <select onchange="setStepPlace('${scenario.id}','${step.id}', this.value)">
             <option value="">— Aucun lieu choisi —</option>
             ${stepPlaceOptions(step)}
           </select>

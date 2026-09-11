@@ -48,6 +48,13 @@ Suivi du travail sur l'app, rangé par page. Mettre à jour l'état ici à chaqu
 - Estimation de l'essence.
 - Estimation des péages.
 
+## Toobar
+
+- option pour afficher les textes dans les boutons ou non
+- sauvegarder le choix dans le localStorage
+- tous les boutons trier, display favorites deviennent icon-button, le view card/table devientun toggle-group je crois et ajouter juste icone +
+- créer un bouton "trier"
+
 ---
 
 # Fait
@@ -76,8 +83,8 @@ existe dès qu'il est tapé quelque part et disparaît avec son dernier porteur.
 ### Trois statuts de plus — ✅
 
 Intéressé 👍, Attente réponse ⏳ et À booker 💳 s'ajoutent à `ACCOMMODATION_STATUSES`
-([data.js](js/data.js)), qui pilote seule le select de la modale, le select en ligne et le tri de la
-colonne Statut. Les statuts y sont rangés dans l'ordre du workflow (à voir → réservé, puis les deux
+([accommodation-statuses.js](js/accommodation-statuses.js)), qui pilote seule le select de la
+modale, le select en ligne et le tri de la colonne Statut. Les statuts y sont rangés dans l'ordre du workflow (à voir → réservé, puis les deux
 sorties pas dispo / écarté), c'est cet ordre que suit le tri.
 
 ### Province et région saisissables — ✅
@@ -99,7 +106,8 @@ choix d'un résultat de géocodage écrase toujours les deux champs.
   — il remplace tout par un tri simple et cycle croissant → décroissant → aucun.
 - `sortValue` posé sur type, statut et ville
   ([columns.js](js/views/accommodations/table/columns.js)). Type et statut se trient sur l'**ordre
-  de leur map** dans [data.js](js/data.js) : réorganiser `ACCOMMODATION_TYPES` ou
+  de leur map** dans [accommodation-types.js](js/accommodation-types.js) et
+  [accommodation-statuses.js](js/accommodation-statuses.js) : réorganiser `ACCOMMODATION_TYPES` ou
   `ACCOMMODATION_STATUSES` change le tri.
 - Les favoris sont un critère comme un autre : ⭐ se retire, se combine ou s'inverse comme les
   autres colonnes. Une colonne peut nommer ses deux sens via `sortLabels`.

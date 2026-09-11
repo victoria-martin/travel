@@ -3,6 +3,8 @@
   dans l'app. localStorage sert de cache local, pour travailler hors ligne entre deux synchros.
 */
 
+const LOCAL_KEY = 'voyage-toscane-local-data';
+
 function emptyData() {
   return { accommodations: [], cars: [], fixedCosts: [], cities: [], scenarios: [], tripNotes: [] };
 }

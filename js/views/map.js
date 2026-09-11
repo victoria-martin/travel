@@ -1,3 +1,11 @@
+let mapFilters = {
+  types: new Set(Object.keys(ACCOMMODATION_TYPES)),
+  counties: new Set(),
+  scenarioId: null,
+  favOnly: false,
+};
+let leafletMap = null;
+
 function distinctCounties() {
   const set = new Set();
   state.accommodations.forEach((a) => {
