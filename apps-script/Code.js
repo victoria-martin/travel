@@ -6,6 +6,20 @@
  */
 
 const COLLECTIONS = {
+  travels: [
+    'id',
+    'name',
+    'emoji',
+    'image',
+    'description',
+    'status',
+    'startDate',
+    'endDate',
+    'country',
+    'region',
+    'accentColor',
+    'travelers',
+  ],
   accommodations: [
     'id',
     'type',
@@ -25,12 +39,24 @@ const COLLECTIONS = {
     'notes',
     'tags',
     'favorite',
+    'travelId',
   ],
-  cars: ['id', 'name', 'model', 'price', 'dates', 'location', 'link', 'notes', 'isDefault'],
-  fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes'],
-  cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
-  scenarios: ['id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
-  tripNotes: ['id', 'text'],
+  cars: [
+    'id',
+    'name',
+    'model',
+    'price',
+    'dates',
+    'location',
+    'link',
+    'notes',
+    'isDefault',
+    'travelId',
+  ],
+  fixedCosts: ['id', 'label', 'amount', 'category', 'recurrence', 'notes', 'travelId'],
+  cities: ['id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes', 'travelId'],
+  scenarios: ['id', 'name', 'startDate', 'carId', 'costIds', 'favorite', 'travelId'],
+  tripNotes: ['id', 'text', 'travelId'],
   steps: [
     'id',
     'scenarioId',
@@ -45,7 +71,7 @@ const COLLECTIONS = {
   ],
 };
 const BOOL_FIELDS = ['favorite', 'isDefault'];
-const NUM_FIELDS = ['nights'];
+const NUM_FIELDS = ['nights', 'travelers'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'tags'];
 
@@ -104,6 +130,7 @@ function readState() {
   });
 
   var data = {
+    travels: rows.travels,
     accommodations: rows.accommodations,
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
@@ -170,6 +197,7 @@ function normalizeState(data) {
   });
 
   return {
+    travels: normalizeCollection('travels', data.travels),
     accommodations: normalizeCollection('accommodations', data.accommodations),
     cars: normalizeCollection('cars', data.cars),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
@@ -245,6 +273,7 @@ function writeState(data) {
     });
   });
 
+  writeSheet('travels', data.travels || []);
   writeSheet('accommodations', data.accommodations || []);
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);

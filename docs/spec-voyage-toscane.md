@@ -1,4 +1,4 @@
-# Spec produit — Voyage Toscane
+# Spec produit — Carnet de voyages
 
 Spec fonctionnelle de l'app, écrite comme exemple de format : **décisions actées** en tête,
 **modèle de données** ensuite, puis **un bloc par écran** qui dit ce qu'on voit, ce qu'on peut
@@ -11,9 +11,11 @@ Documents liés : [blueprint réutilisable](blueprint-app-sheet.md) · [protocol
 
 ## 1. Objectif
 
-Préparer un voyage à plusieurs : rassembler des hébergements candidats, les situer sur une carte,
-et **comparer plusieurs itinéraires chiffrés** avant de réserver quoi que ce soit.
+Préparer ses voyages à plusieurs : pour chacun, rassembler des hébergements candidats, les situer
+sur une carte, et **comparer plusieurs itinéraires chiffrés** avant de réserver quoi que ce soit.
 
+- **Plusieurs voyages** cohabitent dans la même app. On en ouvre un, et tous les écrans ne montrent
+  que ses données.
 - **Utilisateurs** : deux à quelques personnes, toutes avec les mêmes droits, chacune sur son
   navigateur. Pas de compte, pas de rôle.
 - **Ce que l'app n'est pas** : ni un moteur de réservation, ni un agrégateur d'offres. Tout est
@@ -26,7 +28,9 @@ et **comparer plusieurs itinéraires chiffrés** avant de réserver quoi que ce 
 Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste découle :
 
 - Le prix d'un hébergement est un prix **par nuit** → total d'un lieu = prix × nuits.
-- Le prix d'une voiture et le montant d'une charge sont pris **tels quels**, sans multiplication.
+- Le montant d'une charge fixe est pris **tel quel**, sans multiplication. Le coût d'une voiture
+  dans un scénario est son prix **multiplié par les nuits** du scénario — cf. [PLAN.md](../PLAN.md),
+  cette règle contredit la décision d'origine et reste à trancher.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Voitures et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
@@ -35,6 +39,8 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   calculs, l'affichage garde la saisie.
 - Un budget saisi sur une étape **remplace** le prix calculé de l'hébergement, et reste en euros
   même sur une étape en GuestPoints.
+- Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
+  précèdent : elles ne se saisissent pas.
 
 ---
 
@@ -42,13 +48,17 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 | Entité              | Porte                                                                                                                              | Notes                                                |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs         | possède tout le reste ; un seul est ouvert à la fois |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori | la fiche de référence ; c'est elle qui porte le prix |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                        | une étape de passage sans nuit, ou un repère         |
 | **Voiture**         | loueur, modèle, prix, dates, lieu de prise en charge, lien, notes, **par défaut**                                                  | liste simple ; une seule voiture par défaut          |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
-| **Scénario**        | nom, favori, voiture, charges, **étapes**                                                                                          | un itinéraire candidat                               |
-| **Étape**           | lieu (une ville **ou** un hébergement), date d'arrivée, nuits, budget, notes                                                       | appartient à un scénario, l'ordre compte             |
+| **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                          | un itinéraire candidat                               |
+| **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre                                                 | appartient à un scénario, l'ordre compte             |
 | **Notes de voyage** | texte libre                                                                                                                        | un seul bloc, partagé                                |
+
+**Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
+En cours ✈️ · Passé 📦.
 
 **Type d'hébergement** — Home exchange 🔁 · Hôtel 🏨 · Maison 🏡 · Camping ⛺.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
@@ -62,6 +72,25 @@ Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 
 ## 4. Les écrans
 
 ### Hébergements
+
+**Hébergement** — la fiche de référence ; c'est elle qui porte le prix.
+
+| Champ                     | Détail                                                      |
+| ------------------------- | ----------------------------------------------------------- |
+| type                      | Home exchange · Hôtel · Maison · Camping                    |
+| statut                    | les neuf statuts du workflow                                |
+| nom                       |                                                             |
+| adresse                   | saisie libre, c'est elle qu'on géocode                      |
+| adresse géocodée          | écrite par « Localiser »                                    |
+| ville · province · région | proposées par le géocodage, modifiables à la main           |
+| coordonnées               | latitude, longitude                                         |
+| prix/nuit                 | texte libre ; en GuestPoints si le type est Home exchange   |
+| dates                     | texte libre (« 12–14 juin »)                                |
+| lien                      | l'annonce ; un lien HomeExchange collé pré-remplit la fiche |
+| lien de réservation       | Booking                                                     |
+| notes                     | éditables depuis la ligne                                   |
+| tags                      | liste libre, sans administration                            |
+| favori                    | ⭐, et un critère de tri                                    |
 
 La vue principale, en **tableau ou en cartes**.
 
@@ -89,15 +118,48 @@ La vue principale, en **tableau ou en cartes**.
   faite. Nécessite la synchro configurée : la page est lue par l'Apps Script, le navigateur ne peut
   pas la lire lui-même.
 - **Import depuis un tableau** : coller des lignes copiées d'un tableur crée les hébergements
-  correspondants ; type et statut sont reconnus depuis le texte, sinon valeurs par défaut. Le
-  formulaire existe mais **aucun bouton ne l'ouvre aujourd'hui** (cf. [PLAN.md](../PLAN.md)).
+  correspondants ; type et statut sont reconnus depuis le texte, sinon valeurs par défaut. Le bouton
+  « Importer » n'apparaît que **tant qu'aucun Sheet n'est connecté** — la synchro est ensuite la voie
+  d'entrée des lignes.
 
 ### Villes
+
+**Ville** — une étape de passage sans nuit, ou un repère.
+
+| Champ            | Détail                                            |
+| ---------------- | ------------------------------------------------- |
+| nom              |                                                   |
+| adresse géocodée | écrite par « Localiser »                          |
+| coordonnées      | latitude, longitude                               |
+| province, région | proposées par le géocodage, modifiables à la main |
+| notes            |                                                   |
 
 Liste triée par nom : nom, lieu (adresse géocodée, ou province · région), coordonnées, notes. Même
 bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
 
 ### Voitures · Charges fixes
+
+**Voiture**
+
+| Champ                   | Détail                                          |
+| ----------------------- | ----------------------------------------------- |
+| loueur, modèle          | les deux forment le libellé « loueur · modèle » |
+| prix                    | texte libre                                     |
+| dates                   | texte libre                                     |
+| lieu de prise en charge |                                                 |
+| lien                    |                                                 |
+| notes                   | éditables depuis la ligne                       |
+| par défaut              | une seule voiture à la fois                     |
+
+**Charge fixe**
+
+| Champ      | Détail                     |
+| ---------- | -------------------------- |
+| libellé    |                            |
+| montant    | texte libre, pris tel quel |
+| catégorie  | texte libre                |
+| récurrence | texte libre                |
+| notes      | éditables depuis la ligne  |
 
 Deux listes simples, mêmes gestes : tableau ou cartes, ajout/modification en modale, suppression
 confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'est pas présenté.
@@ -110,32 +172,78 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
 
 ### Scénarios
 
+**Scénario** — un itinéraire candidat.
+
+| Champ          | Détail                                           |
+| -------------- | ------------------------------------------------ |
+| nom            | éditable en ligne dans le détail                 |
+| favori         | ⭐, remonte en tête de liste                     |
+| date de départ | date les étapes ; vide, aucune date ne s'affiche |
+| voiture        | une référence à la table Voitures                |
+| charges        | des références à la table Charges fixes          |
+| étapes         | ordonnées ; l'ordre est le trajet                |
+
+**Étape** — appartient à un scénario.
+
+| Champ          | Détail                                                |
+| -------------- | ----------------------------------------------------- |
+| titre          | éditable en ligne                                     |
+| région         | affichée à côté du titre                              |
+| lieu           | une ville **ou** un hébergement, exclusifs            |
+| nuits          | 0 à 14                                                |
+| budget         | remplace le coût calculé de l'hébergement             |
+| date d'arrivée | champ libre de la modale, en plus de la date calculée |
+| notes          |                                                       |
+
 - **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
   tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
   « (copie) »), supprimer.
+- **Date de départ** : un champ dans l'en-tête du détail. Il date la première étape, et les nuits
+  de chaque étape décalent les suivantes. Sans date de départ, aucune date ne s'affiche.
 - **Détail**, en deux colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
   colonne de droite collante. Bouton « Masquer / Afficher la carte », dont l'état est retenu d'une
   session à l'autre. Sous 1100 px, la carte repasse sous les étapes.
-- **Une étape** : titre éditable en ligne, date d'arrivée et notes en dessous, un select de lieu
+- **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
+  le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne, puis en
+  dessous ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si 0 nuit),
+  sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite un select de lieu
   (**une ville ou un hébergement**, les deux dans le même select, exclusifs), un select de nuits
   (0 à 14), et en bout de ligne le coût. Réordonnable ↑↓, supprimable.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix.
-- **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût. Un
-  scénario créé naît avec la **voiture par défaut** déjà rattachée : c'est une valeur de départ, pas
-  un repli — « Aucune voiture » reste un choix qui tient, et les scénarios existants ne bougent pas.
-- **Récap** : une ligne par lieu (lieu · nuits · total), puis « Total hébergements ». Les nuits en
-  home exchange ont **leur propre ligne en GuestPoints**.
-- **Trajet** : marqueurs des étapes et tracé routier réel, partagé avec la vue Carte.
+- **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
+  de la voiture × nuits du scénario. Un scénario créé naît avec la **voiture par défaut**
+  rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
+  tient, et les scénarios existants ne bougent pas.
+- **Récap** : une ligne par lieu (lieu · nuits · total), les lieux les plus dormis en tête — un lieu
+  revisité tient sur une seule ligne, ses nuits additionnées. Les deux bouts du trajet l'encadrent
+  dans l'ordre des étapes, avec leur date. Puis « Total hébergements » ; les nuits en home exchange
+  ont **leur propre ligne en GuestPoints**.
+- **Trajet** : une pastille par étape portant sa lettre, le tracé routier réel, et des chevrons
+  réguliers qui en donnent le sens. Deux étapes au même endroit partagent une pastille (« A·G »), et
+  son popup liste leurs dates et leurs nuits. Le bloc est partagé avec la vue Carte.
 
 ### Carte
+
+Aucune entité propre — l'écran lit :
+
+| Entité          | Champs lus                          | Notes                               |
+| --------------- | ----------------------------------- | ----------------------------------- |
+| **Hébergement** | coordonnées, type, province, favori | sans coordonnées, pas de marqueur   |
+| **Scénario**    | étapes                              | choisi en filtre, il donne le tracé |
 
 Tous les hébergements géolocalisés, en couleur par type. Filtres : type, province, ⭐ favoris,
 et **scénario** — choisir un scénario trace son trajet et n'affiche que les hébergements qu'il
 utilise.
 
 ### Notes
+
+**Notes de voyage**
+
+| Champ | Détail                |
+| ----- | --------------------- |
+| texte | un seul bloc, partagé |
 
 Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
@@ -144,6 +252,9 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 ## 5. Règles transverses
 
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Duplication** : hébergements, villes, voitures, charges et scénarios se dupliquent depuis leur
+  ligne. La copie reprend tous les champs, prend un nouvel identifiant et son nom est suffixé
+  « (copie) » — une voiture dupliquée ne reprend pas le statut « par défaut ».
 - **Liste vide** : un message d'état vide qui dit quoi faire, et qui change selon la cause —
   « aucun favori » et « aucun résultat pour ces tags » ne disent pas la même chose que
   « aucune entrée ».
@@ -165,11 +276,16 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du moment :
 
+- **Voyages** : l'app tient encore un seul voyage implicite — l'entité, la modale, le sélecteur de
+  la barre latérale et le rattachement des données restent à écrire. C'est le chantier en cours.
 - **Total général** d'un scénario (hébergements + voiture + charges) : le récap s'arrête aux
   hébergements.
 - **Charges fixes dans le scénario** : la relation existe dans le modèle, l'écran ne l'expose pas
   encore.
 - **Totaux par étape plutôt que par lieu** : le récap somme prix/nuit × nuits par lieu, donc un
   budget saisi sur une étape n'entre pas dans le total.
-- **Date de départ** du scénario, et donc les dates d'étapes calculées plutôt que saisies.
+- **Le coût d'une voiture est multiplié par les nuits**, contre la décision actée qui le prenait tel
+  quel — à trancher.
+- **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
+  « arrivée le » resté dans la modale, affiché à côté.
 - **Attractions** : page envisagée, pas encore spécifiée.

@@ -23,3 +23,5 @@ function persistPrefs() {
     console.error('Erreur de sauvegarde des préférences', e);
   }
 }
+
+// TODO: à renommer pour indiquer qu'no parle du storage ou autre chose pas juste "prefs"

@@ -4,12 +4,74 @@ Le backlog, rangé par page. Un item terminé **sort d'ici** et va décrire l'ap
 [docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : ce fichier n'archive pas ce qui est
 fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées » de la spec.
 
+## Voyages
+
+Une surcouche au-dessus de toute l'app : aujourd'hui tout est un seul voyage implicite (« Voyage
+Toscane », en dur dans [index.html:6](index.html#L6) et dans la barre latérale de
+[render.js:7-8](js/render.js#L7-L8)). Chaque item du backlog ci-dessous suppose que les données
+appartiennent à un voyage.
+
+**Tranché : un seul Sheet, une colonne `travelId`.** Les données de tous les voyages cohabitent
+dans les mêmes onglets et sont filtrées par l'app. L'autre piste — un classeur par voyage — a été
+écartée : l'Apps Script travaille sur `getActiveSpreadsheet()`
+([Code.js:285](apps-script/Code.js#L285)), donc chaque voyage aurait demandé de dupliquer le
+classeur et de redéployer le script à la main, et créer un voyage depuis l'app devenait impossible.
+
+Les huit premiers items forment le lot en cours, dans l'ordre où ils se codent ; les quatre
+suivants attendent sous « Plus tard ».
+
+- **Créer l'entité Voyage** — ⏳ à faire : `travels` dans `emptyData()`
+  ([storage.js:8](js/storage.js#L8)), avec nom, emoji, image, description, statut, dates de début et
+  de fin, destination (pays / région), couleur d'accent, voyageurs.
+- **Statuts** — ⏳ à faire : Idée, En préparation, Réservé, En cours, Passé — un fichier
+  `js/travel-statuses.js` sur le modèle de
+  [accommodation-statuses.js](js/accommodation-statuses.js).
+- **Rattacher toutes les données au voyage** — ⏳ à faire : `travelId` sur hébergements, voitures,
+  charges fixes, villes, scénarios et notes ; chaque getter et chaque vue ne lit que le voyage
+  courant. Les données existantes sont migrées vers un premier voyage dans `migrateData()`
+  ([storage.js:22](js/storage.js#L22)). La colonne s'ajoute **en fin** de chaque liste de
+  `COLLECTIONS` ([Code.js:9-33](apps-script/Code.js#L9-L33)) : une insertion au milieu décale toutes
+  les lignes déjà écrites, le bug que rattrape `unshiftAccommodation()`
+  ([storage.js:62](js/storage.js#L62)).
+- **Voyage courant** — ⏳ à faire : l'id du voyage ouvert vit dans `prefs`
+  ([prefs.js](js/prefs.js)), pas dans les données synchronisées, et se retrouve au rechargement.
+- **Modale Voyage** — ⏳ à faire : `js/views/travels/modal/form.js` et `save.js`, avec le choix de
+  l'emoji, l'image et le select de statut. Sert à créer comme à modifier un voyage.
+- **Sélecteur de voyage dans la barre latérale** — ⏳ à faire : en tête, à la place du titre en dur
+  ([render.js:7-8](js/render.js#L7-L8)) — un bouton emoji + nom + dates qui ouvre un menu
+  déroulant : les autres voyages, puis « Modifier » et « Nouveau voyage », tous deux vers la modale
+  Voyage. En sidebar réduite, `.brand` est masqué ([styles.css:890](styles.css#L890)) : il ne reste
+  que l'emoji, cliquable.
+- **Dates du voyage → scénarios** — ⏳ à faire : la date de début du voyage sert de valeur par
+  défaut au `startDate` d'un scénario, aujourd'hui saisi scénario par scénario.
+- **Synchro Google Sheet** — ⏳ à faire : un onglet `travels` de plus, et la fusion entrée par
+  entrée de [sync.js](js/sync.js) étendue aux voyages.
+
+### Plus tard
+
+- **Page Voyages** — ⏳ à faire : la liste des voyages en cartes (image, emoji, nom, destination,
+  dates, statut), avec créer / modifier / dupliquer / supprimer. Sert d'écran d'accueil quand aucun
+  voyage n'est ouvert. Tant qu'elle n'existe pas, le sélecteur de la barre latérale est le seul
+  point d'entrée.
+- **Onglet du navigateur** — ⏳ à faire : le titre et la favicon suivent le voyage courant, la
+  favicon étant l'emoji rendu en SVG `data:`.
+- **Couleur d'accent** — ⏳ à faire : la couleur du voyage pilote les variables CSS de l'app, pour
+  savoir d'un coup d'œil dans quel projet on est.
+- **Voyageurs → coût par personne** — ⏳ à faire : le récap d'un scénario affiche le total divisé
+  par le nombre de voyageurs, à côté du total général.
+
 ## Hébergements
 
-- **Modale « Importer depuis un tableau » injoignable** — ⏳ à trancher : `openPasteImport()` est
-  commentée ([paste-import.js](js/views/accommodations/modal/paste-import.js)) et rien n'appelle
-  `openModal('paste-import')`, donc aucun geste de l'app n'ouvre le formulaire — qui reste chargé
-  et enregistré dans [modal.js](js/modals/modal.js). À rebrancher sur un bouton ou à supprimer.
+- **Sort de l'import depuis un tableau** — ⏳ à trancher : le bouton « Importer » n'est affiché que
+  tant qu'aucun Sheet n'est connecté ([header.js:41](js/views/accommodations/header.js#L41)), et
+  `openPasteImport()` reste commentée dans
+  [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions ouvertes
+  sur le flux d'import de fichier. Garder, généraliser ou supprimer.
+- **Dropdown custom pour les selects inline** — ⏳ à faire : `accommodationTypeSelect` et
+  `accommodationStatusSelect` ([inline-selects.js](js/views/accommodations/inline-selects.js)) sont
+  des `<select>` natifs, dont les `<option>` n'affichent que du texte — impossible d'espacer
+  l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
+  leurs `onchange`.
 
 ## Attractions
 
@@ -40,7 +102,13 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
   détail par bloc.
 - **Totaliser par étape, pas par hébergement** — ⏳ à faire : le récap somme aujourd'hui prix/nuit ×
   nuits par lieu, donc un budget saisi sur une étape n'entre pas dans le total.
-- **Date de départ du scénario** — ⏳ à faire
+- **Coût de la voiture × nuits** — ⏳ à trancher : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
+  multiplie le prix de la voiture par les nuits du scénario, contre la décision actée « pris tel
+  quel, sans multiplication ». Corriger le code ou la décision — et le total s'affiche sans unité.
+- **Deux dates par étape** — ⏳ à trancher : les dates se calculent depuis le départ du scénario
+  ([step-dates.js](js/views/scenarios/step-dates.js)), mais le champ libre « arrivée le »
+  (`arrivalDate`) reste dans la modale et s'affiche à côté
+  ([step-card.js:88](js/views/scenarios/detail/step-card.js#L88)). Le retirer ou lui donner un rôle.
 - **Bouton « + Ajouter une voiture »** — ⏳ à faire : ouvre la modale Voitures et rattache la
   nouvelle voiture au scénario.
 - **Variables du scénario ou générales ?** — ⏳ à étudier
@@ -81,13 +149,3 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
   [cars/cards.js](js/views/cars/cards.js#L19) et [fixed-costs/cards.js](js/views/fixed-costs/cards.js#L17).
   Même besoin que [cells/actions/](js/views/cells/actions/), mais en boutons texte : une brique à
   part, pas un paramètre de plus sur `editButton` / `deleteButton`.
-- **`scenarios/list/` et `list/` portent le même nom** — ⏳ à trancher : l'un est la liste des
-  scénarios, l'autre le mécanisme générique de liste.
-- **La structure des fichiers du README est périmée** — ⏳ à faire : le bloc de
-  [README.md](README.md#L17) liste `data.js`, `helpers.js` et `simple-lists.js`, tous disparus.
-- **Découpage de `data.js`** — 🚧 en cours : un fichier par sujet
-  ([accommodation-types.js](js/accommodation-types.js),
-  [accommodation-statuses.js](js/accommodation-statuses.js), [uid.js](js/uid.js),
-  [state.js](js/state.js)), et le reste de l'état posé auprès de son seul consommateur — les nuits
-  dans [nights.js](js/views/scenarios/nights.js), `LOCAL_KEY` dans [storage.js](js/storage.js),
-  les filtres de la carte dans [map.js](js/views/map.js).

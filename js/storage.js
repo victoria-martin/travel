@@ -5,8 +5,25 @@
 
 const LOCAL_KEY = 'voyage-toscane-local-data';
 
+const TRAVEL_COLLECTIONS = [
+  'accommodations',
+  'cars',
+  'fixedCosts',
+  'cities',
+  'scenarios',
+  'tripNotes',
+];
+
 function emptyData() {
-  return { accommodations: [], cars: [], fixedCosts: [], cities: [], scenarios: [], tripNotes: [] };
+  return {
+    travels: [],
+    accommodations: [],
+    cars: [],
+    fixedCosts: [],
+    cities: [],
+    scenarios: [],
+    tripNotes: [],
+  };
 }
 
 function loadData() {
@@ -20,6 +37,7 @@ function loadData() {
   "Florence") — the same granularity the map filter now reads from `county`.
 */
 function migrateData(data) {
+  if (!data.travels) data.travels = [];
   if (!data.cities) data.cities = [];
   if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
@@ -45,7 +63,39 @@ function migrateData(data) {
       delete c.address;
     }
   });
+  attachOrphansToFirstTravel(data);
   return data;
+}
+
+// Every entry predates the Voyage entity, so the ones without a travelId are adopted by the
+// first travel, created here when there is none yet.
+function attachOrphansToFirstTravel(data) {
+  const orphans = TRAVEL_COLLECTIONS.flatMap((name) =>
+    (data[name] || []).filter((item) => !item.travelId),
+  );
+  if (!orphans.length) return;
+  if (!data.travels.length) data.travels.push(firstTravel());
+  const travelId = data.travels[0].id;
+  orphans.forEach((item) => {
+    item.travelId = travelId;
+  });
+}
+
+function firstTravel() {
+  return {
+    id: uid(),
+    name: 'Voyage Toscane',
+    emoji: '🌿',
+    image: '',
+    description: '',
+    status: DEFAULT_TRAVEL_STATUS,
+    startDate: '',
+    endDate: '',
+    country: 'Italie',
+    region: 'Toscane',
+    accentColor: '',
+    travelers: 0,
+  };
 }
 
 /*

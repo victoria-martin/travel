@@ -445,8 +445,7 @@ tr:hover td {
   font-family: inherit;
   font-size: 12px;
   padding: 4px 6px;
-  /* border: 1px solid var(--line); */
-  border: 1px solid red;
+  border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--white);
   color: var(--ink);

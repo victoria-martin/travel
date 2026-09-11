@@ -35,6 +35,13 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 
 Pas de `data.js` ni de `helpers.js` fourre-tout (démantelés en `87bc0c4`).
 
+## PLAN.md touché → passer la spec en revue
+
+Dès que [PLAN.md](PLAN.md) bouge — elle comme moi — vérifier dans la foulée ce que ça change dans
+[docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : un item qui sort du backlog doit y être
+décrit, un item ajouté contredit peut-être une décision actée ou une section d'écran. Le signaler
+dans le même tour, sans attendre qu'on me le demande.
+
 ## Journal
 
 - **2026-09-11** — `js/views/cells/` créé pour les briques de cellule partagées : `text-cell.js`,

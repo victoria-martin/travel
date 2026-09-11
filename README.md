@@ -14,45 +14,45 @@ Envoie ce lien à qui tu veux.
 
 ## Structure des fichiers
 
-Une app statique, sans build ni bundler : chaque fichier est chargé tel quel par `index.html`, dans l'ordre.
+Une app statique, sans build ni bundler : chaque fichier est chargé tel quel par `index.html`, dans
+l'ordre — une balise `<script src>` par fichier, avant `js/init.js`. Les boutons appellent les
+fonctions directement dans le HTML (`onclick="..."`), donc les fichiers JS sont des scripts
+classiques et **pas** des modules ES.
+
+Le détail des critères de découpage (où vit quoi) est dans [CLAUDE.md](CLAUDE.md).
 
 ```
-index.html                                 balises + ordre de chargement
-styles.css                                 tout le style
-js/state.js                                état global partagé (`state`)
-js/accommodation-types.js                  types d'hébergement
-js/accommodation-statuses.js               statuts d'hébergement
-js/uid.js                                  identifiants des éléments créés
-js/storage.js                              cache localStorage
-js/sync.js                                 synchro Google Sheets (voir plus bas)
-js/helpers.js                              utilitaires
-js/render.js                               rendu de la coquille + barre latérale
-js/views/accommodations/accommodations.js  vue Hébergements — assemblage + favoris
-js/views/accommodations/header.js          en-tête de la vue (filtres, bascule tableau/cartes)
-js/views/accommodations/table/table.js     tableau — <table> et en-têtes
-js/views/accommodations/table/row.js       une ligne du tableau
-js/views/accommodations/cards/cards.js     grille de cartes
-js/views/accommodations/cards/card.js      une carte
-js/views/simple-lists.js                   vues Voitures et Charges fixes
-js/views/scenarios/scenarios.js            vue Scénarios (liste, créer, dupliquer)
-js/views/scenarios/header.js               en-tête de la vue
-js/views/scenarios/list/list.js            liste des scénarios
-js/views/scenarios/list/row.js             une ligne de scénario
-js/views/scenarios/detail/detail.js        vue détail d’un scénario + actions d’étape
-js/views/scenarios/detail/header.js        en-tête du détail (titre éditable)
-js/views/scenarios/detail/step-list.js     liste des étapes
-js/views/scenarios/detail/step-card.js     une carte d’étape
-js/views/scenarios/detail/recap.js         récap hébergements du scénario
-js/views/scenarios/detail/recap-row.js     une ligne du récap
-js/views/map.js                            vue Carte (Leaflet)
-js/modals.js                               modales et formulaires
-js/init.js                                 démarrage — doit rester chargé en dernier
-apps-script/Code.js                        le backend Apps Script (voir plus bas)
+index.html                       balises + ordre de chargement
+styles.css                       tout le style
+js/state.js                      état global partagé (`state`)
+js/storage.js                    cache localStorage
+js/sync.js                       synchro Google Sheets (voir plus bas)
+js/prefs.js                      préférences d'affichage, propres au navigateur
+js/geocode.js                    géocodage d'une adresse
+js/routing.js                    tracé routier (OSRM)
+js/homeexchange.js               lecture d'une annonce HomeExchange collée
+js/columns.js  js/sort.js        colonnes masquables et tri des tableaux
+js/uid.js  js/escape-html.js     primitives
+js/accommodation-types.js        types d'hébergement
+js/accommodation-statuses.js     statuts d'hébergement
+js/render.js                     rendu de la coquille + barre latérale
+js/modals/                       ouverture des modales, état du géocodage
+js/views/*.js                    briques utilisées par plusieurs vues (tableau, cartes,
+                                 favoris, tags, duplication, suppression, édition en ligne)
+js/views/cells/                  cellules de tableau partagées (+ actions/)
+js/views/locate/                 bloc de localisation partagé
+js/views/accommodations.js       vue Hébergements — assemblage, filtres, favoris
+js/views/accommodations/         son en-tête, ses colonnes, ses cartes, sa modale, l'import collé
+js/views/cities/                 vue Villes
+js/views/cars/                   vue Voitures
+js/views/fixed-costs/            vue Charges fixes
+js/views/scenarios/              vue Scénarios — liste (list/), détail (detail/), et les briques
+                                 communes : nuits, dates d'étapes, lettres, montants, carte
+js/views/map.js                  vue Carte (Leaflet)
+js/views/notes.js                vue Notes
+js/init.js                       démarrage — doit rester chargé en dernier
+apps-script/Code.js              le backend Apps Script (voir plus bas)
 ```
-
-Les boutons de l'app appellent les fonctions directement dans le HTML (`onclick="..."`), donc les
-fichiers JS sont des scripts classiques et **pas** des modules ES : ajouter un fichier = ajouter une
-balise `<script src>` dans `index.html`, avant `js/init.js`.
 
 ## Travailler à plusieurs en même temps (Google Sheets)
 

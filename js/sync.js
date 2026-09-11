@@ -187,6 +187,7 @@ function mergeScenario(remoteScenario, localScenario, baseScenario) {
 function mergeStates(remote, local, base) {
   base = base || {};
   return {
+    travels: mergeCollections(remote.travels, local.travels, base.travels),
     accommodations: mergeCollections(
       remote.accommodations,
       local.accommodations,
@@ -202,9 +203,7 @@ function mergeStates(remote, local, base) {
 
 function isEmptyState(data) {
   if (!data) return true;
-  return ['accommodations', 'cars', 'fixedCosts', 'cities', 'scenarios', 'tripNotes'].every(
-    (k) => !(data[k] || []).length,
-  );
+  return ['travels', ...TRAVEL_COLLECTIONS].every((k) => !(data[k] || []).length);
 }
 
 /* ------------------------------ pull / push ------------------------------ */
