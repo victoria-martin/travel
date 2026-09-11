@@ -1,15 +1,14 @@
 let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte | notes
 
 function render() {
+  applyTravelAccent();
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
-      <p class="brand">Voyage Toscane</p>
-      <p class="brand-sub">Carnet de préparation</p>
-      ${navBtn('hebergements', '🏠', 'Hébergements')} ${navBtn('voitures', '🚗', 'Voitures')}
-      ${navBtn('charges', '💶', 'Charges fixes')} ${navBtn('villes', '📍', 'Villes')}
-      ${navBtn('scenarios', '🧭', 'Scénarios')} ${navBtn('carte', '🗺️', 'Carte')}
-      ${navBtn('notes', '📝', 'Notes')}
+      ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
+      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('charges', '💶', 'Charges fixes')}
+      ${navBtn('villes', '📍', 'Villes')} ${navBtn('scenarios', '🧭', 'Scénarios')}
+      ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >

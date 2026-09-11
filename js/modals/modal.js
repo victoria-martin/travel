@@ -6,6 +6,10 @@
 let modal = null; // {type, payload}
 
 const MODAL_TYPES = {
+  voyage: {
+    open: (id) => ({ payload: id ? { ...getTravel(id) } : emptyTravel() }),
+    body: (m) => travelForm(m.payload),
+  },
   accommodation: {
     open: (id) => ({ payload: id ? { ...getAccommodation(id) } : emptyAccommodation() }),
     body: (m) => accommodationForm(m.payload),

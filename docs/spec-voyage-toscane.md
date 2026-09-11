@@ -41,6 +41,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
+- **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`.
+  Un classeur par voyage a été écarté : l'Apps Script travaille sur `getActiveSpreadsheet()`, donc
+  il aurait fallu dupliquer le classeur et redéployer le script à la main à chaque nouveau voyage.
 
 ---
 
@@ -55,7 +58,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
 | **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                          | un itinéraire candidat                               |
 | **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre                                                 | appartient à un scénario, l'ordre compte             |
-| **Notes de voyage** | texte libre                                                                                                                        | un seul bloc, partagé                                |
+| **Notes de voyage** | texte libre                                                                                                                        | un bloc par voyage                                   |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -70,6 +73,22 @@ Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 
 ---
 
 ## 4. Les écrans
+
+### Voyage courant
+
+En tête de la barre latérale, un bouton **emoji + nom + sous-titre** (les dates si elles sont
+saisies, sinon la destination) ouvre le menu des voyages : les autres voyages, « Modifier ce
+voyage » et « Nouveau voyage ». Les deux derniers ouvrent la même modale. En barre latérale
+réduite, il ne reste que l'emoji.
+
+La **couleur d'accent** du voyage ouvert remplace les deux verts structurants du thème — barre
+latérale, boutons, états actifs. Sans couleur choisie, l'app garde les siens.
+
+Créer un voyage l'ouvre aussitôt. Tant qu'il n'y en a aucun, le bouton affiche « Aucun voyage » et
+le menu ne propose que la création.
+
+**Voyage** — les champs de la modale : emoji, nom, pays, région, dates de début et de fin, statut,
+nombre de voyageurs, couleur d'accent (une palette fermée, ou aucune), image, description.
 
 ### Hébergements
 
@@ -174,14 +193,14 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
 
 **Scénario** — un itinéraire candidat.
 
-| Champ          | Détail                                           |
-| -------------- | ------------------------------------------------ |
-| nom            | éditable en ligne dans le détail                 |
-| favori         | ⭐, remonte en tête de liste                     |
-| date de départ | date les étapes ; vide, aucune date ne s'affiche |
-| voiture        | une référence à la table Voitures                |
-| charges        | des références à la table Charges fixes          |
-| étapes         | ordonnées ; l'ordre est le trajet                |
+| Champ          | Détail                                                                      |
+| -------------- | --------------------------------------------------------------------------- |
+| nom            | éditable en ligne dans le détail                                            |
+| favori         | ⭐, remonte en tête de liste                                                |
+| date de départ | par défaut celle du voyage ; date les étapes, vide aucune date ne s'affiche |
+| voiture        | une référence à la table Voitures                                           |
+| charges        | des références à la table Charges fixes                                     |
+| étapes         | ordonnées ; l'ordre est le trajet                                           |
 
 **Étape** — appartient à un scénario.
 
@@ -241,9 +260,9 @@ utilise.
 
 **Notes de voyage**
 
-| Champ | Détail                |
-| ----- | --------------------- |
-| texte | un seul bloc, partagé |
+| Champ | Détail             |
+| ----- | ------------------ |
+| texte | un bloc par voyage |
 
 Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
@@ -260,8 +279,8 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
   « aucune entrée ».
 - **Géocodage** : jamais automatique (le service limite à 1 requête/seconde), toujours sur clic, et
   jamais bloquant — les coordonnées restent saisissables à la main.
-- **Préférences d'affichage** (colonnes masquées, tri, carte du scénario affichée, panneaux
-  ouverts) : propres à chaque navigateur, **jamais partagées**.
+- **Préférences d'affichage** (voyage ouvert, colonnes masquées, tri, carte du scénario affichée,
+  panneaux ouverts) : propres à chaque navigateur, **jamais partagées**.
 - **Tout le reste est partagé** via le Google Sheet, en quelques secondes. Voir le
   [protocole de synchro](protocole-sync-sheet.md) : deux entrées différentes éditées en même temps
   sont toutes deux gardées ; sur la même entrée, la dernière personne qui enregistre gagne.
@@ -276,8 +295,8 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du moment :
 
-- **Voyages** : l'app tient encore un seul voyage implicite — l'entité, la modale, le sélecteur de
-  la barre latérale et le rattachement des données restent à écrire. C'est le chantier en cours.
+- **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage ;
+  le titre de l'onglet, la favicon et les couleurs de l'app ne suivent pas le voyage ouvert.
 - **Total général** d'un scénario (hébergements + voiture + charges) : le récap s'arrête aux
   hébergements.
 - **Charges fixes dans le scénario** : la relation existe dans le modèle, l'écran ne l'expose pas

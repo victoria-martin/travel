@@ -26,7 +26,7 @@ function createScenario() {
     id: uid(),
     travelId: currentTravelId(),
     name: 'Nouveau scénario',
-    startDate: '',
+    startDate: currentTravel()?.startDate || '',
     carId: defaultCar()?.id || null,
     costIds: [],
     favorite: false,

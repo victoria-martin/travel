@@ -6,57 +6,18 @@ fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées »
 
 ## Voyages
 
-Une surcouche au-dessus de toute l'app : aujourd'hui tout est un seul voyage implicite (« Voyage
-Toscane », en dur dans [index.html:6](index.html#L6) et dans la barre latérale de
-[render.js:7-8](js/render.js#L7-L8)). Chaque item du backlog ci-dessous suppose que les données
-appartiennent à un voyage.
-
-**Tranché : un seul Sheet, une colonne `travelId`.** Les données de tous les voyages cohabitent
-dans les mêmes onglets et sont filtrées par l'app. L'autre piste — un classeur par voyage — a été
-écartée : l'Apps Script travaille sur `getActiveSpreadsheet()`
-([Code.js:285](apps-script/Code.js#L285)), donc chaque voyage aurait demandé de dupliquer le
-classeur et de redéployer le script à la main, et créer un voyage depuis l'app devenait impossible.
-
-Les huit premiers items forment le lot en cours, dans l'ordre où ils se codent ; les quatre
-suivants attendent sous « Plus tard ».
-
-- **Créer l'entité Voyage** — ⏳ à faire : `travels` dans `emptyData()`
-  ([storage.js:8](js/storage.js#L8)), avec nom, emoji, image, description, statut, dates de début et
-  de fin, destination (pays / région), couleur d'accent, voyageurs.
-- **Statuts** — ⏳ à faire : Idée, En préparation, Réservé, En cours, Passé — un fichier
-  `js/travel-statuses.js` sur le modèle de
-  [accommodation-statuses.js](js/accommodation-statuses.js).
-- **Rattacher toutes les données au voyage** — ⏳ à faire : `travelId` sur hébergements, voitures,
-  charges fixes, villes, scénarios et notes ; chaque getter et chaque vue ne lit que le voyage
-  courant. Les données existantes sont migrées vers un premier voyage dans `migrateData()`
-  ([storage.js:22](js/storage.js#L22)). La colonne s'ajoute **en fin** de chaque liste de
-  `COLLECTIONS` ([Code.js:9-33](apps-script/Code.js#L9-L33)) : une insertion au milieu décale toutes
-  les lignes déjà écrites, le bug que rattrape `unshiftAccommodation()`
-  ([storage.js:62](js/storage.js#L62)).
-- **Voyage courant** — ⏳ à faire : l'id du voyage ouvert vit dans `prefs`
-  ([prefs.js](js/prefs.js)), pas dans les données synchronisées, et se retrouve au rechargement.
-- **Modale Voyage** — ⏳ à faire : `js/views/travels/modal/form.js` et `save.js`, avec le choix de
-  l'emoji, l'image et le select de statut. Sert à créer comme à modifier un voyage.
-- **Sélecteur de voyage dans la barre latérale** — ⏳ à faire : en tête, à la place du titre en dur
-  ([render.js:7-8](js/render.js#L7-L8)) — un bouton emoji + nom + dates qui ouvre un menu
-  déroulant : les autres voyages, puis « Modifier » et « Nouveau voyage », tous deux vers la modale
-  Voyage. En sidebar réduite, `.brand` est masqué ([styles.css:890](styles.css#L890)) : il ne reste
-  que l'emoji, cliquable.
-- **Dates du voyage → scénarios** — ⏳ à faire : la date de début du voyage sert de valeur par
-  défaut au `startDate` d'un scénario, aujourd'hui saisi scénario par scénario.
-- **Synchro Google Sheet** — ⏳ à faire : un onglet `travels` de plus, et la fusion entrée par
-  entrée de [sync.js](js/sync.js) étendue aux voyages.
-
-### Plus tard
+Le socle est en place : l'entité Voyage, le voyage ouvert dans les préférences locales, le
+sélecteur et sa modale dans la barre latérale, et le `travelId` sur toutes les collections, Sheet
+compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 - **Page Voyages** — ⏳ à faire : la liste des voyages en cartes (image, emoji, nom, destination,
   dates, statut), avec créer / modifier / dupliquer / supprimer. Sert d'écran d'accueil quand aucun
   voyage n'est ouvert. Tant qu'elle n'existe pas, le sélecteur de la barre latérale est le seul
   point d'entrée.
+- **Supprimer un voyage** — ⏳ à faire : avec la page Voyages, puisque c'est de là qu'on supprime.
+  Confirmation obligatoire, et les données rattachées partent avec.
 - **Onglet du navigateur** — ⏳ à faire : le titre et la favicon suivent le voyage courant, la
   favicon étant l'emoji rendu en SVG `data:`.
-- **Couleur d'accent** — ⏳ à faire : la couleur du voyage pilote les variables CSS de l'app, pour
-  savoir d'un coup d'œil dans quel projet on est.
 - **Voyageurs → coût par personne** — ⏳ à faire : le récap d'un scénario affiche le total divisé
   par le nombre de voyageurs, à côté du total général.
 

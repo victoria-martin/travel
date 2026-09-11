@@ -9,6 +9,15 @@ function currentTravelId() {
   return state.travels.length ? state.travels[0].id : null;
 }
 
+function currentTravel() {
+  return getTravel(currentTravelId());
+}
+
+function openTravel(id) {
+  prefs.travelId = id;
+  persistPrefs();
+}
+
 function ofCurrentTravel(items) {
   const travelId = currentTravelId();
   return (items || []).filter((item) => item.travelId === travelId);

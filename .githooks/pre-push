@@ -1,7 +1,8 @@
 #!/bin/sh
-# Deploy apps-script/ to Google Apps Script when the push carries changes to it.
+# Refuse a push that changes the app without touching PLAN.md or docs/, then deploy
+# apps-script/ to Google Apps Script when the push carries changes to it.
 
-deploy=0
+changed=""
 
 while read -r _local_ref local_sha _remote_ref remote_sha; do
   # all-zero local sha means the ref is being deleted
@@ -12,12 +13,25 @@ while read -r _local_ref local_sha _remote_ref remote_sha; do
     *) set -- "$local_sha" --not --remotes=origin ;;
   esac
 
-  if [ -n "$(git log --format= --name-only "$@" -- apps-script)" ]; then
-    deploy=1
-  fi
+  changed="$changed$(git log --format= --name-only "$@")
+"
 done
 
-[ "$deploy" -eq 1 ] || exit 0
+touches() {
+  printf '%s' "$changed" | grep -qE "$1"
+}
+
+if [ "$SKIP_DOCS_CHECK" != 1 ] &&
+  touches '^(index\.html|styles\.css|js/|apps-script/)' &&
+  ! touches '^(PLAN\.md|docs/)'; then
+  echo "pre-push: the app changed but neither PLAN.md nor docs/ did." >&2
+  echo "  - an item that is done leaves PLAN.md and gets described in docs/spec-voyage-toscane.md" >&2
+  echo "  - amend or add a commit, then push again" >&2
+  echo "  - to push anyway: SKIP_DOCS_CHECK=1 git push origin \"\$(git_current_branch)\"" >&2
+  exit 1
+fi
+
+touches '^apps-script/' || exit 0
 
 if [ ! -f .clasp-deployment ]; then
   echo "pre-push: .clasp-deployment is missing, skipping the Apps Script deploy" >&2

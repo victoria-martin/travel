@@ -10,11 +10,11 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 
 ## Où vit quoi
 
-| Emplacement | Ce qui y vit |
-| --- | --- |
-| `js/*.js` | état, stockage, synchro, primitives transverses |
-| `js/views/*.js` à plat | briques utilisées par **plusieurs** vues |
-| `js/views/<domaine>/` | tout ce qui n'appartient qu'à ce domaine |
+| Emplacement            | Ce qui y vit                                    |
+| ---------------------- | ----------------------------------------------- |
+| `js/*.js`              | état, stockage, synchro, primitives transverses |
+| `js/views/*.js` à plat | briques utilisées par **plusieurs** vues        |
+| `js/views/<domaine>/`  | tout ce qui n'appartient qu'à ce domaine        |
 
 ## Un dossier = un domaine, jamais un degré de complexité
 
@@ -35,15 +35,27 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 
 Pas de `data.js` ni de `helpers.js` fourre-tout (démantelés en `87bc0c4`).
 
-## PLAN.md touché → passer la spec en revue
+## Fin de tâche → PLAN.md → spec
 
-Dès que [PLAN.md](PLAN.md) bouge — elle comme moi — vérifier dans la foulée ce que ça change dans
-[docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : un item qui sort du backlog doit y être
-décrit, un item ajouté contredit peut-être une décision actée ou une section d'écran. Le signaler
-dans le même tour, sans attendre qu'on me le demande.
+Une tâche n'est finie que quand les deux docs ont suivi, dans le même tour, sans attendre qu'on me
+le demande :
+
+- **L'item fait sort de [PLAN.md](PLAN.md)** : le backlog ne garde que ce qui reste à faire, git
+  archive le reste.
+- **Il devient une feature décrite dans
+  [docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md)** — dans le bloc d'écran concerné
+  (« Les écrans »), et dans « Décisions actées » si l'implémentation a tranché un arbitrage de fond.
+- **Dans l'autre sens** : dès que PLAN.md bouge — elle comme moi — vérifier ce que ça change dans la
+  spec ; un item ajouté contredit peut-être une décision actée ou une section d'écran.
+
+Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `PLAN.md` ni `docs/`.
 
 ## Journal
 
+- **2026-09-12** — `js/views/travels/` créé pour le domaine Voyage : `get-travel.js`,
+  `selector.js` (le bouton et le menu de la barre latérale) et `modal/`. Le voyage ouvert et le
+  filtrage des collections vivent dans [current-travel.js](js/current-travel.js), à côté de
+  [prefs.js](js/prefs.js) qui le stocke.
 - **2026-09-11** — `js/views/cells/` créé pour les briques de cellule partagées : `text-cell.js`,
   `link-cell.js` et `actions/` (`edit-button.js`, `duplicate-button.js`, `delete-button.js`).
   `linkButton`, qui ne sert qu'aux cartes, est sorti dans [link-button.js](js/views/link-button.js).
