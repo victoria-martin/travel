@@ -16,7 +16,7 @@ function scrapeHomeExchange(url) {
   }
   var html = res.getContentText();
   var home = {
-    name: matchOne(html, /<h1[^>]*id="title"[^>]*>([\s\S]*?)<\/h1>/),
+    name: hostFirstName(matchOne(html, /<h1[^>]*id="title"[^>]*>([\s\S]*?)<\/h1>/)),
     city: breadcrumbLevel(html, 'admin3'),
     county: breadcrumbLevel(html, 'admin2'),
     region: breadcrumbLevel(html, 'admin1'),
@@ -24,6 +24,14 @@ function scrapeHomeExchange(url) {
   };
   if (!home.name && !home.city) return { error: 'Annonce illisible : la page a peut-être changé.' };
   return home;
+}
+
+// Les titres HomeExchange finissent souvent par « … - chez Rosanna » : l'hôte passe devant.
+var HOST_SUFFIX = /^(.+?)\s+-\s+chez\s+(.+)$/i;
+
+function hostFirstName(title) {
+  var found = title.match(HOST_SUFFIX);
+  return found ? 'Chez ' + found[2] + ' - ' + found[1] : title;
 }
 
 // Les fils d'Ariane portent le niveau administratif : admin1 région, admin2 province, admin3 ville.
