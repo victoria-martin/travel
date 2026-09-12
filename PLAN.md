@@ -42,7 +42,8 @@ les types.
 
   existe déjà avec le picker attendons deja le rework
 
-- **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 🔍 à étudier
+- **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 💡 idée : on commence a
+  répondre à ca dans la trasfo de charges fixes en depense normameent
 
 ### Plus tard
 
@@ -72,7 +73,7 @@ les types.
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
 - **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard
-- **tags dans task form (type et statut)** <!--t:ydld--> — ⏳ à faire : pas les mêmes tags entre
+- **tags dans task form (type et statut)** <!--t:ydld--> — 🚧 en cours : pas les mêmes tags entre
   style et status prends le style de status
 
   on comprend pas bien quels tags sont selectionnés peut etr qu'il faut les faire passer au debut de

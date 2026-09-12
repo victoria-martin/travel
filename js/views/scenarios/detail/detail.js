@@ -76,6 +76,18 @@ function setStepBudget(scenarioId, stepId, budget) {
   render();
 }
 
+function setStepAttractionCount(scenarioId, stepId, index, count) {
+  getStep(scenarioId, stepId).attractions[index].count = parseInt(count) || 1;
+  saveNow();
+  render();
+}
+
+function setStepAttractionBudget(scenarioId, stepId, index, budget) {
+  getStep(scenarioId, stepId).attractions[index].budget = budget.trim();
+  saveNow();
+  render();
+}
+
 // Une étape se rattache soit à une ville, soit à un hébergement : le même select porte les deux.
 function setStepPlace(scenarioId, stepId, value) {
   const s = getScenario(scenarioId);

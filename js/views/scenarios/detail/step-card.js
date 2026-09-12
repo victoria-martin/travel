@@ -1,11 +1,17 @@
 // Une étape sans rang ou sans lieu géolocalisé est absente du tracé : la pastille le dit sur place.
 function stepOrderBadge(step, idx) {
   if (idx === null)
-    return /* HTML */ `<div class="step-order step-order-hidden" title="Masquée — hors des dates, des totaux et de la carte">
+    return /* HTML */ `<div
+      class="step-order step-order-hidden"
+      title="Masquée — hors des dates, des totaux et de la carte"
+    >
       •
     </div>`;
   if (coordsFor(step)) return `<div class="step-order">${stepLetter(idx)}</div>`;
-  return /* HTML */ `<div class="step-order step-order-unmapped" title="Pas de lieu géolocalisé — absente de la carte">
+  return /* HTML */ `<div
+    class="step-order step-order-unmapped"
+    title="Pas de lieu géolocalisé — absente de la carte"
+  >
     ${stepLetter(idx)}
   </div>`;
 }
@@ -26,6 +32,9 @@ function stepCard(scenario, step, idx) {
           ${stepPlaceDropdown(scenario, step)} ${stepNightsDropdown(scenario, step)}
           ${stepBudgetSlot(scenario, step)}
         </div>
+        ${(step.attractions || [])
+          .map((entry, i) => stepAttractionRow(scenario, step, entry, i))
+          .join('')}
       </div>
       <div class="step-actions">
         <button

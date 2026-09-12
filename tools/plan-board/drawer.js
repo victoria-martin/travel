@@ -47,10 +47,10 @@ function draftFields() {
       <label>Type <span class="field-note">plusieurs possibles</span></label>
       <div class="choices">
         ${PLAN_TYPES.map((type) =>
-          typePill(
-            type.label,
+          pill(
+            type,
             `role="button" tabindex="0" data-act="pick-type" data-value="${type.label}"
-             title="${esc(type.hint || '')}" aria-pressed="${draft.types.includes(type.label)}"`,
+             aria-pressed="${draft.types.includes(type.label)}"`,
           ),
         ).join('')}
         ${newWordButton('type')}
@@ -62,8 +62,8 @@ function draftFields() {
       <label>Statut</label>
       <div class="choices">
         ${PLAN_STATUSES.map((status) =>
-          statusPill(
-            status.label,
+          pill(
+            status,
             `role="button" tabindex="0" data-act="pick-status" data-value="${status.label}"
              aria-pressed="${draft.status === status.label}"`,
           ),

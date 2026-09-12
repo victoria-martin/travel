@@ -2,12 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const { PLAN_STATUSES, planStatus } = require('./statuses.js');
 const { PLAN_TYPES, planType } = require('./types.js');
-const { PILL_VARIANTS } = require('./pill-variants.js');
+const { PILL_VARIANTS } = require('./pill.js');
 
 // A word typed on the board joins the frozen list it belongs to — both the file, so the next load
 // reads it from code, and the live array, which `planType` / `planStatus` close over.
 const LISTS = {
-  type: { file: 'types.js', array: 'PLAN_TYPES', entries: PLAN_TYPES, fields: ['variant', 'hint'] },
+  type: { file: 'types.js', array: 'PLAN_TYPES', entries: PLAN_TYPES, fields: ['variant'] },
   status: {
     file: 'statuses.js',
     array: 'PLAN_STATUSES',
@@ -58,12 +58,11 @@ function appendToFile(list, word) {
   return true;
 }
 
-function addWord({ kind, label, emoji, variant, hint = '' }) {
+function addWord({ kind, label, emoji, variant }) {
   const word = {
     label: (label || '').trim().replace(/\s+/g, ' '),
     emoji: (emoji || '').trim(),
     variant: (variant || '').trim(),
-    hint: (hint || '').trim(),
   };
   const error = validate(kind, word);
   if (error) return { error };

@@ -9,6 +9,7 @@ function emptyStep() {
     accommodationId: null,
     budget: '',
     notes: '',
+    attractions: [],
     hidden: false,
   };
 }
@@ -41,6 +42,7 @@ function stepForm(p) {
       <label>Date d'arrivée</label
       ><input id="s-date" type="text" value="${escapeHtml(p.arrivalDate)}" placeholder="12 juin" />
     </div>
+    ${stepAttractionsField(p)}
     <div class="field">
       <label>Notes</label><textarea id="s-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>

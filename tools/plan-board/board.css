@@ -649,6 +649,7 @@ code,
 
 /* ---------- Pastilles ---------- */
 .pill {
+  --pill-hue: var(--ink-soft);
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -670,11 +671,6 @@ code,
   align-items: center;
   height: 1.2em;
 }
-.pill-type {
-  padding: 2px 8px;
-  font-size: 11px;
-  color: var(--ink-soft);
-}
 .type-dot {
   flex-shrink: 0;
   width: 22px;
@@ -694,23 +690,28 @@ code,
 }
 
 .pill-success {
-  border-color: color-mix(in srgb, #7c8b5e 55%, var(--line));
+  --pill-hue: #7c8b5e;
+  border-color: color-mix(in srgb, var(--pill-hue) 55%, var(--line));
 }
 .pill-focus {
-  border-color: color-mix(in srgb, #7c8b5e 70%, var(--line));
-  background: color-mix(in srgb, #7c8b5e 14%, var(--paper));
+  --pill-hue: #7c8b5e;
+  border-color: color-mix(in srgb, var(--pill-hue) 70%, var(--line));
+  background: color-mix(in srgb, var(--pill-hue) 14%, var(--paper));
   font-weight: 500;
 }
 .pill-info {
-  border-color: var(--accent);
+  --pill-hue: #3f6f9e;
+  border-color: color-mix(in srgb, var(--pill-hue) 60%, var(--line));
   font-weight: 500;
 }
 .pill-warning {
-  border-color: color-mix(in srgb, #c98a3e 45%, var(--line));
+  --pill-hue: #c98a3e;
+  border-color: color-mix(in srgb, var(--pill-hue) 45%, var(--line));
 }
 .pill-error {
-  border-color: color-mix(in srgb, #a6462e 40%, var(--line));
-  color: color-mix(in srgb, #a6462e 70%, var(--ink));
+  --pill-hue: #a6462e;
+  border-color: color-mix(in srgb, var(--pill-hue) 40%, var(--line));
+  color: color-mix(in srgb, var(--pill-hue) 70%, var(--ink));
 }
 .pill-default {
   color: var(--ink-soft);
@@ -735,10 +736,14 @@ code,
   color: var(--ink-soft);
 }
 .choices .pill[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 20%, var(--paper-raised));
+  border-color: var(--pill-hue);
+  background: color-mix(in srgb, var(--pill-hue) 24%, var(--paper-raised));
   color: var(--ink);
-  box-shadow: 0 0 0 1px var(--accent);
+  box-shadow: 0 0 0 1px var(--pill-hue);
+}
+.choices .pill:not(.pill-add)[aria-pressed='true']::after {
+  content: '✓';
+  font-size: 10px;
 }
 .choices .pill-add[aria-pressed='true'] {
   border-style: solid;
@@ -943,8 +948,7 @@ code,
 .new-word .field-row:last-child {
   margin-top: 12px;
 }
-.word-label,
-.word-hint {
+.word-label {
   width: 100%;
   min-width: 0;
   padding: 7px 9px;
@@ -956,12 +960,7 @@ code,
   flex: 1;
   font-weight: 500;
 }
-.word-hint {
-  margin-top: 10px;
-  font-size: 13px;
-}
-.word-label:focus,
-.word-hint:focus {
+.word-label:focus {
   outline: none;
   border-color: var(--accent);
 }

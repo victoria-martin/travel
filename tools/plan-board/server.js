@@ -82,6 +82,7 @@ function sessionPreview(res, id) {
       sessionId: session ? session.sessionId : '<uuid généré au lancement>',
       resumed: Boolean(session),
       prompt: START_PROMPT,
+      title: task.title,
     }),
   });
 }
@@ -94,10 +95,16 @@ function markDoing(id) {
 }
 
 async function openSession(res, id, prompt) {
-  if (!taskOrArchived(id)) return send(res, 404, { error: 'tâche inconnue' });
+  const task = taskOrArchived(id);
+  if (!task) return send(res, 404, { error: 'tâche inconnue' });
 
   const { session, resumed } = sessions.openSession(id);
-  const command = iterm.claudeCommand({ sessionId: session.sessionId, resumed, prompt });
+  const command = iterm.claudeCommand({
+    sessionId: session.sessionId,
+    resumed,
+    prompt,
+    title: task.title,
+  });
   try {
     await iterm.openInITerm(command);
     markDoing(id);

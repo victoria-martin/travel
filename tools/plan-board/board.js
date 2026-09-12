@@ -48,22 +48,10 @@ function visibleTasks() {
   });
 }
 
-function statusPill(label, attributes = '') {
-  const status = planStatus(label);
-  if (!status) return '';
-  return `<span class="pill ${pillClass(status.variant)}" ${attributes}><span>${status.emoji}</span><span>${status.label}</span></span>`;
-}
-
 // A row has no space for labels: the emoji alone, named by its tooltip.
 function typeDot(label) {
   const type = planType(label);
   return type ? `<span class="type-dot" title="${type.label}">${type.emoji}</span>` : '';
-}
-
-function typePill(label, attributes = '') {
-  const type = planType(label);
-  if (!type) return '';
-  return `<span class="pill pill-type ${pillClass(type.variant)}" ${attributes}><span>${type.emoji}</span><span>${type.label}</span></span>`;
 }
 
 function toggleType(label) {
@@ -196,7 +184,7 @@ function taskButton(task) {
     data-section="${esc(task.section)}" data-subsection="${esc(task.subsection)}"
     aria-current="${task.id === openTaskId}">
     <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
-      ${statusPill(task.status)}
+      ${pill(planStatus(task.status))}
       <span class="task-types">${task.types.map(typeDot).join('')}</span>
       <span class="task-title">${esc(task.title)}</span>
       <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
@@ -330,7 +318,6 @@ const INPUTS = {
   'subsection-name': (target) => editNewSubsection(target.value),
   'subsection-title': (target) => editSubsectionDraft(target.value),
   'word-label': (target) => editNewWord('label', target.value),
-  'word-hint': (target) => editNewWord('hint', target.value),
 };
 
 function bindApp() {

@@ -9,6 +9,7 @@ function saveStep(id) {
     arrivalDate: document.getElementById('s-date').value.trim(),
     budget: document.getElementById('s-budget').value.trim(),
     notes: document.getElementById('s-notes').value.trim(),
+    attractions: [...(modal.payload.attractions || [])],
     cityId: current.cityId || null,
     accommodationId: current.accommodationId || null,
     hidden: !!current.hidden,

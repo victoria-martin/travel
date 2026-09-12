@@ -60,6 +60,11 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — une session ouverte par le board porte son nom : `claude --name '◉ <titre>'`
+  dans [iterm.js](tools/plan-board/iterm.js). Le nom est fixe, contrairement à l'`ai-title` que le
+  CLI régénère à chaque tour, et le `◉` de tête distingue ces conversations des autres dans le
+  picker et le titre de terminal.
+
 - **2026-09-12** — le statut d'une tâche suit le geste, pas ma discipline : ouvrir sa session la
   passe à `🚧 en cours` côté serveur ([server.js](tools/plan-board/server.js)), après qu'iTerm a
   répondu, et jamais sur une tâche close — `DOING_STATUS` et `CLOSED_STATUSES` rejoignent

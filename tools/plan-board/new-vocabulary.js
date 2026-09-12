@@ -15,7 +15,7 @@ function toggleNewWord(kind) {
 function openNewWord(kind) {
   closeEmojiPicker();
   newWordError = '';
-  newWord = { kind, label: '', emoji: '🏷️', variant: 'default', hint: '' };
+  newWord = { kind, label: '', emoji: '🏷️', variant: 'default' };
   renderDrawer();
   ui.getElementById('word-label').focus();
 }
@@ -67,17 +67,16 @@ async function addNewWord() {
 function newWordButton(kind) {
   const title = kind === 'type' ? 'Nouveau type' : 'Nouveau statut';
   const open = Boolean(newWord) && newWord.kind === kind;
-  return `<span class="${kind === 'type' ? 'pill pill-type' : 'pill'} pill-add" role="button"
+  return `<span class="pill pill-add" role="button"
     tabindex="0" data-act="new-word" data-value="${kind}" title="${title}" aria-label="${title}"
     aria-pressed="${open}">＋</span>`;
 }
 
 // The variant is shown as it will paint, not as a word: it is the only way to read what it does.
-function variantChoices(kind) {
+function variantChoices() {
   return Object.keys(PILL_VARIANTS)
     .map((variant) => {
-      const classes = kind === 'type' ? 'pill pill-type' : 'pill';
-      return `<span class="${classes} ${pillClass(variant)}" role="button" tabindex="0"
+      return `<span class="pill ${pillClass(variant)}" role="button" tabindex="0"
         data-act="word-variant" data-value="${variant}"
         aria-pressed="${newWord.variant === variant}">${variant}</span>`;
     })
@@ -86,11 +85,6 @@ function variantChoices(kind) {
 
 function newWordForm(kind) {
   if (!newWord || newWord.kind !== kind) return '';
-  const hint =
-    kind === 'type'
-      ? `<input class="word-hint" data-act="word-hint" value="${esc(newWord.hint)}"
-          placeholder="L’infobulle : à quoi sert ce type" />`
-      : '';
 
   return `<div class="new-word">
     <div class="field-row">
@@ -103,8 +97,7 @@ function newWordForm(kind) {
     </div>
     ${emojiPanel('vocabulary')}
     <label class="field-label">Couleur <span class="field-note">la teinte de la pastille</span></label>
-    <div class="choices">${variantChoices(kind)}</div>
-    ${hint}
+    <div class="choices">${variantChoices()}</div>
     ${newWordError ? `<p class="hint hint-warn">${esc(newWordError)}</p>` : ''}
     <div class="field-row">
       <button class="btn btn-primary" id="word-add" data-act="word-add"

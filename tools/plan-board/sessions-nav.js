@@ -15,13 +15,21 @@ const activeSessions = () =>
     .filter((task) => task.session)
     .sort((a, b) => b.session.lastOpenedAt.localeCompare(a.session.lastOpenedAt));
 
-const openedAt = (session) =>
-  new Date(session.lastOpenedAt).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+// La barre est étroite : une seule case, et l'heure seule tant qu'elle situe la session dans la
+// journée écoulée — au-delà, c'est le jour qui compte.
+const DAY = 24 * 60 * 60 * 1000;
+
+function openedAt(session) {
+  const date = new Date(session.lastOpenedAt);
+  return Date.now() - date < DAY
+    ? date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+    : date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+}
 
 function sessionRow(task) {
   return `<div class="session-row">
     <button class="session-open" data-act="open" data-id="${task.id}"
-      title="Ouvrir le détail">
+      title="${esc(task.title)}">
       <span class="session-title">${esc(task.title)}</span>
       <span class="session-when">${openedAt(task.session)}</span>
     </button>

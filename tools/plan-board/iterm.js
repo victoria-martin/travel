@@ -6,10 +6,14 @@ const REPO = path.join(__dirname, '..', '..');
 const shellQuote = (value) => `'${value.replace(/'/g, `'\\''`)}'`;
 const appleQuote = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 
-function claudeCommand({ sessionId, resumed, prompt }) {
+// Marks a session as born on the board, in the /resume picker and the terminal title.
+const MARKER = '◉';
+
+function claudeCommand({ sessionId, resumed, prompt, title }) {
   const flag = resumed ? `--resume ${sessionId}` : `--session-id ${sessionId}`;
+  const name = title ? ` --name ${shellQuote(`${MARKER} ${title}`)}` : '';
   const opening = prompt ? ` ${shellQuote(prompt)}` : '';
-  return `cd ${shellQuote(REPO)} && claude ${flag}${opening}`;
+  return `cd ${shellQuote(REPO)} && claude ${flag}${name}${opening}`;
 }
 
 function openInITerm(command) {

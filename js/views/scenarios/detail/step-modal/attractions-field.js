@@ -1,0 +1,116 @@
+/*
+  Le champ attractions d'une étape : plusieurs à la fois, cherchées par leur nom. Comme le champ
+  tags, il édite modal.payload et repeint son seul bloc — un render complet perdrait les champs
+  saisis et pas encore enregistrés.
+  Chips et résultats sont deux blocs séparés : la frappe ne repeint que les résultats, sinon le
+  champ perdrait sa saisie à chaque lettre.
+*/
+
+function stepAttractionsField(p) {
+  if (!p.attractions) p.attractions = [];
+  return /* HTML */ `<div class="field">
+    <label>Attractions</label>
+    <div id="step-attractions" class="tags-field">${stepAttractionsChips(p.attractions)}</div>
+    <div id="step-attractions-results" class="attraction-results"></div>
+  </div>`;
+}
+
+function stepAttractionName(entry) {
+  const attraction = getAttraction(entry.attractionId);
+  return attraction ? attraction.name : 'Attraction supprimée';
+}
+
+function stepAttractionsChips(entries) {
+  return /* HTML */ `
+    ${entries
+      .map(
+        (entry, i) =>
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(stepAttractionName(entry))}<button type="button" class="tag-chip-remove" onclick="removeStepAttraction(${i})" title="Retirer cette attraction">✕</button></span>`,
+      )
+      .join('')}
+    <input
+      id="step-attractions-input"
+      type="text"
+      placeholder="Chercher une attraction…"
+      oninput="repaintStepAttractionResults()"
+      onkeydown="stepAttractionsKeydown(event)"
+    />
+  `;
+}
+
+function stepAttractionQuery() {
+  const input = document.getElementById('step-attractions-input');
+  return input ? input.value.trim() : '';
+}
+
+function stepAttractionMatches(query) {
+  const used = modal.payload.attractions.map((entry) => entry.attractionId);
+  const needle = query.toLowerCase();
+  return ofCurrentTravel(state.attractions)
+    .filter((a) => !used.includes(a.id) && (a.name || '').toLowerCase().includes(needle))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Un nom sans résultat se crée sur place : l'attraction ne porte alors que son nom, le reste se
+// complète depuis la page Attractions.
+function stepAttractionResults() {
+  const query = stepAttractionQuery();
+  if (!query) return '';
+  const matches = stepAttractionMatches(query);
+  if (!matches.length)
+    return /* HTML */ `<button
+      type="button"
+      class="attraction-result attraction-result-create"
+      onclick="createStepAttraction()"
+    >
+      ＋ Créer « ${escapeHtml(query)} »
+    </button>`;
+  return matches
+    .map(
+      (
+        a,
+      ) => `<button type="button" class="attraction-result" onclick="addStepAttraction('${a.id}')">
+        ${tagLabel(attractionType(a.type).emoji, escapeHtml(a.name))}
+      </button>`,
+    )
+    .join('');
+}
+
+function stepAttractionsKeydown(e) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const matches = stepAttractionMatches(stepAttractionQuery());
+  if (matches.length) return addStepAttraction(matches[0].id);
+  createStepAttraction();
+}
+
+function addStepAttraction(attractionId) {
+  modal.payload.attractions.push({ attractionId, count: 1, budget: '' });
+  document.getElementById('step-attractions-input').value = '';
+  repaintStepAttractionsField();
+}
+
+function removeStepAttraction(index) {
+  modal.payload.attractions.splice(index, 1);
+  repaintStepAttractionsField();
+}
+
+function createStepAttraction() {
+  const name = stepAttractionQuery();
+  if (!name) return;
+  const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
+  upsertAttraction(item);
+  addStepAttraction(item.id);
+}
+
+function repaintStepAttractionsField() {
+  document.getElementById('step-attractions').innerHTML = stepAttractionsChips(
+    modal.payload.attractions,
+  );
+  document.getElementById('step-attractions-input').focus();
+  repaintStepAttractionResults();
+}
+
+function repaintStepAttractionResults() {
+  document.getElementById('step-attractions-results').innerHTML = stepAttractionResults();
+}
