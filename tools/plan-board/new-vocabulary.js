@@ -64,11 +64,13 @@ async function addNewWord() {
   }
 }
 
+// The row already says what it holds: the plus joins it as one more choice, named by its tooltip.
 function newWordButton(kind) {
-  const label = kind === 'type' ? '＋ nouveau type…' : '＋ nouveau statut…';
+  const title = kind === 'type' ? 'Nouveau type' : 'Nouveau statut';
   const open = Boolean(newWord) && newWord.kind === kind;
-  return `<button class="btn btn-slim" data-act="new-word" data-value="${kind}"
-    aria-pressed="${open}">${label}</button>`;
+  return `<span class="${kind === 'type' ? 'pill pill-type' : 'pill'} pill-add" role="button"
+    tabindex="0" data-act="new-word" data-value="${kind}" title="${title}" aria-label="${title}"
+    aria-pressed="${open}">＋</span>`;
 }
 
 // The tone is shown as it will paint, not as a word: it is the only way to read what it does.

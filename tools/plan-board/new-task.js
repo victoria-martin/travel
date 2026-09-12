@@ -46,19 +46,16 @@ async function addNewTask() {
 function newTaskForm(section, subsection) {
   const scope = `data-section="${esc(section)}" data-subsection="${esc(subsection)}"`;
   if (!newTaskOpen(section, subsection)) {
-    return `<button class="btn btn-slim new-task-btn" data-act="new-task" ${scope}>
-      ＋ nouvelle tâche…
-    </button>`;
+    return `<button class="ghost-add" data-act="new-task" ${scope}>＋ nouvelle tâche…</button>`;
   }
 
   return `<div class="new-task">
-    <input class="new-task-input" id="task-name" data-act="task-name" value="${esc(newTask.title)}"
-      placeholder="Ce qu’il y a à faire" />
-    ${newTaskError ? `<p class="hint hint-warn">${esc(newTaskError)}</p>` : ''}
-    <div class="field-row">
-      <button class="btn btn-primary" id="task-add" data-act="task-add"
-        ${newTask.title.trim() ? '' : 'disabled'}>Ajouter</button>
-      <button class="btn" data-act="task-cancel">Annuler</button>
+    <div class="inline-form">
+      <input class="new-task-input" id="task-name" data-act="task-name"
+        value="${esc(newTask.title)}" placeholder="Ce qu’il y a à faire" />
+      ${confirmButton('task-add', 'task-add', newTask.title.trim())}
+      ${cancelButton('task-cancel')}
     </div>
+    ${newTaskError ? `<p class="hint hint-warn">${esc(newTaskError)}</p>` : ''}
   </div>`;
 }

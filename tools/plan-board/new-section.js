@@ -41,19 +41,16 @@ async function addNewSection() {
 
 function newSectionForm() {
   if (newSection === null) {
-    return `<button class="btn btn-slim new-section-btn" data-act="new-section">
-      ＋ nouvelle section…
-    </button>`;
+    return `<button class="ghost-add" data-act="new-section">＋ nouvelle section…</button>`;
   }
 
   return `<div class="new-section">
-    <input class="section-input" id="section-name" data-act="section-name"
-      value="${esc(newSection)}" placeholder="Le nom de la page" />
-    ${newSectionError ? `<p class="hint hint-warn">${esc(newSectionError)}</p>` : ''}
-    <div class="field-row">
-      <button class="btn btn-primary" id="section-add" data-act="section-add"
-        ${newSection.trim() ? '' : 'disabled'}>Ajouter</button>
-      <button class="btn" data-act="section-cancel">Annuler</button>
+    <div class="inline-form">
+      <input class="section-input" id="section-name" data-act="section-name"
+        value="${esc(newSection)}" placeholder="Le nom de la page" />
+      ${confirmButton('section-add', 'section-add', newSection.trim())}
+      ${cancelButton('section-cancel')}
     </div>
+    ${newSectionError ? `<p class="hint hint-warn">${esc(newSectionError)}</p>` : ''}
   </div>`;
 }

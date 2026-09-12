@@ -21,9 +21,10 @@ Les statuts sont une liste figée, du premier jet à ce qui ne se fera pas — �
   scroll
 - **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
   et met mon focus dans l input pour le name
-- **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien  et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ⏳ à faire
+- **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien  et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
+- **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard
 
 ## 🧳 Valise
 
@@ -281,6 +282,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Vérifier que le backend est documenté** <!--t:m9ci--> — 📄 doc · ⏳ à faire : l'en-tête de
   [Code.js](apps-script/Code.js#L1-L6) donne la procédure de déploiement ; confirmer qu'elle est à
   jour et reprise dans [docs/protocole-sync-sheet.md](docs/protocole-sync-sheet.md).
+
+## Layout
+
+- **fix scroll in page** <!--t:epip--> — 🧩 layout · ⏳ à faire : make thinkgs sticky and other
+  scrollables
 
 ## 📝 Données à saisir
 

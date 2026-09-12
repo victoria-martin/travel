@@ -270,9 +270,8 @@ code,
   font-family: var(--mono);
   opacity: 0.55;
 }
-.new-section-btn {
-  margin: 8px 9px 0;
-  align-self: flex-start;
+#sections .ghost-add {
+  margin: 6px 4px 0;
 }
 .new-section {
   margin-top: 8px;
@@ -280,9 +279,6 @@ code,
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper-raised);
-}
-.new-section .field-row {
-  margin-top: 10px;
 }
 .section-input {
   width: 100%;
@@ -323,9 +319,6 @@ code,
   text-transform: uppercase;
   color: var(--ink-soft);
 }
-.new-task-btn {
-  margin: 3px 0 10px;
-}
 .new-task {
   margin: 3px 0 10px;
   padding: 10px 14px;
@@ -345,9 +338,6 @@ code,
 .new-task-input:focus {
   outline: none;
   border-color: var(--accent);
-}
-.new-task .field-row {
-  margin-top: 10px;
 }
 .task {
   display: flex;
@@ -517,11 +507,21 @@ code,
   border-color: var(--accent);
   transform: translateY(-1px);
 }
+.choices .pill-add {
+  padding-right: 9px;
+  padding-left: 9px;
+  border-style: dashed;
+  color: var(--ink-soft);
+}
 .choices .pill[aria-pressed='true'] {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 20%, var(--paper-raised));
   color: var(--ink);
   box-shadow: 0 0 0 1px var(--accent);
+}
+.choices .pill-add[aria-pressed='true'] {
+  border-style: solid;
+  box-shadow: none;
 }
 
 .empty {
@@ -606,8 +606,12 @@ code,
   background: var(--paper);
   color: var(--ink);
 }
-.icon-btn:active {
+.icon-btn:active:not(:disabled) {
   transform: scale(0.9);
+}
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 .drawer-body {
   flex: 1;
@@ -705,18 +709,6 @@ code,
   outline: none;
   background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
-.btn-slim {
-  padding: 3px 9px;
-  border-radius: 999px;
-  border-style: dashed;
-  font-size: 12px;
-  color: var(--ink-soft);
-}
-.btn-slim[aria-pressed='true'] {
-  border-style: solid;
-  border-color: var(--accent);
-  color: var(--ink);
-}
 .new-word {
   margin-top: 10px;
   padding: 12px;
@@ -805,6 +797,63 @@ code,
   padding: 13px 22px;
   border-top: 1px solid var(--line);
   background: var(--paper);
+}
+/* Adding never competes with the list: the line stays out of the way until the pointer is there. */
+.ghost-add {
+  display: block;
+  width: 100%;
+  padding: 5px 9px;
+  margin: 2px 0 10px;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  opacity: 0;
+  cursor: pointer;
+  transition:
+    opacity 0.15s,
+    color 0.15s,
+    padding-left 0.15s;
+}
+.section:hover > .ghost-add,
+#sections:hover > .ghost-add,
+.ghost-add:focus-visible {
+  outline: none;
+  opacity: 0.6;
+}
+.ghost-add:hover {
+  opacity: 1;
+  color: var(--accent);
+  padding-left: 13px;
+}
+.inline-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.inline-form input {
+  flex: 1;
+  min-width: 0;
+}
+.inline-form .icon-btn {
+  flex: none;
+  padding: 6px 8px;
+  line-height: 1;
+}
+.icon-ok:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.icon-cancel {
+  font-size: 13px;
+}
+.icon-cancel:hover {
+  border-color: var(--warn);
+  color: var(--warn);
 }
 .btn {
   padding: 8px 15px;
