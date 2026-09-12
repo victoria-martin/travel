@@ -1,0 +1,31 @@
+const { execFile } = require('child_process');
+const path = require('path');
+
+const REPO = path.join(__dirname, '..', '..');
+
+const shellQuote = (value) => `'${value.replace(/'/g, `'\\''`)}'`;
+const appleQuote = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+
+function claudeCommand({ sessionId, resumed, prompt }) {
+  const flag = resumed ? `--resume ${sessionId}` : `--session-id ${sessionId}`;
+  const opening = resumed || !prompt ? '' : ` ${shellQuote(prompt)}`;
+  return `cd ${shellQuote(REPO)} && claude ${flag}${opening}`;
+}
+
+function openInITerm(command) {
+  const script = `
+    tell application "iTerm"
+      activate
+      create window with default profile
+      tell current session of current window to write text ${appleQuote(command)}
+    end tell
+  `;
+  return new Promise((resolve, reject) => {
+    execFile('osascript', ['-e', script], (error, _stdout, stderr) => {
+      if (error) reject(new Error(stderr || error.message));
+      else resolve();
+    });
+  });
+}
+
+module.exports = { claudeCommand, openInITerm };

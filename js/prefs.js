@@ -5,7 +5,7 @@
 
 const PREFS_KEY = 'voyage-toscane-prefs';
 
-let prefs = { hiddenColumns: {}, showScenarioMap: true, sort: {} };
+let prefs = { hiddenColumns: {}, showScenarioMap: true, sort: {}, showButtonLabels: true };
 
 function loadPrefs() {
   const stored = readStore(PREFS_KEY);

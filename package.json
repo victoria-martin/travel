@@ -5,7 +5,8 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "push-script": "clasp push -f && clasp update-deployment \"$(cat .clasp-deployment)\""
+    "push-script": "clasp push -f && clasp update-deployment \"$(cat .clasp-deployment)\"",
+    "plan": "node tools/plan-board/server.js"
   },
   "author": "",
   "license": "ISC",

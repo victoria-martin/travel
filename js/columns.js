@@ -36,26 +36,21 @@ function toggleColumn(kind, key) {
   render();
 }
 
-let columnPickerOpen = false;
-
 function columnPicker(kind) {
   const hidden = hiddenColumns(kind);
   const options = columnsFor(kind).filter((c) => !c.locked);
-  return /* HTML */ `<details
-    class="col-picker"
-    ${columnPickerOpen ? 'open' : ''}
-    ontoggle="columnPickerOpen = this.open"
-  >
-    <summary>Colonnes</summary>
-    <div class="col-picker-panel">
-      ${options
-        .map(
-          (c) => `<label class="filter-option">
-            <input type="checkbox" ${hidden.includes(c.key) ? '' : 'checked'}
-              onchange="toggleColumn('${kind}','${c.key}')" />${escapeHtml(columnLabel(c))}
-          </label>`,
-        )
-        .join('')}
-    </div>
-  </details>`;
+  return toolbarPanel({
+    key: 'columns',
+    icon: '▥',
+    label: 'Colonnes',
+    count: options.filter((c) => hidden.includes(c.key)).length,
+    body: options
+      .map(
+        (c) => `<label class="filter-option">
+          <input type="checkbox" ${hidden.includes(c.key) ? '' : 'checked'}
+            onchange="toggleColumn('${kind}','${c.key}')" />${escapeHtml(columnLabel(c))}
+        </label>`,
+      )
+      .join(''),
+  });
 }

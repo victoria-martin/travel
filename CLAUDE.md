@@ -52,6 +52,31 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — `js/views/toolbar/` créé : `button.js`, `panel.js` (le bouton qui ouvre son
+  propre panneau), `toggle-group.js`, `filter-panel.js` et `menu.js` (le ⋮). Chaque header écrit sa
+  barre en clair à partir de ces briques — pas de `toolbar(kind, {…})` qui fabriquerait l'écran.
+  `sortPanel` perd son argument `filters` : trier et filtrer sont deux boutons. La préférence des
+  libellés vit dans [button-labels.js](js/views/button-labels.js), à plat, parce qu'elle a deux
+  consommateurs — la barre latérale et le menu ⋮ ; `listModeToggle` rejoint `setListMode` dans
+  [list-mode.js](js/views/list-mode.js). Côté CSS, `.filter-toggle` et `.col-picker` disparaissent
+  au profit d'un seul `.toolbar-btn`, porté aussi bien par un `<button>` que par un `<summary>`.
+  Le détail d'un scénario a la même barre, mêmes briques.
+- **2026-09-12** — `tools/plan-board/` créé : le backlog de [PLAN.md](PLAN.md) devient un écran,
+  chaque tâche ouvrant sa session Claude. Un outil de dev, pas un domaine du voyage — d'où `tools/`
+  et pas `js/views/`. Le lien tâche → session tient à un marqueur `<!--t:id-->` dans PLAN.md, donc
+  un renommage ne le casse pas ; la liaison elle-même vit hors du plan, dans
+  `.claude/plan-sessions.json`. Le chat Claude de VS Code ne déclare pas d'`uriHandler` : rien ne
+  l'ouvre depuis l'extérieur, le lancement passe par iTerm et `claude --session-id` / `--resume`.
+  PLAN.md devient donc un format lu ET écrit : les statuts sont une liste figée
+  ([statuses.js](tools/plan-board/statuses.js)) sur le modèle d'
+  [accommodation-statuses.js](js/accommodation-statuses.js), et le corps d'une tâche se lit en
+  paragraphes logiques — le retour à la ligne à cent colonnes n'appartient qu'à l'écriture du
+  fichier. Un clic sur une tâche n'ouvre que son panneau : lancer une session est un geste séparé,
+  avec son prompt sous les yeux. Le board se détache dans une fenêtre flottante (Document
+  Picture-in-Picture) : le nœud `#app` y est déplacé tel quel, ce qui interdit deux choses que l'app
+  travel s'autorise — les `onclick` inline, qui ne se résolvent pas dans ce document (d'où la
+  délégation d'événements sur `#app`), et `confirm` / `alert`, qui s'ouvriraient derrière la fenêtre
+  flottante (d'où l'archivage armé en deux clics et les erreurs affichées en place).
 - **2026-09-12** — `js/views/cards/actions/` créé : la paire Modifier / Suppr. des cartes,
   recopiée à l'identique dans Hébergements, Voitures et Charges fixes, devient `cardEditButton` /
   `cardDeleteButton`. Deux familles distinctes et non paramétrables l'une par l'autre — une ligne de

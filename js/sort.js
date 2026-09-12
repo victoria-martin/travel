@@ -114,24 +114,15 @@ function columnHeader(kind, column) {
   </th>`;
 }
 
-let sortPanelOpen = false;
-
-/*
-  `filters` is the caller's own block — {html, count} — dropped above the sort levels: the panel
-  owns the disclosure and the sort, the list owns what it filters on.
-*/
-function sortPanel(kind, filters) {
+function sortPanel(kind) {
   const criteria = sortCriteria(kind);
   const canAdd = criteria.length < sortableColumns(kind).length;
-  const active = criteria.length + (filters ? filters.count : 0);
-  return /* HTML */ `<details
-    class="col-picker"
-    ${sortPanelOpen ? 'open' : ''}
-    ontoggle="sortPanelOpen = this.open"
-  >
-    <summary>${filters ? 'Trier & filtrer' : 'Trier'}${active ? ` (${active})` : ''}</summary>
-    <div class="col-picker-panel sort-panel">
-      ${filters ? filters.html : ''}
+  return toolbarPanel({
+    key: 'sort',
+    icon: '⇅',
+    label: 'Trier',
+    count: criteria.length,
+    body: /* HTML */ `<div class="sort-panel">
       ${
         criteria.length
           ? criteria.map((c, i) => sortLevelRow(kind, c, i, criteria.length)).join('')
@@ -142,8 +133,8 @@ function sortPanel(kind, filters) {
           ? `<button class="btn-ghost btn sort-add" onclick="addSortLevel('${kind}')">+ Ajouter un niveau</button>`
           : ''
       }
-    </div>
-  </details>`;
+    </div>`,
+  });
 }
 
 const DIRECTION_LABELS = { asc: 'Croissant ↑', desc: 'Décroissant ↓' };

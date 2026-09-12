@@ -54,6 +54,37 @@ js/init.js                       démarrage — doit rester chargé en dernier
 apps-script/Code.js              le backend Apps Script (voir plus bas)
 ```
 
+## Le board du backlog
+
+```
+pnpm plan
+```
+
+Ouvre <http://localhost:4321> : les tâches de [PLAN.md](PLAN.md), rangées par section, filtrables
+par statut et par recherche. `PLAN_PORT=4399 pnpm plan` pour un autre port.
+
+Cliquer une tâche ouvre son panneau — rien n'est lancé au clic. On y édite le titre, le statut et le
+détail (enregistrer réécrit la puce dans PLAN.md, à cent colonnes comme le reste du fichier), et on y
+lance sa session Claude :
+
+- **Aucune session** : le prompt d'amorce est affiché et modifiable avant de lancer. Le bouton ouvre
+  une fenêtre iTerm sur `claude --session-id <uuid>` avec ce prompt en argument.
+- **Session existante** : le bouton la rouvre avec `claude --resume <uuid>`.
+- **Archiver** sort la puce de PLAN.md — git en garde l'histoire, comme pour un item terminé. Le
+  board la garde sous le filtre « 📦 archivées », avec son statut et sa session, toujours réouvrable.
+
+L'URL porte la tâche ouverte (`#t-<id>`), donc un lien mène droit à une tâche.
+
+**⧉ Détacher** sort le board du navigateur dans une petite fenêtre flottante, au-dessus de tout et
+déplaçable — la même mécanique que la vignette de Google Meet (API Document Picture-in-Picture). Le
+board y passe en colonne unique. Fermer la fenêtre le remet dans l'onglet, dans l'état où il était.
+Le bouton n'apparaît que sur un navigateur qui sait le faire : Chrome et Arc oui, Firefox et Safari
+non.
+
+Les statuts sont une liste figée dans [statuses.js](tools/plan-board/statuses.js), partagée par le
+serveur et la page. La liaison tâche → session vit dans `.claude/plan-sessions.json`, non versionné :
+les sessions sont propres à ta machine.
+
 ## Travailler à plusieurs en même temps (Google Sheets)
 
 Le Google Sheet est la **seule** base de données : l'app n'embarque aucune donnée, elle est vide

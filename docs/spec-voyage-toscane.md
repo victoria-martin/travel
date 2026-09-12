@@ -153,12 +153,12 @@ La vue principale, en **tableau ou en cartes**.
   adresse, prix, dates, notes, lien, Booking, actions. Région, adresse et notes sont masquées par
   défaut ; nom, favori et actions ne sont jamais masquables. Le sélecteur « Colonnes » garde le
   choix d'une session à l'autre.
-- **Tri** — panneau « Trier & filtrer » : une liste ordonnée de critères (« statut, puis ville »),
+- **Tri** — panneau « Trier » : une liste ordonnée de critères (« statut, puis ville »),
   chacun avec son sens, réordonnable. Le clic sur un en-tête est le raccourci : il remplace tout
   par un tri simple et cycle croissant → décroissant → aucun. Tri de départ : favoris, puis type,
   puis statut. Les favoris sont un critère comme un autre.
-- **Filtres** : ⭐ favoris uniquement, et par tag — un hébergement sort dès qu'il porte **un** des
-  tags cochés. Le bloc de tags est dans le même panneau que le tri, donc absent en mode cartes.
+- **Filtres** : ⭐ favoris uniquement — un bouton à part, toujours visible — et par tag dans le
+  panneau « Filtrer », un hébergement sortant dès qu'il porte **un** des tags cochés.
 - **Édition en ligne** : type, statut, prix et notes se changent directement dans la ligne comme
   dans la carte, sans ouvrir la fiche. Le prix garde sa monnaie (€ ou GP) affichée à côté du champ.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
@@ -355,6 +355,14 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 ## 5. Règles transverses
 
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Barre d'outils** : les mêmes contrôles, dans le même ordre, en haut à droite de chaque écran —
+  « Trier », « Filtrer », « Colonnes », les filtres propres à l'écran, la bascule tableau / cartes,
+  « Ajouter », puis le menu ⋮. Chacun porte une icône, et un compteur quand il a quelque chose
+  d'actif. « Trier » et « Filtrer » sont deux panneaux distincts. Le détail d'un scénario a la
+  sienne : date de départ, bascule de la carte, « Ajouter une étape », ⋮.
+- **Libellés des boutons** : une option unique pour toute l'app, qui affiche ou masque le texte à
+  côté des icônes. Elle se change depuis la barre latérale ou depuis le menu ⋮ de n'importe quelle
+  liste. Icône seule, le libellé reste lisible au survol.
 - **Fermeture d'une modale de saisie** (création comme modification) : confirmée dès qu'un champ a
   été touché, que la fermeture vienne du clic sur le fond ou du bouton « Annuler ». Une modale
   restée telle qu'ouverte se ferme sans rien demander.
@@ -367,7 +375,7 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 - **Géocodage** : jamais automatique (le service limite à 1 requête/seconde), toujours sur clic, et
   jamais bloquant — les coordonnées restent saisissables à la main.
 - **Préférences d'affichage** (voyage ouvert, colonnes masquées, tri, carte du scénario affichée,
-  panneaux ouverts) : propres à chaque navigateur, **jamais partagées**.
+  panneaux ouverts, libellés des boutons) : propres à chaque navigateur, **jamais partagées**.
 - **Tout le reste est partagé** via le Google Sheet, en quelques secondes. Voir le
   [protocole de synchro](protocole-sync-sheet.md) : deux entrées différentes éditées en même temps
   sont toutes deux gardées ; sur la même entrée, la dernière personne qui enregistre gagne.

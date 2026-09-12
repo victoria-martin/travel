@@ -15,6 +15,14 @@ function render() {
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
         ${syncStatusHtml()}
+        <label class="sidebar-option">
+          <input
+            type="checkbox"
+            ${showButtonLabels() ? 'checked' : ''}
+            onchange="toggleButtonLabels()"
+          />
+          Textes des boutons
+        </label>
       </div>
     </div>
     <div class="main" id="main"></div>

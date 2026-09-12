@@ -8,21 +8,11 @@ function fixedCostsHeader(items) {
         enregistrée${items.length > 1 ? 's' : ''}
       </p>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div class="view-header-actions">
       ${mode === 'table' ? sortPanel('charges') : ''}
-      ${mode === 'table' ? columnPicker('charges') : ''}
-      <div class="toggle-group">
-        <button
-          class="${mode === 'table' ? 'active' : ''}"
-          onclick="setListMode('charges','table')"
-        >
-          Tableau
-        </button>
-        <button class="${mode === 'card' ? 'active' : ''}" onclick="setListMode('charges','card')">
-          Cartes
-        </button>
-      </div>
-      <button class="btn" onclick="openModal('charge')">+ Ajouter</button>
+      ${mode === 'table' ? columnPicker('charges') : ''} ${listModeToggle('charges', mode)}
+      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('charge')" })}
+      ${toolbarMenu()}
     </div>
   </div>`;
 }

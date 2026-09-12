@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Backlog — Voyage Toscane</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+    <link rel="stylesheet" href="board.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <h1>Backlog</h1>
+        <input
+          id="search"
+          class="search"
+          type="search"
+          placeholder="Rechercher une tâche…"
+          data-act="search"
+        />
+        <span id="count" class="count"></span>
+        <button id="detach" class="detach" data-act="detach" hidden>⧉ Détacher</button>
+      </header>
+
+      <nav id="filters" class="filters"></nav>
+
+      <div class="layout">
+        <aside id="sections" class="sections"></aside>
+        <main id="board"></main>
+      </div>
+
+      <div id="overlay" class="overlay" hidden data-act="close"></div>
+      <aside id="drawer" class="drawer" hidden></aside>
+    </div>
+
+    <script src="statuses.js"></script>
+    <script src="detach.js"></script>
+    <script src="task-drawer.js"></script>
+    <script src="board.js"></script>
+  </body>
+</html>

@@ -15,7 +15,7 @@ function renderAccommodationsView() {
         ? emptyState(
             'Aucun hébergement',
             listFilters.tags.length
-              ? 'Aucun hébergement ne porte les tags cochés dans « Trier & filtrer ».'
+              ? 'Aucun hébergement ne porte les tags cochés dans « Filtrer ».'
               : favOnly
                 ? "Aucun favori pour l'instant — clique sur l'étoile d'un hébergement pour le marquer."
                 : 'Ajoute tes premiers hébergements pour pouvoir les rattacher à tes étapes.',

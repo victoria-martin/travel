@@ -16,9 +16,12 @@ function scenarioMapBlock(scenario) {
 }
 
 function scenarioMapToggleBtn() {
-  return /* HTML */ `<button class="btn-ghost btn btn-small" onclick="toggleScenarioMap()">
-    ${prefs.showScenarioMap ? '🗺️ Masquer la carte' : '🗺️ Afficher la carte'}
-  </button>`;
+  return toolbarButton({
+    icon: '🗺️',
+    label: prefs.showScenarioMap ? 'Masquer la carte' : 'Afficher la carte',
+    onclick: 'toggleScenarioMap()',
+    active: prefs.showScenarioMap,
+  });
 }
 
 function toggleScenarioMap() {

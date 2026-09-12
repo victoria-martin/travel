@@ -9,9 +9,10 @@ function attractionsHeader(items) {
         — ${items.length} lieu${items.length > 1 ? 'x' : ''}
       </p>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div class="view-header-actions">
       ${sortPanel('attractions')} ${columnPicker('attractions')}
-      <button class="btn" onclick="openModal('attraction')">+ Ajouter</button>
+      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('attraction')" })}
+      ${toolbarMenu()}
     </div>
   </div>`;
 }
