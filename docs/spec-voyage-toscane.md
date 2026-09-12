@@ -61,7 +61,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs         | possède tout le reste ; un seul est ouvert à la fois |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori | la fiche de référence ; c'est elle qui porte le prix |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                        | une étape de passage sans nuit, ou un repère         |
-| **Voiture**         | loueur, modèle, prix, dates, lieu de prise en charge, lien, notes, **par défaut**                                                  | liste simple ; une seule voiture par défaut          |
+| **Voiture**         | loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**               | liste simple ; une seule voiture par défaut          |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
 | **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                          | un itinéraire candidat                               |
 | **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre                                                 | appartient à un scénario, l'ordre compte             |
@@ -94,6 +94,11 @@ réduite, il ne reste que l'emoji.
 
 La **couleur d'accent** du voyage ouvert remplace les deux verts structurants du thème — barre
 latérale, boutons, états actifs. Sans couleur choisie, l'app garde les siens.
+
+L'**onglet du navigateur** suit lui aussi le voyage : son nom en titre, son emoji en favicon, rendu
+en SVG `data:` sans fichier. Ouverte en local — fichier, `localhost` ou `127.0.0.1` —, la favicon
+porte en plus une **pastille orange** cerclée de blanc : d'un coup d'œil dans la liste des onglets,
+on sait si on regarde sa copie de travail ou la prod GitHub Pages.
 
 Créer un voyage l'ouvre aussitôt. Tant qu'il n'y en a aucun, le bouton affiche « Aucun voyage » et
 le menu ne propose que la création.
@@ -183,7 +188,8 @@ bloc de localisation que les hébergements. Sert à poser une étape de passage 
 | Champ                   | Détail                                          |
 | ----------------------- | ----------------------------------------------- |
 | loueur, modèle          | les deux forment le libellé « loueur · modèle » |
-| prix                    | texte libre                                     |
+| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les nuits |
+| prix total              | texte libre ; saisi à la main, jamais calculé   |
 | dates                   | texte libre                                     |
 | lieu de prise en charge |                                                 |
 | lien                    |                                                 |
@@ -252,7 +258,8 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix.
 - **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
-  de la voiture × nuits du scénario. Un scénario créé naît avec la **voiture par défaut**
+  / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
+  Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
   rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
   tient, et les scénarios existants ne bougent pas.
 - **Total général**, en tête du récap : une ligne par bloc (hébergements, hébergements en GP si le
@@ -325,8 +332,7 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du moment :
 
-- **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage ;
-  le titre de l'onglet, la favicon et les couleurs de l'app ne suivent pas le voyage ouvert.
+- **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage.
 - **Charges fixes dans le scénario** : la relation (`costIds`) existe dans le modèle et alimente le
   total général, mais aucun écran ne rattache une charge à un scénario — la ligne reste donc à 0 €.
 - **Le coût d'une voiture est multiplié par les nuits**, contre la décision actée qui le prenait tel

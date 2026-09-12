@@ -14,10 +14,18 @@ COLUMN_SETS.voitures = [
     sortValue: (c) => (c.model || '').toLowerCase(),
   },
   {
-    key: 'price',
-    label: 'Prix',
-    cell: carPriceCell,
-    sortValue: (c) => (c.price || '').toLowerCase(),
+    key: 'pricePerDay',
+    label: 'Prix / jour',
+    nowrap: true,
+    cell: carPricePerDayCell,
+    sortValue: (c) => priceNumber(c.pricePerDay),
+  },
+  {
+    key: 'priceTotal',
+    label: 'Prix total',
+    nowrap: true,
+    cell: carPriceTotalCell,
+    sortValue: (c) => priceNumber(c.priceTotal),
   },
   {
     key: 'dates',
@@ -43,8 +51,12 @@ function carModelCell(c) {
   return textCell(c.model);
 }
 
-function carPriceCell(c) {
-  return textCell(c.price);
+function carPricePerDayCell(c) {
+  return textCell(carPriceLabel(c.pricePerDay, '/ jour'));
+}
+
+function carPriceTotalCell(c) {
+  return textCell(carPriceLabel(c.priceTotal));
 }
 
 function carDatesCell(c) {

@@ -52,6 +52,12 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — `js/views/travels/favicon.js` devient
+  [tab.js](js/views/travels/tab.js) : l'onglet est la responsabilité, pas seulement l'icône — titre,
+  emoji et pastille « local ». `isLocalEnv` y vit, elle n'a que ce consommateur.
+- **2026-09-12** — `apps-script/Html.js` créé : `matchOne` / `decodeEntities` / `matchFirst`,
+  partagés par les deux scrapers ([HomeExchange.js](apps-script/HomeExchange.js),
+  [Booking.js](apps-script/Booking.js)).
 - **2026-09-12** — `js/views/travels/` créé pour le domaine Voyage : `get-travel.js`,
   `selector.js` (le bouton et le menu de la barre latérale) et `modal/`. Le voyage ouvert et le
   filtrage des collections vivent dans [current-travel.js](js/current-travel.js), à côté de

@@ -3,7 +3,8 @@ function emptyCar() {
     id: null,
     name: '',
     model: '',
-    price: '',
+    pricePerDay: '',
+    priceTotal: '',
     dates: '',
     location: '',
     link: '',
@@ -22,7 +23,12 @@ function carForm(p) {
       <label>Modèle</label><input id="car-model" type="text" value="${escapeHtml(p.model)}" />
     </div>
     <div class="field">
-      <label>Prix</label><input id="car-price" type="text" value="${escapeHtml(p.price)}" />
+      <label>Prix / jour</label
+      ><input id="car-price-per-day" type="text" value="${escapeHtml(p.pricePerDay)}" />
+    </div>
+    <div class="field">
+      <label>Prix total</label
+      ><input id="car-price-total" type="text" value="${escapeHtml(p.priceTotal)}" />
     </div>
     <div class="field">
       <label>Dates</label><input id="car-dates" type="text" value="${escapeHtml(p.dates)}" />

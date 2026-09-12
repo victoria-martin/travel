@@ -94,7 +94,7 @@ function formatCosts(cost) {
 
 function carTotal(scenario) {
   const car = getScenarioCar(scenario);
-  return car ? priceNumber(car.price) * totalNights(scenario) : 0;
+  return car ? priceNumber(car.pricePerDay) * totalNights(scenario) : 0;
 }
 
 // Le montant d'une charge est pris tel quel, sans multiplication.

@@ -22,7 +22,7 @@ function scenarioCarDropdown(scenario) {
               onclick="pickScenarioCar('${scenario.id}','${c.id}')"
             >
               <span class="inline-label">${escapeHtml(carLabel(c))}</span>
-              ${c.price ? `<span class="inline-menu-aside">${escapeHtml(c.price)} €</span>` : ''}
+              ${c.pricePerDay ? `<span class="inline-menu-aside">${escapeHtml(carPriceLabel(c.pricePerDay, '/ jour'))}</span>` : ''}
             </button>`,
           )
           .join('')}

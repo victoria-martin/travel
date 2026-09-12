@@ -2,7 +2,7 @@ let view = 'hebergements'; // hebergements | voitures | charges | scenarios | sc
 
 function render() {
   applyTravelAccent();
-  applyTravelFavicon();
+  applyTravelTab();
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `
     <div class="sidebar">

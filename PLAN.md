@@ -4,7 +4,7 @@ Le backlog, rangé par page. Un item terminé **sort d'ici** et va décrire l'ap
 [docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : ce fichier n'archive pas ce qui est
 fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées » de la spec.
 
-## Voyages
+## ✈️ Voyages
 
 Le socle est en place : l'entité Voyage, le voyage ouvert dans les préférences locales, le
 sélecteur et sa modale dans la barre latérale, et le `travelId` sur toutes les collections, Sheet
@@ -14,10 +14,19 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   dates, statut), avec créer / modifier / dupliquer / supprimer. Sert d'écran d'accueil quand aucun
   voyage n'est ouvert. Tant qu'elle n'existe pas, le sélecteur de la barre latérale est le seul
   point d'entrée.
+- **Place dans le site** — ⏳ à faire : `navBtn('voyages', '✈️', 'Voyages')` en tête de la barre
+  latérale, avant Hébergements ([render.js:9](js/render.js#L9)), et `view = 'voyages'` comme vue
+  initiale quand `currentTravelId` est vide. Le dossier
+  [js/views/travels/](js/views/travels/) existe déjà : la page y ajoute `travels.js`, `header.js`
+  et `cards.js`, et réutilise `modal/` et `get-travel.js` du sélecteur.
+- **Ouvrir un voyage depuis une carte** — ⏳ à faire : un clic sur la carte appelle le même
+  `setCurrentTravel()` que le menu du sélecteur ([current-travel.js](js/current-travel.js)) et
+  bascule sur Hébergements. Le sélecteur reste, les deux points d'entrée partagent le même chemin.
+- **Chiffres de la carte** — ⏳ à trancher : ce qu'une carte de voyage résume — nombre
+  d'hébergements et de scénarios, budget du scénario retenu — et donc s'il faut un scénario
+  « retenu » sur le voyage, ce qui n'existe pas aujourd'hui.
 - **Supprimer un voyage** — ⏳ à faire : avec la page Voyages, puisque c'est de là qu'on supprime.
   Confirmation obligatoire, et les données rattachées partent avec.
-- **Onglet du navigateur** — ⏳ à faire : le titre et la favicon suivent le voyage courant, la
-  favicon étant l'emoji rendu en SVG `data:`.
 - **Voyageurs → coût par personne** — ⏳ à faire : le récap d'un scénario affiche le total divisé
   par le nombre de voyageurs, à côté du total général.
 
@@ -66,7 +75,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   avec son `travelId`.
 - **Créer la vue** — ⏳ à faire : `js/views/restaurants/`, en écrivant ses fichiers en clair comme
   Villes et Hébergements.
-- **Modèle** — ⏳ à faire : nom, description, type, `restaurantTags`, favori, lien, statut,
+- **Modèle** — ⏳ à faire : nom, description, type, `restaurantTags`, favori, lien, hotelId, statut,
   fourchette de prix, horaires, téléphone.
 - **`restaurantTags`** — ⏳ à faire : même design que les `attractionTags` ci-dessus — libres,
   créables à la saisie, amorcés par une liste par défaut. Proposition : trattoria, pizzeria,
@@ -80,11 +89,44 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   qui partent des villes déjà choisies — par exemple les villes des étapes d'un scénario. Sources
   et point d'entrée à préciser.
 
-## Todo list de voyage
+## 🧳 Valise
 
-- **Créer la page** — ⏳ idée : une liste de choses à préparer / emporter, cochables. Tout reste à
-  préciser : items libres ou modèle par défaut, rattachement à un scénario ou à une étape, place
-  dans la barre latérale.
+La liste de ce qu'on emporte et de ce qu'on prépare, cochable. Remplace l'idée « Todo list de
+voyage ». Tout est à trancher, rien n'est commencé.
+
+- **Créer la page** — ⏳ idée : `navBtn('valise', '🧳', 'Valise')` dans la barre latérale, après
+  Notes ([render.js:11](js/render.js#L11)), et `js/views/packing/` pour le domaine — un dossier par
+  domaine, comme `cars/` ou `cities/`.
+- **Entité `packingItems`** — ⏳ idée : une collection de plus dans `COLLECTIONS`
+  ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()` ([storage.js:17](js/storage.js#L17)),
+  avec son `travelId` en première colonne comme les autres. Modèle proposé : libellé, catégorie,
+  quantité, coché, `travelerId` plus tard, notes.
+- **Catégories** — ⏳ à trancher : une liste figée sur le modèle d'
+  [accommodation-types.js](js/accommodation-types.js) (vêtements, papiers, santé, électronique,
+  bagage cabine, voiture, à faire avant de partir) ou des tags libres comme
+  [tags.js:5](js/views/tags.js#L5). Les deux existent déjà dans l'app, il faut choisir lequel.
+- **Modèle par défaut** — ⏳ à trancher : un bouton « Partir d'une liste type » qui crée les items
+  d'un coup, versus une liste vide. Si modèle il y a, il vit à côté de la vue, comme
+  [default-car.js](js/views/cars/default-car.js).
+- **Cocher** — ⏳ idée : une case par ligne, écrite directement en base comme les inline-edits
+  existants, et un compteur « 12 / 30 » dans l'en-tête.
+
+### Intégration aux scénarios
+
+- **Quantités déduites des nuits** — ⏳ à trancher : le scénario connaît déjà ses nuits
+  ([nights.js](js/views/scenarios/nights.js)). Une quantité peut valoir « 1 par nuit » plutôt qu'un
+  nombre fixe, et se recalculer quand le scénario retenu change. Suppose un scénario « retenu » sur
+  le voyage — même prérequis que les chiffres des cartes Voyages.
+- **Items rattachés à une étape** — ⏳ à trancher : un `stepId` optionnel sur l'item (maillot pour
+  l'étape mer, chaussures de rando pour l'étape Chianti), sur le modèle d'une étape qui référence
+  un hébergement. La page Valise les grouperait alors par étape, dans l'ordre du scénario.
+- **Bloc « Valise » dans le détail d'un scénario** — ⏳ idée : sous les étapes, à côté du bloc
+  Charges fixes, une ligne par catégorie avec son compteur et un lien vers la page. Lecture seule :
+  on coche depuis la page Valise, pas depuis le scénario.
+- **Ce qui dépend de la voiture** — ⏳ idée : le scénario porte déjà une voiture
+  ([car-block.js](js/views/scenarios/detail/car-block.js)). Des items « coffre de toit », « siège
+  enfant » n'ont de sens que s'il y a une voiture — à voir si la valise s'en sert ou si c'est une
+  complication inutile.
 
 ## Villes
 

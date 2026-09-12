@@ -10,7 +10,8 @@ function carCard(car) {
     </div>
     <div class="card-meta">
       ${car.model ? `<span>Modèle : ${escapeHtml(car.model)}</span>` : ''}
-      ${car.price ? `<span>Prix : ${escapeHtml(car.price)}</span>` : ''}
+      ${car.pricePerDay ? `<span>${escapeHtml(carPriceLabel(car.pricePerDay, '/ jour'))}</span>` : ''}
+      ${car.priceTotal ? `<span>Total : ${escapeHtml(carPriceLabel(car.priceTotal))}</span>` : ''}
       ${car.dates ? `<span>Dates : ${escapeHtml(car.dates)}</span>` : ''}
       ${car.location ? `<span>Lieu de prise en charge : ${escapeHtml(car.location)}</span>` : ''}
       <span>📝 ${carNotesEditable(car)}</span>
