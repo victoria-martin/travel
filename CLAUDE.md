@@ -50,7 +50,46 @@ le demande :
 
 Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `PLAN.md` ni `docs/`.
 
+## Le board se recharge tout seul — je ne le relance pas
+
+`pnpm plan` tourne en `node --watch`, et l'écran se rafraîchit par SSE. Après une modif de
+`tools/plan-board/` :
+
+- le process tourne → je dis que c'est rechargé, rien d'autre à faire ;
+- il ne tourne pas → je demande si elle veut voir les changements, et j'ouvre.
+
 ## Journal
+
+- **2026-09-12** — une tâche se tape aussi en fin de liste, dans la portée où elle atterrit :
+  [new-task.js](tools/plan-board/new-task.js) ne demande que le titre — le reste (types, corps,
+  statut) est le travail du tiroir — et le statut de départ, commun aux deux chemins, devient
+  `NEW_STATUS` dans [statuses.js](tools/plan-board/statuses.js). Le board se rend désormais sur le
+  squelette de PLAN.md et non sur le regroupement des seules tâches visibles : une portée sans
+  aucune tâche reste affichée, puisqu'elle n'a rien à filtrer et que c'est là qu'on pose la
+  première — sans quoi une section fraîchement créée serait inatteignable. Les archivées, elles,
+  ne sont plus dans le fichier : `groupBySection` leur reste, sous la portée qu'elles gardent en
+  mémoire, et le bouton ne s'y affiche pas.
+
+- **2026-09-12** — le board se recharge à l'enregistrement. `node --watch` couvre les modules du
+  serveur, un `fs.watch` du dossier plus un flux SSE (`/api/reload`) couvre les fichiers servis en
+  assets, que `--watch` ne voit pas puisqu'ils ne sont jamais `require`és. Les deux moitiés passent
+  par un seul canal : un restart de node coupe le flux, le navigateur se rebranche seul, et
+  [live-reload.js](tools/plan-board/live-reload.js) lit cette reconnexion comme un message. Le
+  tiroir ouvert diffère le rechargement jusqu'à sa fermeture — c'est le seul état qui coûte de
+  perdre. La fenêtre détachée, elle, survit : le `pagehide` de l'onglet ne la ferme plus quand le
+  rechargement vient de nous, et le document neuf la retrouve par son nom
+  (`window.open('', 'plan-board')`) pour y reposer le `#app`, ce qui lui garde sa taille et sa
+  place. D'où l'`adoptWindow` de [detach.js](tools/plan-board/detach.js), par où passent les deux
+  entrées — le clic Détacher et la reprise après rechargement.
+
+- **2026-09-12** — l'emoji est une propriété de la section, pas un caractère du nom : `splitHeading`
+  coupe le `##` en deux dans [plan.js](tools/plan-board/plan.js), une section se désigne partout par
+  son nom nu (tâches, portée, ancre, déplacement) et `headingLine` la réécrit. D'où le retrait du
+  picker du titre de tâche — un titre n'a pas d'emoji à lui — et
+  [section-drawer.js](tools/plan-board/section-drawer.js), troisième mode du tiroir, qui édite les
+  deux moitiés de la ligne ; renommer une section y déplace ses tâches sans rien toucher d'autre,
+  puisque le titre est le seul endroit où elle vit. Les trois modes deviennent une table lue à
+  l'appel (`drawerModes`) : chacun vit dans son fichier, chargé après `drawer.js`.
 
 - **2026-09-12** — une section se crée depuis la barre latérale, sans passer par une tâche :
   [new-section.js](tools/plan-board/new-section.js) tient le bouton et son champ, sur le modèle de

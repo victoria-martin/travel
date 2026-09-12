@@ -17,7 +17,7 @@ function openCreateDrawer() {
     newScope: false,
     title: '',
     types: [],
-    status: 'à faire',
+    status: NEW_STATUS,
     body: '',
   };
   renderBoard();

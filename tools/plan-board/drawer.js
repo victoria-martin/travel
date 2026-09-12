@@ -21,6 +21,7 @@ function toggleDraftType(label) {
 function closeDrawer() {
   closeEmojiPicker();
   resetNewWord();
+  sectionDraft = null;
   if (location.hash) history.replaceState(null, '', location.pathname);
   drawerMode = null;
   openTaskId = null;
@@ -29,19 +30,15 @@ function closeDrawer() {
   drawerEl().hidden = true;
   ui.getElementById('overlay').hidden = true;
   renderBoard();
+  runQueuedReload();
 }
 
 function draftFields() {
   return `
     <div class="field">
       <label for="title">Titre</label>
-      <div class="field-row">
-        <input class="title-input" id="title" data-act="title" value="${esc(draft.title)}"
-          placeholder="Ce qu'il y a à faire" />
-        <button class="btn emoji-btn" data-act="emoji" data-value="title"
-          title="Insérer un emoji" aria-pressed="${emojiPickerOpen('title')}">🙂</button>
-      </div>
-      ${emojiPanel('title')}
+      <input class="title-input" id="title" data-act="title" value="${esc(draft.title)}"
+        placeholder="Ce qu'il y a à faire" />
     </div>
 
     <div class="field">
@@ -81,10 +78,15 @@ function draftFields() {
     </div>`;
 }
 
-function renderDrawer() {
-  if (drawerMode === 'create') return renderCreateDrawer();
-  renderTaskDrawer();
-}
+// Read at call time: each mode lives in its own file, loaded after this one.
+const drawerModes = () => ({
+  create: { render: renderCreateDrawer, canSave: canCreate, save: createDraft },
+  section: { render: renderSectionDrawer, canSave: sectionDirty, save: saveSection },
+  task: { render: renderTaskDrawer, canSave: isDirty, save: saveDraft },
+});
+const currentDrawer = () => drawerModes()[drawerMode];
+
+const renderDrawer = () => currentDrawer().render();
 
 function paintDrawer({ where, body, foot }) {
   drawerEl().innerHTML = `

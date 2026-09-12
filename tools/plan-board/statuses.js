@@ -12,6 +12,9 @@ const PLAN_STATUSES = [
   { label: 'abandonné', emoji: '🚫', tone: 'dropped' },
 ];
 
+// Where a task starts its life, whether it is typed in the drawer or at the end of a list.
+const NEW_STATUS = 'à faire';
+
 const planStatus = (label) => PLAN_STATUSES.find((status) => status.label === label);
 
-if (typeof module !== 'undefined') module.exports = { PLAN_STATUSES, planStatus };
+if (typeof module !== 'undefined') module.exports = { PLAN_STATUSES, NEW_STATUS, planStatus };

@@ -7,12 +7,22 @@ const { PLAN_TYPES, planType } = require('./types.js');
 
 const PLAN_PATH = path.join(__dirname, '..', '..', 'PLAN.md');
 
-// Bullets under this heading are content to type into the app, not dev tasks. Every heading may
-// open on an emoji, which is decoration and never part of the name.
+// Bullets under this heading are content to type into the app, not dev tasks.
 const SKIPPED_SECTION = 'Données à saisir';
-const isSkipped = (name) => [name, name.replace(/^\S+\s+/, '')].includes(SKIPPED_SECTION);
-const skippedIndex = (lines) =>
-  lines.findIndex((line) => line.startsWith('## ') && isSkipped(line.slice(3).trim()));
+const isSkipped = (name) => name === SKIPPED_SECTION;
+
+// A heading may open on an emoji: decoration, and never part of the name a task points at.
+const HEADING_EMOJI = /^(\p{Extended_Pictographic}\S*)\s+(.+)$/u;
+function splitHeading(text) {
+  const heading = String(text || '').trim();
+  const match = heading.match(HEADING_EMOJI);
+  return match ? { emoji: match[1], name: match[2].trim() } : { emoji: '', name: heading };
+}
+const headingOf = (line) => splitHeading(line.slice(3));
+const headingLine = ({ emoji, name }) => `## ${[emoji, name].filter(Boolean).join(' ')}`;
+const sectionIndex = (lines, name) =>
+  lines.findIndex((line) => line.startsWith('## ') && headingOf(line).name === name);
+const skippedIndex = (lines) => sectionIndex(lines, SKIPPED_SECTION);
 
 const TASK_RE = /^- \*\*(.+?)\*\* <!--t:(\w+)-->(.*)$/;
 const WIDTH = 100;
@@ -76,7 +86,7 @@ function parseTasks(lines) {
   lines.forEach((line, index) => {
     if (line.startsWith('## ')) {
       close(index - 1);
-      section = line.slice(3).trim();
+      section = headingOf(line).name;
       skipping = isSkipped(section);
       subsection = '';
       return;
@@ -181,9 +191,9 @@ function listSections() {
   let skipping = false;
   readPlan().forEach((line) => {
     if (line.startsWith('## ')) {
-      const name = line.slice(3).trim();
+      const { emoji, name } = headingOf(line);
       skipping = isSkipped(name);
-      if (!skipping) sections.push({ name, subsections: [] });
+      if (!skipping) sections.push({ emoji, name, subsections: [] });
       return;
     }
     if (!skipping && line.startsWith('### ') && sections.length) {
@@ -193,13 +203,26 @@ function listSections() {
   return sections;
 }
 
-// A heading typed on its own, ahead of the first task that would have written it.
+// A heading typed on its own, ahead of the first task that would have written it. An emoji typed
+// in front of the name is kept as one, not as a first word.
 function createSection(name) {
-  const section = cleanHeading(name);
-  if (!section || isSkipped(section)) return null;
+  const heading = splitHeading(cleanHeading(name));
+  if (!heading.name || isSkipped(heading.name)) return null;
   const lines = readPlan();
-  if (sectionRange(lines, section)) return null;
-  ensureBlock(lines, section, '');
+  if (sectionRange(lines, heading.name)) return null;
+  ensureBlock(lines, heading, '');
+  writePlan(lines);
+  return listSections();
+}
+
+// The heading is the only place a section lives: renaming it carries every task under it along.
+function updateSection(name, { emoji = '', title }) {
+  const next = { emoji: String(emoji || '').trim(), name: cleanHeading(title) };
+  const lines = readPlan();
+  const at = sectionIndex(lines, name);
+  if (at === -1 || isSkipped(name) || !next.name || isSkipped(next.name)) return null;
+  if (next.name !== name && sectionIndex(lines, next.name) !== -1) return null;
+  lines[at] = headingLine(next);
   writePlan(lines);
   return listSections();
 }
@@ -212,7 +235,7 @@ function moveSection(name, before) {
   if (!range || isSkipped(name)) return null;
 
   const block = lines.splice(range.start, range.end - range.start);
-  let at = before ? lines.findIndex((line) => line.trim() === `## ${before}`) : skippedIndex(lines);
+  let at = before ? sectionIndex(lines, before) : skippedIndex(lines);
   if (at === -1) at = lines.length;
   lines.splice(at, 0, ...block);
   writePlan(lines);
@@ -229,7 +252,7 @@ function freshId(lines) {
 }
 
 function sectionRange(lines, section) {
-  const start = lines.findIndex((line) => line.trim() === `## ${section}`);
+  const start = sectionIndex(lines, section);
   if (start === -1) return null;
   let end = start + 1;
   while (end < lines.length && !lines[end].startsWith('## ')) end += 1;
@@ -238,22 +261,22 @@ function sectionRange(lines, section) {
 
 // A scope names a heading; the first task of a brand new one writes it. A `##` goes just before
 // « Données à saisir », which stays last because it holds content and not work.
-function ensureBlock(lines, section, subsection) {
-  if (!sectionRange(lines, section)) {
+function ensureBlock(lines, heading, subsection) {
+  if (!sectionRange(lines, heading.name)) {
     let at = skippedIndex(lines);
     if (at === -1) at = lines.length;
     while (at > 0 && lines[at - 1].trim() === '') at -= 1;
-    lines.splice(at, 0, '', `## ${section}`);
+    lines.splice(at, 0, '', headingLine(heading));
   }
   if (!subsection) return;
 
-  const range = sectionRange(lines, section);
-  const heading = `### ${subsection}`;
-  if (lines.slice(range.start, range.end).some((line) => line.trim() === heading)) return;
+  const range = sectionRange(lines, heading.name);
+  const sub = `### ${subsection}`;
+  if (lines.slice(range.start, range.end).some((line) => line.trim() === sub)) return;
 
   let at = range.end;
   while (at > range.start && lines[at - 1].trim() === '') at -= 1;
-  lines.splice(at, 0, '', heading);
+  lines.splice(at, 0, '', sub);
 }
 
 // A new task lands at the end of its block: after the last task that shares it, or before the
@@ -264,8 +287,9 @@ function insertionLine(lines, tasks, section, subsection) {
   );
   if (siblings.length) return siblings[siblings.length - 1].endLine + 1;
 
-  const heading = subsection ? `### ${subsection}` : `## ${section}`;
-  const start = lines.findIndex((line) => line.trim() === heading);
+  const start = subsection
+    ? lines.findIndex((line) => line.trim() === `### ${subsection}`)
+    : sectionIndex(lines, section);
   if (start === -1) return -1;
   let end = start + 1;
   while (end < lines.length && !lines[end].startsWith('## ') && !lines[end].startsWith('### ')) {
@@ -283,7 +307,7 @@ function createTask({ section, subsection = '', title, types = [], status, body 
   if (isSkipped(block.section)) return null;
 
   const lines = readPlan();
-  ensureBlock(lines, block.section, block.subsection);
+  ensureBlock(lines, { emoji: '', name: block.section }, block.subsection);
   const at = insertionLine(lines, parseTasks(lines), block.section, block.subsection);
   if (at === -1) return null;
 
@@ -359,6 +383,7 @@ module.exports = {
   listTasks,
   listSections,
   createSection,
+  updateSection,
   moveSection,
   moveTask,
   findTask,

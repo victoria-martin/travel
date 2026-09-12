@@ -225,22 +225,45 @@ code,
   gap: 1px;
   font-size: 13px;
 }
+.section-link {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.section-link:hover {
+  background: var(--paper-raised);
+}
+.section-emoji {
+  padding: 5px 2px 5px 7px;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.section-emoji:hover,
+.section-emoji:focus-visible {
+  outline: none;
+  opacity: 1;
+}
 .sections a {
+  flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  padding: 5px 9px;
-  border-radius: 6px;
+  padding: 5px 9px 5px 4px;
   color: var(--ink-soft);
   text-decoration: none;
   transition:
-    background 0.15s,
     color 0.15s,
     padding-left 0.15s;
 }
-.sections a:hover {
-  padding-left: 13px;
-  background: var(--paper-raised);
+.section-link:hover a {
+  padding-left: 8px;
   color: var(--ink);
 }
 .sections .tally {
@@ -278,6 +301,7 @@ code,
 /* ---------- Sections et tâches ---------- */
 .section-title {
   margin: 26px 0 10px;
+  cursor: pointer;
   font-family: var(--display);
   font-size: 19px;
   font-weight: 600;
@@ -298,6 +322,32 @@ code,
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--ink-soft);
+}
+.new-task-btn {
+  margin: 3px 0 10px;
+}
+.new-task {
+  margin: 3px 0 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  box-shadow: var(--shadow);
+}
+.new-task-input {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  font-weight: 500;
+}
+.new-task-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.new-task .field-row {
+  margin-top: 10px;
 }
 .task {
   display: flex;

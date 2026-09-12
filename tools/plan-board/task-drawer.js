@@ -99,7 +99,7 @@ function renderTaskDrawer() {
 
 function refreshDrawerFoot() {
   const save = ui.getElementById('save');
-  if (save) save.disabled = drawerMode === 'create' ? !canCreate() : !isDirty();
+  if (save) save.disabled = !currentDrawer().canSave();
 }
 
 async function saveDraft() {

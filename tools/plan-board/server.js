@@ -23,6 +23,30 @@ function serveAsset(res, name) {
   res.end(fs.readFileSync(file));
 }
 
+// The open board reloads itself when a board file is saved. A restart drops this stream, and the
+// browser reconnects on its own: the client treats that reconnection as the same signal.
+const WATCHED_EXTENSIONS = new Set(['.js', '.css', '.html']);
+const listeners = new Set();
+
+function liveReload(res) {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+  });
+  res.write('retry: 200\n\n');
+  listeners.add(res);
+  res.on('close', () => listeners.delete(res));
+}
+
+// One save fires several fs events; collapse them into a single push.
+let queued = null;
+fs.watch(__dirname, (_event, name) => {
+  if (!name || !WATCHED_EXTENSIONS.has(path.extname(name))) return;
+  clearTimeout(queued);
+  queued = setTimeout(() => listeners.forEach((res) => res.write('data: reload\n\n')), 100);
+});
+
 function readBody(req) {
   return new Promise((resolve) => {
     let raw = '';
@@ -80,6 +104,8 @@ const server = http.createServer(async (req, res) => {
   const archive = url.pathname.match(/^\/api\/tasks\/(\w+)\/archive$/);
   const move = url.pathname.match(/^\/api\/tasks\/(\w+)\/move$/);
 
+  if (req.method === 'GET' && url.pathname === '/api/reload') return liveReload(res);
+
   if (req.method === 'GET' && url.pathname === '/api/tasks') return send(res, 200, tasksPayload());
 
   if (req.method === 'POST' && url.pathname === '/api/tasks') {
@@ -97,6 +123,13 @@ const server = http.createServer(async (req, res) => {
     const { name } = await readBody(req);
     const created = plan.createSection(name);
     if (!created) return send(res, 400, { error: 'section vide ou déjà présente' });
+    return send(res, 200, tasksPayload());
+  }
+
+  if (req.method === 'PUT' && url.pathname === '/api/sections') {
+    const { name, emoji, title } = await readBody(req);
+    const updated = plan.updateSection(name, { emoji, title });
+    if (!updated) return send(res, 400, { error: 'nom vide, déjà pris, ou section inconnue' });
     return send(res, 200, tasksPayload());
   }
 

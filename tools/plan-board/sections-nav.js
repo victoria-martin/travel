@@ -56,7 +56,8 @@ function bindSectionDrag(container) {
 }
 
 // The list is the order of the `##` headings of PLAN.md, a freshly created one included: a section
-// without any visible task shows up with an empty tally rather than disappearing.
+// without any visible task shows up with an empty tally rather than disappearing. Its emoji is the
+// handle that opens the section drawer; the rest of the row scrolls to the block.
 function renderSections(visible) {
   const tallyOf = (name) => {
     const section = visible.find((entry) => entry.name === name);
@@ -68,10 +69,14 @@ function renderSections(visible) {
   container.innerHTML =
     board.sections
       .map(
-        (section) => `<a href="#${anchorOf(section.name)}" draggable="true"
+        (section) => `<div class="section-link" draggable="true"
         data-section="${esc(section.name)}">
-        <span>${esc(section.name)}</span><span class="tally">${tallyOf(section.name)}</span>
-      </a>`,
+        <button class="section-emoji" data-act="section-edit" data-value="${esc(section.name)}"
+          title="Emoji et nom de la section">${section.emoji || '·'}</button>
+        <a href="#${anchorOf(section.name)}">
+          <span>${esc(section.name)}</span><span class="tally">${tallyOf(section.name)}</span>
+        </a>
+      </div>`,
       )
       .join('') + newSectionForm();
   bindSectionDrag(container);

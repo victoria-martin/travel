@@ -135,6 +135,33 @@ function renderFilters() {
     `<div class="filter-row">${statuses}${archived}${clear}</div>`;
 }
 
+// The order of the file is the order on screen: the skeleton is PLAN.md and the visible tasks fall
+// into it. A scope that holds no task at all stays on screen — nothing there can be filtered out,
+// and it is where the first one gets typed.
+const scopeTasks = (tasks, section, subsection) =>
+  tasks.filter((task) => task.section === section && task.subsection === subsection);
+
+function scopeGroups(section, tasks) {
+  const groups = [];
+  const own = scopeTasks(tasks, section.name, '');
+  const bare = !board.tasks.some((task) => task.section === section.name);
+  if (own.length || bare) groups.push({ name: '', tasks: own });
+
+  section.subsections.forEach((name) => {
+    const inside = scopeTasks(tasks, section.name, name);
+    const empty = !scopeTasks(board.tasks, section.name, name).length;
+    if (inside.length || empty) groups.push({ name, tasks: inside });
+  });
+  return groups;
+}
+
+function boardScopes(tasks) {
+  return board.sections
+    .map((section) => ({ name: section.name, groups: scopeGroups(section, tasks) }))
+    .filter((section) => section.groups.length);
+}
+
+// An archived task is out of PLAN.md: it groups under the scope it remembers, not under the file.
 function groupBySection(tasks) {
   const sections = [];
   tasks.forEach((task) => {
@@ -148,6 +175,10 @@ function groupBySection(tasks) {
 }
 
 const anchorOf = (name) => `s-${name.replace(/[^\w]+/g, '-')}`;
+
+// The board groups the visible tasks by section name; the emoji is carried by the heading itself.
+const sectionOf = (name) => board.sections.find((entry) => entry.name === name) || { emoji: '' };
+const sectionHeading = (name) => [sectionOf(name).emoji, name].filter(Boolean).join(' ');
 
 // Markdown reads badly on one line: keep the words, drop the syntax.
 const plainText = (markdown) =>
@@ -173,7 +204,7 @@ function taskButton(task) {
 function renderBoard() {
   renderFilters();
   const tasks = visibleTasks();
-  const sections = groupBySection(tasks);
+  const sections = showArchived ? groupBySection(tasks) : boardScopes(tasks);
 
   ui.getElementById('count').textContent = `${tasks.length} tâche${tasks.length > 1 ? 's' : ''}`;
   ui.getElementById('detach').textContent =
@@ -189,12 +220,17 @@ function renderBoard() {
     sections
       .map(
         (section) => `<section class="section">
-          <h2 class="section-title" id="${anchorOf(section.name)}">${esc(section.name)}</h2>
+          <h2 class="section-title" id="${anchorOf(section.name)}"
+            data-act="section-edit" data-value="${esc(section.name)}"
+            title="Emoji et nom de la section">
+            ${esc(sectionHeading(section.name))}
+          </h2>
           ${section.groups
             .map(
               (group) =>
                 (group.name ? `<h3 class="group-title">${esc(group.name)}</h3>` : '') +
-                group.tasks.map(taskButton).join(''),
+                group.tasks.map(taskButton).join('') +
+                (showArchived ? '' : newTaskForm(section.name, group.name)),
             )
             .join('')}
         </section>`,
@@ -220,13 +256,17 @@ const CLICKS = {
   'emoji-pick': (target) => pickEmoji(target.dataset.value),
   'new-word': (target) => toggleNewWord(target.dataset.value),
   'new-section': toggleNewSection,
+  'new-task': (target) => toggleNewTask(target.dataset.section, target.dataset.subsection),
+  'task-add': addNewTask,
+  'task-cancel': closeNewTask,
+  'section-edit': (target) => openSectionDrawer(target.dataset.value),
   'section-add': addNewSection,
   'section-cancel': closeNewSection,
   'word-tone': (target) => pickWordTone(target.dataset.value),
   'word-add': addNewWord,
   'word-cancel': closeNewWord,
   theme: toggleTheme,
-  save: () => (drawerMode === 'create' ? createDraft() : saveDraft()),
+  save: () => currentDrawer().save(),
   launch: launchSession,
   archive: archiveTask,
   detach: () => (detached && !detached.closed ? detached.close() : detachWindow()),
@@ -241,6 +281,8 @@ const INPUTS = {
   'scope-name': (target) => editDraft('scope', target.value),
   'emoji-search': (target) => setEmojiSearch(target.value),
   'section-name': (target) => editNewSection(target.value),
+  'task-name': (target) => editNewTask(target.value),
+  'section-title': (target) => editSectionDraft(target.value),
   'word-label': (target) => editNewWord('label', target.value),
   'word-hint': (target) => editNewWord('hint', target.value),
 };
@@ -277,4 +319,7 @@ function openFromHash() {
 
 applyTheme(document);
 bindApp();
-loadBoard().then(openFromHash);
+loadBoard().then(() => {
+  restoreDetached();
+  openFromHash();
+});

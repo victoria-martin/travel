@@ -13,6 +13,18 @@ Les statuts sont une liste figée, du premier jet à ce qui ne se fera pas — �
 📌 acté, ⏳ à faire, 🚧 en cours, ⏸️ en attente, 🌙 plus tard, ✅ fait, 🚫 abandonné. Elle vit dans
 [statuses.js](tools/plan-board/statuses.js) : en ajouter un se fait là, pas à la main ici.
 
+## 💻 plan-tool
+
+- **drag and drop** <!--t:yr9v--> — ⏳ à faire
+  - ajouter un type layout
+- **gerer scroll** <!--t:xwg8--> — 🧩 layout · ⏳ à faire : gerer scroll pr laisser le header qd on
+  scroll
+- **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
+  et met mon focus dans l input pour le name
+- **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien  et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ⏳ à faire
+- **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
+  tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
+
 ## 🧳 Valise
 
 La liste de ce qu'on emporte et de ce qu'on prépare, cochable. Remplace l'idée « Todo list de
@@ -299,8 +311,3 @@ Du contenu, pas des fonctionnalités : à entrer dans l'app dès que l'écran co
   16ᵉ s., une ruelle unique enroulée autour de la colline jusqu'à une petite église. Chercher la
   façade marquée d'un V enserrant une abeille : la maison natale d'Amerigo Vespucci (1454-1512).
   À rattacher à Greve in Chianti ou au Chianti — à voir.
-
-## plan-tool
-
-- **drag and drop** <!--t:yr9v--> — ⏳ à faire
-  - ajouter un type layout
