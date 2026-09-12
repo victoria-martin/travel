@@ -1,4 +1,4 @@
-let view = 'hebergements'; // hebergements | voitures | charges | scenarios | scenario-detail | carte | notes
+let view = 'hebergements'; // hebergements | voitures | charges | villes | attractions | scenarios | scenario-detail | carte | notes
 
 function render() {
   applyTravelAccent();
@@ -8,8 +8,9 @@ function render() {
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
       ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('charges', '💶', 'Charges fixes')}
-      ${navBtn('villes', '📍', 'Villes')} ${navBtn('scenarios', '🧭', 'Scénarios')}
-      ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
+      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Attractions')}
+      ${navBtn('scenarios', '🧭', 'Scénarios')} ${navBtn('carte', '🗺️', 'Carte')}
+      ${navBtn('notes', '📝', 'Notes')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
@@ -51,6 +52,7 @@ function renderMain() {
   else if (view === 'voitures') main.innerHTML = renderCarsView();
   else if (view === 'charges') main.innerHTML = renderFixedCostsView();
   else if (view === 'villes') main.innerHTML = renderCitiesView();
+  else if (view === 'attractions') main.innerHTML = renderAttractionsView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
   else if (view === 'scenario-detail') {
     main.innerHTML = renderScenarioDetailView();

@@ -61,7 +61,8 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs         | possède tout le reste ; un seul est ouvert à la fois |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori | la fiche de référence ; c'est elle qui porte le prix |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                        | une étape de passage sans nuit, ou un repère         |
-| **Voiture**         | loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**               | liste simple ; une seule voiture par défaut          |
+| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, tags, favori                                | un lieu à visiter ; localisée comme une ville        |
+| **Voiture**         | loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                               | liste simple ; une seule voiture par défaut          |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
 | **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                          | un itinéraire candidat                               |
 | **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre                                                 | appartient à un scénario, l'ordre compte             |
@@ -73,6 +74,11 @@ En cours ✈️ · Passé 📦.
 **Type d'hébergement** — Home exchange 🔁 · Hôtel 🏨 · Maison 🏡 · Camping ⛺.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
 Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎.
+
+**Type d'attraction** — Nature 🌿 · Patrimoine 🏛️ · Musée 🖼️ · Village 🏘️ · Plage 🏖️ ·
+Activité 🎟️.
+**Statuts d'une attraction**, dans l'ordre du workflow et du tri : À voir 👀 · Go ✅ · Vu ☑️ ·
+Écarté 👎. Les statuts d'hébergement ne s'appliquent pas : on ne réserve pas un point de vue.
 
 Les deux champs peuvent rester vides : « Non renseigné ❔ » est l'état d'un hébergement créé ou
 importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne, popup de la carte,
@@ -181,20 +187,48 @@ La vue principale, en **tableau ou en cartes**.
 Liste triée par nom : nom, lieu (adresse géocodée, ou province · région), coordonnées, notes. Même
 bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
 
+### Attractions
+
+**Attraction** — un lieu à visiter.
+
+| Champ            | Détail                                             |
+| ---------------- | -------------------------------------------------- |
+| nom              |                                                    |
+| type             | liste figée, comme le type d'un hébergement        |
+| statut           | liste propre, courte                               |
+| description      | texte libre                                        |
+| adresse géocodée | écrite par « Localiser »                           |
+| coordonnées      | latitude, longitude                                |
+| province, région | proposées par le géocodage, modifiables à la main  |
+| lien             |                                                    |
+| tags             | texte libre, amorcés par un vocabulaire par défaut |
+| favori           | étoile en tête de ligne                            |
+
+Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, tags, description, lieu
+(adresse géocodée, ou province · région), coordonnées (masquées par défaut), lien. Tri par défaut
+favoris d'abord, puis type, puis nom. Même bloc de localisation que les villes et les hébergements.
+
+- **Type et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
+- **Tags** : mêmes tags libres que les hébergements — un tag existe dès qu'il est saisi — mais la
+  liste proposée est amorcée par un vocabulaire par défaut (paysage, village, marché, monument,
+  musée, église, jardin, point de vue, plage, thermes, randonnée, artisanat), pour qu'une première
+  attraction ait déjà quelque chose à choisir. Ils se saisissent depuis la modale ; le tableau les
+  affiche sans les éditer.
+
 ### Voitures · Charges fixes
 
 **Voiture**
 
-| Champ                   | Détail                                          |
-| ----------------------- | ----------------------------------------------- |
-| loueur, modèle          | les deux forment le libellé « loueur · modèle » |
+| Champ                   | Détail                                                          |
+| ----------------------- | --------------------------------------------------------------- |
+| loueur, modèle          | les deux forment le libellé « loueur · modèle »                 |
 | prix / jour             | texte libre ; c'est lui que le scénario multiplie par les nuits |
-| prix total              | texte libre ; saisi à la main, jamais calculé   |
-| dates                   | texte libre                                     |
-| lieu de prise en charge |                                                 |
-| lien                    |                                                 |
-| notes                   | éditables depuis la ligne                       |
-| par défaut              | une seule voiture à la fois                     |
+| prix total              | texte libre ; saisi à la main, jamais calculé                   |
+| dates                   | texte libre                                                     |
+| lieu de prise en charge |                                                                 |
+| lien                    |                                                                 |
+| notes                   | éditables depuis la ligne                                       |
+| par défaut              | une seule voiture à la fois                                     |
 
 **Charge fixe**
 
@@ -339,4 +373,6 @@ Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du 
   quel — à trancher.
 - **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
   « arrivée le » resté dans la modale, affiché à côté.
-- **Attractions** : page envisagée, pas encore spécifiée.
+- **Attractions** : la page existe, mais une attraction ne se rattache ni à une étape de
+  scénario ni à une ville — Montefioralle est donc saisie deux fois si elle est à la fois une
+  étape et une visite.

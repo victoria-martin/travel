@@ -26,6 +26,12 @@ function setSortCriteria(kind, criteria) {
   render();
 }
 
+// Order by a dictionary's declaration order; an unknown key sorts last.
+function dictSortIndex(dict, key) {
+  const keys = Object.keys(dict);
+  return keys.includes(key) ? keys.indexOf(key) : keys.length;
+}
+
 function compareValues(left, right) {
   if (typeof left === 'number' && typeof right === 'number') return left - right;
   return String(left).localeCompare(String(right), 'fr');

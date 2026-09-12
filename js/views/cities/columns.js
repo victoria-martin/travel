@@ -10,7 +10,7 @@ COLUMN_SETS.villes = [
     key: 'place',
     label: 'Adresse à localiser / zone',
     cell: cityPlaceCell,
-    sortValue: (c) => cityPlaceLabel(c).toLowerCase(),
+    sortValue: (c) => placeLabel(c).toLowerCase(),
   },
   { key: 'coords', label: 'Coordonnées', nowrap: true, cell: cityCoordsCell },
   { key: 'notes', label: 'Notes', cell: cityNotesCell },
@@ -24,11 +24,11 @@ function cityNameCell(c) {
 }
 
 function cityPlaceCell(c) {
-  return escapeHtml(cityPlaceLabel(c));
+  return escapeHtml(placeLabel(c));
 }
 
 function cityCoordsCell(c) {
-  return escapeHtml(cityCoordsLabel(c));
+  return escapeHtml(coordsLabel(c));
 }
 
 function cityNotesCell(c) {

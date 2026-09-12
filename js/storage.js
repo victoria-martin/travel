@@ -10,6 +10,7 @@ const TRAVEL_COLLECTIONS = [
   'cars',
   'fixedCosts',
   'cities',
+  'attractions',
   'scenarios',
   'tripNotes',
 ];
@@ -21,6 +22,7 @@ function emptyData() {
     cars: [],
     fixedCosts: [],
     cities: [],
+    attractions: [],
     scenarios: [],
     tripNotes: [],
   };
@@ -39,6 +41,7 @@ function loadData() {
 function migrateData(data) {
   if (!data.travels) data.travels = [];
   if (!data.cities) data.cities = [];
+  if (!data.attractions) data.attractions = [];
   if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
     unshiftAccommodation(a);
@@ -49,6 +52,10 @@ function migrateData(data) {
       a.region = '';
     }
     if (!Array.isArray(a.tags)) a.tags = [];
+  });
+  data.attractions.forEach((a) => {
+    if (!Array.isArray(a.tags)) a.tags = [];
+    if (a.favorite === undefined) a.favorite = false;
   });
   (data.scenarios || []).forEach((s) => {
     if (s.startDate === undefined) s.startDate = '';

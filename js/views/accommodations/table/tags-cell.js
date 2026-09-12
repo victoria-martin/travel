@@ -27,7 +27,7 @@ function tagsCellDisplay(a) {
 
 function tagsCellEditor(a) {
   const used = a.tags || [];
-  const options = allTags().filter((tag) => !used.includes(tag));
+  const options = allAccommodationTags().filter((tag) => !used.includes(tag));
   return /* HTML */ `<div class="tags-field tags-field-inline">
     ${used
       .map(

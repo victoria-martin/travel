@@ -29,13 +29,13 @@ function renderAccommodationsView() {
 
 // A tag checked then removed from its last accommodation would filter on nothing visible.
 function activeTagFilter() {
-  const tags = allTags();
+  const tags = allAccommodationTags();
   listFilters.tags = listFilters.tags.filter((tag) => tags.includes(tag));
   return listFilters.tags;
 }
 
 function tagFilterBlock() {
-  const tags = allTags();
+  const tags = allAccommodationTags();
   if (!tags.length) return null;
   const active = listFilters.tags;
   return {
@@ -54,7 +54,7 @@ function tagFilterBlock() {
 
 // An accommodation shows as soon as it carries one of the checked tags.
 function toggleTagFilter(index) {
-  const tag = allTags()[index];
+  const tag = allAccommodationTags()[index];
   const active = listFilters.tags;
   listFilters.tags = active.includes(tag) ? active.filter((t) => t !== tag) : [...active, tag];
   render();

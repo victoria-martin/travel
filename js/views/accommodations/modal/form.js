@@ -100,7 +100,7 @@ function accommodationForm(p) {
         onchange="importBookingLink()"
       />
     </div>
-    ${accommodationTagsField(p)}
+    ${tagsField(p, allAccommodationTags)}
     <div class="field">
       <label>Notes</label><textarea id="f-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>

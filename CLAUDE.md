@@ -52,6 +52,15 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — `js/views/attractions/` créé pour le domaine Attraction, sur le découpage de
+  `cities/` et `accommodations/`. Trois briques en sont sorties parce qu'elles ont désormais deux
+  consommateurs : le champ tags de modale devient [tags-field.js](js/views/tags-field.js) et prend
+  son vocabulaire en argument, les libellés de lieu localisé
+  ([locate-labels.js](js/views/locate/locate-labels.js)) quittent `cities.js`, et `accSortIndex`
+  devient `dictSortIndex` dans [sort.js](js/sort.js). Symétriquement, le vocabulaire de tags des
+  hébergements descend de `views/tags.js` dans
+  [accommodations/tags.js](js/views/accommodations/tags.js) : `views/tags.js` ne garde que
+  `tagChips`, la seule brique réellement partagée.
 - **2026-09-12** — `js/views/travels/favicon.js` devient
   [tab.js](js/views/travels/tab.js) : l'onglet est la responsabilité, pas seulement l'icône — titre,
   emoji et pastille « local ». `isLocalEnv` y vit, elle n'a que ce consommateur.

@@ -26,6 +26,13 @@ function duplicateCity(id) {
   render();
 }
 
+function duplicateAttraction(id) {
+  const a = getAttraction(id);
+  state.attractions.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });
+  saveNow();
+  render();
+}
+
 function duplicateScenario(id) {
   const s = getScenario(id);
   const copy = JSON.parse(JSON.stringify(s));

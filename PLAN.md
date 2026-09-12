@@ -53,17 +53,22 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## Attractions
 
-- **Créer la page** — ⏳ à faire : place dans la barre latérale, colonnes, rattachement à une étape.
-- **Modèle** — ⏳ à faire : nom, description, type, tags, favori, lien, statut.
-- **`attractionTags`** — ⏳ à faire : libres et créables à la saisie, exactement comme les tags
-  d'hébergement — la liste des options est l'union de ce qui est déjà utilisé
-  ([tags.js:5](js/views/tags.js#L5)) — mais amorcée par une liste par défaut. Proposition :
-  paysage, village, monument, musée, église, jardin, point de vue, plage, marché, thermes,
-  randonnée, artisanat.
-- **Une attraction peut-elle être une ville ?** — ⏳ à faire : Montefioralle est à la fois un village
-  à visiter et un lieu d'étape. Trancher entre un tag `village` sur l'attraction, qui duplique la
-  ville, et une attraction qui **référence** une ville existante par son id, comme une étape de
-  scénario référence un hébergement.
+La page existe : modèle, types, statuts, tags et tableau sont décrits dans
+[la spec](docs/spec-voyage-toscane.md). Ce qui reste :
+
+- **Rattachement à une étape** — ⏳ à faire : une étape de scénario référence déjà une ville ou un
+  hébergement ([step-place-dropdown.js](js/views/scenarios/detail/step-place-dropdown.js)) ; reste
+  à décider si elle porte en plus une liste d'attractions, et ce que le détail du scénario en
+  affiche.
+- **Une attraction peut-elle être une ville ?** — ⏳ à trancher : Montefioralle est à la fois un
+  village à visiter et un lieu d'étape. Trancher entre le tag `village` sur l'attraction, qui
+  duplique la ville, et un `cityId` optionnel qui **référence** une ville existante, comme une
+  étape de scénario référence un hébergement.
+- **Tags éditables depuis le tableau** — ⏳ à faire : les hébergements éditent leurs tags sur place
+  ([tags-cell.js](js/views/accommodations/table/tags-cell.js)), les attractions passent par la
+  modale. Généraliser la cellule demande de lui passer son getter et son vocabulaire.
+- **Attractions sur la carte** — ⏳ à faire : elles portent des coordonnées mais
+  [map.js](js/views/map.js) ne trace que les hébergements.
 
 ## Restaurants
 
@@ -192,9 +197,6 @@ voyage ». Tout est à trancher, rien n'est commencé.
   `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`, `cars`, `fixedCosts`,
   `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes aligne le tout ; les
   prefs stockées étant indexées par vue, les colonnes masquées et le tri repartent à zéro une fois.
-- **Libellés de colonnes encore dans `<vue>.js`** — ⏳ à faire : `cityCoordsLabel` et
-  `cityPlaceLabel` ([cities.js:9-17](js/views/cities/cities.js#L9-L17)) ne servent qu'à
-  [cities/columns.js](js/views/cities/columns.js) et doivent y descendre.
 - **Redécouper `accommodations.js`** — ⏳ à faire : 95 lignes à plat alors que
   `js/views/accommodations/` existe, et trois responsabilités dans le même fichier — le render, les
   filtres (`listFilters`, `tagFilterBlock`, `toggleTagFilter`, `toggleFavOnly`, tous lus par

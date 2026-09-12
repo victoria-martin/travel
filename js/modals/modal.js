@@ -23,6 +23,11 @@ const MODAL_TYPES = {
     body: (m) => cityForm(m.payload),
     edits: true,
   },
+  attraction: {
+    open: (id) => ({ payload: id ? { ...getAttraction(id) } : emptyAttraction() }),
+    body: (m) => attractionForm(m.payload),
+    edits: true,
+  },
   voiture: {
     open: (id) => ({ payload: id ? { ...getCar(id) } : emptyCar() }),
     body: (m) => carForm(m.payload),

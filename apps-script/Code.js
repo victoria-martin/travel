@@ -56,6 +56,23 @@ const COLLECTIONS = {
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'category', 'recurrence', 'notes'],
   cities: ['travelId', 'id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
+  attractions: [
+    'travelId',
+    'id',
+    'name',
+    'type',
+    'status',
+    'description',
+    'geoAddress',
+    'city',
+    'county',
+    'region',
+    'lat',
+    'lng',
+    'link',
+    'tags',
+    'favorite',
+  ],
   scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
   tripNotes: ['travelId', 'id', 'text'],
   steps: [
@@ -140,6 +157,7 @@ function readState() {
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
     cities: rows.cities,
+    attractions: rows.attractions,
     scenarios: rows.scenarios.map(function (scenario) {
       scenario.steps = stepsByScenario[scenario.id] || [];
       return scenario;
@@ -205,6 +223,7 @@ function normalizeState(data) {
     cars: normalizeCollection('cars', data.cars),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
+    attractions: normalizeCollection('attractions', data.attractions),
     scenarios: scenarios,
     tripNotes: normalizeCollection('tripNotes', data.tripNotes),
   };
@@ -286,6 +305,7 @@ function writeState(data) {
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);
+  writeSheet('attractions', data.attractions || []);
   writeSheet('tripNotes', data.tripNotes || []);
   writeSheet('scenarios', scenarios);
   writeSheet('steps', steps);
