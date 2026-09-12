@@ -66,7 +66,7 @@ function pasteImportForm() {
       ${Object.values(ACCOMMODATION_TYPES)
         .map((t) => `"${t.label}"`)
         .join(', ')}
-      (par défaut : ${accType(DEFAULT_ACCOMMODATION_TYPE).label.toLowerCase()}).
+      (laissé vide si la colonne ne correspond à rien).
     </p>
     <div class="field">
       <textarea

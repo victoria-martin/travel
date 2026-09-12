@@ -1,7 +1,6 @@
 function scenarioCarBlock(scenario) {
   const car = getScenarioCar(scenario);
-  const nbOfDays = totalNights(scenario);
-  const totalCarCost = carCost(scenario) * nbOfDays;
+  const totalCarCost = carTotal(scenario);
   return /* HTML */ `<div class="scenario-extra">
     <div class="scenario-extra-head">
       <div class="acc-recap-title">Voiture</div>

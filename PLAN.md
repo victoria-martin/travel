@@ -28,12 +28,6 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   `openPasteImport()` reste commentée dans
   [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions ouvertes
   sur le flux d'import de fichier. Garder, généraliser ou supprimer.
-- **Scraper Booking** — ⏳ à faire : sur le modèle de l'import HomeExchange
-  ([homeexchange.js](js/homeexchange.js)), récupérer nom, prix et adresse depuis un lien Booking.
-  Piste à tester : viser les blocs par leur `data-testid` plutôt que par leur structure HTML.
-- **Ni statut ni type par défaut** — ⏳ à faire : un hébergement créé sort aujourd'hui avec
-  `DEFAULT_ACCOMMODATION_STATUS` ([storage.js:45](js/storage.js#L45)) ; le laisser vide. Vérifier
-  dans la foulée que les nouvelles entrées apparaissent bien **en fin** de liste.
 - **Dropdown custom pour les selects inline** — ⏳ à faire : `accommodationTypeSelect` et
   `accommodationStatusSelect` ([inline-selects.js](js/views/accommodations/inline-selects.js)) sont
   des `<select>` natifs, dont les `<option>` n'affichent que du texte — impossible d'espacer
@@ -105,11 +99,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   - « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
     alimente la table Charges fixes).
   - Un select pour rattacher une charge déjà existante.
-- **Total général** — ⏳ à faire : hébergements + voiture + charges, en tête du récap, avec le
-  détail par bloc.
-- **Prendre en compte le budget ds les totaux** !
-- **Totaliser par étape, pas par hébergement** — ⏳ à faire : le récap somme aujourd'hui prix/nuit ×
-  nuits par lieu, donc un budget saisi sur une étape n'entre pas dans le total.
+  - Tant que `costIds` reste vide, la ligne « Charges fixes » du total général affiche 0 €.
 - **Coût de la voiture × nuits** — ⏳ à trancher : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
   multiplie le prix de la voiture par les nuits du scénario, contre la décision actée « pris tel
   quel, sans multiplication ». Corriger le code ou la décision — et le total s'affiche sans unité.

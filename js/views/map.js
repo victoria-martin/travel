@@ -1,5 +1,5 @@
 let mapFilters = {
-  types: new Set(Object.keys(ACCOMMODATION_TYPES)),
+  types: new Set([...Object.keys(ACCOMMODATION_TYPES), '']),
   counties: new Set(),
   scenarioId: null,
   favOnly: false,
@@ -27,7 +27,7 @@ function renderMapView() {
       <div class="map-filters">
         <div class="filter-block">
           <div class="filter-title">Type de liste</div>
-          ${Object.entries(ACCOMMODATION_TYPES)
+          ${[...Object.entries(ACCOMMODATION_TYPES), ['', UNSET_ACCOMMODATION_TYPE]]
             .map(
               ([key, t]) =>
                 /* HTML */ ` <label class="filter-option"
@@ -140,7 +140,7 @@ function initMap() {
   const bounds = [];
   ofCurrentTravel(state.accommodations).forEach((a) => {
     if (!a.lat || !a.lng) return;
-    if (!mapFilters.types.has(a.type)) return;
+    if (!mapFilters.types.has(accTypeKey(a.type))) return;
     if (countyFilterActive && a.county && mapFilters.counties.has(a.county) === false) return;
     if (scenarioAccIds && !scenarioAccIds.has(a.id)) return;
     if (mapFilters.favOnly && !a.favorite) return;
@@ -163,7 +163,9 @@ function initMap() {
 }
 
 function accommodationPopup(a) {
-  const place = [accType(a.type).label, escapeHtml(a.city)].filter(Boolean).join(' · ');
+  const place = [accTypeKey(a.type) && accType(a.type).label, escapeHtml(a.city)]
+    .filter(Boolean)
+    .join(' · ');
   const price = a.price ? `<br/>${escapeHtml(a.price)} ${accommodationPriceUnit(a)}` : '';
   return `<strong>${accommodationPopupName(a)}</strong><br/>${place}${price}`;
 }

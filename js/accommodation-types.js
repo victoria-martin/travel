@@ -1,4 +1,4 @@
-const DEFAULT_ACCOMMODATION_TYPE = 'hotel';
+const UNSET_ACCOMMODATION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
 
 const ACCOMMODATION_TYPES = {
   homeExchange: {
@@ -28,11 +28,11 @@ const ACCOMMODATION_TYPES = {
 };
 
 function accType(type) {
-  return ACCOMMODATION_TYPES[type] || ACCOMMODATION_TYPES[DEFAULT_ACCOMMODATION_TYPE];
+  return ACCOMMODATION_TYPES[type] || UNSET_ACCOMMODATION_TYPE;
 }
 
 function accTypeKey(type) {
-  return ACCOMMODATION_TYPES[type] ? type : DEFAULT_ACCOMMODATION_TYPE;
+  return ACCOMMODATION_TYPES[type] ? type : '';
 }
 
 function accTypeFromText(text) {
@@ -40,5 +40,5 @@ function accTypeFromText(text) {
   const found = Object.keys(ACCOMMODATION_TYPES).find((key) =>
     accType(key).aliases.some((a) => lower.includes(a)),
   );
-  return found || DEFAULT_ACCOMMODATION_TYPE;
+  return found || '';
 }

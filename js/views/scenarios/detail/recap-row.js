@@ -5,7 +5,7 @@ function scenarioRecapRow(r) {
     <span class="acc-recap-nights"
       >${nightsLabel(r.nights)}${r.dates.length ? ` · ${r.dates.join(', ')}` : ''}</span
     >
-    <strong>${cost ? formatAccommodationCost(r.acc, cost) : '—'}</strong>
+    <strong>${formatCosts(cost)}</strong>
   </div>`;
 }
 

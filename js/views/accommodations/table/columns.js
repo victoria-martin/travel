@@ -1,3 +1,8 @@
+function accSortIndex(dict, key) {
+  const keys = Object.keys(dict);
+  return keys.includes(key) ? keys.indexOf(key) : keys.length;
+}
+
 const ACCOMMODATION_COLUMNS = [
   {
     key: 'favorite',
@@ -13,13 +18,13 @@ const ACCOMMODATION_COLUMNS = [
     key: 'type',
     label: 'Type',
     cell: accommodationTypeCell,
-    sortValue: (a) => Object.keys(ACCOMMODATION_TYPES).indexOf(accTypeKey(a.type)),
+    sortValue: (a) => accSortIndex(ACCOMMODATION_TYPES, accTypeKey(a.type)),
   },
   {
     key: 'status',
     label: 'Statut',
     cell: accommodationStatusCell,
-    sortValue: (a) => Object.keys(ACCOMMODATION_STATUSES).indexOf(accStatusKey(a.status)),
+    sortValue: (a) => accSortIndex(ACCOMMODATION_STATUSES, accStatusKey(a.status)),
   },
   {
     key: 'city',

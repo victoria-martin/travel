@@ -44,27 +44,6 @@ function breadcrumbLevel(html, level) {
   );
 }
 
-function matchOne(html, re) {
-  var found = html.match(re);
-  if (!found) return '';
-  return decodeEntities(found[1].replace(/<[^>]*>/g, ''))
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-var NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
-
-function decodeEntities(text) {
-  return text
-    .replace(/&#(\d+);/g, function (whole, code) {
-      return String.fromCharCode(parseInt(code, 10));
-    })
-    .replace(/&([a-z]+);/gi, function (whole, name) {
-      var known = NAMED_ENTITIES[name.toLowerCase()];
-      return known === undefined ? whole : known;
-    });
-}
-
 // À lancer depuis l'éditeur : force la demande d'autorisation UrlFetchApp et journalise le résultat.
 function testHomeExchange() {
   var home = scrapeHomeExchange('https://www.homeexchange.fr/homes/view/427143');

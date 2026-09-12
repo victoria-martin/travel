@@ -79,6 +79,8 @@ const LIST_FIELDS = ['costIds', 'tags'];
 function doGet(e) {
   var homeExchangeUrl = e && e.parameter ? e.parameter.homeExchange : '';
   if (homeExchangeUrl) return json(scrapeHomeExchange(homeExchangeUrl));
+  var bookingUrl = e && e.parameter ? e.parameter.booking : '';
+  if (bookingUrl) return json(scrapeBooking(bookingUrl));
   return json(readState());
 }
 

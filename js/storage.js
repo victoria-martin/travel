@@ -42,7 +42,6 @@ function migrateData(data) {
   if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
     unshiftAccommodation(a);
-    if (!a.status) a.status = DEFAULT_ACCOMMODATION_STATUS;
     if (a.address === undefined) a.address = '';
     if (a.geoAddress === undefined) a.geoAddress = a.address;
     if (a.county === undefined) {

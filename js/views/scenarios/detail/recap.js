@@ -9,17 +9,19 @@ function nightsByPlace(scenario) {
       : st.accommodationId
         ? `heb:${st.accommodationId}`
         : '';
-    if (!rows.has(key)) rows.set(key, { nights: 0, stays: [] });
+    if (!rows.has(key)) rows.set(key, { nights: 0, stays: [], steps: [] });
     const row = rows.get(key);
     row.nights += nights;
     row.stays.push(idx);
+    row.steps.push(st);
   });
-  return Array.from(rows, ([key, { nights, stays }]) => {
+  return Array.from(rows, ([key, { nights, stays, steps }]) => {
     const [kind, id] = key.split(':');
     return {
       city: kind === 'ville' ? getCity(id) : null,
       acc: kind === 'heb' ? getAccommodation(id) : null,
       nights,
+      steps,
       dates: stays.map((idx) => stepArrivalDay(scenario, idx)).filter(Boolean),
     };
   }).sort((a, b) => b.nights - a.nights);

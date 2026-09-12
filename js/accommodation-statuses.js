@@ -1,4 +1,4 @@
-const DEFAULT_ACCOMMODATION_STATUS = 'toCheck';
+const UNSET_ACCOMMODATION_STATUS = { label: 'Non renseigné', emoji: '❔' };
 
 const ACCOMMODATION_STATUSES = {
   booked: { label: 'Réservé', emoji: '🔒' },
@@ -13,18 +13,18 @@ const ACCOMMODATION_STATUSES = {
 };
 
 function accStatus(status) {
-  return ACCOMMODATION_STATUSES[status] || ACCOMMODATION_STATUSES[DEFAULT_ACCOMMODATION_STATUS];
+  return ACCOMMODATION_STATUSES[status] || UNSET_ACCOMMODATION_STATUS;
 }
 
 function accStatusKey(status) {
-  return ACCOMMODATION_STATUSES[status] ? status : DEFAULT_ACCOMMODATION_STATUS;
+  return ACCOMMODATION_STATUSES[status] ? status : '';
 }
 
 function accStatusFromText(text) {
   const wanted = (text || '').trim().toLowerCase();
-  if (!wanted) return DEFAULT_ACCOMMODATION_STATUS;
+  if (!wanted) return '';
   const found = Object.keys(ACCOMMODATION_STATUSES).find(
     (key) => key.toLowerCase() === wanted || accStatus(key).label.toLowerCase() === wanted,
   );
-  return found || DEFAULT_ACCOMMODATION_STATUS;
+  return found || '';
 }

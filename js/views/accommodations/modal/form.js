@@ -1,8 +1,8 @@
 function emptyAccommodation() {
   return {
     id: null,
-    type: DEFAULT_ACCOMMODATION_TYPE,
-    status: DEFAULT_ACCOMMODATION_STATUS,
+    type: '',
+    status: '',
     name: '',
     address: '',
     geoAddress: '',
@@ -28,6 +28,9 @@ function accommodationForm(p) {
       <div class="field">
         <label>Type</label>
         <select id="f-type">
+          <option value="" ${p.type ? '' : 'selected'}>
+            ${UNSET_ACCOMMODATION_TYPE.emoji} ${UNSET_ACCOMMODATION_TYPE.label}
+          </option>
           ${Object.entries(ACCOMMODATION_TYPES)
             .map(
               ([key, t]) =>
@@ -44,6 +47,9 @@ function accommodationForm(p) {
     <div class="field">
       <label>Statut</label>
       <select id="f-status">
+        <option value="" ${p.status ? '' : 'selected'}>
+          ${UNSET_ACCOMMODATION_STATUS.emoji} ${UNSET_ACCOMMODATION_STATUS.label}
+        </option>
         ${Object.entries(ACCOMMODATION_STATUSES)
           .map(
             ([key, s]) =>
@@ -90,6 +96,8 @@ function accommodationForm(p) {
         type="text"
         value="${escapeHtml(p.bookingLink)}"
         placeholder="https://www.booking.com/..."
+        onpaste="importBookingPaste()"
+        onchange="importBookingLink()"
       />
     </div>
     ${accommodationTagsField(p)}

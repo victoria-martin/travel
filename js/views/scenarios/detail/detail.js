@@ -14,7 +14,7 @@ function renderScenarioDetailView() {
     ${scenarioDetailHeader(s)}
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main">
-        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioRecap(s)}
+        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioTotalBlock(s)} ${scenarioRecap(s)}
       </div>
       ${
         prefs.showScenarioMap

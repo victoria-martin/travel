@@ -74,6 +74,10 @@ En cours ✈️ · Passé 📦.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
 Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎.
 
+Les deux champs peuvent rester vides : « Non renseigné ❔ » est l'état d'un hébergement créé ou
+importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne, popup de la carte,
+filtre de type — et se trie **après** toutes les valeurs connues.
+
 > Les deux listes vivent dans une map unique qui pilote à la fois les selects, les couleurs de la
 > carte et l'ordre de tri de leur colonne. Les réordonner change le tri.
 
@@ -108,8 +112,8 @@ pastilles, avant même l'enregistrement.
 
 | Champ                     | Détail                                                                                          |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| type                      | Home exchange · Hôtel · Maison · Camping                                                        |
-| statut                    | les neuf statuts du workflow                                                                    |
+| type                      | Home exchange · Hôtel · Maison · Camping, ou non renseigné                                      |
+| statut                    | les neuf statuts du workflow, ou non renseigné                                                  |
 | nom                       |                                                                                                 |
 | adresse                   | saisie libre, c'est elle qu'on géocode                                                          |
 | adresse géocodée          | écrite par « Localiser »                                                                        |
@@ -118,7 +122,7 @@ pastilles, avant même l'enregistrement.
 | prix/nuit                 | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
 | dates                     | texte libre (« 12–14 juin »)                                                                    |
 | lien                      | l'annonce ; un lien HomeExchange collé pré-remplit la fiche                                     |
-| lien de réservation       | Booking                                                                                         |
+| lien de réservation       | Booking ; un lien collé pré-remplit la fiche                                                    |
 | notes                     | éditables depuis la ligne                                                                       |
 | tags                      | liste libre, sans administration                                                                |
 | favori                    | ⭐, et un critère de tri                                                                        |
@@ -148,8 +152,12 @@ La vue principale, en **tableau ou en cartes**.
   GuestPoints/nuit, ville, province et région — **seuls les champs vides**, jamais une saisie déjà
   faite. Nécessite la synchro configurée : la page est lue par l'Apps Script, le navigateur ne peut
   pas la lire lui-même.
+- **Import d'un lien Booking** : coller le lien dans le champ « Lien Booking » pré-remplit nom,
+  type, prix, adresse (fiche et champ à géocoder), ville et région — **seuls les champs vides**,
+  comme pour HomeExchange, et même dépendance à la synchro. Le nom et l'adresse viennent du JSON-LD
+  de la page, le prix du bloc `data-testid` — il n'existe que si le lien porte des dates.
 - **Import depuis un tableau** : coller des lignes copiées d'un tableur crée les hébergements
-  correspondants ; type et statut sont reconnus depuis le texte, sinon valeurs par défaut. Le bouton
+  correspondants ; type et statut sont reconnus depuis le texte, sinon laissés non renseignés. Le bouton
   « Importer » n'apparaît que **tant qu'aucun Sheet n'est connecté** — la synchro est ensuite la voie
   d'entrée des lignes.
 
@@ -247,10 +255,15 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
   de la voiture × nuits du scénario. Un scénario créé naît avec la **voiture par défaut**
   rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
   tient, et les scénarios existants ne bougent pas.
+- **Total général**, en tête du récap : une ligne par bloc (hébergements, hébergements en GP si le
+  scénario en compte, voiture, charges fixes rattachées), puis le total des nuits et le montant.
+  Les GuestPoints y gardent leur propre montant, à côté des euros.
 - **Récap** : une ligne par lieu (lieu · nuits · total), les lieux les plus dormis en tête — un lieu
   revisité tient sur une seule ligne, ses nuits additionnées. Les deux bouts du trajet l'encadrent
   dans l'ordre des étapes, avec leur date. Puis « Total hébergements » ; les nuits en home exchange
   ont **leur propre ligne en GuestPoints**.
+- **Les totaux se calculent par étape** : le coût d'une étape (budget saisi, sinon prix/nuit ×
+  nuits) alimente aussi bien la ligne de son lieu que les totaux du scénario.
 - **Trajet** : une pastille par étape portant sa lettre, le tracé routier réel, et des chevrons
   réguliers qui en donnent le sens. Deux étapes au même endroit partagent une pastille (« A·G »), et
   son popup liste leurs dates et leurs nuits. Le bloc est partagé avec la vue Carte.
@@ -314,12 +327,8 @@ Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du 
 
 - **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage ;
   le titre de l'onglet, la favicon et les couleurs de l'app ne suivent pas le voyage ouvert.
-- **Total général** d'un scénario (hébergements + voiture + charges) : le récap s'arrête aux
-  hébergements.
-- **Charges fixes dans le scénario** : la relation existe dans le modèle, l'écran ne l'expose pas
-  encore.
-- **Totaux par étape plutôt que par lieu** : le récap somme prix/nuit × nuits par lieu, donc un
-  budget saisi sur une étape n'entre pas dans le total.
+- **Charges fixes dans le scénario** : la relation (`costIds`) existe dans le modèle et alimente le
+  total général, mais aucun écran ne rattache une charge à un scénario — la ligne reste donc à 0 €.
 - **Le coût d'une voiture est multiplié par les nuits**, contre la décision actée qui le prenait tel
   quel — à trancher.
 - **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
