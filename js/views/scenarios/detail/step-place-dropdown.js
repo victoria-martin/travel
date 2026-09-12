@@ -23,7 +23,9 @@ function stepPlaceLabel(step) {
 function stepPlaceDropdown(scenario, step) {
   const pick = (value) => `pickStepPlace('${scenario.id}','${step.id}','${value}')`;
   const cities = ofCurrentTravel(state.cities).sort((a, b) => a.name.localeCompare(b.name));
-  const accommodations = ofCurrentTravel(state.accommodations);
+  const accommodations = ofCurrentTravel(state.accommodations).sort(
+    (a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0) || a.name.localeCompare(b.name),
+  );
   return inlineDropdown(
     `place:${step.id}`,
     'place-dropdown',
@@ -55,7 +57,7 @@ function stepPlaceDropdown(scenario, step) {
                      class="inline-menu-item ${step.accommodationId === a.id ? 'selected' : ''}"
                      onclick="${pick(`heb:${a.id}`)}"
                    >
-                     ${tagLabel(accType(a.type).emoji, placeOptionLabel(a))}
+                     ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
                    </button>`,
                  )
                  .join('')}`

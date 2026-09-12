@@ -57,6 +57,11 @@ function migrateData(data) {
     if (!Array.isArray(a.tags)) a.tags = [];
     if (a.favorite === undefined) a.favorite = false;
   });
+  (data.cars || []).forEach((c) => {
+    if (c.pricePerDay === undefined) c.pricePerDay = c.price || '';
+    if (c.priceTotal === undefined) c.priceTotal = '';
+    delete c.price;
+  });
   (data.scenarios || []).forEach((s) => {
     if (s.startDate === undefined) s.startDate = '';
     if (s.carId === undefined) s.carId = null;

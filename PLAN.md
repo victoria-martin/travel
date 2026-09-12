@@ -4,7 +4,7 @@ Le backlog, rangé par page. Un item terminé **sort d'ici** et va décrire l'ap
 [docs/spec-voyage-toscane.md](docs/spec-voyage-toscane.md) : ce fichier n'archive pas ce qui est
 fait, git s'en charge. Les arbitrages de fond sont dans « Décisions actées » de la spec.
 
-## ✈️ Voyages
+## Voyages
 
 Le socle est en place : l'entité Voyage, le voyage ouvert dans les préférences locales, le
 sélecteur et sa modale dans la barre latérale, et le `travelId` sur toutes les collections, Sheet
@@ -45,11 +45,58 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## Charges fixes
 
-- **Type de charge** — ⏳ à faire : un champ `type` à plusieurs valeurs, `budget total` (une enveloppe qu'on se donne) et `cost` (une dépense certaine), sur le modèle de
-  [accommodation-types.js](js/accommodation-types.js).
-- **Fourchette de prix** — ⏳ à faire : remplacer le montant unique par `amountMin` / `amountMax`.
-  Reste à définir ce que vaut la charge dans un total quand la fourchette est incomplète — un seul
-  des deux saisi, ou aucun.
+- **Budget et prix** — ⏳ à faire : applique la règle transverse « Budget et prix » — un `budget`
+  optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type` `budget total` / `cost`
+  envisagé ici n'a plus lieu d'être : une charge sans prix saisi **est** une enveloppe, le dire
+  deux fois ouvre la porte à la contradiction.
+- **Fourchette incomplète** — ⏳ à trancher : ce que vaut la charge dans un total quand un seul des
+  deux montants est saisi.
+
+## ✈️ Transports
+
+Les trajets d'un voyage — avion, train, bus, ferry, voiture. Rien n'est commencé. La voiture garde
+sa propre entrée de barre latérale : `cars` reste la table de location, et un transport de mode
+voiture la **référence** plutôt que de la recopier.
+
+- **Créer la page** — ⏳ idée : `navBtn('transports', '✈️', 'Transports')` dans la barre latérale,
+  après Voitures ([render.js:10](js/render.js#L10)), et `js/views/transports/` pour le domaine.
+- **Entité `transports`** — ⏳ idée : une collection de plus dans `COLLECTIONS`
+  ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()` ([storage.js:17](js/storage.js#L17)),
+  avec son `travelId` en première colonne. Modèle proposé : mode, départ, arrivée, date et heure de
+  départ, date et heure d'arrivée, compagnie, numéro / référence de réservation, budget, lien,
+  statut, favori, notes — le prix n'est pas un champ, il vient du mode (voir plus bas).
+- **Modes** — ⏳ à trancher : une liste figée sur le modèle d'
+  [accommodation-types.js](js/accommodation-types.js) — ✈️ avion, 🚆 train, 🚌 bus, ⛴️ ferry,
+  🚗 voiture. C'est le mode qui décide des champs utiles : un vol a une compagnie et un numéro, une
+  voiture a un `carId`.
+- **Départ et arrivée : des villes** — ⏳ à trancher : deux `cityId` qui pointent sur `cities`,
+  comme une étape de scénario référence une ville, plutôt que deux champs texte. Un aéroport n'est
+  pas une ville — à voir si on ajoute un champ libre à côté ou si on l'accepte tel quel.
+- **Mode voiture → `carId`** — ⏳ à faire : un transport de mode voiture référence une entrée de
+  `cars` ([get-car.js](js/views/cars/get-car.js)).
+- **Budget et prix** — ⏳ à faire : applique la règle transverse « Budget et prix ». Le transport
+  porte un `budget` ; son prix vient du mode — la location pour la voiture (`carId` →
+  [get-car.js](js/views/cars/get-car.js)), le billet pour un vol ou un train. Donc pas de double
+  comptage : le prix d'un transport voiture est celui de la voiture référencée, jamais une
+  deuxième saisie.
+- **Prix d'un vol, d'un train** — ⏳ à trancher : aucune table ne porte ce prix aujourd'hui, alors
+  que la voiture a la sienne. Soit `amountMin` / `amountMax` sur le transport lui-même, soit une
+  entité par mode — et là, autant tout mettre sur le transport.
+- **Prix dans le total d'un scénario** — ⏳ à faire : les transports rattachés à un scénario
+  s'ajoutent au récap ([recap.js](js/views/scenarios/detail/recap.js)), à côté des hébergements,
+  de la voiture et des charges fixes, selon la règle transverse — prix s'il existe, budget sinon.
+
+### Intégration aux scénarios
+
+- **Un transport entre deux étapes** — ⏳ à trancher (déplacé de « Scénarios / Plus tard ») : le
+  trajet se lit entre deux étapes consécutives. Soit un `transportIds` sur le scénario, soit un
+  `transportId` sur l'étape d'arrivée — à choisir avant d'écrire quoi que ce soit.
+- **Affichage dans le détail** — ⏳ idée : entre deux `step-card`
+  ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
+  et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
+- **Aller-retour du voyage** — ⏳ à trancher : le vol aller et le vol retour encadrent le voyage
+  entier, pas une étape. Soit deux transports sans étape rattachée, soit des étapes fictives de
+  départ et de retour dans le scénario.
 
 ## Attractions
 
@@ -69,24 +116,19 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   modale. Généraliser la cellule demande de lui passer son getter et son vocabulaire.
 - **Attractions sur la carte** — ⏳ à faire : elles portent des coordonnées mais
   [map.js](js/views/map.js) ne trace que les hébergements.
-
-## Restaurants
-
-- **Restaurant ou attraction taguée ?** — ⏳ à faire : à trancher **avant** tout le reste de cette
-  section, parce que tout en découle. Un restaurant a des champs qu'une attraction n'a pas
-  (fourchette de prix, horaires, téléphone) — c'est l'argument pour une entité à part.
-- **Créer l'entité** — ⏳ à faire : une collection `restaurants` dans `COLLECTIONS`
-  ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()` ([storage.js:17](js/storage.js#L17)),
-  avec son `travelId`.
-- **Créer la vue** — ⏳ à faire : `js/views/restaurants/`, en écrivant ses fichiers en clair comme
-  Villes et Hébergements.
-- **Modèle** — ⏳ à faire : nom, description, type, `restaurantTags`, favori, lien, hotelId, statut,
-  fourchette de prix, horaires, téléphone.
-- **`restaurantTags`** — ⏳ à faire : même design que les `attractionTags` ci-dessus — libres,
-  créables à la saisie, amorcés par une liste par défaut. Proposition : trattoria, pizzeria,
-  gastronomique, terrasse, vue, cave / dégustation, fromager, glacier, street food, végétarien.
+- **Type `Restaurant` 🍝** — ⏳ à faire : un type de plus dans la liste figée, plus le vocabulaire de
+  tags qui va avec — trattoria, pizzeria, gastronomique, terrasse, vue, cave / dégustation,
+  fromager, glacier, street food, végétarien. Reste à décider si la liste amorcée dépend du type
+  choisi ou si elle est commune à tous.
+- **Prix, horaires, téléphone** — ⏳ à faire : trois champs de plus sur l'attraction, pour **tous**
+  les types — un musée a des horaires et un prix d'entrée autant qu'une trattoria.
+- **Rattacher une attraction à un hébergement** — ⏳ à faire : un `hotelId` optionnel, pour la
+  table d'hôtes ou le restaurant de l'hôtel.
 - **Scraper un lien Google Maps** — ⏳ à faire : depuis le formulaire, remplir nom, adresse,
   coordonnées et horaires à partir d'une URL `maps.app.goo.gl`.
+- **Une page Restaurants ?** — ⏳ à trancher : le type étant porté par l'attraction, une entrée de
+  barre latérale « Restaurants » n'est qu'un filtre sur la vue Attractions. À décider quand il y
+  aura assez de contenu pour que la liste mixte devienne illisible.
 
 ## Browse
 
@@ -160,7 +202,6 @@ voyage ». Tout est à trancher, rien n'est commencé.
 
 ### Plus tard
 
-- ajout type de transport entre étapes - à réfléchir
 - Distance entre deux étapes.
 - Estimation de l'essence.
 - Estimation des péages.
@@ -174,6 +215,16 @@ voyage ». Tout est à trancher, rien n'est commencé.
 - créer un bouton "trier"
 
 ## Transverse
+
+- **Budget et prix** — ⏳ acté : partout où une entité coûte — charge fixe, transport, hébergement,
+  voiture — deux notions distinctes et jamais un champ `type` pour les départager.
+  - Le **budget** est l'enveloppe qu'on se donne : un champ, optionnel, saisi à la main.
+  - Le **prix** est ce que ça coûte vraiment : `amountMin` / `amountMax`, ou la valeur de l'entité
+    référencée quand il y en a une (la voiture d'un transport).
+  - Dans un total : le prix s'il est connu, le budget sinon, et la ligne dit laquelle des deux est
+    affichée. Une entité sans prix **est** une enveloppe — rien de plus à déclarer.
+  - Les deux se saisissent et s'affichent pareil d'un écran à l'autre, donc les briques de
+    formulaire et de cellule sont communes.
 
 - **Renommer `notes` en `userNotes`** — ⏳ à faire : sur toutes les entités, Sheet compris — donc
   une colonne renommée dans chaque liste de `COLLECTIONS` ([Code.js:8](apps-script/Code.js#L8)) et

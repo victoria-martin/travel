@@ -51,6 +51,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   n'invente jamais de voyage pour les accueillir — une réponse du Sheet à laquelle il manque
   l'onglet `travels` ou la colonne `travelId` créait sinon un voyage fantôme qui repartait dans la
   synchro et détournait les entrées des autres.
+- **Un restaurant est une attraction**, d'un type de plus — pas une entité à part. Les champs qu'on
+  croyait lui appartenir (fourchette de prix, horaires, téléphone) valent aussi pour un musée ou une
+  dégustation : ils sont portés par l'attraction, quel que soit son type. Une collection séparée
+  aurait obligé à fusionner deux tables à la main dès qu'un écran veut montrer les deux — carte,
+  suggestions, rattachement à une étape — alors qu'ici une page Restaurants n'est qu'un filtre.
 
 ---
 
@@ -288,6 +293,8 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
   sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite un select de lieu
   (**une ville ou un hébergement**, les deux dans le même select, exclusifs), un select de nuits
   (0 à 14), et en bout de ligne le coût. Réordonnable ↑↓, supprimable.
+- **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
+  hébergements favoris passent en tête de leur groupe, précédés d'une ★.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix.
