@@ -52,6 +52,14 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — une section se crée depuis la barre latérale, sans passer par une tâche :
+  [new-section.js](tools/plan-board/new-section.js) tient le bouton et son champ, sur le modèle de
+  [new-vocabulary.js](tools/plan-board/new-vocabulary.js), et `POST /api/sections` écrit le `##`
+  juste avant « Données à saisir » comme le fait déjà la première tâche d'une portée neuve. La liste
+  se rend désormais depuis `board.sections`, l'ordre du fichier, et non plus depuis les seules
+  sections qui portent une tâche visible : sans ça une section vide n'apparaîtrait nulle part. Une
+  section filtrée reste donc affichée, avec un compteur à zéro.
+
 - **2026-09-12** — un type ou un statut qui manque se tape dans le panneau, et
   [vocabulary.js](tools/plan-board/vocabulary.js) l'écrit dans
   [types.js](tools/plan-board/types.js) / [statuses.js](tools/plan-board/statuses.js) : les listes

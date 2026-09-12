@@ -8,6 +8,7 @@ const PLAN_TYPES = [
   { label: 'fix', emoji: '🐛', tone: 'fix', hint: 'le code contredit une décision prise' },
   { label: 'refacto', emoji: '🧹', tone: 'chore', hint: 'même comportement, meilleure structure' },
   { label: 'doc', emoji: '📄', tone: 'doc', hint: 'la doc du dépôt' },
+  { label: 'layout', emoji: '🧩', tone: 'screen' },
 ];
 
 const planType = (label) => PLAN_TYPES.find((type) => type.label === label);

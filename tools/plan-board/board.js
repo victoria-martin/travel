@@ -219,6 +219,9 @@ const CLICKS = {
   emoji: (target) => toggleEmojiPicker(target.dataset.value),
   'emoji-pick': (target) => pickEmoji(target.dataset.value),
   'new-word': (target) => toggleNewWord(target.dataset.value),
+  'new-section': toggleNewSection,
+  'section-add': addNewSection,
+  'section-cancel': closeNewSection,
   'word-tone': (target) => pickWordTone(target.dataset.value),
   'word-add': addNewWord,
   'word-cancel': closeNewWord,
@@ -237,6 +240,7 @@ const INPUTS = {
   scope: (target) => pickScope(target.value),
   'scope-name': (target) => editDraft('scope', target.value),
   'emoji-search': (target) => setEmojiSearch(target.value),
+  'section-name': (target) => editNewSection(target.value),
   'word-label': (target) => editNewWord('label', target.value),
   'word-hint': (target) => editNewWord('hint', target.value),
 };

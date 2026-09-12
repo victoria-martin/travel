@@ -12,11 +12,11 @@ async function moveSection(name, before) {
 }
 
 // A drop lands before the hovered section, or after it past its middle — the anchor is then its
-// next neighbour, and nothing at all when it is the last one.
+// next neighbour, and nothing at all when it is the last one, the creation form closing the list.
 function dropAnchor(link, clientY) {
   if (overTopHalf(link, clientY)) return link.dataset.section;
   const next = link.nextElementSibling;
-  return next ? next.dataset.section : '';
+  return (next && next.dataset.section) || '';
 }
 
 // Bound once on the node itself: #sections travels to the detached window with #app.
@@ -55,16 +55,24 @@ function bindSectionDrag(container) {
   });
 }
 
-function renderSections(sections) {
+// The list is the order of the `##` headings of PLAN.md, a freshly created one included: a section
+// without any visible task shows up with an empty tally rather than disappearing.
+function renderSections(visible) {
+  const tallyOf = (name) => {
+    const section = visible.find((entry) => entry.name === name);
+    if (!section) return 0;
+    return section.groups.reduce((sum, group) => sum + group.tasks.length, 0);
+  };
+
   const container = ui.getElementById('sections');
-  container.innerHTML = sections
-    .map((section) => {
-      const total = section.groups.reduce((sum, group) => sum + group.tasks.length, 0);
-      return `<a href="#${anchorOf(section.name)}" draggable="true"
+  container.innerHTML =
+    board.sections
+      .map(
+        (section) => `<a href="#${anchorOf(section.name)}" draggable="true"
         data-section="${esc(section.name)}">
-        <span>${esc(section.name)}</span><span class="tally">${total}</span>
-      </a>`;
-    })
-    .join('');
+        <span>${esc(section.name)}</span><span class="tally">${tallyOf(section.name)}</span>
+      </a>`,
+      )
+      .join('') + newSectionForm();
   bindSectionDrag(container);
 }

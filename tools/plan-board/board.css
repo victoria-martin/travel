@@ -247,6 +247,33 @@ code,
   font-family: var(--mono);
   opacity: 0.55;
 }
+.new-section-btn {
+  margin: 8px 9px 0;
+  align-self: flex-start;
+}
+.new-section {
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+}
+.new-section .field-row {
+  margin-top: 10px;
+}
+.section-input {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  font-weight: 500;
+}
+.section-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
 
 /* ---------- Sections et tâches ---------- */
 .section-title {

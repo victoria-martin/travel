@@ -93,6 +93,13 @@ const server = http.createServer(async (req, res) => {
     return error ? send(res, 400, { error }) : send(res, 200, { word });
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/sections') {
+    const { name } = await readBody(req);
+    const created = plan.createSection(name);
+    if (!created) return send(res, 400, { error: 'section vide ou déjà présente' });
+    return send(res, 200, tasksPayload());
+  }
+
   if (req.method === 'PATCH' && url.pathname === '/api/sections') {
     const { name, before } = await readBody(req);
     const moved = plan.moveSection(name, before);

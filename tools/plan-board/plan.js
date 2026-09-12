@@ -193,6 +193,17 @@ function listSections() {
   return sections;
 }
 
+// A heading typed on its own, ahead of the first task that would have written it.
+function createSection(name) {
+  const section = cleanHeading(name);
+  if (!section || isSkipped(section)) return null;
+  const lines = readPlan();
+  if (sectionRange(lines, section)) return null;
+  ensureBlock(lines, section, '');
+  writePlan(lines);
+  return listSections();
+}
+
 // A section moves as one block — its heading and everything under it. « Données à saisir » stays
 // last, so a drop past the last section lands just before it.
 function moveSection(name, before) {
@@ -347,6 +358,7 @@ function taskMarkdown(task) {
 module.exports = {
   listTasks,
   listSections,
+  createSection,
   moveSection,
   moveTask,
   findTask,
