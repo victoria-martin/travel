@@ -1,7 +1,7 @@
 function readTravelForm(id) {
   return {
     id: id || uid(),
-    name: document.getElementById('travel-name').value.trim() || 'Sans nom',
+    name: document.getElementById('travel-name').innerText.trim() || 'Sans nom',
     emoji: document.getElementById('travel-emoji').value.trim() || '🧳',
     image: document.getElementById('travel-image').value.trim(),
     description: document.getElementById('travel-description').value.trim(),

@@ -94,10 +94,13 @@ latérale, boutons, états actifs. Sans couleur choisie, l'app garde les siens.
 Créer un voyage l'ouvre aussitôt. Tant qu'il n'y en a aucun, le bouton affiche « Aucun voyage » et
 le menu ne propose que la création.
 
-**Voyage** — les champs de la modale : emoji, nom, pays, région, dates de début et de fin, statut,
-nombre de voyageurs, couleur d'accent (une palette fermée, ou aucune), image, description. Le titre
-de la modale est posé sur un bandeau de la couleur d'accent choisie, qui suit le clic sur les
-pastilles ; sans couleur, le bandeau reste celui du fond.
+**Voyage** — les champs de la modale : pays, région, dates de début et de fin, statut, nombre de
+voyageurs, couleur d'accent (une palette fermée, ou aucune), image, description. En-tête de la
+modale : l'emoji dans une pastille teintée, le titre et la destination. Le nom et l'emoji n'ont pas
+de champ à eux — le titre de l'en-tête s'édite en place, et la pastille ouvre un menu de
+suggestions d'emoji doublé d'un champ de collage, qui reste la valeur retenue. La couleur choisie
+tient toute la modale — papier et bordure teintés, bouton Enregistrer — et suit le clic sur les
+pastilles, avant même l'enregistrement.
 
 ### Hébergements
 

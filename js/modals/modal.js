@@ -10,6 +10,7 @@ const MODAL_TYPES = {
   voyage: {
     open: (id) => ({ payload: id ? { ...getTravel(id) } : emptyTravel() }),
     body: (m) => travelForm(m.payload),
+    after: (m) => paintTravelModal(m.payload.accentColor),
     edits: true,
   },
   accommodation: {
@@ -74,12 +75,14 @@ function modalIsDirty() {
 
 function modalFieldsState() {
   const fields = document.querySelectorAll(
-    '.overlay .modal input, .overlay .modal textarea, .overlay .modal select',
+    '.overlay .modal input, .overlay .modal textarea, .overlay .modal select, .overlay .modal [contenteditable]',
   );
-  return JSON.stringify([
-    modal.payload,
-    [...fields].map((f) => (f.type === 'checkbox' || f.type === 'radio' ? f.checked : f.value)),
-  ]);
+  return JSON.stringify([modal.payload, [...fields].map(modalFieldValue)]);
+}
+
+function modalFieldValue(field) {
+  if (field.isContentEditable) return field.innerText;
+  return field.type === 'checkbox' || field.type === 'radio' ? field.checked : field.value;
 }
 
 function renderModal() {
@@ -93,5 +96,6 @@ function renderModal() {
   const style = cfg.width ? `max-width:${cfg.width};` : '';
   container.innerHTML = `<div class="modal" style="${style}">${cfg.body(modal)}</div>`;
   document.getElementById('app').appendChild(container);
+  if (cfg.after) cfg.after(modal);
   modalSnapshot = cfg.edits ? modalFieldsState() : null;
 }

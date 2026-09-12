@@ -610,7 +610,6 @@ tr:hover td {
   max-width: 480px;
   max-height: 88vh;
   overflow-y: auto;
-  overflow-x: hidden;
   border: 1px solid var(--line);
 }
 .modal h3 {
@@ -619,15 +618,80 @@ tr:hover td {
   font-size: 20px;
 }
 .travel-modal-header {
-  margin: -26px -26px 18px -26px;
-  padding: 20px 26px 18px 26px;
-  border-radius: 13px 13px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 0 16px 0;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
 }
 .travel-modal-header h3 {
   margin: 0;
 }
-.travel-modal-header.accented h3 {
-  color: var(--white);
+.emoji-picker {
+  position: relative;
+  flex: 0 0 42px;
+}
+.travel-modal-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  font-family: inherit;
+  font-size: 21px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  cursor: pointer;
+}
+.emoji-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  width: max-content;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.emoji-row {
+  display: flex;
+  gap: 2px;
+}
+.emoji-option {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 19px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+.emoji-option:hover {
+  background: var(--paper-raised);
+}
+.emoji-option.selected {
+  border-color: var(--ink);
+}
+.emoji-menu input {
+  width: 100%;
+  margin-top: 8px;
+  font-family: inherit;
+  font-size: 13.5px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--white);
+  color: var(--ink);
+}
+.travel-modal-place {
+  margin: 2px 0 0 0;
+  font-size: 12.5px;
+  color: var(--ink-soft);
 }
 .field {
   margin-bottom: 13px;
