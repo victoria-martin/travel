@@ -1,5 +1,7 @@
-let board = { tasks: [], archived: [] };
+let board = { tasks: [], archived: [], sections: [] };
+let firstRender = true;
 let activeStatuses = [];
+let activeTypes = [];
 let showArchived = false;
 let search = '';
 
@@ -40,6 +42,7 @@ function visibleTasks() {
   return allTasks().filter((task) => {
     if (Boolean(task.archived) !== showArchived) return false;
     if (activeStatuses.length && !activeStatuses.includes(task.status)) return false;
+    if (activeTypes.length && !task.types.some((type) => activeTypes.includes(type))) return false;
     if (!needle) return true;
     return `${task.title} ${task.body} ${task.section}`.toLowerCase().includes(needle);
   });
@@ -51,6 +54,25 @@ function statusPill(label, attributes = '') {
   return `<span class="pill pill-${status.tone}" ${attributes}>${status.emoji} ${status.label}</span>`;
 }
 
+// A row has no space for labels: the emoji alone, named by its tooltip.
+function typeDot(label) {
+  const type = planType(label);
+  return type ? `<span class="type-dot" title="${type.label}">${type.emoji}</span>` : '';
+}
+
+function typePill(label, attributes = '') {
+  const type = planType(label);
+  if (!type) return '';
+  return `<span class="pill pill-type type-${type.tone}" ${attributes}>${type.emoji} ${type.label}</span>`;
+}
+
+function toggleType(label) {
+  activeTypes = activeTypes.includes(label)
+    ? activeTypes.filter((entry) => entry !== label)
+    : [...activeTypes, label];
+  renderBoard();
+}
+
 function toggleStatus(label) {
   activeStatuses = activeStatuses.includes(label)
     ? activeStatuses.filter((entry) => entry !== label)
@@ -58,8 +80,9 @@ function toggleStatus(label) {
   renderBoard();
 }
 
-function clearStatuses() {
+function clearFilters() {
   activeStatuses = [];
+  activeTypes = [];
   renderBoard();
 }
 
@@ -74,17 +97,27 @@ function setSearch(value) {
 }
 
 function renderFilters() {
-  const tally = {};
-  allTasks()
-    .filter((task) => Boolean(task.archived) === showArchived)
-    .forEach((task) => (tally[task.status] = (tally[task.status] || 0) + 1));
+  const shown = allTasks().filter((task) => Boolean(task.archived) === showArchived);
+  const tally = (key) => {
+    const counts = {};
+    shown.forEach((task) =>
+      [].concat(task[key]).forEach((value) => (counts[value] = (counts[value] || 0) + 1)),
+    );
+    return counts;
+  };
+  const byType = tally('types');
+  const byStatus = tally('status');
 
-  const chips = PLAN_STATUSES.map(
-    (status) => `<button class="filter" data-act="status" data-value="${status.label}"
-      aria-pressed="${activeStatuses.includes(status.label)}">
-      ${status.emoji} ${status.label}
-      <span class="tally">${tally[status.label] || 0}</span>
-    </button>`,
+  const chip = (entry, count, act, active) => `<button class="filter" data-act="${act}"
+    data-value="${entry.label}" aria-pressed="${active}">
+    ${entry.emoji} ${entry.label} <span class="tally">${count || 0}</span>
+  </button>`;
+
+  const types = PLAN_TYPES.map((type) =>
+    chip(type, byType[type.label], 'type', activeTypes.includes(type.label)),
+  ).join('');
+  const statuses = PLAN_STATUSES.map((status) =>
+    chip(status, byStatus[status.label], 'status', activeStatuses.includes(status.label)),
   ).join('');
 
   const archived = `<button class="filter filter-archived" data-act="archived"
@@ -92,11 +125,14 @@ function renderFilters() {
     📦 archivées <span class="tally">${board.archived.length}</span>
   </button>`;
 
-  const clear = activeStatuses.length
-    ? '<button class="filter-clear" data-act="clear-status">tout afficher</button>'
-    : '';
+  const clear =
+    activeStatuses.length || activeTypes.length
+      ? '<button class="filter-clear" data-act="clear-filters">tout afficher</button>'
+      : '';
 
-  ui.getElementById('filters').innerHTML = chips + archived + clear;
+  ui.getElementById('filters').innerHTML =
+    `<div class="filter-row">${types}</div>` +
+    `<div class="filter-row">${statuses}${archived}${clear}</div>`;
 }
 
 function groupBySection(tasks) {
@@ -126,6 +162,7 @@ function taskButton(task) {
   return `<button class="task" data-act="open" data-id="${task.id}"
     aria-current="${task.id === openTaskId}">
     ${statusPill(task.status)}
+    <span class="task-types">${task.types.map(typeDot).join('')}</span>
     <span class="task-title">${esc(task.title)}</span>
     <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
     ${task.session ? '<span class="task-session" title="Session liée">💬</span>' : ''}
@@ -138,7 +175,9 @@ function renderBoard() {
   const sections = groupBySection(tasks);
 
   ui.getElementById('count').textContent = `${tasks.length} tâche${tasks.length > 1 ? 's' : ''}`;
-  ui.getElementById('detach').hidden = !canDetach();
+  ui.getElementById('detach').textContent =
+    detached && !detached.closed ? '⇤ Rattacher' : '⧉ Détacher';
+  ui.getElementById('theme').textContent = theme === 'dev' ? '☀︎' : '☾';
 
   ui.getElementById('sections').innerHTML = sections
     .map((section) => {
@@ -149,7 +188,10 @@ function renderBoard() {
     })
     .join('');
 
-  ui.getElementById('board').innerHTML =
+  const boardEl = ui.getElementById('board');
+  boardEl.className = firstRender ? 'enter' : '';
+  firstRender = false;
+  boardEl.innerHTML =
     sections
       .map(
         (section) => `<section class="section">
@@ -172,13 +214,18 @@ const CLICKS = {
   close: closeDrawer,
   cancel: closeDrawer,
   status: (target) => toggleStatus(target.dataset.value),
+  type: (target) => toggleType(target.dataset.value),
   archived: toggleArchived,
-  'clear-status': clearStatuses,
+  'clear-filters': clearFilters,
   'pick-status': (target) => editDraft('status', target.dataset.value),
-  save: saveDraft,
+  'pick-type': (target) => toggleDraftType(target.dataset.value),
+  create: openCreateDrawer,
+  'scope-pick': backToScopeList,
+  theme: toggleTheme,
+  save: () => (drawerMode === 'create' ? createDraft() : saveDraft()),
   launch: launchSession,
   archive: archiveTask,
-  detach: detachWindow,
+  detach: () => (detached && !detached.closed ? detached.close() : detachWindow()),
 };
 
 const INPUTS = {
@@ -186,6 +233,8 @@ const INPUTS = {
   title: (target) => editDraft('title', target.value),
   body: (target) => editDraft('body', target.value),
   prompt: (target) => setPrompt(target.value),
+  scope: (target) => pickScope(target.value),
+  'scope-name': (target) => editDraft('scope', target.value),
 };
 
 function bindApp() {
@@ -195,6 +244,10 @@ function bindApp() {
     if (target && CLICKS[target.dataset.act]) CLICKS[target.dataset.act](target);
   });
   app.addEventListener('input', (event) => {
+    const target = event.target.closest('[data-act]');
+    if (target && INPUTS[target.dataset.act]) INPUTS[target.dataset.act](target);
+  });
+  app.addEventListener('change', (event) => {
     const target = event.target.closest('[data-act]');
     if (target && INPUTS[target.dataset.act]) INPUTS[target.dataset.act](target);
   });
@@ -209,9 +262,11 @@ window.addEventListener('hashchange', openFromHash);
 
 function openFromHash() {
   const id = location.hash.match(/^#t-(\w+)$/);
-  if (id) openDrawer(id[1]);
-  else if (openTaskId) closeDrawer();
+  if (location.hash === '#new') openCreateDrawer();
+  else if (id) openDrawer(id[1]);
+  else if (drawerMode) closeDrawer();
 }
 
+applyTheme(document);
 bindApp();
 loadBoard().then(openFromHash);

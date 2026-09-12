@@ -1,19 +1,18 @@
 let openTaskId = null;
-let draft = null;
 let preview = null;
 let archiveArmed = false;
 let sessionError = '';
 let previewFailed = '';
 
-const drawerEl = () => ui.getElementById('drawer');
 const findTask = (id) => allTasks().find((task) => task.id === id);
 
 async function openDrawer(id) {
   const task = findTask(id);
   if (!task) return;
+  drawerMode = 'task';
   openTaskId = id;
   if (location.hash !== `#t-${id}`) history.replaceState(null, '', `#t-${id}`);
-  draft = { title: task.title, status: task.status, body: task.body };
+  draft = { title: task.title, types: [...task.types], status: task.status, body: task.body };
   preview = null;
   archiveArmed = false;
   sessionError = '';
@@ -28,26 +27,13 @@ async function openDrawer(id) {
   if (openTaskId === id) renderDrawer();
 }
 
-function closeDrawer() {
-  if (location.hash) history.replaceState(null, '', location.pathname);
-  openTaskId = null;
-  draft = null;
-  preview = null;
-  archiveArmed = false;
-  drawerEl().hidden = true;
-  ui.getElementById('overlay').hidden = true;
-  renderBoard();
-}
-
 function isDirty() {
   const task = findTask(openTaskId);
-  return ['title', 'status', 'body'].some((field) => draft[field] !== task[field]);
-}
-
-function editDraft(field, value) {
-  draft[field] = value;
-  if (field === 'status') renderDrawer();
-  else ui.getElementById('save').disabled = !isDirty();
+  if (!task) return false;
+  return (
+    ['title', 'status', 'body'].some((field) => draft[field] !== task[field]) ||
+    draft.types.join() !== task.types.join()
+  );
 }
 
 const setPrompt = (value) => (preview.prompt = value);
@@ -58,10 +44,12 @@ function sessionBlock() {
       S’il tourne sur une version antérieure du board, relance-le.</p>`;
   }
   if (!preview) return '<p class="hint">Chargement…</p>';
+
   const warning = isDirty()
     ? '<p class="hint hint-warn">Le détail modifié n’est pas encore enregistré.</p>'
     : '';
   const failed = sessionError ? `<p class="hint hint-warn">${esc(sessionError)}</p>` : '';
+
   if (preview.session) {
     const opened = new Date(preview.session.lastOpenedAt).toLocaleString('fr-FR', {
       dateStyle: 'medium',
@@ -80,49 +68,19 @@ function sessionBlock() {
     <button class="btn btn-primary" data-act="launch">▶ Lancer dans iTerm</button>`;
 }
 
-function renderDrawer() {
+function renderTaskDrawer() {
   const task = findTask(openTaskId);
   if (!task) return closeDrawer();
-  const where = [task.section, task.subsection].filter(Boolean).join(' › ');
 
-  drawerEl().innerHTML = `
-    <div class="drawer-head">
-      <span class="drawer-where">${esc(where)}</span>
-      <button class="icon-btn" data-act="close" title="Fermer (Échap)">✕</button>
-    </div>
-
-    <div class="drawer-body">
-      <div class="field">
-        <label for="title">Titre</label>
-        <input class="title-input" id="title" data-act="title" value="${esc(draft.title)}" />
-      </div>
-
-      <div class="field">
-        <label>Statut</label>
-        <div class="status-choices">
-          ${PLAN_STATUSES.map((status) =>
-            statusPill(
-              status.label,
-              `role="button" tabindex="0" data-act="pick-status" data-value="${status.label}"
-               aria-pressed="${draft.status === status.label}"`,
-            ),
-          ).join('')}
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="body">Détail</label>
-        <textarea class="body-input" id="body" data-act="body">${esc(draft.body)}</textarea>
-        <p class="hint">Markdown, tel qu'il sera écrit dans PLAN.md.</p>
-      </div>
-
-      <div class="session">
-        <label class="drawer-where">Session Claude</label>
+  paintDrawer({
+    where: esc([task.section, task.subsection].filter(Boolean).join(' › ')),
+    body: `
+      <div class="session session-top">
+        <label class="field-label">Session Claude</label>
         ${sessionBlock()}
       </div>
-    </div>
-
-    <div class="drawer-foot">
+      ${draftFields()}`,
+    foot: `
       <button class="btn btn-primary" id="save" data-act="save" ${isDirty() ? '' : 'disabled'}>
         Enregistrer
       </button>
@@ -133,11 +91,13 @@ function renderDrawer() {
           : `<button class="btn btn-danger ${archiveArmed ? 'armed' : ''}" data-act="archive">
               ${archiveArmed ? 'Confirmer — la puce sort de PLAN.md' : 'Archiver'}
             </button>`
-      }
-    </div>`;
+      }`,
+  });
+}
 
-  drawerEl().hidden = false;
-  ui.getElementById('overlay').hidden = false;
+function refreshDrawerFoot() {
+  const save = ui.getElementById('save');
+  if (save) save.disabled = drawerMode === 'create' ? !canCreate() : !isDirty();
 }
 
 async function saveDraft() {
@@ -148,7 +108,7 @@ async function saveDraft() {
     body: JSON.stringify(draft),
   });
   const task = findTask(id);
-  draft = { title: task.title, status: task.status, body: task.body };
+  draft = { title: task.title, types: [...task.types], status: task.status, body: task.body };
   renderBoard();
   renderDrawer();
 }
@@ -170,7 +130,8 @@ async function launchSession() {
   }
 }
 
-// First click arms, second archives: a confirm() dialog would open behind the floating window.
+// First click arms, second archives: a confirm() dialog opens on the opener window, not on
+// the detached one where the click happened.
 async function archiveTask() {
   if (!archiveArmed) {
     archiveArmed = true;

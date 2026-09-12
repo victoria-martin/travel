@@ -94,7 +94,7 @@ function accommodationNotesCell(a) {
 
 function accommodationBookingLinkCell(a) {
   if (!a.bookingLink) return '—';
-  return `<a href="${escapeHtml(a.bookingLink)}" target="_blank" style="color:var(--stone-dark);">Booking</a>`;
+  return externalLink(a.bookingLink, 'Booking');
 }
 
 function accommodationActionsCell(a) {

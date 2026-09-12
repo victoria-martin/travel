@@ -52,6 +52,12 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — `js/views/link-button.js` devient
+  [external-link.js](js/views/external-link.js) : la responsabilité est d'ouvrir une URL dans un
+  onglet, et elle a deux formes — `externalLink` pour une cellule ou un popup, `linkButton` pour une
+  carte. Les trois `<a target="_blank" style="color:…">` écrits en clair
+  ([link-cell.js](js/views/cells/link-cell.js), la colonne Booking, le popup de
+  [map.js](js/views/map.js)) passent par la première, et le style inline devient `.external-link`.
 - **2026-09-12** — `js/views/toolbar/` créé : `button.js`, `panel.js` (le bouton qui ouvre son
   propre panneau), `toggle-group.js`, `filter-panel.js` et `menu.js` (le ⋮). Chaque header écrit sa
   barre en clair à partir de ces briques — pas de `toolbar(kind, {…})` qui fabriquerait l'écran.
@@ -67,16 +73,23 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   un renommage ne le casse pas ; la liaison elle-même vit hors du plan, dans
   `.claude/plan-sessions.json`. Le chat Claude de VS Code ne déclare pas d'`uriHandler` : rien ne
   l'ouvre depuis l'extérieur, le lancement passe par iTerm et `claude --session-id` / `--resume`.
-  PLAN.md devient donc un format lu ET écrit : les statuts sont une liste figée
-  ([statuses.js](tools/plan-board/statuses.js)) sur le modèle d'
-  [accommodation-statuses.js](js/accommodation-statuses.js), et le corps d'une tâche se lit en
-  paragraphes logiques — le retour à la ligne à cent colonnes n'appartient qu'à l'écriture du
-  fichier. Un clic sur une tâche n'ouvre que son panneau : lancer une session est un geste séparé,
-  avec son prompt sous les yeux. Le board se détache dans une fenêtre flottante (Document
-  Picture-in-Picture) : le nœud `#app` y est déplacé tel quel, ce qui interdit deux choses que l'app
-  travel s'autorise — les `onclick` inline, qui ne se résolvent pas dans ce document (d'où la
-  délégation d'événements sur `#app`), et `confirm` / `alert`, qui s'ouvriraient derrière la fenêtre
-  flottante (d'où l'archivage armé en deux clics et les erreurs affichées en place).
+- **2026-09-12** — PLAN.md devient un format lu **et écrit**. Deux axes indépendants sur une tâche,
+  chacun une liste figée sur le modèle d'[accommodation-statuses.js](js/accommodation-statuses.js) :
+  [types.js](tools/plan-board/types.js) dit sur quoi elle porte — plusieurs à la fois, une page
+  neuve est presque toujours écran **et** modèle — et [statuses.js](tools/plan-board/statuses.js) où
+  elle en est. Ils s'écrivent dans une même liste `·` parce que leurs vocabulaires sont disjoints.
+  Le corps d'une tâche se lit en paragraphes logiques : le retour à la ligne à cent colonnes
+  n'appartient qu'à l'écriture du fichier, et ne coupe jamais un code span ni un lien. Les sections
+  `##` servent de portée à la création — ce sont les pages de l'app, `Transverse` étant le global —
+  et une portée absente s'écrit à la volée : le `##` ou le `###` manquant est posé par la première
+  tâche qui s'y range, avant « Données à saisir » qui ferme le fichier.
+- **2026-09-12** — le board se détache dans une fenêtre ordinaire (`window.open`), pas en
+  Picture-in-Picture : le toujours-au-dessus du PiP gêne plus qu'il n'aide. Le nœud `#app` y est
+  déplacé, donc une seule instance — ce qui interdit deux choses que l'app travel s'autorise : les
+  `onclick` inline, qui ne se résolvent pas dans l'autre document (d'où la délégation d'événements
+  sur `#app`), et `confirm` / `alert`, qui s'ouvrent sur la fenêtre d'origine et pas sous les yeux
+  (d'où l'archivage armé en deux clics et les erreurs affichées en place). Le panneau met la session
+  en premier : c'est le geste principal, il ne passe pas sous la ligne de flottaison.
 - **2026-09-12** — `js/views/cards/actions/` créé : la paire Modifier / Suppr. des cartes,
   recopiée à l'identique dans Hébergements, Voitures et Charges fixes, devient `cardEditButton` /
   `cardDeleteButton`. Deux familles distinctes et non paramétrables l'une par l'autre — une ligne de

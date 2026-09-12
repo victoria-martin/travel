@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     />
     <link rel="stylesheet" href="board.css" />
   </head>
@@ -23,7 +23,9 @@
           data-act="search"
         />
         <span id="count" class="count"></span>
-        <button id="detach" class="detach" data-act="detach" hidden>⧉ Détacher</button>
+        <button class="ghost-btn" data-act="create">+ Nouvelle tâche</button>
+        <button id="theme" class="ghost-btn ghost-icon" data-act="theme" title="Thème"></button>
+        <button id="detach" class="ghost-btn" data-act="detach">⧉ Détacher</button>
       </header>
 
       <nav id="filters" class="filters"></nav>
@@ -38,8 +40,12 @@
     </div>
 
     <script src="statuses.js"></script>
+    <script src="types.js"></script>
+    <script src="theme.js"></script>
     <script src="detach.js"></script>
+    <script src="drawer.js"></script>
     <script src="task-drawer.js"></script>
+    <script src="create-drawer.js"></script>
     <script src="board.js"></script>
   </body>
 </html>

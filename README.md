@@ -60,30 +60,44 @@ apps-script/Code.js              le backend Apps Script (voir plus bas)
 pnpm plan
 ```
 
-Ouvre <http://localhost:4321> : les tâches de [PLAN.md](PLAN.md), rangées par section, filtrables
-par statut et par recherche. `PLAN_PORT=4399 pnpm plan` pour un autre port.
+Ouvre <http://localhost:4321> : les tâches de [PLAN.md](PLAN.md), rangées par section.
+`PLAN_PORT=4399 pnpm plan` pour un autre port.
 
-Cliquer une tâche ouvre son panneau — rien n'est lancé au clic. On y édite le titre, le statut et le
-détail (enregistrer réécrit la puce dans PLAN.md, à cent colonnes comme le reste du fichier), et on y
-lance sa session Claude :
+Une tâche porte deux étiquettes indépendantes, toutes deux des listes figées :
 
-- **Aucune session** : le prompt d'amorce est affiché et modifiable avant de lancer. Le bouton ouvre
-  une fenêtre iTerm sur `claude --session-id <uuid>` avec ce prompt en argument.
-- **Session existante** : le bouton la rouvre avec `claude --resume <uuid>`.
-- **Archiver** sort la puce de PLAN.md — git en garde l'histoire, comme pour un item terminé. Le
-  board la garde sous le filtre « 📦 archivées », avec son statut et sa session, toujours réouvrable.
+- son **type** ([types.js](tools/plan-board/types.js)) — ce sur quoi elle porte, et il peut y en
+  avoir plusieurs : 🖼️ écran, 🧩 ui, 🗃️ modèle, 🧮 calcul, 🔌 intégration, 🐛 fix, 🧹 refacto,
+  📄 doc.
+- son **statut** ([statuses.js](tools/plan-board/statuses.js)) — où elle en est : 💡 idée,
+  🤔 à trancher, 📌 acté, ⏳ à faire, 🚧 en cours, ⏸️ en attente, 🌙 plus tard, ✅ fait,
+  🚫 abandonné.
 
-L'URL porte la tâche ouverte (`#t-<id>`), donc un lien mène droit à une tâche.
+Les deux se filtrent depuis l'en-tête, avec la recherche plein texte.
 
-**⧉ Détacher** sort le board du navigateur dans une petite fenêtre flottante, au-dessus de tout et
-déplaçable — la même mécanique que la vignette de Google Meet (API Document Picture-in-Picture). Le
-board y passe en colonne unique. Fermer la fenêtre le remet dans l'onglet, dans l'état où il était.
-Le bouton n'apparaît que sur un navigateur qui sait le faire : Chrome et Arc oui, Firefox et Safari
-non.
+Cliquer une tâche ouvre son panneau — rien n'est lancé au clic. En haut, sa **session Claude** :
+sans session, le prompt d'amorce est affiché et modifiable, et le bouton ouvre une fenêtre iTerm sur
+`claude --session-id <uuid>` avec ce prompt en argument ; avec session, il la rouvre par
+`claude --resume <uuid>`. Dessous, le titre, les types, le statut et le détail, réécrits dans
+PLAN.md à l'enregistrement. **Archiver** sort la puce de PLAN.md — git en garde l'histoire, comme
+pour un item terminé — et le board la garde sous le filtre « 📦 archivées », session comprise.
 
-Les statuts sont une liste figée dans [statuses.js](tools/plan-board/statuses.js), partagée par le
-serveur et la page. La liaison tâche → session vit dans `.claude/plan-sessions.json`, non versionné :
-les sessions sont propres à ta machine.
+**+ Nouvelle tâche** écrit une puce dans la section choisie. Les sections `##` de PLAN.md sont les
+pages de l'app, `Transverse` est le global : choisir la portée, c'est choisir où la tâche vit. La
+dernière entrée de la liste, **＋ nouvelle portée…**, ouvre un champ libre — `Sync`, ou
+`Sync › Conflits` pour une sous-section : le titre manquant est écrit dans PLAN.md par la première
+tâche qui en a besoin, juste avant « Données à saisir », qui reste en fin de fichier.
+
+**⧉ Détacher** déplace le board dans une fenêtre à part, déplaçable et redimensionnable comme
+n'importe laquelle. Ce n'est pas un second onglet : le board y est déplacé, donc une seule instance,
+et la fermer le rend à l'onglet dans l'état où il était.
+
+Le bouton ☾ / ☀︎ bascule entre le thème papier, celui de l'app, et un thème sombre. Au premier
+passage, c'est le réglage du système qui décide.
+
+L'URL porte ce qui est ouvert : `#t-<id>` une tâche, `#new` le formulaire de création.
+
+La liaison tâche → session vit dans `.claude/plan-sessions.json`, non versionné : les sessions sont
+propres à ta machine.
 
 ## Travailler à plusieurs en même temps (Google Sheets)
 

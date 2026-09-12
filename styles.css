@@ -356,6 +356,12 @@ body {
   min-width: 340px;
 }
 
+.external-link {
+  color: var(--stone-dark);
+}
+a.btn {
+  text-decoration: none;
+}
 .back-link {
   margin-bottom: 10px;
 }

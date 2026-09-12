@@ -1,18 +1,23 @@
-// The board pops out into a floating always-on-top window, like Meet's.
-// The #app node is moved across documents, so state and listeners follow it.
-const PIP_SIZE = { width: 460, height: 720 };
+// The board pops out into an ordinary browser window — movable, resizable, and free to go behind
+// the others. The #app node is moved across documents, so state and listeners follow it: one
+// instance, two possible homes.
+const POPUP_FEATURES = 'popup=yes,width=520,height=880';
 
-const canDetach = () => 'documentPictureInPicture' in window;
+let detached = null;
 
-function copyStyles(target) {
+function copyHead(target) {
+  const meta = target.document.createElement('meta');
+  meta.setAttribute('charset', 'utf-8');
+  target.document.head.append(meta);
+
   [...document.styleSheets].forEach((sheet) => {
     try {
-      const style = document.createElement('style');
+      const style = target.document.createElement('style');
       style.textContent = [...sheet.cssRules].map((rule) => rule.cssText).join('\n');
       target.document.head.append(style);
     } catch {
       // A cross-origin sheet (the fonts) cannot be read: link it instead.
-      const link = document.createElement('link');
+      const link = target.document.createElement('link');
       link.rel = 'stylesheet';
       link.href = sheet.href;
       target.document.head.append(link);
@@ -20,18 +25,28 @@ function copyStyles(target) {
   });
 }
 
-async function detachWindow() {
-  if (!canDetach()) return;
-  const app = ui.getElementById('app');
-  const floating = await documentPictureInPicture.requestWindow(PIP_SIZE);
+function reattach() {
+  document.body.append(ui.getElementById('app'));
+  setUiDocument(document);
+  detached = null;
+  renderBoard();
+}
 
-  copyStyles(floating);
-  floating.document.title = document.title;
-  floating.document.body.append(app);
-  setUiDocument(floating.document);
+function detachWindow() {
+  if (detached && !detached.closed) return detached.focus();
 
-  floating.addEventListener('pagehide', () => {
-    document.body.append(app);
-    setUiDocument(document);
-  });
+  const popup = window.open('about:blank', 'plan-board', POPUP_FEATURES);
+  if (!popup) return;
+
+  detached = popup;
+  copyHead(popup);
+  applyTheme(popup.document);
+  popup.document.title = document.title;
+  popup.document.body.style.margin = '0';
+  popup.document.body.append(ui.getElementById('app'));
+  setUiDocument(popup.document);
+  renderBoard();
+
+  popup.addEventListener('pagehide', reattach);
+  window.addEventListener('pagehide', () => popup.close());
 }

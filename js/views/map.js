@@ -132,7 +132,11 @@ function initMap() {
   if (mapFilters.scenarioId) {
     const s = getScenario(mapFilters.scenarioId);
     if (s) {
-      scenarioAccIds = new Set(visibleSteps(s).map((st) => st.accommodationId).filter(Boolean));
+      scenarioAccIds = new Set(
+        visibleSteps(s)
+          .map((st) => st.accommodationId)
+          .filter(Boolean),
+      );
       drawScenarioOnMap(leafletMap, s, 'route-notice', ROUTE_HELP);
     }
   }
@@ -174,5 +178,5 @@ function accommodationPopupName(a) {
   const name = `${a.favorite ? '★ ' : ''}${escapeHtml(a.name)}`;
   const url = a.link || a.bookingLink;
   if (!url) return name;
-  return `<a href="${escapeHtml(url)}" target="_blank" style="color:var(--stone-dark);">${name}</a>`;
+  return externalLink(url, name);
 }

@@ -38,7 +38,7 @@ function readBody(req) {
 
 function tasksPayload() {
   const tasks = plan.listTasks().map((task) => ({ ...task, session: sessions.sessionOf(task.id) }));
-  return { tasks, archived: sessions.listArchived() };
+  return { tasks, archived: sessions.listArchived(), sections: plan.listSections() };
 }
 
 const taskOrArchived = (id) =>
@@ -80,6 +80,12 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && url.pathname === '/api/tasks') return send(res, 200, tasksPayload());
 
+  if (req.method === 'POST' && url.pathname === '/api/tasks') {
+    const created = plan.createTask(await readBody(req));
+    if (!created) return send(res, 400, { error: 'section ou titre invalide' });
+    return send(res, 200, { ...tasksPayload(), created: created.id });
+  }
+
   if (req.method === 'GET' && session) return sessionPreview(res, session[1]);
 
   if (req.method === 'POST' && session) {
@@ -88,9 +94,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === 'PATCH' && rename) {
-    const { title, status, body } = await readBody(req);
+    const { title, status, body, types } = await readBody(req);
     if (!title || !title.trim()) return send(res, 400, { error: 'titre vide' });
-    const updated = plan.updateTask(rename[1], { title: title.trim(), status, body });
+    const updated = plan.updateTask(rename[1], { title: title.trim(), status, body, types });
     return updated
       ? send(res, 200, tasksPayload())
       : send(res, 400, { error: 'mise à jour refusée' });
