@@ -8,7 +8,7 @@ const appleQuote = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\
 
 function claudeCommand({ sessionId, resumed, prompt }) {
   const flag = resumed ? `--resume ${sessionId}` : `--session-id ${sessionId}`;
-  const opening = resumed || !prompt ? '' : ` ${shellQuote(prompt)}`;
+  const opening = prompt ? ` ${shellQuote(prompt)}` : '';
   return `cd ${shellQuote(REPO)} && claude ${flag}${opening}`;
 }
 

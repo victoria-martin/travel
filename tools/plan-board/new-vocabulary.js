@@ -4,7 +4,6 @@ let newWord = null;
 let newWordError = '';
 
 const wordList = (kind) => (kind === 'type' ? PLAN_TYPES : PLAN_STATUSES);
-const wordTones = (kind) => [...new Set(wordList(kind).map((entry) => entry.tone))];
 const setWordEmoji = (char) => (newWord.emoji = char);
 
 // Clicking the open kind folds the form; clicking the other one switches it over.
@@ -16,7 +15,7 @@ function toggleNewWord(kind) {
 function openNewWord(kind) {
   closeEmojiPicker();
   newWordError = '';
-  newWord = { kind, label: '', emoji: '🏷️', tone: wordTones(kind)[0], hint: '' };
+  newWord = { kind, label: '', emoji: '🏷️', variant: 'default', hint: '' };
   renderDrawer();
   ui.getElementById('word-label').focus();
 }
@@ -39,8 +38,8 @@ function editNewWord(field, value) {
   if (add) add.disabled = !newWord.label.trim();
 }
 
-function pickWordTone(tone) {
-  newWord.tone = tone;
+function pickWordVariant(variant) {
+  newWord.variant = variant;
   renderDrawer();
 }
 
@@ -73,13 +72,14 @@ function newWordButton(kind) {
     aria-pressed="${open}">＋</span>`;
 }
 
-// The tone is shown as it will paint, not as a word: it is the only way to read what it does.
-function toneChoices(kind) {
-  return wordTones(kind)
-    .map((tone) => {
-      const classes = kind === 'type' ? `pill pill-type type-${tone}` : `pill pill-${tone}`;
-      return `<span class="${classes}" role="button" tabindex="0" data-act="word-tone"
-        data-value="${tone}" aria-pressed="${newWord.tone === tone}">${tone}</span>`;
+// The variant is shown as it will paint, not as a word: it is the only way to read what it does.
+function variantChoices(kind) {
+  return Object.keys(PILL_VARIANTS)
+    .map((variant) => {
+      const classes = kind === 'type' ? 'pill pill-type' : 'pill';
+      return `<span class="${classes} ${pillClass(variant)}" role="button" tabindex="0"
+        data-act="word-variant" data-value="${variant}"
+        aria-pressed="${newWord.variant === variant}">${variant}</span>`;
     })
     .join('');
 }
@@ -102,8 +102,8 @@ function newWordForm(kind) {
         placeholder="${kind === 'type' ? 'Le type, en un ou deux mots' : 'Le statut, en un ou deux mots'}" />
     </div>
     ${emojiPanel('vocabulary')}
-    <label class="field-label">Ton <span class="field-note">la couleur de la pastille</span></label>
-    <div class="choices">${toneChoices(kind)}</div>
+    <label class="field-label">Couleur <span class="field-note">la teinte de la pastille</span></label>
+    <div class="choices">${variantChoices(kind)}</div>
     ${hint}
     ${newWordError ? `<p class="hint hint-warn">${esc(newWordError)}</p>` : ''}
     <div class="field-row">

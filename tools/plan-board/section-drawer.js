@@ -64,6 +64,7 @@ function renderSectionDrawer() {
       <div class="field">
         <label>Groupes <span class="field-note">les <code>###</code> de la page</span></label>
         ${sectionGroups()}
+        ${subsectionAddRow(sectionDraft.was.name)}
         ${newSubsectionForm(sectionDraft.was.name, 'drawer')}
       </div>
       ${sectionError ? `<p class="hint hint-warn">${esc(sectionError)}</p>` : ''}`,

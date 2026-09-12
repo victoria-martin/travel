@@ -60,6 +60,32 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — le statut d'une tâche suit le geste, pas ma discipline : ouvrir sa session la
+  passe à `🚧 en cours` côté serveur ([server.js](tools/plan-board/server.js)), après qu'iTerm a
+  répondu, et jamais sur une tâche close — `DOING_STATUS` et `CLOSED_STATUSES` rejoignent
+  `NEW_STATUS` dans [statuses.js](tools/plan-board/statuses.js), qui reste le seul endroit où un
+  statut se nomme. La fin, elle, se décide : c'est le skill `commit-task`
+  ([.claude/skills/commit-task/SKILL.md](.claude/skills/commit-task/SKILL.md)), qui retrouve la
+  tâche par le lien session ↔ `plan-sessions.json`, la passe à `✅ fait` et délègue le commit.
+
+- **2026-09-12** — la couleur d'une pastille devient un axe à elle, partagé par les deux
+  vocabulaires : [pill-variants.js](tools/plan-board/pill-variants.js) tient les six variantes et la
+  classe CSS de chacune, une pastille de type et une de statut de même variante se peignent pareil.
+  Le `tone` disparaît — il ne servait qu'à nommer la classe, donc il faisait doublon avec la
+  variante dès l'instant où les deux listes la partagent. Les classes de [board.css](tools/plan-board/board.css)
+  passent du statut (`pill-doing`, `pill-dropped`) à la couleur (`pill-info`, `pill-error`), et
+  `pill-focus` est la déclinaison pleine de `pill-success` pour « à faire », le seul statut qui
+  appelle l'œil. Le panneau de vocabulaire propose donc les six variantes telles qu'elles peignent,
+  et non plus les tons déjà employés par la liste qu'on complète.
+
+- **2026-09-12** — un titre du board est un accordéon : il replie ce qu'il tient, une page comme un
+  groupe, et affiche alors le nombre de tâches cachées. Le repli est une préférence de vue, pas un
+  état du plan — il vit dans le navigateur ([fold.js](tools/plan-board/fold.js)) sur le modèle de
+  [theme.js](tools/plan-board/theme.js), parce que le board se recharge à chaque enregistrement et
+  qu'une section fermée exprès ne doit pas se rouvrir toute seule. Le titre devenant le geste de
+  repli, l'édition passe à une poignée : l'emoji pour la page, comme dans la barre latérale, un ✎
+  pour le groupe.
+
 - **2026-09-12** — une sous-section se crée, se renomme et se glisse comme une section. Un `###` est
   un groupe **dans** une page : deux pages peuvent porter le même nom, donc il ne se cherche jamais
   que dans la sienne — `subsectionIndex` part de `sectionRange`, et `insertionLine` cesse de

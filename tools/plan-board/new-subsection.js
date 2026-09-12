@@ -57,11 +57,18 @@ async function addNewSubsection() {
   repaintSubsections();
 }
 
+// The `+` sits at the end of a section row, in the sidebar as on the board. In the drawer the
+// groups are a list, so adding one is a line under it.
+const subsectionAddButton = (section, where) => `<button class="row-add" data-act="new-subsection"
+  data-section="${esc(section)}" data-where="${where}" title="Nouveau groupe"
+  aria-pressed="${newSubsectionOpen(section, where)}">＋</button>`;
+
+const subsectionAddRow = (section) => `<button class="ghost-add" data-act="new-subsection"
+  data-section="${esc(section)}" data-where="drawer">＋ nouveau groupe…</button>`;
+
+// Wherever the `+` was pressed, the form stands where the group will: at the foot of its section.
 function newSubsectionForm(section, where) {
-  const scope = `data-section="${esc(section)}" data-where="${where}"`;
-  if (!newSubsectionOpen(section, where)) {
-    return `<button class="ghost-add" data-act="new-subsection" ${scope}>＋ nouveau groupe…</button>`;
-  }
+  if (!newSubsectionOpen(section, where)) return '';
 
   return `<div class="new-subsection">
     <div class="inline-form">

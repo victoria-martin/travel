@@ -2,12 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const { PLAN_STATUSES, planStatus } = require('./statuses.js');
 const { PLAN_TYPES, planType } = require('./types.js');
+const { PILL_VARIANTS } = require('./pill-variants.js');
 
 // A word typed on the board joins the frozen list it belongs to — both the file, so the next load
 // reads it from code, and the live array, which `planType` / `planStatus` close over.
 const LISTS = {
-  type: { file: 'types.js', array: 'PLAN_TYPES', entries: PLAN_TYPES, fields: ['tone', 'hint'] },
-  status: { file: 'statuses.js', array: 'PLAN_STATUSES', entries: PLAN_STATUSES, fields: ['tone'] },
+  type: { file: 'types.js', array: 'PLAN_TYPES', entries: PLAN_TYPES, fields: ['variant', 'hint'] },
+  status: {
+    file: 'statuses.js',
+    array: 'PLAN_STATUSES',
+    entries: PLAN_STATUSES,
+    fields: ['variant'],
+  },
 };
 
 // PLAN.md tells a type from a status by looking the chunk up in one list then the other, so a word
@@ -15,7 +21,7 @@ const LISTS = {
 const FORBIDDEN = /[·:()—*`|#<>\[\]\n]/;
 const taken = (label) => Boolean(planType(label) || planStatus(label));
 
-function validate(kind, { label, emoji, tone }) {
+function validate(kind, { label, emoji, variant }) {
   const list = LISTS[kind];
   if (!list) return 'vocabulaire inconnu';
   if (!label) return 'libellé vide';
@@ -24,7 +30,7 @@ function validate(kind, { label, emoji, tone }) {
   if (taken(label)) return `« ${label} » est déjà un type ou un statut`;
   if (!emoji || /\s/.test(emoji) || emoji.length > 8) return 'emoji invalide';
   if (/^[\w-]+$/.test(emoji)) return 'emoji invalide';
-  if (!list.entries.some((entry) => entry.tone === tone)) return 'ton inconnu';
+  if (!PILL_VARIANTS[variant]) return 'couleur inconnue';
   return '';
 }
 
@@ -52,11 +58,11 @@ function appendToFile(list, word) {
   return true;
 }
 
-function addWord({ kind, label, emoji, tone, hint = '' }) {
+function addWord({ kind, label, emoji, variant, hint = '' }) {
   const word = {
     label: (label || '').trim().replace(/\s+/g, ' '),
     emoji: (emoji || '').trim(),
-    tone: (tone || '').trim(),
+    variant: (variant || '').trim(),
     hint: (hint || '').trim(),
   };
   const error = validate(kind, word);

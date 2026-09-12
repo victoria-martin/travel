@@ -436,12 +436,6 @@ function removeTask(id) {
   return task;
 }
 
-// Full markdown of a task, used as the opening prompt of its session.
-function taskMarkdown(task) {
-  const where = [task.section, task.subsection].filter(Boolean).join(' / ');
-  return [`## ${task.title}`, where && `_${where}_`, '', task.body].filter(Boolean).join('\n');
-}
-
 module.exports = {
   listTasks,
   listSections,
@@ -456,5 +450,4 @@ module.exports = {
   createTask,
   updateTask,
   removeTask,
-  taskMarkdown,
 };

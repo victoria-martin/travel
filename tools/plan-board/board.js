@@ -51,7 +51,7 @@ function visibleTasks() {
 function statusPill(label, attributes = '') {
   const status = planStatus(label);
   if (!status) return '';
-  return `<span class="pill pill-${status.tone}" ${attributes}>${status.emoji} ${status.label}</span>`;
+  return `<span class="pill ${pillClass(status.variant)}" ${attributes}><span>${status.emoji}</span><span>${status.label}</span></span>`;
 }
 
 // A row has no space for labels: the emoji alone, named by its tooltip.
@@ -63,7 +63,7 @@ function typeDot(label) {
 function typePill(label, attributes = '') {
   const type = planType(label);
   if (!type) return '';
-  return `<span class="pill pill-type type-${type.tone}" ${attributes}>${type.emoji} ${type.label}</span>`;
+  return `<span class="pill pill-type ${pillClass(type.variant)}" ${attributes}><span>${type.emoji}</span><span>${type.label}</span></span>`;
 }
 
 function toggleType(label) {
@@ -179,7 +179,6 @@ const subAnchorOf = (section, name) => `${anchorOf(section)}-${anchorOf(name)}`;
 
 // The board groups the visible tasks by section name; the emoji is carried by the heading itself.
 const sectionOf = (name) => board.sections.find((entry) => entry.name === name) || { emoji: '' };
-const sectionHeading = (name) => [sectionOf(name).emoji, name].filter(Boolean).join(' ');
 
 // Markdown reads badly on one line: keep the words, drop the syntax.
 const plainText = (markdown) =>
@@ -190,23 +189,62 @@ const plainText = (markdown) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+// The card carries its own actions, so it is a row and not a button: the clickable part that opens
+// the drawer is the one inside it.
 function taskButton(task) {
-  return `<button class="task" data-act="open" data-id="${task.id}" draggable="true"
+  return `<div class="task" data-id="${task.id}" draggable="true"
     data-section="${esc(task.section)}" data-subsection="${esc(task.subsection)}"
     aria-current="${task.id === openTaskId}">
-    ${statusPill(task.status)}
-    <span class="task-types">${task.types.map(typeDot).join('')}</span>
-    <span class="task-title">${esc(task.title)}</span>
-    <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
+    <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
+      ${statusPill(task.status)}
+      <span class="task-types">${task.types.map(typeDot).join('')}</span>
+      <span class="task-title">${esc(task.title)}</span>
+      <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
+    </button>
     ${task.session ? '<span class="task-session" title="Session liée">💬</span>' : ''}
-  </button>`;
+    ${taskActionButtons(task)}
+  </div>`;
 }
 
-// A `###` title opens its own drawer, where it gets renamed — the section title does the same.
-const groupTitle = (section, name) => `<h3 class="group-title"
-  id="${subAnchorOf(section, name)}" data-act="subsection-edit"
-  data-section="${esc(section)}" data-value="${esc(name)}"
-  title="Renommer le groupe">${esc(name)}</h3>`;
+// A `###` title folds the tasks it groups; the pencil at its end opens the drawer that renames it.
+const groupTitle = (section, group) => `<h3 class="group-title"
+  id="${subAnchorOf(section, group.name)}" ${foldAttributes('board', section, group.name)}>
+  <span>${esc(group.name)}</span>
+  ${foldMark(section, group.name, group.tasks.length)}
+  <button class="row-edit" data-act="subsection-edit" data-section="${esc(section)}"
+    data-value="${esc(group.name)}" title="Renommer le groupe">✎</button>
+</h3>`;
+
+// Clicking the page title folds it; the emoji, as in the sidebar, opens the drawer that edits it.
+const sectionTitle = (section) => `<h2 class="section-title"
+  id="${anchorOf(section.name)}" ${foldAttributes('board', section.name, '')}>
+  <button class="title-emoji" data-act="section-edit" data-value="${esc(section.name)}"
+    title="Emoji et nom de la section">${sectionOf(section.name).emoji || '·'}</button>
+  <span>${esc(section.name)}</span>
+  ${foldMark(
+    section.name,
+    '',
+    section.groups.reduce((sum, group) => sum + group.tasks.length, 0),
+  )}
+</h2>`;
+
+// A folded heading hides everything it holds — its groups, their tasks, and the lines that add one.
+function sectionBody(section) {
+  return (
+    section.groups
+      .map((group) => {
+        const shut = group.name && isFolded('board', section.name, group.name);
+        return (
+          (group.name ? groupTitle(section.name, group) : '') +
+          (shut
+            ? ''
+            : group.tasks.map(taskButton).join('') +
+              (showArchived ? '' : newTaskForm(section.name, group.name)))
+        );
+      })
+      .join('') + (showArchived ? '' : newSubsectionForm(section.name, 'board'))
+  );
+}
 
 function renderBoard() {
   renderFilters();
@@ -227,20 +265,11 @@ function renderBoard() {
     sections
       .map(
         (section) => `<section class="section">
-          <h2 class="section-title" id="${anchorOf(section.name)}"
-            data-act="section-edit" data-value="${esc(section.name)}"
-            title="Emoji et nom de la section">
-            ${esc(sectionHeading(section.name))}
-          </h2>
-          ${section.groups
-            .map(
-              (group) =>
-                (group.name ? groupTitle(section.name, group.name) : '') +
-                group.tasks.map(taskButton).join('') +
-                (showArchived ? '' : newTaskForm(section.name, group.name)),
-            )
-            .join('')}
-          ${showArchived ? '' : newSubsectionForm(section.name, 'board')}
+          <div class="section-head">
+            ${sectionTitle(section)}
+            ${showArchived ? '' : subsectionAddButton(section.name, 'board')}
+          </div>
+          ${isFolded('board', section.name) ? '' : sectionBody(section)}
         </section>`,
       )
       .join('') || '<p class="empty">Aucune tâche ne correspond.</p>';
@@ -263,6 +292,7 @@ const CLICKS = {
   emoji: (target) => toggleEmojiPicker(target.dataset.value),
   'emoji-pick': (target) => pickEmoji(target.dataset.value),
   'new-word': (target) => toggleNewWord(target.dataset.value),
+  fold: (target) => toggleFold(target.dataset.scope, target.dataset.section, target.dataset.group),
   'new-section': toggleNewSection,
   'new-subsection': (target) => toggleNewSubsection(target.dataset.section, target.dataset.where),
   'new-task': (target) => toggleNewTask(target.dataset.section, target.dataset.subsection),
@@ -274,13 +304,16 @@ const CLICKS = {
   'subsection-cancel': closeNewSubsection,
   'section-add': addNewSection,
   'section-cancel': closeNewSection,
-  'word-tone': (target) => pickWordTone(target.dataset.value),
+  'word-variant': (target) => pickWordVariant(target.dataset.value),
   'word-add': addNewWord,
   'word-cancel': closeNewWord,
   theme: toggleTheme,
   save: () => currentDrawer().save(),
   launch: launchSession,
   archive: archiveTask,
+  sessions: toggleSessions,
+  'task-start': (target) => runTaskAction('task-start', target.dataset.id),
+  'task-commit': (target) => runTaskAction('task-commit', target.dataset.id),
   detach: () => (detached && !detached.closed ? detached.close() : detachWindow()),
 };
 
@@ -288,7 +321,6 @@ const INPUTS = {
   search: (target) => setSearch(target.value),
   title: (target) => editDraft('title', target.value),
   body: (target) => editDraft('body', target.value),
-  prompt: (target) => setPrompt(target.value),
   scope: (target) => pickScope(target.value),
   'scope-name': (target) => editDraft('scope', target.value),
   'emoji-search': (target) => setEmojiSearch(target.value),

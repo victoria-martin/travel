@@ -4,11 +4,12 @@
 // The emoji is the handle that opens the section drawer; the rest of the row scrolls to the block.
 function sectionRow(section, tally) {
   return `<div class="section-link" draggable="true" data-section="${esc(section.name)}">
+    <button class="section-fold" ${foldAttributes('nav', section.name, '')}>${chevron()}</button>
     <button class="section-emoji" data-act="section-edit" data-value="${esc(section.name)}"
       title="Emoji et nom de la section">${section.emoji || '·'}</button>
-    <a href="#${anchorOf(section.name)}">
-      <span>${esc(section.name)}</span><span class="tally">${tally}</span>
-    </a>
+    <a href="#${anchorOf(section.name)}"><span>${esc(section.name)}</span></a>
+    ${showArchived ? '' : subsectionAddButton(section.name, 'nav')}
+    <span class="tally">${tally}</span>
   </div>`;
 }
 
@@ -35,18 +36,24 @@ function renderSections(visible) {
 
   const container = ui.getElementById('sections');
   container.innerHTML =
+    sessionsPanel() +
     board.sections
       .map((section) => {
         const groups = groupsOf(section.name);
         const total = groups.reduce((sum, group) => sum + group.tasks.length, 0);
         return `<div class="section-block">
           ${sectionRow(section, total)}
-          ${section.subsections
-            .map((name) => subsectionRow(section, name, tallyOf(groups, name)))
-            .join('')}
-          ${showArchived ? '' : newSubsectionForm(section.name, 'nav')}
+          ${
+            isFolded('nav', section.name)
+              ? ''
+              : `${section.subsections
+                  .map((name) => subsectionRow(section, name, tallyOf(groups, name)))
+                  .join('')}
+                ${showArchived ? '' : newSubsectionForm(section.name, 'nav')}`
+          }
         </div>`;
       })
-      .join('') + newSectionForm();
+      .join('') +
+    newSectionForm();
   bindSidebarDrag(container);
 }

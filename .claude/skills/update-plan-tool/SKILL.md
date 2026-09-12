@@ -43,8 +43,8 @@ Le statut est le dernier morceau de la liste `·` de la puce, avant le `:` du d�
 - **Titre** <!--t:abcd--> — 🧩 layout · ✅ fait : le détail, s'il y en a un
 ```
 
-Les statuts sont une liste figée — 💡 idée, 🤔 à trancher, 📌 acté, ⏳ à faire, 🚧 en cours,
-⏸️ en attente, 🌙 plus tard, ✅ fait, 🚫 abandonné — qui vit dans
+Les statuts sont une liste figée — ⏳ à faire, 💡 idée, 🚧 en cours, ⏸️ en attente, 🌙 plus tard,
+✅ fait, 🚫 abandonné, 📓 à planifier, 🔍 à étudier — qui vit dans
 [statuses.js](../../../tools/plan-board/statuses.js). En inventer un ici casse la lecture du board.
 
 ## 4. Livrer

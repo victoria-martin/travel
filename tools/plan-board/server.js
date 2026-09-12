@@ -4,7 +4,9 @@ const path = require('path');
 const plan = require('./plan.js');
 const vocabulary = require('./vocabulary.js');
 const sessions = require('./sessions.js');
+const { START_PROMPT } = require('./session-prompts.js');
 const iterm = require('./iterm.js');
+const { DOING_STATUS, CLOSED_STATUSES } = require('./statuses.js');
 
 const PORT = Number(process.env.PLAN_PORT) || 4321;
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };
@@ -76,12 +78,19 @@ function sessionPreview(res, id) {
   const session = sessions.sessionOf(id);
   send(res, 200, {
     session,
-    prompt: plan.taskMarkdown(task),
     command: iterm.claudeCommand({
       sessionId: session ? session.sessionId : '<uuid généré au lancement>',
       resumed: Boolean(session),
+      prompt: START_PROMPT,
     }),
   });
+}
+
+// An archived task is out of PLAN.md, and a closed one stays closed.
+function markDoing(id) {
+  const task = plan.findTask(id);
+  if (!task || task.status === DOING_STATUS || CLOSED_STATUSES.includes(task.status)) return;
+  plan.updateTask(id, { status: DOING_STATUS });
 }
 
 async function openSession(res, id, prompt) {
@@ -91,6 +100,7 @@ async function openSession(res, id, prompt) {
   const command = iterm.claudeCommand({ sessionId: session.sessionId, resumed, prompt });
   try {
     await iterm.openInITerm(command);
+    markDoing(id);
     send(res, 200, { session, resumed, command });
   } catch (error) {
     send(res, 500, { error: error.message, command });

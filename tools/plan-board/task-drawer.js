@@ -38,7 +38,6 @@ function isDirty() {
   );
 }
 
-const setPrompt = (value) => (preview.prompt = value);
 
 function sessionBlock() {
   if (previewFailed) {
@@ -62,10 +61,9 @@ function sessionBlock() {
       ${warning}${failed}
       <button class="btn btn-primary" data-act="launch">↻ Rouvrir dans iTerm</button>`;
   }
-  return `<p class="hint">Aucune session. Claude démarrera sur ce prompt — modifiable avant de lancer.</p>
-    <textarea class="prompt-input" data-act="prompt">${esc(preview.prompt)}</textarea>
+  return `<p class="hint">Aucune session. Claude s’ouvrira sur <code>${esc(START_PROMPT)}</code>,
+    qui relit la tâche dans PLAN.md.</p>
     <code>${esc(preview.command)}</code>
-    <p class="hint">Le prompt ci-dessus est passé en argument au démarrage.</p>
     ${warning}${failed}
     <button class="btn btn-primary" data-act="launch">▶ Lancer dans iTerm</button>`;
 }
@@ -121,9 +119,10 @@ async function launchSession() {
     await api(`/api/tasks/${openTaskId}/session`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: preview.prompt }),
+      body: JSON.stringify({ prompt: START_PROMPT }),
     });
     await loadBoard();
+    draft.status = findTask(openTaskId).status;
     preview = await api(`/api/tasks/${openTaskId}/session`);
     renderDrawer();
   } catch (error) {

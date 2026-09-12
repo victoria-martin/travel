@@ -234,8 +234,21 @@ code,
 .section-link:hover {
   background: var(--paper-raised);
 }
+/* In the sidebar the chevron leads the row: the emoji already holds the far left of a heading. */
+.section-fold {
+  display: flex;
+  padding: 5px 1px 5px 5px;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.section-link:hover .chev {
+  opacity: 0.9;
+  color: var(--accent);
+}
 .section-emoji {
-  padding: 5px 2px 5px 7px;
+  padding: 5px 2px 5px 3px;
   border: 0;
   background: none;
   font-size: 13px;
@@ -269,6 +282,10 @@ code,
 .sections .tally {
   font-family: var(--mono);
   opacity: 0.55;
+}
+/* The tally closes the row; the `+` slips in before it, so the numbers stay in one column. */
+.section-link > .tally {
+  padding-right: 9px;
 }
 #sections .ghost-add {
   margin: 2px 4px 0;
@@ -335,25 +352,111 @@ code,
 }
 
 /* ---------- Sections et tâches ---------- */
-.section-title {
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin: 26px 0 10px;
+}
+.section:first-child .section-head {
+  margin-top: 0;
+}
+/* The `+` that opens a group form stays out of the way until the pointer is on the row. */
+.row-add,
+.row-edit {
+  padding: 4px 7px;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0;
   cursor: pointer;
+  transition:
+    opacity 0.15s,
+    color 0.15s;
+}
+.section-link:hover .row-add,
+.section-head:hover .row-add,
+.group-title:hover .row-edit,
+.row-add:focus-visible,
+.row-edit:focus-visible,
+.row-add[aria-pressed='true'] {
+  outline: none;
+  opacity: 0.7;
+}
+.row-add:hover,
+.row-edit:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  margin: 0;
   font-family: var(--display);
   font-size: 19px;
   font-weight: 600;
   color: var(--ink);
   scroll-margin-top: 100px;
 }
+.title-emoji {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.85em;
+  line-height: 1;
+  opacity: 0.75;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.title-emoji:hover,
+.title-emoji:focus-visible {
+  outline: none;
+  opacity: 1;
+}
+/* A heading is its own handle: the chevron trails the name, and never cuts in front of it. */
+.chev {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  opacity: 0.5;
+  transition:
+    transform 0.15s,
+    opacity 0.15s;
+}
+.group-title .chev {
+  width: 10px;
+  height: 10px;
+}
+.section-title:hover .chev,
+.group-title:hover .chev {
+  opacity: 0.9;
+  color: var(--accent);
+}
+[aria-expanded='false'] > .chev {
+  transform: rotate(-90deg);
+}
+.section-title .tally,
+.group-title .tally {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.5;
+}
 [data-theme='dev'] .section-title::before {
   content: '# ';
   color: var(--accent);
 }
-.section:first-child .section-title {
-  margin-top: 0;
-}
 .group-title {
-  margin: 18px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
+  margin: 18px 0 8px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.09em;
@@ -408,9 +511,9 @@ code,
 .task {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
-  padding: 10px 14px;
+  padding-right: 8px;
   margin-bottom: 5px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -428,6 +531,52 @@ code,
   border-color: var(--accent);
   transform: translateX(3px);
   box-shadow: var(--shadow-lift);
+}
+/* La carte porte le cadre et les actions ; ce bouton-ci est la part qui ouvre le tiroir. */
+.task-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 6px 10px 14px;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.task-open:focus-visible {
+  outline: none;
+  text-decoration: underline;
+}
+/* Une action reste en retrait tant qu'on ne survole pas sa ligne. */
+.task-action {
+  flex-shrink: 0;
+  padding: 4px 7px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0;
+  cursor: pointer;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.task:hover .task-action,
+.session-row:hover .task-action,
+.task-action:focus-visible {
+  outline: none;
+  opacity: 1;
+}
+.task-action:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .task[aria-current='true'] {
   border-color: var(--accent);
@@ -504,19 +653,25 @@ code,
   align-items: center;
   gap: 5px;
   flex-shrink: 0;
-  padding: 3px 10px 3px 7px;
+  padding: 3px 10px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--paper);
   font-size: 12px;
+  line-height: 1;
   white-space: nowrap;
   transition:
     transform 0.12s,
     box-shadow 0.12s,
     border-color 0.12s;
 }
+.pill > span {
+  display: inline-flex;
+  align-items: center;
+  height: 1.2em;
+}
 .pill-type {
-  padding: 2px 8px 2px 6px;
+  padding: 2px 8px;
   font-size: 11px;
   color: var(--ink-soft);
 }
@@ -538,27 +693,27 @@ code,
   border-color: var(--accent);
 }
 
-.pill-idea {
-  border-color: color-mix(in srgb, #c98a3e 45%, var(--line));
+.pill-success {
+  border-color: color-mix(in srgb, #7c8b5e 55%, var(--line));
 }
-.pill-open {
-  border-color: color-mix(in srgb, #a6462e 40%, var(--line));
+.pill-focus {
+  border-color: color-mix(in srgb, #7c8b5e 70%, var(--line));
+  background: color-mix(in srgb, #7c8b5e 14%, var(--paper));
+  font-weight: 500;
 }
-.pill-settled,
-.pill-doing {
+.pill-info {
   border-color: var(--accent);
   font-weight: 500;
 }
-.pill-done {
-  border-color: color-mix(in srgb, #7c8b5e 55%, var(--line));
+.pill-warning {
+  border-color: color-mix(in srgb, #c98a3e 45%, var(--line));
 }
-.pill-paused,
-.pill-later {
-  color: var(--ink-soft);
+.pill-error {
+  border-color: color-mix(in srgb, #a6462e 40%, var(--line));
+  color: color-mix(in srgb, #a6462e 70%, var(--ink));
 }
-.pill-dropped {
+.pill-default {
   color: var(--ink-soft);
-  text-decoration: line-through;
 }
 
 .choices {
@@ -715,8 +870,7 @@ code,
 }
 .title-input:focus,
 .scope-input:focus,
-.body-input:focus,
-.prompt-input:focus {
+.body-input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
@@ -843,18 +997,6 @@ code,
   font-size: 12px;
   word-break: break-all;
 }
-.prompt-input {
-  width: 100%;
-  min-height: 120px;
-  padding: 10px 12px;
-  border: 1px dashed var(--line);
-  border-radius: var(--radius);
-  background: var(--code);
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.5;
-  resize: vertical;
-}
 
 .drawer-foot {
   display: flex;
@@ -886,7 +1028,6 @@ code,
 }
 .section:hover > .ghost-add,
 #sections:hover > .ghost-add,
-.section-block:hover > .ghost-add,
 .field > .ghost-add,
 .ghost-add:focus-visible {
   outline: none;
@@ -1038,4 +1179,82 @@ code,
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Le panneau des sessions ouvre au-dessus des pages : il ne se lit pas comme l'une d'elles. */
+.sessions-block {
+  margin-bottom: 10px;
+}
+.sessions-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.sessions-toggle:hover,
+.sessions-toggle[aria-pressed='true'] {
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+.sessions-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 4px 0 2px;
+}
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.session-row:hover {
+  background: var(--paper-raised);
+}
+.session-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 4px 5px 9px;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.session-row:hover .session-open {
+  color: var(--ink);
+}
+.session-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.session-when {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  opacity: 0.55;
+}
+.sessions-panel .hint {
+  padding: 2px 9px 4px;
 }

@@ -9,9 +9,53 @@ stable que le board (`pnpm plan`) relie à sa session Claude : le titre peut cha
 lien. Ne pas le retirer ni le recopier d'une tâche à l'autre. Les puces de « Données à saisir » n'en
 portent pas — c'est du contenu à saisir, pas du travail à lancer.
 
-Les statuts sont une liste figée, du premier jet à ce qui ne se fera pas — 💡 idée, 🤔 à trancher,
-📌 acté, ⏳ à faire, 🚧 en cours, ⏸️ en attente, 🌙 plus tard, ✅ fait, 🚫 abandonné. Elle vit dans
-[statuses.js](tools/plan-board/statuses.js) : en ajouter un se fait là, pas à la main ici.
+Les statuts sont une liste figée, par ordre de priorité — ⏳ à faire, 💡 idée, 🚧 en cours,
+⏸️ en attente, 🌙 plus tard, ✅ fait, 🚫 abandonné, 📓 à planifier, 🔍 à étudier. Elle vit dans
+[statuses.js](tools/plan-board/statuses.js) : en ajouter un se fait là, pas à la main ici. Chacun
+porte une couleur de pastille ([pill-variants.js](tools/plan-board/pill-variants.js)), partagée avec
+les types.
+
+## 🗓️ Scénarios
+
+- **Charges fixes** <!--t:ost1--> — 🧩 ui · 🚧 en cours
+  - Bloc sous les étapes, **dans une autre couleur** que les étapes.
+  - Une ligne par charge rattachée (libellé, montant, retirer).
+  - « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
+    alimente la table Charges fixes). calcul des charges en fonction des dates de la step ds le
+    scenario pr nb de jours et coût renseigné par le user
+  - Un select pour rattacher une charge déjà existante.
+  - Tant que `costIds` reste vide, la ligne « Charges fixes » du total général affiche 0 €.
+
+  ca te semble ok tout ca ?
+
+  si oui dis moi ds quel ordre fair les trucs et on va les faire au fur et a mesure
+
+- **Coût de la voiture × nuits** <!--t:q9vm--> — 🧮 calcul · 🐛 fix · 🔍 à étudier : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
+  multiplie le prix de la voiture par les nuits du scénario, contre la décision actée « pris tel
+  quel, sans multiplication ». Corriger le code ou la décision — et le total s'affiche sans unité.
+- **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🔍 à étudier : les dates se
+  calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
+  le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
+  ([step-card.js:94](js/views/scenarios/detail/step-card.js#L94)). Le retirer ou lui donner un rôle.
+- **Bouton « + Ajouter une voiture »** <!--t:tzp2--> — 🧩 ui · 🔍 à étudier : ouvre la modale
+  Voitures et rattache la nouvelle voiture au scénario.
+
+  existe déjà avec le picker attendons deja le rework
+
+- **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 🔍 à étudier
+
+### Plus tard
+
+- **Distance entre deux étapes** <!--t:mc15--> — 🧮 calcul · 🔌 intégration · ⏸️ en attente
+- **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · ⏸️ en attente
+- **Estimation des péages** <!--t:dlde--> — 🧮 calcul · ⏸️ en attente
+
+### Step
+
+- **stepForm** <!--t:zfop--> — 🧩 ui · 🏷️ données · 🏷️ modal · ⏳ à faire : pouvoir choisir une
+  attraction ds le form,
+  ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
+  j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
 
 ## 💻 plan-tool
 
@@ -22,9 +66,51 @@ Les statuts sont une liste figée, du premier jet à ce qui ne se fera pas — �
 - **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
   et met mon focus dans l input pour le name
 - **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
+- **sessions actives dans la barre latérale** <!--t:ij8e--> — 🧩 ui · ✅ fait : un panneau
+  qui liste les tâches ayant une session, la plus récente en tête. Deux boutons par ligne, sur
+  la carte comme dans le panneau : ▶ ouvre la session sur `/start-task`, ✓ sur `/commit-task`.
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
 - **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard
+- **tags dans task form (type et statut)** <!--t:ydld--> — ⏳ à faire : pas les mêmes tags entre
+  style et status prends le style de status
+
+  on comprend pas bien quels tags sont selectionnés peut etr qu'il faut les faire passer au debut de
+  la liste qd selectionn" ?
+
+- **update plan task statuses** <!--t:f54a--> — 🏷️ données · ✅ fait : dans
+  tools/plan-board/statuses.js voici ce que je veux utiliser a la place du code actuel
+
+  const PLAN_STATUSES = [
+  // mettre à jour avec les nouveaux emoji et cet ordre de priorité
+  { label: 'à faire', emoji: '⏳', tone: 'todo', variant: 'focus' },
+  { label: 'idée', emoji: '💡', tone: 'idea', variant: 'default' },
+  { label: 'en cours', emoji: '🚧', tone: 'doing', variant: 'info' },
+  { label: 'en attente', emoji: '⏸️', tone: 'paused', variant: 'warning' },
+  { label: 'plus tard', emoji: '🌙', tone: 'later', variant: 'default' },
+  { label: 'fait', emoji: '✅', tone: 'done', variant: 'success' },
+  { label: 'abandonné', emoji: '🚫', tone: 'dropped', variant: 'error' },
+  // virer ceux là
+  { label: 'à trancher', emoji: '🤔', tone: 'open' },
+  { label: 'acté', emoji: '📌', tone: 'settled' },
+  // rajouter ceux la, j ai choisi l emoji choisis le tone
+  { label: 'à planifier', emoji: '📓', variant: 'default' },
+  { label: 'à étudier', emoji: '🔍', variant: 'default' },
+  ];
+
+  a mettre au bon endroit et à réutiliser par les autres Pills de Type
+  const PILL_VARIANTS = {
+  success: 'pill-success',
+  focus: 'pill-success', // declinaison de success pour le focus
+  info: 'pill-info',
+  warning: 'pill-warning',
+  error: 'pill-error',
+  default: 'pill-default',
+  };
+
+  tu peux mettre à jour le nom de classes css + creer la classe focus stp
+
+### layout
 
 ## 🧳 Valise
 
@@ -38,11 +124,11 @@ voyage ». Tout est à trancher, rien n'est commencé.
   `COLLECTIONS` ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()`
   ([storage.js:17](js/storage.js#L17)), avec son `travelId` en première colonne comme les autres.
   Modèle proposé : libellé, catégorie, quantité, coché, `travelerId` plus tard, notes.
-- **Catégories** <!--t:fjcp--> — 🗃️ modèle · 🤔 à trancher : une liste figée sur le modèle d'
+- **Catégories** <!--t:fjcp--> — 🗃️ modèle · 🔍 à étudier : une liste figée sur le modèle d'
   [accommodation-types.js](js/accommodation-types.js) (vêtements, papiers, santé, électronique,
   bagage cabine, voiture, à faire avant de partir) ou des tags libres comme
   [tags.js:5](js/views/tags.js#L5). Les deux existent déjà dans l'app, il faut choisir lequel.
-- **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 🤔 à trancher : un bouton « Partir d'une liste
+- **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 🔍 à étudier : un bouton « Partir d'une liste
   type » qui crée les items d'un coup, versus une liste vide. Si modèle il y a, il vit à côté de la
   vue, comme [default-car.js](js/views/cars/default-car.js).
 - **Cocher** <!--t:30rq--> — 🧩 ui · 💡 idée : une case par ligne, écrite directement en base comme
@@ -50,11 +136,11 @@ voyage ». Tout est à trancher, rien n'est commencé.
 
 ### Intégration aux scénarios
 
-- **Quantités déduites des nuits** <!--t:19lc--> — 🧮 calcul · 🤔 à trancher : le scénario connaît
+- **Quantités déduites des nuits** <!--t:19lc--> — 🧮 calcul · 🔍 à étudier : le scénario connaît
   déjà ses nuits ([nights.js](js/views/scenarios/nights.js)). Une quantité peut valoir « 1 par
   nuit » plutôt qu'un nombre fixe, et se recalculer quand le scénario retenu change. Suppose un
   scénario « retenu » sur le voyage — même prérequis que les chiffres des cartes Voyages.
-- **Items rattachés à une étape** <!--t:q8pc--> — 🗃️ modèle · 🤔 à trancher : un `stepId` optionnel
+- **Items rattachés à une étape** <!--t:q8pc--> — 🗃️ modèle · 🔍 à étudier : un `stepId` optionnel
   sur l'item (maillot pour l'étape mer, chaussures de rando pour l'étape Chianti), sur le modèle
   d'une étape qui référence un hébergement. La page Valise les grouperait alors par étape, dans
   l'ordre du scénario.
@@ -85,7 +171,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   appelle le même `setCurrentTravel()` que le menu du sélecteur
   ([current-travel.js](js/current-travel.js)) et bascule sur Hébergements. Le sélecteur reste, les
   deux points d'entrée partagent le même chemin.
-- **Chiffres de la carte** <!--t:aqpf--> — 🗃️ modèle · 🧮 calcul · 🤔 à trancher : ce qu'une carte
+- **Chiffres de la carte** <!--t:aqpf--> — 🗃️ modèle · 🧮 calcul · 🔍 à étudier : ce qu'une carte
   de voyage résume — nombre d'hébergements et de scénarios, budget du scénario retenu — et donc s'il
   faut un scénario « retenu » sur le voyage, ce qui n'existe pas aujourd'hui.
 - **Supprimer un voyage** <!--t:kgci--> — 🧩 ui · 🗃️ modèle · 🌙 plus tard : avec la page Voyages,
@@ -96,7 +182,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## 🏠 Hébergements
 
-- **Sort de l'import depuis un tableau** <!--t:sga5--> — 🧩 ui · 🔌 intégration · 🤔 à trancher : le
+- **Sort de l'import depuis un tableau** <!--t:sga5--> — 🧩 ui · 🔌 intégration · 🔍 à étudier : le
   bouton « Importer » n'est affiché que tant qu'aucun Sheet n'est connecté
   ([header.js:41](js/views/accommodations/header.js#L41)), et `openPasteImport()` reste commentée
   dans [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions
@@ -113,7 +199,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type`
   `budget total` / `cost` envisagé ici n'a plus lieu d'être : une charge sans prix saisi **est** une
   enveloppe, le dire deux fois ouvre la porte à la contradiction.
-- **Fourchette incomplète** <!--t:hl47--> — 🧮 calcul · 🤔 à trancher : ce que vaut la charge dans
+- **Fourchette incomplète** <!--t:hl47--> — 🧮 calcul · 🔍 à étudier : ce que vaut la charge dans
   un total quand un seul des deux montants est saisi.
 
 ## ✈️ Transports
@@ -130,11 +216,11 @@ voiture la **référence** plutôt que de la recopier.
   ([storage.js:17](js/storage.js#L17)), avec son `travelId` en première colonne. Modèle proposé :
   mode, départ, arrivée, date et heure de départ, date et heure d'arrivée, compagnie, numéro /
   référence de réservation, budget, `amountMin` / `amountMax`, lien, statut, favori, notes.
-- **Modes** <!--t:hk8r--> — 🗃️ modèle · 🤔 à trancher : une liste figée sur le modèle d'
+- **Modes** <!--t:hk8r--> — 🗃️ modèle · 🔍 à étudier : une liste figée sur le modèle d'
   [accommodation-types.js](js/accommodation-types.js) — ✈️ avion, 🚆 train, 🚌 bus, ⛴️ ferry, 🚗
   voiture. C'est le mode qui décide des champs utiles : un vol a une compagnie et un numéro, une
   voiture a un `carId`.
-- **Départ et arrivée : des villes** <!--t:vn43--> — 🗃️ modèle · 🤔 à trancher : deux `cityId` qui
+- **Départ et arrivée : des villes** <!--t:vn43--> — 🗃️ modèle · 🔍 à étudier : deux `cityId` qui
   pointent sur `cities`, comme une étape de scénario référence une ville, plutôt que deux champs
   texte. Un aéroport n'est pas une ville — à voir si on ajoute un champ libre à côté ou si on
   l'accepte tel quel.
@@ -142,7 +228,7 @@ voiture la **référence** plutôt que de la recopier.
   référence une entrée de `cars` ([get-car.js](js/views/cars/get-car.js)).
 - **Budget et prix** <!--t:fi2n--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`.
-- **Prix sur le transport** <!--t:4ojw--> — 🗃️ modèle · 📌 acté : `amountMin` / `amountMax` sur le
+- **Prix sur le transport** <!--t:4ojw--> — 🗃️ modèle · 📓 à planifier : `amountMin` / `amountMax` sur le
   transport lui-même, pour tous les modes, voiture comprise.
 - **Prix dans le total d'un scénario** <!--t:8suc--> — 🧮 calcul · ⏳ à faire : les transports
   rattachés à un scénario s'ajoutent au récap ([recap.js](js/views/scenarios/detail/recap.js)), à
@@ -151,13 +237,13 @@ voiture la **référence** plutôt que de la recopier.
 
 ### Intégration aux scénarios
 
-- **Un transport entre deux étapes** <!--t:u2p3--> — 🗃️ modèle · 🤔 à trancher (déplacé de « Scénarios / Plus tard ») : le
+- **Un transport entre deux étapes** <!--t:u2p3--> — 🗃️ modèle · 🔍 à étudier (déplacé de « Scénarios / Plus tard ») : le
   trajet se lit entre deux étapes consécutives. Soit un `transportIds` sur le scénario, soit un
   `transportId` sur l'étape d'arrivée — à choisir avant d'écrire quoi que ce soit.
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
   ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
   et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
-- **Aller-retour du voyage** <!--t:oujb--> — 🗃️ modèle · 🤔 à trancher : le vol aller et le vol
+- **Aller-retour du voyage** <!--t:oujb--> — 🗃️ modèle · 🔍 à étudier : le vol aller et le vol
   retour encadrent le voyage entier, pas une étape. Soit deux transports sans étape rattachée, soit
   des étapes fictives de départ et de retour dans le scénario.
 
@@ -170,7 +256,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   scénario référence déjà une ville ou un hébergement
   ([step-place-dropdown.js](js/views/scenarios/detail/step-place-dropdown.js)) ; reste à décider si
   elle porte en plus une liste d'attractions, et ce que le détail du scénario en affiche.
-- **Une attraction peut-elle être une ville ?** <!--t:4heo--> — 🗃️ modèle · 🤔 à trancher : Montefioralle
+- **Une attraction peut-elle être une ville ?** <!--t:4heo--> — 🗃️ modèle · 🔍 à étudier : Montefioralle
   est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
   l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville
   existante, comme une étape de scénario référence un hébergement.
@@ -190,7 +276,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   `hotelId` optionnel, pour la table d'hôtes ou le restaurant de l'hôtel.
 - **Scraper un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : depuis le formulaire,
   remplir nom, adresse, coordonnées et horaires à partir d'une URL `maps.app.goo.gl`.
-- **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🤔 à trancher : le type étant porté par
+- **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🔍 à étudier : le type étant porté par
   l'attraction, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
   Attractions. À décider quand il y aura assez de contenu pour que la liste mixte devienne
   illisible.
@@ -207,35 +293,9 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   villes ajoutées depuis les autres écrans doivent pointer sur une entrée de `cities`, pas créer un
   doublon de texte.
 
-## 🗓️ Scénarios
-
-- **Charges fixes** <!--t:ost1--> — 🧩 ui · ⏳ à faire
-  - Bloc sous les étapes, **dans une autre couleur** que les étapes.
-  - Une ligne par charge rattachée (libellé, montant, retirer).
-  - « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
-    alimente la table Charges fixes).
-  - Un select pour rattacher une charge déjà existante.
-  - Tant que `costIds` reste vide, la ligne « Charges fixes » du total général affiche 0 €.
-- **Coût de la voiture × nuits** <!--t:q9vm--> — 🧮 calcul · 🐛 fix · 🤔 à trancher : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
-  multiplie le prix de la voiture par les nuits du scénario, contre la décision actée « pris tel
-  quel, sans multiplication ». Corriger le code ou la décision — et le total s'affiche sans unité.
-- **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🤔 à trancher : les dates se
-  calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
-  le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
-  ([step-card.js:94](js/views/scenarios/detail/step-card.js#L94)). Le retirer ou lui donner un rôle.
-- **Bouton « + Ajouter une voiture »** <!--t:tzp2--> — 🧩 ui · ⏳ à faire : ouvre la modale Voitures
-  et rattache la nouvelle voiture au scénario.
-- **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 🤔 à trancher
-
-### Plus tard
-
-- **Distance entre deux étapes** <!--t:mc15--> — 🧮 calcul · 🔌 intégration · ⏸️ en attente
-- **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · ⏸️ en attente
-- **Estimation des péages** <!--t:dlde--> — 🧮 calcul · ⏸️ en attente
-
 ## 🧩 Transverse
 
-- **Budget et prix** <!--t:u6zh--> — 🗃️ modèle · 📌 acté : partout où une entité coûte — charge
+- **Budget et prix** <!--t:u6zh--> — 🗃️ modèle · 📓 à planifier : partout où une entité coûte — charge
   fixe, transport, hébergement, voiture — deux notions distinctes et jamais un champ `type` pour les
   départager.
   - Le **budget** est l'enveloppe qu'on se donne : un champ, optionnel, saisi à la main.
