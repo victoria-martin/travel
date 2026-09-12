@@ -41,6 +41,10 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
+- **Une étape masquée ne compte nulle part** : ni dates, ni nuits, ni totaux, ni carte, ni récap, ni
+  nombre d'étapes. C'est une variante mise de côté, gardée sous la main plutôt que supprimée. Seule
+  la liste du détail la montre, grisée. Conséquence : partout ailleurs, le rang d'une étape est son
+  rang **parmi les visibles** — masquer la deuxième fait passer C en B, et décale les dates.
 - **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`,
   placée en première colonne de chaque onglet pour trier et filtrer d'un coup d'œil — y compris sur
   l'onglet `steps`, où elle est recopiée depuis le scénario parent.
@@ -70,7 +74,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voiture**         | loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                               | liste simple ; une seule voiture par défaut          |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                     | liste simple                                         |
 | **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                          | un itinéraire candidat                               |
-| **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre                                                 | appartient à un scénario, l'ordre compte             |
+| **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre, masquée                                        | appartient à un scénario, l'ordre compte             |
 | **Notes de voyage** | texte libre                                                                                                                        | un bloc par voyage                                   |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
@@ -278,6 +282,7 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
 | budget         | remplace le coût calculé de l'hébergement             |
 | date d'arrivée | champ libre de la modale, en plus de la date calculée |
 | notes          |                                                       |
+| masquée        | l'étape reste dans la liste mais sort de tous les calculs |
 
 - **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
   tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
@@ -292,7 +297,13 @@ confirmée. Aucune colonne masquable, aucun tri configurable — le besoin ne s'
   dessous ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si 0 nuit),
   sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite un select de lieu
   (**une ville ou un hébergement**, les deux dans le même select, exclusifs), un select de nuits
-  (0 à 14), et en bout de ligne le coût. Réordonnable ↑↓, supprimable.
+  (0 à 14), et en bout de ligne le coût. Réordonnable ↑↓, duplicable, masquable, supprimable.
+- **Masquer une étape** (case à cocher en haut à gauche de la carte) : cochée, la carte passe en
+  grisé-pointillé, son contenu et ses actions se désaturent, son titre se barre, sa pastille devient
+  un point, ses dates disparaissent, et le scénario se lit comme si elle n'existait pas. Sert à
+  comparer deux variantes d'un même trajet sans rien perdre.
+- **Dupliquer une étape** (⧉) : la copie s'insère **juste sous** l'originale, champs identiques, sans
+  suffixe au nom — on ajuste l'une des deux, ou on en masque une.
 - **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
   hébergements favoris passent en tête de leur groupe, précédés d'une ★.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;

@@ -1,4 +1,5 @@
 function scenarioDetailHeader(s) {
+  const count = visibleSteps(s).length;
   return /* HTML */ `<div class="view-header">
     <div>
       <button
@@ -16,12 +17,12 @@ function scenarioDetailHeader(s) {
         })}
       </h2>
       <p class="view-sub">
-        ${s.steps.length} étape${s.steps.length > 1 ? 's' : ''} — clique sur le titre pour le
+        ${count} étape${count > 1 ? 's' : ''} — clique sur le titre pour le
         renommer
       </p>
     </div>
     <div class="view-header-actions">
-      ${scenarioStartDateField(s)} ${s.steps.length > 0 ? scenarioMapToggleBtn() : ''}
+      ${scenarioStartDateField(s)} ${count > 0 ? scenarioMapToggleBtn() : ''}
       <button class="btn" onclick="openModal('step','${s.id}')">+ Ajouter une étape</button>
     </div>
   </div>`;

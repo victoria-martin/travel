@@ -16,12 +16,7 @@ function accommodationCard(a) {
     </div>
     ${tagChips(a.tags)}
     <div class="card-actions">
-      <button class="btn-ghost btn btn-small" onclick="openModal('accommodation','${a.id}')">
-        Modifier
-      </button>
-      <button class="btn-danger btn btn-small" onclick="deleteItem('accommodations','${a.id}')">
-        Suppr.
-      </button>
+      ${cardEditButton('accommodation', a.id)} ${cardDeleteButton('accommodations', a.id)}
       ${a.link ? linkButton(a.link, 'Lien') : ''}
       ${a.bookingLink ? linkButton(a.bookingLink, 'Booking') : ''}
     </div>

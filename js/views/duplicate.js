@@ -33,6 +33,15 @@ function duplicateAttraction(id) {
   render();
 }
 
+// La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une.
+function duplicateStep(scenarioId, stepId) {
+  const s = getScenario(scenarioId);
+  const i = s.steps.findIndex((st) => st.id === stepId);
+  s.steps.splice(i + 1, 0, { ...s.steps[i], id: uid() });
+  saveNow();
+  render();
+}
+
 function duplicateScenario(id) {
   const s = getScenario(id);
   const copy = JSON.parse(JSON.stringify(s));

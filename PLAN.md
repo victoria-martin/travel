@@ -63,8 +63,8 @@ voiture la **référence** plutôt que de la recopier.
 - **Entité `transports`** — ⏳ idée : une collection de plus dans `COLLECTIONS`
   ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()` ([storage.js:17](js/storage.js#L17)),
   avec son `travelId` en première colonne. Modèle proposé : mode, départ, arrivée, date et heure de
-  départ, date et heure d'arrivée, compagnie, numéro / référence de réservation, budget, lien,
-  statut, favori, notes — le prix n'est pas un champ, il vient du mode (voir plus bas).
+  départ, date et heure d'arrivée, compagnie, numéro / référence de réservation, budget,
+  `amountMin` / `amountMax`, lien, statut, favori, notes.
 - **Modes** — ⏳ à trancher : une liste figée sur le modèle d'
   [accommodation-types.js](js/accommodation-types.js) — ✈️ avion, 🚆 train, 🚌 bus, ⛴️ ferry,
   🚗 voiture. C'est le mode qui décide des champs utiles : un vol a une compagnie et un numéro, une
@@ -74,14 +74,10 @@ voiture la **référence** plutôt que de la recopier.
   pas une ville — à voir si on ajoute un champ libre à côté ou si on l'accepte tel quel.
 - **Mode voiture → `carId`** — ⏳ à faire : un transport de mode voiture référence une entrée de
   `cars` ([get-car.js](js/views/cars/get-car.js)).
-- **Budget et prix** — ⏳ à faire : applique la règle transverse « Budget et prix ». Le transport
-  porte un `budget` ; son prix vient du mode — la location pour la voiture (`carId` →
-  [get-car.js](js/views/cars/get-car.js)), le billet pour un vol ou un train. Donc pas de double
-  comptage : le prix d'un transport voiture est celui de la voiture référencée, jamais une
-  deuxième saisie.
-- **Prix d'un vol, d'un train** — ⏳ à trancher : aucune table ne porte ce prix aujourd'hui, alors
-  que la voiture a la sienne. Soit `amountMin` / `amountMax` sur le transport lui-même, soit une
-  entité par mode — et là, autant tout mettre sur le transport.
+- **Budget et prix** — ⏳ à faire : applique la règle transverse « Budget et prix » — un `budget`
+  optionnel, et le prix en `amountMin` / `amountMax`.
+- **Prix sur le transport** — ⏳ acté : `amountMin` / `amountMax` sur le transport lui-même, pour
+  tous les modes, voiture comprise.
 - **Prix dans le total d'un scénario** — ⏳ à faire : les transports rattachés à un scénario
   s'ajoutent au récap ([recap.js](js/views/scenarios/detail/recap.js)), à côté des hébergements,
   de la voiture et des charges fixes, selon la règle transverse — prix s'il existe, budget sinon.
@@ -195,7 +191,7 @@ voyage ». Tout est à trancher, rien n'est commencé.
 - **Deux dates par étape** — ⏳ à trancher : les dates se calculent depuis le départ du scénario
   ([step-dates.js](js/views/scenarios/step-dates.js)), mais le champ libre « arrivée le »
   (`arrivalDate`) reste dans la modale et s'affiche à côté
-  ([step-card.js:88](js/views/scenarios/detail/step-card.js#L88)). Le retirer ou lui donner un rôle.
+  ([step-card.js:94](js/views/scenarios/detail/step-card.js#L94)). Le retirer ou lui donner un rôle.
 - **Bouton « + Ajouter une voiture »** — ⏳ à faire : ouvre la modale Voitures et rattache la
   nouvelle voiture au scénario.
 - **Variables du scénario ou générales ?** — ⏳ à étudier
@@ -219,8 +215,7 @@ voyage ». Tout est à trancher, rien n'est commencé.
 - **Budget et prix** — ⏳ acté : partout où une entité coûte — charge fixe, transport, hébergement,
   voiture — deux notions distinctes et jamais un champ `type` pour les départager.
   - Le **budget** est l'enveloppe qu'on se donne : un champ, optionnel, saisi à la main.
-  - Le **prix** est ce que ça coûte vraiment : `amountMin` / `amountMax`, ou la valeur de l'entité
-    référencée quand il y en a une (la voiture d'un transport).
+  - Le **prix** est ce que ça coûte vraiment : `amountMin` / `amountMax`.
   - Dans un total : le prix s'il est connu, le budget sinon, et la ligne dit laquelle des deux est
     affichée. Une entité sans prix **est** une enveloppe — rien de plus à déclarer.
   - Les deux se saisissent et s'affichent pareil d'un écran à l'autre, donc les briques de
@@ -255,11 +250,6 @@ voyage ». Tout est à trancher, rien n'est commencé.
   [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).
-- **Les actions des cartes sont triplées** — ⏳ à faire : la paire Modifier / Suppr. en
-  `btn-ghost` / `btn-danger` est recopiée dans [accommodations/cards/card.js](js/views/accommodations/cards/card.js#L19),
-  [cars/cards.js](js/views/cars/cards.js#L19) et [fixed-costs/cards.js](js/views/fixed-costs/cards.js#L17).
-  Même besoin que [cells/actions/](js/views/cells/actions/), mais en boutons texte : une brique à
-  part, pas un paramètre de plus sur `editButton` / `deleteButton`.
 
 ## Données à saisir
 

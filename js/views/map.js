@@ -132,7 +132,7 @@ function initMap() {
   if (mapFilters.scenarioId) {
     const s = getScenario(mapFilters.scenarioId);
     if (s) {
-      scenarioAccIds = new Set(s.steps.map((st) => st.accommodationId).filter(Boolean));
+      scenarioAccIds = new Set(visibleSteps(s).map((st) => st.accommodationId).filter(Boolean));
       drawScenarioOnMap(leafletMap, s, 'route-notice', ROUTE_HELP);
     }
   }

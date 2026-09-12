@@ -52,6 +52,10 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — `js/views/cards/actions/` créé : la paire Modifier / Suppr. des cartes,
+  recopiée à l'identique dans Hébergements, Voitures et Charges fixes, devient `cardEditButton` /
+  `cardDeleteButton`. Deux familles distinctes et non paramétrables l'une par l'autre — une ligne de
+  tableau agit en icônes ([cells/actions/](js/views/cells/actions/)), une carte en boutons texte.
 - **2026-09-12** — `js/views/attractions/` créé pour le domaine Attraction, sur le découpage de
   `cities/` et `accommodations/`. Trois briques en sont sorties parce qu'elles ont désormais deux
   consommateurs : le champ tags de modale devient [tags-field.js](js/views/tags-field.js) et prend

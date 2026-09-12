@@ -9,6 +9,7 @@ function emptyStep() {
     accommodationId: null,
     budget: '',
     notes: '',
+    hidden: false,
   };
 }
 

@@ -1,7 +1,7 @@
 let scenarioDetailMap = null;
 
 function scenarioMapBlock(scenario) {
-  const hasPlaces = scenario.steps.some((st) => coordsFor(st));
+  const hasPlaces = visibleSteps(scenario).some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">
     <div class="acc-recap-title">Trajet</div>
     ${

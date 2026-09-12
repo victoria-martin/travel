@@ -6,8 +6,9 @@
 const ROUTE_ARROW_COUNT = 12;
 
 function drawScenarioOnMap(map, scenario, noticeId, idleMessage) {
-  const points = scenario.steps.map((st) => coordsFor(st)).filter(Boolean);
-  stepsByCoords(scenario.steps).forEach(({ coords, stops }) => {
+  const steps = visibleSteps(scenario);
+  const points = steps.map((st) => coordsFor(st)).filter(Boolean);
+  stepsByCoords(steps).forEach(({ coords, stops }) => {
     L.marker(coords, { icon: stepPin(stops.map((s) => stepLetter(s.idx))) })
       .bindPopup(stepPinPopup(scenario, stops))
       .addTo(map);

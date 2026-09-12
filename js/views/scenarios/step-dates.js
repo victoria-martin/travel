@@ -3,7 +3,7 @@ function stepArrival(scenario, idx) {
   if (!scenario.startDate) return null;
   const [y, m, d] = scenario.startDate.split('-').map(Number);
   if (!y || !m || !d) return null;
-  const nightsBefore = scenario.steps
+  const nightsBefore = visibleSteps(scenario)
     .slice(0, idx)
     .reduce((sum, st) => sum + (parseInt(st.nights) || 0), 0);
   return new Date(y, m - 1, d + nightsBefore);
@@ -20,7 +20,7 @@ function formatStepDay(date) {
 function stepDateRange(scenario, idx) {
   const arrival = stepArrival(scenario, idx);
   if (!arrival) return '';
-  const nights = parseInt(scenario.steps[idx].nights) || 0;
+  const nights = parseInt(visibleSteps(scenario)[idx].nights) || 0;
   if (nights === 0) return escapeHtml(formatStepDate(arrival));
   const departure = new Date(arrival.getFullYear(), arrival.getMonth(), arrival.getDate() + nights);
   return escapeHtml(`${formatStepDate(arrival)} → ${formatStepDate(departure)}`);

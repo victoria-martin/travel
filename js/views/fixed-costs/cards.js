@@ -14,12 +14,7 @@ function fixedCostCard(cost) {
       <span>📝 ${fixedCostNotesEditable(cost)}</span>
     </div>
     <div class="card-actions">
-      <button class="btn-ghost btn btn-small" onclick="openModal('charge','${cost.id}')">
-        Modifier
-      </button>
-      <button class="btn-danger btn btn-small" onclick="deleteItem('fixedCosts','${cost.id}')">
-        Suppr.
-      </button>
+      ${cardEditButton('charge', cost.id)} ${cardDeleteButton('fixedCosts', cost.id)}
     </div>
   </div>`;
 }

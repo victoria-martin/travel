@@ -48,6 +48,13 @@ function moveStep(scenarioId, stepId, dir) {
   render();
 }
 
+function toggleStepHidden(scenarioId, stepId) {
+  const step = getStep(scenarioId, stepId);
+  step.hidden = !step.hidden;
+  saveNow();
+  render();
+}
+
 function deleteStep(scenarioId, stepId) {
   const s = getScenario(scenarioId);
   s.steps = s.steps.filter((st) => st.id !== stepId);

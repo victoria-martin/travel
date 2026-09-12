@@ -847,6 +847,7 @@ tr:hover td {
   gap: 10px;
   margin: 18px 0;
 }
+/* test */
 .step-card {
   display: flex;
   gap: 12px;
@@ -855,6 +856,7 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 12px 16px;
+  /* padding: 18px 12px; */
 }
 .step-order {
   width: 26px;
@@ -870,6 +872,33 @@ tr:hover td {
   flex-shrink: 0;
 }
 .step-order-unmapped {
+  box-sizing: border-box;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px dashed var(--ink-soft);
+}
+.step-hidden-check {
+  width: 15px;
+  height: 15px;
+  margin-top: 6px;
+  accent-color: var(--stone);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.step-card-hidden {
+  border-style: dashed;
+  background: transparent;
+}
+.step-card-hidden .step-body,
+.step-card-hidden .step-actions,
+.step-card-hidden .step-order {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.step-card-hidden .step-title {
+  text-decoration: line-through;
+}
+.step-order-hidden {
   box-sizing: border-box;
   background: transparent;
   color: var(--ink-soft);

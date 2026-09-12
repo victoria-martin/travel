@@ -1,5 +1,6 @@
 function saveStep(id) {
   const s = getScenario(modal.scenarioId);
+  const current = (id && s.steps.find((x) => x.id === id)) || emptyStep();
   const item = {
     id: id || uid(),
     city: document.getElementById('s-city').value.trim(),
@@ -8,8 +9,9 @@ function saveStep(id) {
     arrivalDate: document.getElementById('s-date').value.trim(),
     budget: document.getElementById('s-budget').value.trim(),
     notes: document.getElementById('s-notes').value.trim(),
-    cityId: id ? s.steps.find((x) => x.id === id).cityId || null : null,
-    accommodationId: id ? s.steps.find((x) => x.id === id).accommodationId || null : null,
+    cityId: current.cityId || null,
+    accommodationId: current.accommodationId || null,
+    hidden: !!current.hidden,
   };
   if (id) {
     const idx = s.steps.findIndex((x) => x.id === id);

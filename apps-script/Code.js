@@ -87,9 +87,10 @@ const COLLECTIONS = {
     'accommodationId',
     'budget',
     'notes',
+    'hidden',
   ],
 };
-const BOOL_FIELDS = ['favorite', 'isDefault'];
+const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden'];
 const NUM_FIELDS = ['nights', 'travelers'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'tags'];

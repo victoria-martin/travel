@@ -52,7 +52,7 @@ function isGuestPointsAccommodation(acc) {
 
 // Nuits et montant par monnaie, pour les additionner séparément.
 function accommodationTotals(scenario) {
-  return scenario.steps.reduce(
+  return visibleSteps(scenario).reduce(
     (totals, step) => {
       const cost = stepCost(step);
       const bucket = cost.guestPoints ? totals.guestPoints : totals.euros;

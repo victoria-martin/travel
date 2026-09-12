@@ -17,12 +17,7 @@ function carCard(car) {
       <span>📝 ${carNotesEditable(car)}</span>
     </div>
     <div class="card-actions">
-      <button class="btn-ghost btn btn-small" onclick="openModal('voiture','${car.id}')">
-        Modifier
-      </button>
-      <button class="btn-danger btn btn-small" onclick="deleteItem('cars','${car.id}')">
-        Suppr.
-      </button>
+      ${cardEditButton('voiture', car.id)} ${cardDeleteButton('cars', car.id)}
       ${car.link ? linkButton(car.link, 'Lien') : ''}
     </div>
   </div>`;

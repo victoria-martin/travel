@@ -1,7 +1,7 @@
 // Un lieu revisité tient sur une ligne : ses nuits s'additionnent et ses séjours se listent.
 function nightsByPlace(scenario) {
   const rows = new Map();
-  scenario.steps.forEach((st, idx) => {
+  visibleSteps(scenario).forEach((st, idx) => {
     const nights = parseInt(st.nights) || 0;
     if (nights === 0) return;
     const key = st.cityId
@@ -30,7 +30,7 @@ function nightsByPlace(scenario) {
 function scenarioRecap(scenario) {
   const rows = nightsByPlace(scenario);
   if (rows.length === 0) return '';
-  const last = scenario.steps.length - 1;
+  const last = visibleSteps(scenario).length - 1;
   return /* HTML */ `<div class="acc-recap">
     <div class="acc-recap-title">Hébergements</div>
     ${scenarioRecapStepRow(scenario, 0)} ${rows.map((r) => scenarioRecapRow(r)).join('')}
@@ -40,7 +40,7 @@ function scenarioRecap(scenario) {
 
 // Le récap trie les lieux par nuits : les deux bouts du trajet l'encadrent dans leur ordre.
 function scenarioRecapStepRow(scenario, idx) {
-  const step = scenario.steps[idx];
+  const step = visibleSteps(scenario)[idx];
   return /* HTML */ `<div class="acc-recap-row">
     <span>${escapeHtml(step.city || 'Sans nom')}</span>
     <span class="acc-recap-nights">${stepArrivalDay(scenario, idx)}</span>

@@ -1,4 +1,5 @@
 function scenarioRow(s) {
+  const count = visibleSteps(s).length;
   return /* HTML */ `<div class="scenario-row" onclick="openScenario('${s.id}')">
     <div style="display:flex; gap:10px; align-items:center;">
       <span onclick="event.stopPropagation();">
@@ -7,7 +8,7 @@ function scenarioRow(s) {
       <div>
         <h4>${escapeHtml(s.name)}</h4>
         <span
-          >${s.steps.length} étape${s.steps.length > 1 ? 's' : ''} —
+          >${count} étape${count > 1 ? 's' : ''} —
           ${nightsLabel(totalNights(s))}</span
         >
       </div>

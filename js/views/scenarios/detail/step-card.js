@@ -1,5 +1,9 @@
-// Une étape sans lieu géolocalisé est absente du tracé : la pastille le dit sur place.
+// Une étape sans rang ou sans lieu géolocalisé est absente du tracé : la pastille le dit sur place.
 function stepOrderBadge(step, idx) {
+  if (idx === null)
+    return /* HTML */ `<div class="step-order step-order-hidden" title="Masquée — hors des dates, des totaux et de la carte">
+      •
+    </div>`;
   if (coordsFor(step)) return `<div class="step-order">${stepLetter(idx)}</div>`;
   return /* HTML */ `<div class="step-order step-order-unmapped" title="Pas de lieu géolocalisé — absente de la carte">
     ${stepLetter(idx)}
@@ -8,8 +12,8 @@ function stepOrderBadge(step, idx) {
 
 function stepCard(scenario, step, idx) {
   return /* HTML */ `
-    <div class="step-card">
-      ${stepOrderBadge(step, idx)}
+    <div class="step-card${step.hidden ? ' step-card-hidden' : ''}">
+      ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, idx)}
       <div class="step-body">
         <div class="step-title">
           ${editableText(step.city, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
@@ -38,6 +42,7 @@ function stepCard(scenario, step, idx) {
         >
           ↓
         </button>
+        ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
         <button
           class="icon-btn"
           onclick="openModal('step','${scenario.id}','${step.id}')"
@@ -76,9 +81,19 @@ function stepBudgetSlot(scenario, step) {
   </span>`;
 }
 
+function stepHiddenCheckbox(scenario, step) {
+  return /* HTML */ `<input
+    type="checkbox"
+    class="step-hidden-check"
+    ${step.hidden ? 'checked' : ''}
+    onchange="toggleStepHidden('${scenario.id}','${step.id}')"
+    title="Masquer — hors des dates, des totaux et de la carte"
+  />`;
+}
+
 function stepDetailLine(scenario, step, idx) {
   const parts = [
-    stepDateRange(scenario, idx),
+    idx === null ? '' : stepDateRange(scenario, idx),
     step.arrivalDate ? `arrivée le ${escapeHtml(step.arrivalDate)}` : '',
     step.notes ? escapeHtml(step.notes) : '',
   ].filter(Boolean);

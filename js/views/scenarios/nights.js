@@ -7,5 +7,5 @@ function nightsLabel(n) {
 }
 
 function totalNights(scenario) {
-  return scenario.steps.reduce((sum, st) => sum + (parseInt(st.nights) || 0), 0);
+  return visibleSteps(scenario).reduce((sum, st) => sum + (parseInt(st.nights) || 0), 0);
 }
