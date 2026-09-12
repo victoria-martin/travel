@@ -60,6 +60,20 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — une sous-section se crée, se renomme et se glisse comme une section. Un `###` est
+  un groupe **dans** une page : deux pages peuvent porter le même nom, donc il ne se cherche jamais
+  que dans la sienne — `subsectionIndex` part de `sectionRange`, et `insertionLine` cesse de
+  balayer tout le fichier. Il n'a pas d'emoji, contrairement au `##` : l'icône appartient à la page,
+  le groupe n'a qu'un nom, d'où un quatrième mode de tiroir
+  ([subsection-drawer.js](tools/plan-board/subsection-drawer.js)) plutôt qu'un drapeau dans celui de
+  la section. Le formulaire d'ajout ([new-subsection.js](tools/plan-board/new-subsection.js)) est le
+  même aux trois endroits où le geste a du sens — pied de section, barre latérale, tiroir de la page
+  — et son état retient lequel des trois est ouvert, puisqu'il n'y en a qu'un à la fois. Le glisser
+  de la barre latérale porte désormais deux familles, il sort donc dans
+  [section-drag.js](tools/plan-board/section-drag.js) sur le modèle de `task-drag.js` ;
+  [sections-nav.js](tools/plan-board/sections-nav.js) ne garde que le rendu. Déposer un groupe sous
+  une autre page l'y déplace, tâches comprises — l'ordre du fichier EST l'ordre affiché.
+
 - **2026-09-12** — une tâche se tape aussi en fin de liste, dans la portée où elle atterrit :
   [new-task.js](tools/plan-board/new-task.js) ne demande que le titre — le reste (types, corps,
   statut) est le travail du tiroir — et le statut de départ, commun aux deux chemins, devient

@@ -22,6 +22,8 @@ function closeDrawer() {
   closeEmojiPicker();
   resetNewWord();
   sectionDraft = null;
+  subsectionDraft = null;
+  resetNewSubsection();
   if (location.hash) history.replaceState(null, '', location.pathname);
   drawerMode = null;
   openTaskId = null;
@@ -82,6 +84,7 @@ function draftFields() {
 const drawerModes = () => ({
   create: { render: renderCreateDrawer, canSave: canCreate, save: createDraft },
   section: { render: renderSectionDrawer, canSave: sectionDirty, save: saveSection },
+  subsection: { render: renderSubsectionDrawer, canSave: subsectionDirty, save: saveSubsection },
   task: { render: renderTaskDrawer, canSave: isDirty, save: saveDraft },
 });
 const currentDrawer = () => drawerModes()[drawerMode];

@@ -140,6 +140,27 @@ const server = http.createServer(async (req, res) => {
     return send(res, 200, tasksPayload());
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/subsections') {
+    const { section, name } = await readBody(req);
+    const created = plan.createSubsection(section, name);
+    if (!created) return send(res, 400, { error: 'nom vide, déjà pris, ou section inconnue' });
+    return send(res, 200, tasksPayload());
+  }
+
+  if (req.method === 'PUT' && url.pathname === '/api/subsections') {
+    const { section, name, title } = await readBody(req);
+    const updated = plan.updateSubsection(section, name, title);
+    if (!updated) return send(res, 400, { error: 'nom vide, déjà pris, ou groupe inconnu' });
+    return send(res, 200, tasksPayload());
+  }
+
+  if (req.method === 'PATCH' && url.pathname === '/api/subsections') {
+    const { section, name, toSection, before } = await readBody(req);
+    const moved = plan.moveSubsection(section, name, { toSection, before });
+    if (!moved) return send(res, 400, { error: 'déplacement refusé' });
+    return send(res, 200, tasksPayload());
+  }
+
   if (req.method === 'PATCH' && move) {
     const moved = plan.moveTask(move[1], await readBody(req));
     return moved ? send(res, 200, tasksPayload()) : send(res, 400, { error: 'déplacement refusé' });

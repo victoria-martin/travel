@@ -175,6 +175,7 @@ function groupBySection(tasks) {
 }
 
 const anchorOf = (name) => `s-${name.replace(/[^\w]+/g, '-')}`;
+const subAnchorOf = (section, name) => `${anchorOf(section)}-${anchorOf(name)}`;
 
 // The board groups the visible tasks by section name; the emoji is carried by the heading itself.
 const sectionOf = (name) => board.sections.find((entry) => entry.name === name) || { emoji: '' };
@@ -200,6 +201,12 @@ function taskButton(task) {
     ${task.session ? '<span class="task-session" title="Session liée">💬</span>' : ''}
   </button>`;
 }
+
+// A `###` title opens its own drawer, where it gets renamed — the section title does the same.
+const groupTitle = (section, name) => `<h3 class="group-title"
+  id="${subAnchorOf(section, name)}" data-act="subsection-edit"
+  data-section="${esc(section)}" data-value="${esc(name)}"
+  title="Renommer le groupe">${esc(name)}</h3>`;
 
 function renderBoard() {
   renderFilters();
@@ -228,11 +235,12 @@ function renderBoard() {
           ${section.groups
             .map(
               (group) =>
-                (group.name ? `<h3 class="group-title">${esc(group.name)}</h3>` : '') +
+                (group.name ? groupTitle(section.name, group.name) : '') +
                 group.tasks.map(taskButton).join('') +
                 (showArchived ? '' : newTaskForm(section.name, group.name)),
             )
             .join('')}
+          ${showArchived ? '' : newSubsectionForm(section.name, 'board')}
         </section>`,
       )
       .join('') || '<p class="empty">Aucune tâche ne correspond.</p>';
@@ -256,10 +264,14 @@ const CLICKS = {
   'emoji-pick': (target) => pickEmoji(target.dataset.value),
   'new-word': (target) => toggleNewWord(target.dataset.value),
   'new-section': toggleNewSection,
+  'new-subsection': (target) => toggleNewSubsection(target.dataset.section, target.dataset.where),
   'new-task': (target) => toggleNewTask(target.dataset.section, target.dataset.subsection),
   'task-add': addNewTask,
   'task-cancel': closeNewTask,
   'section-edit': (target) => openSectionDrawer(target.dataset.value),
+  'subsection-edit': (target) => openSubsectionDrawer(target.dataset.section, target.dataset.value),
+  'subsection-add': addNewSubsection,
+  'subsection-cancel': closeNewSubsection,
   'section-add': addNewSection,
   'section-cancel': closeNewSection,
   'word-tone': (target) => pickWordTone(target.dataset.value),
@@ -283,6 +295,8 @@ const INPUTS = {
   'section-name': (target) => editNewSection(target.value),
   'task-name': (target) => editNewTask(target.value),
   'section-title': (target) => editSectionDraft(target.value),
+  'subsection-name': (target) => editNewSubsection(target.value),
+  'subsection-title': (target) => editSubsectionDraft(target.value),
   'word-label': (target) => editNewWord('label', target.value),
   'word-hint': (target) => editNewWord('hint', target.value),
 };

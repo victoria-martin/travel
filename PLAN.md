@@ -21,7 +21,7 @@ Les statuts sont une liste figée, du premier jet à ce qui ne se fera pas — �
   scroll
 - **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
   et met mon focus dans l input pour le name
-- **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien  et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
+- **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
 - **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard

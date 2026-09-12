@@ -242,6 +242,49 @@ function moveSection(name, before) {
   return listSections();
 }
 
+// A group typed on its own, ahead of the first task that would have written it. A `###` carries
+// no emoji: it names a group inside a page, where the page itself is the one that gets an icon.
+function createSubsection(section, name) {
+  const parent = cleanHeading(section);
+  const title = cleanHeading(name);
+  const lines = readPlan();
+  if (!title || !parent || isSkipped(parent) || !sectionRange(lines, parent)) return null;
+  if (subsectionIndex(lines, parent, title) !== -1) return null;
+  ensureBlock(lines, { emoji: '', name: parent }, title);
+  writePlan(lines);
+  return listSections();
+}
+
+// The heading is the only place a subsection lives: renaming it carries its tasks along.
+function updateSubsection(section, name, title) {
+  const next = cleanHeading(title);
+  const lines = readPlan();
+  const at = subsectionIndex(lines, section, name);
+  if (at === -1 || !next) return null;
+  if (next !== name && subsectionIndex(lines, section, next) !== -1) return null;
+  lines[at] = `### ${next}`;
+  writePlan(lines);
+  return listSections();
+}
+
+// A subsection moves as one block — its `###` and every task under it. The drop names the group it
+// lands before, or the page it lands at the end of when there is none after it; dropping it under
+// another page moves it there, tasks included.
+function moveSubsection(section, name, { toSection, before = '' }) {
+  const lines = readPlan();
+  const target = cleanHeading(toSection) || section;
+  const range = subsectionRange(lines, section, name);
+  if (!range || isSkipped(target) || !sectionRange(lines, target)) return null;
+  if (target === section && (before === name || range.end === range.start)) return null;
+
+  const block = lines.splice(range.start, range.end - range.start);
+  const at = before ? subsectionIndex(lines, target, before) : sectionRange(lines, target).end;
+  if (at === -1) return null;
+  lines.splice(at, 0, '', ...block);
+  writePlan(lines);
+  return listSections();
+}
+
 function freshId(lines) {
   const taken = new Set(lines.join('\n').match(/<!--t:(\w+)-->/g) || []);
   let id;
@@ -256,6 +299,26 @@ function sectionRange(lines, section) {
   if (start === -1) return null;
   let end = start + 1;
   while (end < lines.length && !lines[end].startsWith('## ')) end += 1;
+  return { start, end };
+}
+
+// A `###` names a group inside one page: two pages may hold the same one, so it is only ever
+// looked up within its section.
+function subsectionIndex(lines, section, name) {
+  const range = sectionRange(lines, section);
+  if (!range || !name) return -1;
+  for (let at = range.start + 1; at < range.end; at += 1) {
+    if (lines[at].startsWith('### ') && lines[at].slice(4).trim() === name) return at;
+  }
+  return -1;
+}
+
+function subsectionRange(lines, section, name) {
+  const start = subsectionIndex(lines, section, name);
+  if (start === -1) return null;
+  const outer = sectionRange(lines, section);
+  let end = start + 1;
+  while (end < outer.end && !lines[end].startsWith('### ')) end += 1;
   return { start, end };
 }
 
@@ -288,7 +351,7 @@ function insertionLine(lines, tasks, section, subsection) {
   if (siblings.length) return siblings[siblings.length - 1].endLine + 1;
 
   const start = subsection
-    ? lines.findIndex((line) => line.trim() === `### ${subsection}`)
+    ? subsectionIndex(lines, section, subsection)
     : sectionIndex(lines, section);
   if (start === -1) return -1;
   let end = start + 1;
@@ -385,6 +448,9 @@ module.exports = {
   createSection,
   updateSection,
   moveSection,
+  createSubsection,
+  updateSubsection,
+  moveSubsection,
   moveTask,
   findTask,
   createTask,

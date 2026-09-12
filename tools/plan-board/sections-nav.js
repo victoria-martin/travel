@@ -1,83 +1,52 @@
-// The sidebar list of sections. Dragging one rewrites the order of the `##` blocks of PLAN.md.
-let draggedSection = '';
-
-async function moveSection(name, before) {
-  if (!name || name === before) return;
-  board = await api('/api/sections', {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, before }),
-  });
-  renderBoard();
+// The sidebar is the skeleton of PLAN.md: the `##` pages in the order of the file, each with the
+// `###` groups it holds. A section without any visible task shows up with an empty tally rather
+// than disappearing — nothing there can be filtered out, and it is where the first one gets typed.
+// The emoji is the handle that opens the section drawer; the rest of the row scrolls to the block.
+function sectionRow(section, tally) {
+  return `<div class="section-link" draggable="true" data-section="${esc(section.name)}">
+    <button class="section-emoji" data-act="section-edit" data-value="${esc(section.name)}"
+      title="Emoji et nom de la section">${section.emoji || '·'}</button>
+    <a href="#${anchorOf(section.name)}">
+      <span>${esc(section.name)}</span><span class="tally">${tally}</span>
+    </a>
+  </div>`;
 }
 
-// A drop lands before the hovered section, or after it past its middle — the anchor is then its
-// next neighbour, and nothing at all when it is the last one, the creation form closing the list.
-function dropAnchor(link, clientY) {
-  if (overTopHalf(link, clientY)) return link.dataset.section;
-  const next = link.nextElementSibling;
-  return (next && next.dataset.section) || '';
+function subsectionRow(section, name, tally) {
+  return `<div class="subsection-link" draggable="true" data-section="${esc(section.name)}"
+    data-subsection="${esc(name)}">
+    <button class="subsection-edit" data-act="subsection-edit" data-section="${esc(section.name)}"
+      data-value="${esc(name)}" title="Renommer le groupe">✎</button>
+    <a href="#${subAnchorOf(section.name, name)}">
+      <span>${esc(name)}</span><span class="tally">${tally}</span>
+    </a>
+  </div>`;
 }
 
-// Bound once on the node itself: #sections travels to the detached window with #app.
-function bindSectionDrag(container) {
-  if (container.dataset.drag) return;
-  container.dataset.drag = 'on';
-
-  container.addEventListener('dragstart', (event) => {
-    const link = event.target.closest('[data-section]');
-    if (!link) return;
-    draggedSection = link.dataset.section;
-    event.dataTransfer.effectAllowed = 'move';
-    link.classList.add('dragging');
-  });
-
-  container.addEventListener('dragover', (event) => {
-    if (!draggedSection) return;
-    event.preventDefault();
-    const link = event.target.closest('[data-section]');
-    if (link) markDrop(container, link, event.clientY);
-  });
-
-  container.addEventListener('drop', (event) => {
-    const link = event.target.closest('[data-section]');
-    if (!draggedSection || !link) return;
-    event.preventDefault();
-    const [name, before] = [draggedSection, dropAnchor(link, event.clientY)];
-    draggedSection = '';
-    markDrop(container, null);
-    moveSection(name, before);
-  });
-
-  container.addEventListener('dragend', () => {
-    draggedSection = '';
-    markDrop(container, null);
-  });
-}
-
-// The list is the order of the `##` headings of PLAN.md, a freshly created one included: a section
-// without any visible task shows up with an empty tally rather than disappearing. Its emoji is the
-// handle that opens the section drawer; the rest of the row scrolls to the block.
 function renderSections(visible) {
-  const tallyOf = (name) => {
+  const groupsOf = (name) => {
     const section = visible.find((entry) => entry.name === name);
-    if (!section) return 0;
-    return section.groups.reduce((sum, group) => sum + group.tasks.length, 0);
+    return section ? section.groups : [];
+  };
+  const tallyOf = (groups, name) => {
+    const group = groups.find((entry) => entry.name === name);
+    return group ? group.tasks.length : 0;
   };
 
   const container = ui.getElementById('sections');
   container.innerHTML =
     board.sections
-      .map(
-        (section) => `<div class="section-link" draggable="true"
-        data-section="${esc(section.name)}">
-        <button class="section-emoji" data-act="section-edit" data-value="${esc(section.name)}"
-          title="Emoji et nom de la section">${section.emoji || '·'}</button>
-        <a href="#${anchorOf(section.name)}">
-          <span>${esc(section.name)}</span><span class="tally">${tallyOf(section.name)}</span>
-        </a>
-      </div>`,
-      )
+      .map((section) => {
+        const groups = groupsOf(section.name);
+        const total = groups.reduce((sum, group) => sum + group.tasks.length, 0);
+        return `<div class="section-block">
+          ${sectionRow(section, total)}
+          ${section.subsections
+            .map((name) => subsectionRow(section, name, tallyOf(groups, name)))
+            .join('')}
+          ${showArchived ? '' : newSubsectionForm(section.name, 'nav')}
+        </div>`;
+      })
       .join('') + newSectionForm();
-  bindSectionDrag(container);
+  bindSidebarDrag(container);
 }

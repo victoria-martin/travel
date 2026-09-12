@@ -9,7 +9,9 @@ function openSectionDrawer(name) {
   drawerMode = 'section';
   closeEmojiPicker();
   resetNewWord();
+  resetNewSubsection();
   openTaskId = null;
+  subsectionDraft = null;
   draft = null;
   sectionError = '';
   sectionDraft = { was: section, emoji: section.emoji, name: section.name };
@@ -29,6 +31,18 @@ function editSectionDraft(value) {
   refreshDrawerFoot();
 }
 
+// The groups of the page, listed where the page is edited: each one opens its own drawer.
+function sectionGroups() {
+  const names = sectionOf(sectionDraft.was.name).subsections || [];
+  if (!names.length) return '<p class="hint">Aucun groupe pour l’instant.</p>';
+  return `<div class="group-list">${names
+    .map(
+      (name) => `<button class="group-row" data-act="subsection-edit"
+        data-section="${esc(sectionDraft.was.name)}" data-value="${esc(name)}">${esc(name)}</button>`,
+    )
+    .join('')}</div>`;
+}
+
 function renderSectionDrawer() {
   paintDrawer({
     where: 'Section',
@@ -45,6 +59,12 @@ function renderSectionDrawer() {
         </div>
         ${emojiPanel('section')}
         <p class="hint">L’emoji ouvre le titre dans PLAN.md ; il ne fait pas partie du nom.</p>
+      </div>
+
+      <div class="field">
+        <label>Groupes <span class="field-note">les <code>###</code> de la page</span></label>
+        ${sectionGroups()}
+        ${newSubsectionForm(sectionDraft.was.name, 'drawer')}
       </div>
       ${sectionError ? `<p class="hint hint-warn">${esc(sectionError)}</p>` : ''}`,
     foot: `

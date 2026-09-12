@@ -271,7 +271,45 @@ code,
   opacity: 0.55;
 }
 #sections .ghost-add {
-  margin: 6px 4px 0;
+  margin: 2px 4px 0;
+}
+.section-block + .section-block {
+  margin-top: 4px;
+}
+/* A group hangs under its page, set in from it and quieter. */
+.subsection-link {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: background 0.15s;
+}
+.subsection-link:hover {
+  background: var(--paper-raised);
+}
+.subsection-edit {
+  padding: 4px 2px 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.subsection-link:hover .subsection-edit,
+.subsection-edit:focus-visible {
+  outline: none;
+  opacity: 0.8;
+}
+.subsection-link:hover a {
+  padding-left: 8px;
+  color: var(--ink);
+}
+.new-subsection {
+  margin: 4px 0 8px;
 }
 .new-section {
   margin-top: 8px;
@@ -280,7 +318,8 @@ code,
   border-radius: var(--radius);
   background: var(--paper-raised);
 }
-.section-input {
+.section-input,
+.subsection-input {
   width: 100%;
   min-width: 0;
   padding: 7px 9px;
@@ -289,7 +328,8 @@ code,
   background: var(--paper);
   font-weight: 500;
 }
-.section-input:focus {
+.section-input:focus,
+.subsection-input:focus {
   outline: none;
   border-color: var(--accent);
 }
@@ -313,6 +353,7 @@ code,
 }
 .group-title {
   margin: 18px 0 8px;
+  cursor: pointer;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.09em;
@@ -338,6 +379,31 @@ code,
 .new-task-input:focus {
   outline: none;
   border-color: var(--accent);
+}
+/* The groups of a page, listed in its drawer: one row each, opening its own drawer. */
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.group-row {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.group-row:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .task {
   display: flex;
@@ -820,6 +886,8 @@ code,
 }
 .section:hover > .ghost-add,
 #sections:hover > .ghost-add,
+.section-block:hover > .ghost-add,
+.field > .ghost-add,
 .ghost-add:focus-visible {
   outline: none;
   opacity: 0.6;
