@@ -19,13 +19,7 @@ function stepCard(scenario, step, idx) {
         </div>
         ${stepDetailLine(scenario, step, idx)}
         <div class="step-acc">
-          <select onchange="setStepPlace('${scenario.id}','${step.id}', this.value)">
-            <option value="">— Aucun lieu choisi —</option>
-            ${stepPlaceOptions(step)}
-          </select>
-          <select onchange="setStepNights('${scenario.id}','${step.id}', this.value)">
-            ${NIGHTS_OPTIONS.map((n) => `<option value="${n}" ${(parseInt(step.nights) || 0) === n ? 'selected' : ''}>${nightsLabel(n)}</option>`).join('')}
-          </select>
+          ${stepPlaceDropdown(scenario, step)} ${stepNightsDropdown(scenario, step)}
           ${stepBudgetSlot(scenario, step)}
         </div>
       </div>

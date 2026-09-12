@@ -57,11 +57,11 @@ function accommodationNameCell(a) {
 }
 
 function accommodationTypeCell(a) {
-  return accommodationTypeSelect(a);
+  return accommodationTypeDropdown(a);
 }
 
 function accommodationStatusCell(a) {
-  return accommodationStatusSelect(a);
+  return accommodationStatusTag(a);
 }
 
 function accommodationCityCell(a) {
@@ -81,8 +81,7 @@ function accommodationAddressCell(a) {
 }
 
 function accommodationPriceCell(a) {
-  if (!a.price) return '—';
-  return `${escapeHtml(a.price)} ${accommodationPriceUnit(a)}`;
+  return priceEditable(a);
 }
 
 function accommodationDatesCell(a) {

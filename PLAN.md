@@ -28,16 +28,57 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   `openPasteImport()` reste commentée dans
   [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions ouvertes
   sur le flux d'import de fichier. Garder, généraliser ou supprimer.
+- **Scraper Booking** — ⏳ à faire : sur le modèle de l'import HomeExchange
+  ([homeexchange.js](js/homeexchange.js)), récupérer nom, prix et adresse depuis un lien Booking.
+  Piste à tester : viser les blocs par leur `data-testid` plutôt que par leur structure HTML.
+- **Ni statut ni type par défaut** — ⏳ à faire : un hébergement créé sort aujourd'hui avec
+  `DEFAULT_ACCOMMODATION_STATUS` ([storage.js:45](js/storage.js#L45)) ; le laisser vide. Vérifier
+  dans la foulée que les nouvelles entrées apparaissent bien **en fin** de liste.
 - **Dropdown custom pour les selects inline** — ⏳ à faire : `accommodationTypeSelect` et
   `accommodationStatusSelect` ([inline-selects.js](js/views/accommodations/inline-selects.js)) sont
   des `<select>` natifs, dont les `<option>` n'affichent que du texte — impossible d'espacer
   l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
   leurs `onchange`.
 
+## Charges fixes
+
+- **Type de charge** — ⏳ à faire : un champ `type` à plusieurs valeurs, `budget total` (une enveloppe qu'on se donne) et `cost` (une dépense certaine), sur le modèle de
+  [accommodation-types.js](js/accommodation-types.js).
+- **Fourchette de prix** — ⏳ à faire : remplacer le montant unique par `amountMin` / `amountMax`.
+  Reste à définir ce que vaut la charge dans un total quand la fourchette est incomplète — un seul
+  des deux saisi, ou aucun.
+
 ## Attractions
 
-- **Créer la page** — ⏳ à faire : pas encore spécifiée (colonnes, place dans la barre latérale,
-  rattachement à une étape ?).
+- **Créer la page** — ⏳ à faire : place dans la barre latérale, colonnes, rattachement à une étape.
+- **Modèle** — ⏳ à faire : nom, description, type, tags, favori, lien, statut.
+- **`attractionTags`** — ⏳ à faire : libres et créables à la saisie, exactement comme les tags
+  d'hébergement — la liste des options est l'union de ce qui est déjà utilisé
+  ([tags.js:5](js/views/tags.js#L5)) — mais amorcée par une liste par défaut. Proposition :
+  paysage, village, monument, musée, église, jardin, point de vue, plage, marché, thermes,
+  randonnée, artisanat.
+- **Une attraction peut-elle être une ville ?** — ⏳ à faire : Montefioralle est à la fois un village
+  à visiter et un lieu d'étape. Trancher entre un tag `village` sur l'attraction, qui duplique la
+  ville, et une attraction qui **référence** une ville existante par son id, comme une étape de
+  scénario référence un hébergement.
+
+## Restaurants
+
+- **Restaurant ou attraction taguée ?** — ⏳ à faire : à trancher **avant** tout le reste de cette
+  section, parce que tout en découle. Un restaurant a des champs qu'une attraction n'a pas
+  (fourchette de prix, horaires, téléphone) — c'est l'argument pour une entité à part.
+- **Créer l'entité** — ⏳ à faire : une collection `restaurants` dans `COLLECTIONS`
+  ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()` ([storage.js:17](js/storage.js#L17)),
+  avec son `travelId`.
+- **Créer la vue** — ⏳ à faire : `js/views/restaurants/`, en écrivant ses fichiers en clair comme
+  Villes et Hébergements.
+- **Modèle** — ⏳ à faire : nom, description, type, `restaurantTags`, favori, lien, statut,
+  fourchette de prix, horaires, téléphone.
+- **`restaurantTags`** — ⏳ à faire : même design que les `attractionTags` ci-dessus — libres,
+  créables à la saisie, amorcés par une liste par défaut. Proposition : trattoria, pizzeria,
+  gastronomique, terrasse, vue, cave / dégustation, fromager, glacier, street food, végétarien.
+- **Scraper un lien Google Maps** — ⏳ à faire : depuis le formulaire, remplir nom, adresse,
+  coordonnées et horaires à partir d'une URL `maps.app.goo.gl`.
 
 ## Browse
 
@@ -51,6 +92,11 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   préciser : items libres ou modèle par défaut, rattachement à un scénario ou à une étape, place
   dans la barre latérale.
 
+## Villes
+
+- **Rattacher les villes saisies au modèle existant** — ⏳ à faire : les villes ajoutées depuis les
+  autres écrans doivent pointer sur une entrée de `cities`, pas créer un doublon de texte.
+
 ## Scénarios
 
 - **Charges fixes** — ⏳ à faire
@@ -61,6 +107,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   - Un select pour rattacher une charge déjà existante.
 - **Total général** — ⏳ à faire : hébergements + voiture + charges, en tête du récap, avec le
   détail par bloc.
+- **Prendre en compte le budget ds les totaux** !
 - **Totaliser par étape, pas par hébergement** — ⏳ à faire : le récap somme aujourd'hui prix/nuit ×
   nuits par lieu, donc un budget saisi sur une étape n'entre pas dans le total.
 - **Coût de la voiture × nuits** — ⏳ à trancher : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
@@ -91,6 +138,23 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## Transverse
 
+- **Renommer `notes` en `userNotes`** — ⏳ à faire : sur toutes les entités, Sheet compris — donc
+  une colonne renommée dans chaque liste de `COLLECTIONS` ([Code.js:8](apps-script/Code.js#L8)) et
+  une migration dans `migrateData()` ([storage.js:39](js/storage.js#L39)).
+- **Plusieurs versions du script `travel`** — ⏳ à faire : comprendre d'où viennent les déploiements
+  multiples de l'Apps Script et n'en garder qu'un. Le dépôt ne porte qu'un
+  [Code.js](apps-script/Code.js) : les versions vivent côté Google, dans l'historique de
+  déploiement, pas ici.
+- **Vérifier que le backend est documenté** — ⏳ à faire : l'en-tête de
+  [Code.js](apps-script/Code.js#L1-L6) donne la procédure de déploiement ; confirmer qu'elle est
+  à jour et reprise dans [docs/protocole-sync-sheet.md](docs/protocole-sync-sheet.md).
+- **Archiver le Sheet dans une base de référence** — ⏳ à faire : un bouton qui pousse à la demande
+  tout le contenu du Sheet dans une base plus large, commune à tous les voyages. C'est elle qui
+  alimentera les suggestions.
+- **Mode suggestion** — ⏳ à faire : à partir de cette base, un panneau qui propose hébergements,
+  voitures, restaurants et attractions en lien avec le voyage en cours. Reste à décider s'il est
+  toujours affiché ou repliable comme la carte d'un scénario. Remplace la page **Browse**, à
+  renommer.
 - **Nommer les vues en anglais** — ⏳ à faire - pas grave : deux espaces de noms cohabitent, les vues en
   français (`hebergements`, `voitures`, `charges`, `villes` — clés de `view`, `listViewMode`,
   `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`, `cars`, `fixedCosts`,
@@ -111,3 +175,33 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   [cars/cards.js](js/views/cars/cards.js#L19) et [fixed-costs/cards.js](js/views/fixed-costs/cards.js#L17).
   Même besoin que [cells/actions/](js/views/cells/actions/), mais en boutons texte : une brique à
   part, pas un paramètre de plus sur `editButton` / `deleteButton`.
+
+## Données à saisir
+
+Du contenu, pas des fonctionnalités : à entrer dans l'app dès que l'écran correspondant existe.
+
+### Restaurants
+
+- **Il Vescovino** — Greve in Chianti, Via Ciampolo da Panzano, 9 · 338 36 48 446 ·
+  [ilvescovinoristorante.com](https://ilvescovinoristorante.com) · mar.-sam. 12h-15h et 19h-22h,
+  dim. 12h-15h · primi 12-20 €, secondi 18-20 €. Restaurant familial tenu par une famille
+  italo-brésilienne installée à Panzano. Poulet spécial et **tiramisù — le meilleur dessert**.
+- **Apicorno Formaggi** — Tavarnelle Val di Pesa, Strada di Sicelle, 2b Valle · 338 119 52 75 ·
+  martabuon@gmail.com · [apicorno.com/formaggi](https://www.apicorno.com/formaggi) · avr.-oct.,
+  tous les jours 9h-13h. Fromager : robiola de chèvre, cenerico au charbon de bois, stracchinato,
+  « caprembert » au lait de chèvre cru. Dégustation à organiser par email ou téléphone.
+- <https://maps.app.goo.gl/BKQXqqXEKW8K1GjS7?g_st=ic> — à identifier.
+
+### Attractions
+
+- **Torre del Palacio Guinigi** — noté « 114 » dans la source, sens à retrouver.
+- **Marina di Pisa** — plage.
+- **Pieve Aldina** — noté dans la partie Chianti, à identifier.
+
+### Villes
+
+- **Montefioralle** — Greve in Chianti, Toscane. À 2 km à l'ouest de Greve, 20 min à pied de
+  l'office de tourisme. Village perché parmi les plus beaux d'Italie, préservé dans son état du
+  16ᵉ s., une ruelle unique enroulée autour de la colline jusqu'à une petite église. Chercher la
+  façade marquée d'un V enserrant une abeille : la maison natale d'Amerigo Vespucci (1454-1512).
+  À rattacher à Greve in Chianti ou au Chianti — à voir.

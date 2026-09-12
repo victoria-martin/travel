@@ -106,22 +106,22 @@ pastilles, avant même l'enregistrement.
 
 **Hébergement** — la fiche de référence ; c'est elle qui porte le prix.
 
-| Champ                     | Détail                                                      |
-| ------------------------- | ----------------------------------------------------------- |
-| type                      | Home exchange · Hôtel · Maison · Camping                    |
-| statut                    | les neuf statuts du workflow                                |
-| nom                       |                                                             |
-| adresse                   | saisie libre, c'est elle qu'on géocode                      |
-| adresse géocodée          | écrite par « Localiser »                                    |
-| ville · province · région | proposées par le géocodage, modifiables à la main           |
-| coordonnées               | latitude, longitude                                         |
-| prix/nuit                 | texte libre ; en GuestPoints si le type est Home exchange   |
-| dates                     | texte libre (« 12–14 juin »)                                |
-| lien                      | l'annonce ; un lien HomeExchange collé pré-remplit la fiche |
-| lien de réservation       | Booking                                                     |
-| notes                     | éditables depuis la ligne                                   |
-| tags                      | liste libre, sans administration                            |
-| favori                    | ⭐, et un critère de tri                                    |
+| Champ                     | Détail                                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| type                      | Home exchange · Hôtel · Maison · Camping                                                        |
+| statut                    | les neuf statuts du workflow                                                                    |
+| nom                       |                                                                                                 |
+| adresse                   | saisie libre, c'est elle qu'on géocode                                                          |
+| adresse géocodée          | écrite par « Localiser »                                                                        |
+| ville · province · région | proposées par le géocodage, modifiables à la main                                               |
+| coordonnées               | latitude, longitude                                                                             |
+| prix/nuit                 | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
+| dates                     | texte libre (« 12–14 juin »)                                                                    |
+| lien                      | l'annonce ; un lien HomeExchange collé pré-remplit la fiche                                     |
+| lien de réservation       | Booking                                                                                         |
+| notes                     | éditables depuis la ligne                                                                       |
+| tags                      | liste libre, sans administration                                                                |
+| favori                    | ⭐, et un critère de tri                                                                        |
 
 La vue principale, en **tableau ou en cartes**.
 
@@ -135,8 +135,8 @@ La vue principale, en **tableau ou en cartes**.
   puis statut. Les favoris sont un critère comme un autre.
 - **Filtres** : ⭐ favoris uniquement, et par tag — un hébergement sort dès qu'il porte **un** des
   tags cochés. Le bloc de tags est dans le même panneau que le tri, donc absent en mode cartes.
-- **Édition en ligne** : type, statut et notes se changent directement dans la ligne, sans ouvrir
-  la fiche.
+- **Édition en ligne** : type, statut, prix et notes se changent directement dans la ligne comme
+  dans la carte, sans ouvrir la fiche. Le prix garde sa monnaie (€ ou GP) affichée à côté du champ.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
   saisis — un tag existe dès qu'il est tapé quelque part, et disparaît avec son dernier porteur.
   Un tag coché puis disparu est retiré du filtre tout seul.

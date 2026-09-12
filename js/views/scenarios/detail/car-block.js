@@ -12,15 +12,7 @@ function scenarioCarBlock(scenario) {
         ? /* HTML */ `<div class="scenario-extra-empty">
             Aucune voiture enregistrée — ajoute-la d'abord dans la liste Voitures.
           </div>`
-        : /* HTML */ `<select onchange="setScenarioCar('${scenario.id}', this.value)">
-            <option value="">— Aucune voiture —</option>
-            ${ofCurrentTravel(state.cars)
-              .map(
-                (c) =>
-                  `<option value="${c.id}" ${scenario.carId === c.id ? 'selected' : ''}>${escapeHtml(carLabel(c))}${c.price ? ` · ${escapeHtml(c.price)} €` : ''}</option>`,
-              )
-              .join('')}
-          </select>`
+        : scenarioCarDropdown(scenario)
     }
   </div>`;
 }

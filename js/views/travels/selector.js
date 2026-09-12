@@ -24,7 +24,9 @@ function travelSelector() {
         <span class="travel-name">${escapeHtml(travel ? travel.name : 'Aucun voyage')}</span>
         <span class="travel-sub">${escapeHtml(travelSubtitle(travel))}</span>
       </span>
-      <span class="travel-chevron">⌄</span>
+      <svg class="travel-chevron" viewBox="0 0 10 6" aria-hidden="true">
+        <path d="M1 1l4 4 4-4" />
+      </svg>
     </summary>
     ${travelMenu(travel)}
   </details>`;

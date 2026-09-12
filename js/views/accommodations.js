@@ -86,6 +86,13 @@ function setAccommodationNotes(id, notes) {
   syncEditable(`accommodation:${id}:notes`, value);
 }
 
+function setAccommodationPrice(id, price) {
+  const value = price.trim();
+  getAccommodation(id).price = value;
+  saveNow();
+  syncEditable(`accommodation:${id}:price`, value);
+}
+
 function setAccommodationStatus(id, status) {
   getAccommodation(id).status = status;
   saveNow();
