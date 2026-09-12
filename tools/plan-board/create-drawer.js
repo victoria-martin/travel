@@ -8,6 +8,8 @@ const canCreate = () => Boolean(draft.title.trim() && draft.scope.trim());
 
 function openCreateDrawer() {
   drawerMode = 'create';
+  closeEmojiPicker();
+  resetNewWord();
   openTaskId = null;
   if (location.hash !== '#new') history.replaceState(null, '', '#new');
   draft = {

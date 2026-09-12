@@ -159,7 +159,8 @@ const plainText = (markdown) =>
     .trim();
 
 function taskButton(task) {
-  return `<button class="task" data-act="open" data-id="${task.id}"
+  return `<button class="task" data-act="open" data-id="${task.id}" draggable="true"
+    data-section="${esc(task.section)}" data-subsection="${esc(task.subsection)}"
     aria-current="${task.id === openTaskId}">
     ${statusPill(task.status)}
     <span class="task-types">${task.types.map(typeDot).join('')}</span>
@@ -179,14 +180,7 @@ function renderBoard() {
     detached && !detached.closed ? '⇤ Rattacher' : '⧉ Détacher';
   ui.getElementById('theme').textContent = theme === 'dev' ? '☀︎' : '☾';
 
-  ui.getElementById('sections').innerHTML = sections
-    .map((section) => {
-      const total = section.groups.reduce((sum, group) => sum + group.tasks.length, 0);
-      return `<a href="#${anchorOf(section.name)}">
-        <span>${esc(section.name)}</span><span class="tally">${total}</span>
-      </a>`;
-    })
-    .join('');
+  renderSections(sections);
 
   const boardEl = ui.getElementById('board');
   boardEl.className = firstRender ? 'enter' : '';
@@ -206,6 +200,7 @@ function renderBoard() {
         </section>`,
       )
       .join('') || '<p class="empty">Aucune tâche ne correspond.</p>';
+  bindTaskDrag(boardEl);
 }
 
 // One listener set, on the node that travels to the detached window.
@@ -221,6 +216,12 @@ const CLICKS = {
   'pick-type': (target) => toggleDraftType(target.dataset.value),
   create: openCreateDrawer,
   'scope-pick': backToScopeList,
+  emoji: (target) => toggleEmojiPicker(target.dataset.value),
+  'emoji-pick': (target) => pickEmoji(target.dataset.value),
+  'new-word': (target) => toggleNewWord(target.dataset.value),
+  'word-tone': (target) => pickWordTone(target.dataset.value),
+  'word-add': addNewWord,
+  'word-cancel': closeNewWord,
   theme: toggleTheme,
   save: () => (drawerMode === 'create' ? createDraft() : saveDraft()),
   launch: launchSession,
@@ -235,6 +236,9 @@ const INPUTS = {
   prompt: (target) => setPrompt(target.value),
   scope: (target) => pickScope(target.value),
   'scope-name': (target) => editDraft('scope', target.value),
+  'emoji-search': (target) => setEmojiSearch(target.value),
+  'word-label': (target) => editNewWord('label', target.value),
+  'word-hint': (target) => editNewWord('hint', target.value),
 };
 
 function bindApp() {

@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const plan = require('./plan.js');
+const vocabulary = require('./vocabulary.js');
 const sessions = require('./sessions.js');
 const iterm = require('./iterm.js');
 
@@ -77,6 +78,7 @@ const server = http.createServer(async (req, res) => {
   const session = url.pathname.match(/^\/api\/tasks\/(\w+)\/session$/);
   const rename = url.pathname.match(/^\/api\/tasks\/(\w+)$/);
   const archive = url.pathname.match(/^\/api\/tasks\/(\w+)\/archive$/);
+  const move = url.pathname.match(/^\/api\/tasks\/(\w+)\/move$/);
 
   if (req.method === 'GET' && url.pathname === '/api/tasks') return send(res, 200, tasksPayload());
 
@@ -84,6 +86,23 @@ const server = http.createServer(async (req, res) => {
     const created = plan.createTask(await readBody(req));
     if (!created) return send(res, 400, { error: 'section ou titre invalide' });
     return send(res, 200, { ...tasksPayload(), created: created.id });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/vocabulary') {
+    const { error, word } = vocabulary.addWord(await readBody(req));
+    return error ? send(res, 400, { error }) : send(res, 200, { word });
+  }
+
+  if (req.method === 'PATCH' && url.pathname === '/api/sections') {
+    const { name, before } = await readBody(req);
+    const moved = plan.moveSection(name, before);
+    if (!moved) return send(res, 400, { error: 'section inconnue' });
+    return send(res, 200, tasksPayload());
+  }
+
+  if (req.method === 'PATCH' && move) {
+    const moved = plan.moveTask(move[1], await readBody(req));
+    return moved ? send(res, 200, tasksPayload()) : send(res, 400, { error: 'déplacement refusé' });
   }
 
   if (req.method === 'GET' && session) return sessionPreview(res, session[1]);

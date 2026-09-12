@@ -7,8 +7,12 @@ const { PLAN_TYPES, planType } = require('./types.js');
 
 const PLAN_PATH = path.join(__dirname, '..', '..', 'PLAN.md');
 
-// Bullets under this heading are content to type into the app, not dev tasks.
-const SKIPPED_SECTION = '## Données à saisir';
+// Bullets under this heading are content to type into the app, not dev tasks. Every heading may
+// open on an emoji, which is decoration and never part of the name.
+const SKIPPED_SECTION = 'Données à saisir';
+const isSkipped = (name) => [name, name.replace(/^\S+\s+/, '')].includes(SKIPPED_SECTION);
+const skippedIndex = (lines) =>
+  lines.findIndex((line) => line.startsWith('## ') && isSkipped(line.slice(3).trim()));
 
 const TASK_RE = /^- \*\*(.+?)\*\* <!--t:(\w+)-->(.*)$/;
 const WIDTH = 100;
@@ -72,8 +76,8 @@ function parseTasks(lines) {
   lines.forEach((line, index) => {
     if (line.startsWith('## ')) {
       close(index - 1);
-      skipping = line.trim() === SKIPPED_SECTION;
       section = line.slice(3).trim();
+      skipping = isSkipped(section);
       subsection = '';
       return;
     }
@@ -177,8 +181,9 @@ function listSections() {
   let skipping = false;
   readPlan().forEach((line) => {
     if (line.startsWith('## ')) {
-      skipping = line.trim() === SKIPPED_SECTION;
-      if (!skipping) sections.push({ name: line.slice(3).trim(), subsections: [] });
+      const name = line.slice(3).trim();
+      skipping = isSkipped(name);
+      if (!skipping) sections.push({ name, subsections: [] });
       return;
     }
     if (!skipping && line.startsWith('### ') && sections.length) {
@@ -186,6 +191,21 @@ function listSections() {
     }
   });
   return sections;
+}
+
+// A section moves as one block — its heading and everything under it. « Données à saisir » stays
+// last, so a drop past the last section lands just before it.
+function moveSection(name, before) {
+  const lines = readPlan();
+  const range = sectionRange(lines, name);
+  if (!range || isSkipped(name)) return null;
+
+  const block = lines.splice(range.start, range.end - range.start);
+  let at = before ? lines.findIndex((line) => line.trim() === `## ${before}`) : skippedIndex(lines);
+  if (at === -1) at = lines.length;
+  lines.splice(at, 0, ...block);
+  writePlan(lines);
+  return listSections();
 }
 
 function freshId(lines) {
@@ -209,7 +229,7 @@ function sectionRange(lines, section) {
 // « Données à saisir », which stays last because it holds content and not work.
 function ensureBlock(lines, section, subsection) {
   if (!sectionRange(lines, section)) {
-    let at = lines.findIndex((line) => line.trim() === SKIPPED_SECTION);
+    let at = skippedIndex(lines);
     if (at === -1) at = lines.length;
     while (at > 0 && lines[at - 1].trim() === '') at -= 1;
     lines.splice(at, 0, '', `## ${section}`);
@@ -249,7 +269,7 @@ const cleanHeading = (name) => (name || '').replace(/^#+\s*/, '').trim();
 function createTask({ section, subsection = '', title, types = [], status, body = '' }) {
   const block = { section: cleanHeading(section), subsection: cleanHeading(subsection) };
   if (!title || !title.trim() || !planStatus(status) || !block.section) return null;
-  if (block.section === cleanHeading(SKIPPED_SECTION)) return null;
+  if (isSkipped(block.section)) return null;
 
   const lines = readPlan();
   ensureBlock(lines, block.section, block.subsection);
@@ -271,6 +291,29 @@ function createTask({ section, subsection = '', title, types = [], status, body 
   return task;
 }
 const findTask = (id) => listTasks().find((task) => task.id === id);
+
+// A task moves as one block — its bullet and its wrapped continuation lines. The drop names the
+// task it lands before, or the scope it lands at the end of when there is none after it.
+function moveTask(id, { before, section, subsection = '' }) {
+  const lines = readPlan();
+  const task = parseTasks(lines).find((entry) => entry.id === id);
+  const scope = { section: cleanHeading(section), subsection: cleanHeading(subsection) };
+  if (!task || id === before || !scope.section || isSkipped(scope.section)) return null;
+
+  const block = lines.splice(task.startLine, task.endLine - task.startLine + 1);
+  const rest = parseTasks(lines);
+  const anchor = before && rest.find((entry) => entry.id === before);
+  const at = anchor
+    ? anchor.startLine
+    : insertionLine(lines, rest, scope.section, scope.subsection);
+  if (at === -1) return null;
+
+  // A heading is always followed by a blank line before its first bullet.
+  const spacer = (lines[at - 1] || '').startsWith('#') ? [''] : [];
+  lines.splice(at, 0, ...spacer, ...block);
+  writePlan(lines);
+  return listTasks().find((entry) => entry.id === id);
+}
 
 function updateTask(id, changes) {
   const lines = readPlan();
@@ -304,6 +347,8 @@ function taskMarkdown(task) {
 module.exports = {
   listTasks,
   listSections,
+  moveSection,
+  moveTask,
   findTask,
   createTask,
   updateTask,

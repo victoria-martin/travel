@@ -52,6 +52,45 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-12** — un type ou un statut qui manque se tape dans le panneau, et
+  [vocabulary.js](tools/plan-board/vocabulary.js) l'écrit dans
+  [types.js](tools/plan-board/types.js) / [statuses.js](tools/plan-board/statuses.js) : les listes
+  restent la source de vérité en code, versionnées, et le mot rejoint aussi le tableau vivant parce
+  que `plan.js` en tient une référence déstructurée — un `require` rejoué ne changerait rien à
+  `planType`. Le format de PLAN.md impose deux refus côté serveur : les deux vocabulaires doivent
+  rester disjoints, `splitRest` reconnaissant un morceau de ligne en l'interrogeant dans l'une puis
+  l'autre liste, et un libellé ne porte pas la syntaxe de la puce (`·`, `:`, parenthèses). Côté
+  écran, [new-vocabulary.js](tools/plan-board/new-vocabulary.js) tient le formulaire et
+  [emoji-picker.js](tools/plan-board/emoji-picker.js) prend une cible — `title` insère au caret,
+  `vocabulaire` remplace la pastille. Le bloc Type / Statut venant de `draftFields`, le `＋`
+  s'affiche dans les deux panneaux : le réserver à la création demanderait de passer un mode au
+  bloc, soit la prop de configuration qu'on évite.
+
+- **2026-09-12** — une tâche se glisse comme une section : [task-drag.js](tools/plan-board/task-drag.js)
+  déplace son bloc entier dans PLAN.md — puce et lignes de continuation — et un dépôt sous un autre
+  titre la change de section, puisque l'ordre du fichier EST l'ordre affiché. Le dépôt nomme la
+  tâche devant laquelle il atterrit, ou la portée dont il vise la fin quand il n'y a plus rien
+  après. Le marquage de la ligne de dépôt, commun aux deux, sort dans
+  [drag.js](tools/plan-board/drag.js) ; côté CSS, `.dragging` / `.drop-before` / `.drop-after` ne
+  sont plus rattachés à la barre latérale et se posent après les cartes, dont ils remplacent
+  l'ombre le temps du geste.
+
+- **2026-09-12** — un titre de tâche peut porter un emoji :
+  [emojis.js](tools/plan-board/emojis.js) est le vocabulaire, liste figée sur le modèle de
+  [statuses.js](tools/plan-board/statuses.js), avec les mots-clés français qui servent à le
+  chercher ; [emoji-picker.js](tools/plan-board/emoji-picker.js) est le panneau, qui écrit dans le
+  champ à la position du curseur. Le panneau vit sous le champ Titre de `draftFields`, donc les deux
+  modes du tiroir — ajouter et éditer — l'ont sans rien en savoir. La position du curseur se lit à
+  l'ouverture du panneau : au clic sur une vignette, le champ a déjà perdu le focus.
+
+- **2026-09-12** — la barre latérale du board sort de `board.js` dans
+  [sections-nav.js](tools/plan-board/sections-nav.js) : elle n'est plus une liste d'ancres mais un
+  ordre qu'on manipule, la section s'attrape et se dépose. Le drop écrit PLAN.md — `moveSection`
+  déplace le bloc `##` entier, tâches comprises — parce que l'ordre du fichier EST l'ordre affiché ;
+  rien ne le mémorise à côté. Un titre de section porte un emoji, qui est de la décoration et jamais
+  du nom : la reconnaissance de « Données à saisir », seule section exclue du board et tenue en
+  dernière place, se fait donc sur le nom sans son premier mot.
+
 - **2026-09-12** — `js/views/link-button.js` devient
   [external-link.js](js/views/external-link.js) : la responsabilité est d'ouvrir une URL dans un
   onglet, et elle a deux formes — `externalLink` pour une cellule ou un popup, `linkButton` pour une

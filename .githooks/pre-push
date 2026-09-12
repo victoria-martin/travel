@@ -31,6 +31,23 @@ if [ "$SKIP_DOCS_CHECK" != 1 ] &&
   exit 1
 fi
 
+# the plan board loads its node modules once: a change to them only takes effect after a restart
+if touches '^tools/plan-board/(server|plan|sessions|iterm|vocabulary)\.js'; then
+  board_pid=$(pgrep -f 'node .*tools/plan-board/server\.js' | head -1)
+  if [ -n "$board_pid" ] && [ -r /dev/tty ]; then
+    printf 'pre-push: the plan board server changed, the one running (pid %s) is stale.\n' "$board_pid" >&2
+    printf '  kill it and run pnpm plan again? [y/N] ' >&2
+    read -r answer < /dev/tty
+    case "$answer" in
+      [yY]*)
+        kill "$board_pid"
+        (nohup pnpm plan >/dev/null 2>&1 &)
+        echo "pre-push: plan board restarted" >&2
+        ;;
+    esac
+  fi
+fi
+
 touches '^apps-script/' || exit 0
 
 if [ ! -f .clasp-deployment ]; then

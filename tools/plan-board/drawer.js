@@ -19,6 +19,8 @@ function toggleDraftType(label) {
 }
 
 function closeDrawer() {
+  closeEmojiPicker();
+  resetNewWord();
   if (location.hash) history.replaceState(null, '', location.pathname);
   drawerMode = null;
   openTaskId = null;
@@ -33,8 +35,13 @@ function draftFields() {
   return `
     <div class="field">
       <label for="title">Titre</label>
-      <input class="title-input" id="title" data-act="title" value="${esc(draft.title)}"
-        placeholder="Ce qu'il y a à faire" />
+      <div class="field-row">
+        <input class="title-input" id="title" data-act="title" value="${esc(draft.title)}"
+          placeholder="Ce qu'il y a à faire" />
+        <button class="btn emoji-btn" data-act="emoji" data-value="title"
+          title="Insérer un emoji" aria-pressed="${emojiPickerOpen('title')}">🙂</button>
+      </div>
+      ${emojiPanel('title')}
     </div>
 
     <div class="field">
@@ -44,10 +51,12 @@ function draftFields() {
           typePill(
             type.label,
             `role="button" tabindex="0" data-act="pick-type" data-value="${type.label}"
-             title="${esc(type.hint)}" aria-pressed="${draft.types.includes(type.label)}"`,
+             title="${esc(type.hint || '')}" aria-pressed="${draft.types.includes(type.label)}"`,
           ),
         ).join('')}
+        ${newWordButton('type')}
       </div>
+      ${newWordForm('type')}
     </div>
 
     <div class="field">
@@ -60,7 +69,9 @@ function draftFields() {
              aria-pressed="${draft.status === status.label}"`,
           ),
         ).join('')}
+        ${newWordButton('status')}
       </div>
+      ${newWordForm('status')}
     </div>
 
     <div class="field">

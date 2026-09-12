@@ -1,0 +1,70 @@
+// The sidebar list of sections. Dragging one rewrites the order of the `##` blocks of PLAN.md.
+let draggedSection = '';
+
+async function moveSection(name, before) {
+  if (!name || name === before) return;
+  board = await api('/api/sections', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, before }),
+  });
+  renderBoard();
+}
+
+// A drop lands before the hovered section, or after it past its middle — the anchor is then its
+// next neighbour, and nothing at all when it is the last one.
+function dropAnchor(link, clientY) {
+  if (overTopHalf(link, clientY)) return link.dataset.section;
+  const next = link.nextElementSibling;
+  return next ? next.dataset.section : '';
+}
+
+// Bound once on the node itself: #sections travels to the detached window with #app.
+function bindSectionDrag(container) {
+  if (container.dataset.drag) return;
+  container.dataset.drag = 'on';
+
+  container.addEventListener('dragstart', (event) => {
+    const link = event.target.closest('[data-section]');
+    if (!link) return;
+    draggedSection = link.dataset.section;
+    event.dataTransfer.effectAllowed = 'move';
+    link.classList.add('dragging');
+  });
+
+  container.addEventListener('dragover', (event) => {
+    if (!draggedSection) return;
+    event.preventDefault();
+    const link = event.target.closest('[data-section]');
+    if (link) markDrop(container, link, event.clientY);
+  });
+
+  container.addEventListener('drop', (event) => {
+    const link = event.target.closest('[data-section]');
+    if (!draggedSection || !link) return;
+    event.preventDefault();
+    const [name, before] = [draggedSection, dropAnchor(link, event.clientY)];
+    draggedSection = '';
+    markDrop(container, null);
+    moveSection(name, before);
+  });
+
+  container.addEventListener('dragend', () => {
+    draggedSection = '';
+    markDrop(container, null);
+  });
+}
+
+function renderSections(sections) {
+  const container = ui.getElementById('sections');
+  container.innerHTML = sections
+    .map((section) => {
+      const total = section.groups.reduce((sum, group) => sum + group.tasks.length, 0);
+      return `<a href="#${anchorOf(section.name)}" draggable="true"
+        data-section="${esc(section.name)}">
+        <span>${esc(section.name)}</span><span class="tally">${total}</span>
+      </a>`;
+    })
+    .join('');
+  bindSectionDrag(container);
+}

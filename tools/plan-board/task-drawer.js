@@ -10,6 +10,8 @@ async function openDrawer(id) {
   const task = findTask(id);
   if (!task) return;
   drawerMode = 'task';
+  closeEmojiPicker();
+  resetNewWord();
   openTaskId = id;
   if (location.hash !== `#t-${id}`) history.replaceState(null, '', `#t-${id}`);
   draft = { title: task.title, types: [...task.types], status: task.status, body: task.body };
