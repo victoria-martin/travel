@@ -60,6 +60,13 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — `js/views/accommodations/table/tags-cell.js` remonte à plat dans
+  [tags-cell.js](js/views/tags-cell.js) : la cellule qui édite les tags sur place a deux
+  consommateurs dès que les attractions s'en servent, donc elle prend son getter et son vocabulaire
+  en argument, comme [tags-field.js](js/views/tags-field.js) l'avait fait pour la modale. Le getter
+  tient dans une globale reposée à chaque ligne, et non dans la cellule : une seule table est à
+  l'écran à la fois, et une seule cellule y est en édition.
+
 - **2026-09-13** — le panneau principal ne montre qu'**une liste à la fois** : tout le plan, une
   page, ou les sessions ouvertes. C'est une préférence de vue et non un état du plan, donc elle vit
   dans le navigateur ([view.js](tools/plan-board/view.js)) sur le modèle de

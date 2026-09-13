@@ -29,7 +29,11 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'county', label: 'Province', cell: accommodationCountyCell },
   { key: 'region', label: 'Région', hiddenByDefault: true, cell: accommodationRegionCell },
-  { key: 'tags', label: 'Tags', cell: tagsCell },
+  {
+    key: 'tags',
+    label: 'Tags',
+    cell: (a) => tagsCell(a, getAccommodation, allAccommodationTags),
+  },
   { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: accommodationAddressCell },
   { key: 'price', label: 'Prix', nowrap: true, cell: accommodationPriceCell },
   { key: 'dates', label: 'Dates', cell: accommodationDatesCell },
