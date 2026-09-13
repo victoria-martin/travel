@@ -43,7 +43,49 @@ const DERIVED_EXPENSE_SOURCES = [
       ];
     },
   },
+  {
+    key: 'transports',
+    label: 'Transports réservés',
+    view: 'transports',
+    lines: () =>
+      ofCurrentTravel(state.transports)
+        .filter((t) => t.status === 'booked')
+        .map((t) => ({
+          icon: transportMode(t.mode).emoji,
+          label: `${transportEndpointLabel(t.fromCityId, t.fromPrecision)} → ${transportEndpointLabel(t.toCityId, t.toPrecision)}`,
+          unit: '',
+          amount: firmPrice(t),
+          display: priceLabel(t),
+        })),
+  },
+  {
+    key: 'attractions',
+    label: 'À faire, validé',
+    view: 'attractions',
+    lines: () =>
+      ofCurrentTravel(state.attractions)
+        .filter((a) => a.status === 'go')
+        .map((a) => ({
+          icon: attractionType(a.type).emoji,
+          label: a.name || 'Sans nom',
+          unit: '',
+          amount: firmPrice(a),
+          display: priceLabel(a),
+        })),
+  },
 ];
+
+/*
+  Une fourchette ouverte ne sait pas ce qu'elle vaut dans un total : elle s'affiche et reste
+  dehors, comme un prix par nuit. Seul un montant unique — les deux bornes égales, ou une seule
+  saisie, ou le budget à défaut — entre dans la somme.
+*/
+function firmPrice(entity) {
+  const bounds = [entity.amountMin, entity.amountMax].filter(hasPriceValue).map(priceNumber);
+  if (bounds.length === 2) return bounds[0] === bounds[1] ? bounds[0] : null;
+  if (bounds.length === 1) return bounds[0];
+  return hasPriceValue(entity.budget) ? priceNumber(entity.budget) : null;
+}
 
 function derivedExpenseGroups() {
   return DERIVED_EXPENSE_SOURCES.map((source) => ({ ...source, items: source.lines() })).filter(
@@ -61,7 +103,7 @@ function derivedExpensesList() {
   const groups = derivedExpenseGroups();
   if (!groups.length) {
     return /* HTML */ `<div class="scenario-extra-empty">
-      Rien à calculer — aucun hébergement réservé, aucune voiture par défaut.
+      Rien à calculer — rien de réservé, aucune voiture par défaut.
     </div>`;
   }
   return groups.map(derivedExpenseGroup).join('');

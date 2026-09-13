@@ -9,7 +9,7 @@
 function stepAttractionsField(p) {
   if (!p.attractions) p.attractions = [];
   return /* HTML */ `<div class="field">
-    <label>Attractions</label>
+    <label>Activités</label>
     <div id="step-attractions" class="tags-field">${stepAttractionsChips(p.attractions)}</div>
     <div id="step-attractions-results" class="attraction-results"></div>
   </div>`;
@@ -17,7 +17,7 @@ function stepAttractionsField(p) {
 
 function stepAttractionName(entry) {
   const attraction = getAttraction(entry.attractionId);
-  return attraction ? attraction.name : 'Attraction supprimée';
+  return attraction ? attraction.name : 'Activité supprimée';
 }
 
 function stepAttractionsChips(entries) {
@@ -25,13 +25,13 @@ function stepAttractionsChips(entries) {
     ${entries
       .map(
         (entry, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(stepAttractionName(entry))}<button type="button" class="tag-chip-remove" onclick="removeStepAttraction(${i})" title="Retirer cette attraction">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(stepAttractionName(entry))}<button type="button" class="tag-chip-remove" onclick="removeStepAttraction(${i})" title="Retirer cette activité">✕</button></span>`,
       )
       .join('')}
     <input
       id="step-attractions-input"
       type="text"
-      placeholder="Chercher une attraction…"
+      placeholder="Chercher une activité…"
       oninput="repaintStepAttractionResults()"
       onkeydown="stepAttractionsKeydown(event)"
     />

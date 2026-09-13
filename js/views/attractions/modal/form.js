@@ -12,6 +12,9 @@ function emptyAttraction() {
     lat: '',
     lng: '',
     link: '',
+    budget: '',
+    amountMin: '',
+    amountMax: '',
     tags: [],
     favorite: false,
   };
@@ -19,7 +22,7 @@ function emptyAttraction() {
 
 function attractionForm(p) {
   return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Ajouter'} une attraction</h3>
+    <h3>${p.id ? 'Modifier' : 'Ajouter'} une activité</h3>
     <div class="field-row">
       <div class="field">
         <label>Type</label>
@@ -60,6 +63,20 @@ function attractionForm(p) {
       </select>
     </div>
     ${locateFields(p)}
+    <div class="field-row">
+      <div class="field">
+        <label>Budget</label
+        ><input id="a-budget" type="text" value="${escapeHtml(p.budget)}" placeholder="25" />
+      </div>
+      <div class="field">
+        <label>Prix mini</label
+        ><input id="a-amount-min" type="text" value="${escapeHtml(p.amountMin)}" />
+      </div>
+      <div class="field">
+        <label>Prix maxi</label
+        ><input id="a-amount-max" type="text" value="${escapeHtml(p.amountMax)}" />
+      </div>
+    </div>
     <div class="field">
       <label>Lien</label
       ><input id="a-link" type="text" value="${escapeHtml(p.link)}" placeholder="https://..." />

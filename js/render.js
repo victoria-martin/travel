@@ -8,7 +8,7 @@ function render() {
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
       ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', '💶', 'Dépenses')}
-      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Attractions')}
+      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'À faire')}
       ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
       ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
       <div

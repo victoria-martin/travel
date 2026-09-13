@@ -69,6 +69,7 @@ function migrateData(data) {
     if (s.startDate === undefined) s.startDate = '';
     if (s.carId === undefined) s.carId = null;
     if (!Array.isArray(s.costIds)) s.costIds = [];
+    if (!Array.isArray(s.transportIds)) s.transportIds = [];
     if (s.favorite === undefined) s.favorite = false;
   });
   data.cities.forEach((c) => {

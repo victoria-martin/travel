@@ -8,7 +8,7 @@ function stepAttractionLabel(entry) {
   const attraction = getAttraction(entry.attractionId);
   return attraction
     ? tagLabel(attractionType(attraction.type).emoji, escapeHtml(attraction.name))
-    : tagLabel('❔', 'Attraction supprimée');
+    : tagLabel('❔', 'Activité supprimée');
 }
 
 function pickStepAttraction(scenarioId, stepId, index, attractionId) {
@@ -29,7 +29,7 @@ function stepAttractionDropdown(scenario, step, entry, index) {
           class="inline-menu-item"
           onclick="detachStepAttraction('${scenario.id}','${step.id}',${index})"
         >
-          Retirer cette attraction
+          Retirer cette activité
         </button>
         ${attractionMatches('', others)
           .map(

@@ -1,6 +1,7 @@
 function emptyCar() {
   return {
     id: null,
+    status: '',
     name: '',
     model: '',
     pricePerDay: '',
@@ -21,6 +22,20 @@ function carForm(p) {
     </div>
     <div class="field">
       <label>Modèle</label><input id="car-model" type="text" value="${escapeHtml(p.model)}" />
+    </div>
+    <div class="field">
+      <label>Statut</label>
+      <select id="car-status">
+        <option value="" ${p.status ? '' : 'selected'}>
+          ${UNSET_CAR_STATUS.emoji} ${UNSET_CAR_STATUS.label}
+        </option>
+        ${Object.entries(CAR_STATUSES)
+          .map(
+            ([key, s]) =>
+              `<option value="${key}" ${p.status === key ? 'selected' : ''}>${s.emoji} ${s.label}</option>`,
+          )
+          .join('')}
+      </select>
     </div>
     <div class="field">
       <label>Prix / jour</label

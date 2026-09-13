@@ -4,7 +4,7 @@ function renderAttractionsView() {
     ${attractionsHeader(items)}
     ${
       items.length === 0
-        ? emptyState('Aucune attraction', 'Ajoute un premier lieu à visiter.')
+        ? emptyState('Aucune activité', 'Ajoute un premier lieu à visiter.')
         : listTable('attractions', items)
     }
   `;

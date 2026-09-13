@@ -4,6 +4,7 @@ function saveCar(id) {
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
+    status: carStatusKey(document.getElementById('car-status').value),
     name: document.getElementById('car-name').value.trim(),
     model: document.getElementById('car-model').value.trim(),
     pricePerDay: document.getElementById('car-price-per-day').value.trim(),

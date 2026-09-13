@@ -17,22 +17,11 @@ les types.
 
 ## 🗓️ Scénarios
 
-- **Charges fixes** <!--t:ost1--> — 🧩 ui · 🚧 en cours
-  - Bloc sous les étapes, **dans une autre couleur** que les étapes.
-  - Une ligne par charge rattachée (libellé, montant, retirer).
-  - « + Ajouter une charge » → ouvre la modale Charges fixes, puis rattache au scénario (donc
-    alimente la table Charges fixes). calcul des charges en fonction des dates de la step ds le
-    scenario pr nb de jours et coût renseigné par le user
-  - Un select pour rattacher une charge déjà existante.
-  - Tant que `costIds` reste vide, la ligne « Charges fixes » du total général affiche 0 €.
-
-  ca te semble ok tout ca ?
-
-  si oui dis moi ds quel ordre fair les trucs et on va les faire au fur et a mesure
-
-- **Coût de la voiture × nuits** <!--t:q9vm--> — 🧮 calcul · 🐛 fix · 🔍 à étudier : [car-block.js:4](js/views/scenarios/detail/car-block.js#L4)
-  multiplie le prix de la voiture par les nuits du scénario, contre la décision actée « pris tel
-  quel, sans multiplication ». Corriger le code ou la décision — et le total s'affiche sans unité.
+- **Bloc des dépenses dans le détail** <!--t:ost1--> — 🧩 ui · 🚧 en cours : sous les étapes, dans
+  une autre couleur, les dépenses des étapes du scénario — une ligne par dépense (libellé, montant,
+  retirer), un select pour en rattacher une existante, et « + Ajouter » qui ouvre la modale puis
+  rattache. Même forme que le bloc Voiture ([car-block.js](js/views/scenarios/detail/car-block.js)).
+  Tant que `costIds` reste vide, la ligne « Dépenses » du total général affiche 0 €.
 - **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🔍 à étudier : les dates se
   calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
   le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
@@ -64,7 +53,8 @@ les types.
 ## 💻 plan-tool
 
 - **drag and drop** <!--t:yr9v--> — ⏳ à faire
-  - ajouter un type layout
+  - ok pour move au meme niveau
+  - pouvoir deplacer ds une sous session
 - **gerer scroll** <!--t:xwg8--> — 🧩 layout · ⏳ à faire : gerer scroll pr laisser le header qd on
   scroll
 - **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
@@ -113,6 +103,20 @@ les types.
   };
 
   tu peux mettre à jour le nom de classes css + creer la classe focus stp
+- **donner une priorité aux taches !** <!--t:49ng--> — 🚧 en cours
+  - priority : low, medium, high, null or to_determine
+  - + status pas obligatoire pour une tâche,
+  - les nouvelles tâches sont crées sans statut ou alors avec status. "a trier" c est mieux et
+    prority null aussi
+- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · ⏳ à faire : un
+  clic sur la liste des sessions en cours ouvre cette liste ds le main panel
+
+  un clic sur une section fait la même action, ouvre celle liste ds le main panel. on ajoute une
+  fleche gauche a gauche du nom de la section pr revenir plus facilement à la liste
+
+  voir comment filtrer les sections
+
+  tri ok (drag and drop)
 
 ### layout
 
@@ -207,14 +211,21 @@ table et leur modale.
   prix par nuit et une voiture à prix par jour s'affichent avec leur unité et restent hors du total
   ([derived.js](js/views/expenses/derived.js)). Décider sur combien de nuits / de jours les
   multiplier — le nombre ne vit nulle part hors d'un scénario.
-- **Transports dans le bloc Calculé** <!--t:5wpe--> — 🧮 calcul · ⏳ à faire : une troisième source
-  dans `DERIVED_EXPENSE_SOURCES`, selon la règle transverse « budget et prix ».
 - **Budget et prix** <!--t:w4qe--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type`
   `budget total` / `cost` envisagé ici n'a plus lieu d'être : une charge sans prix saisi **est** une
   enveloppe, le dire deux fois ouvre la porte à la contradiction.
 - **Fourchette incomplète** <!--t:hl47--> — 🧮 calcul · 🔍 à étudier : ce que vaut la charge dans
-  un total quand un seul des deux montants est saisi.
+  un total quand un seul des deux montants est saisi. `firmPrice`
+  ([derived.js](js/views/expenses/derived.js)) tient la réponse provisoire : une seule borne compte
+  pour elle-même, deux bornes différentes restent hors du total. À confirmer ou à changer.
+- **Afficher ou non le bloc Calculé** <!--t:v2ne--> — 🧩 ui · ⏳ à faire : un toggle sur la section
+  des dépenses dérivées, et une condition par source qui dit ce qui y entre —
+  `accommodation.status === 'booked'`, `scenario.isChosen`, et la troisième reste à nommer.
+- **Une dépense saisie appartient-elle au scénario ?** <!--t:x8dr--> — 🗃️ modèle · 🔍 à étudier :
+  aujourd'hui elle appartient au voyage. Reste à décider si certaines n'existent que dans un
+  scénario — et si oui, par un `scenarioId` optionnel sur la dépense, ou par la liste `costIds` que
+  le scénario porte déjà.
 
 ## ✈️ Transports
 
@@ -231,9 +242,9 @@ la recopier.
 
 ### Intégration aux scénarios
 
-- **Un transport entre deux étapes** <!--t:u2p3--> — 🗃️ modèle · 🔍 à étudier (déplacé de « Scénarios / Plus tard ») : le
-  trajet se lit entre deux étapes consécutives. Soit un `transportIds` sur le scénario, soit un
-  `transportId` sur l'étape d'arrivée — à choisir avant d'écrire quoi que ce soit.
+- **Rattacher un transport à un scénario** <!--t:u2p3--> — 🧩 ui · ⏳ à faire : `transportIds` est
+  au modèle et au Sheet, avec `getScenarioTransports`. Reste l'écran : où on rattache, et ce que le
+  détail en montre.
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
   ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
   et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
@@ -255,13 +266,14 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   passent par la modale. Généraliser la cellule demande de lui passer son getter et son vocabulaire.
 - **Attractions sur la carte** <!--t:4ehs--> — 🧩 ui · ⏳ à faire : elles portent des coordonnées
   mais [map.js](js/views/map.js) ne trace que les hébergements.
-- **Type `Restaurant` 🍝** <!--t:s0ad--> — 🗃️ modèle · ⏳ à faire : un type de plus dans la liste
-  figée, plus le vocabulaire de tags qui va avec — trattoria, pizzeria, gastronomique, terrasse,
-  vue, cave / dégustation, fromager, glacier, street food, végétarien. Reste à décider si la liste
-  amorcée dépend du type choisi ou si elle est commune à tous.
-- **Prix, horaires, téléphone** <!--t:nvyg--> — 🗃️ modèle · ⏳ à faire : trois champs de plus sur
-  l'attraction, pour **tous** les types — un musée a des horaires et un prix d'entrée autant qu'une
-  trattoria.
+- **Renommer l'entité en « À faire »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale
+  et le titre disent « À faire », mais les libellés d'item disent encore « une attraction »
+  (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
+  à choisir le mot au singulier, puis à décider si les clés suivent — c'est la même migration que
+  <!--t:omun-->.
+- **Horaires et téléphone** <!--t:nvyg--> — 🗃️ modèle · ⏳ à faire : deux champs de plus sur
+  l'attraction, pour **tous** les types — un musée a des horaires autant qu'une trattoria. Le prix
+  est fait, à la règle transverse « Budget et prix ».
 - **Rattacher une attraction à un hébergement** <!--t:3cn1--> — 🗃️ modèle · ⏳ à faire : un
   `hotelId` optionnel, pour la table d'hôtes ou le restaurant de l'hôtel.
 - **Scraper un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : depuis le formulaire,

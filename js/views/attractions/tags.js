@@ -15,6 +15,16 @@ const DEFAULT_ATTRACTION_TAGS = [
   'thermes',
   'randonnée',
   'artisanat',
+  'trattoria',
+  'pizzeria',
+  'gastronomique',
+  'terrasse',
+  'vue',
+  'cave / dégustation',
+  'fromager',
+  'glacier',
+  'street food',
+  'végétarien',
 ];
 
 function allAttractionTags() {

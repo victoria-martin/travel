@@ -7,6 +7,7 @@ const ATTRACTION_TYPES = {
   village: { label: 'Village', emoji: '🏘️', color: '#C98A3E' },
   beach: { label: 'Plage', emoji: '🏖️', color: '#4E7A9B' },
   activity: { label: 'Activité', emoji: '🎟️', color: '#8B5E7C' },
+  restaurant: { label: 'Restaurant', emoji: '🍝', color: '#7A5C3E' },
 };
 
 function attractionType(type) {

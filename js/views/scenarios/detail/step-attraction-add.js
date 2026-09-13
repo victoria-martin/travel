@@ -12,7 +12,7 @@ function stepAttractionAddButton(scenario, step) {
     'attraction-add-dropdown',
     /* HTML */ `<summary
         class="inline-tag step-add-attraction"
-        title="Ajouter une attraction"
+        title="Ajouter une activité"
         onclick="setTimeout(() => focusStepAttractionSearch('${step.id}'))"
       >
         ＋
@@ -22,7 +22,7 @@ function stepAttractionAddButton(scenario, step) {
           class="inline-menu-search"
           id="attraction-search-${step.id}"
           type="text"
-          placeholder="Chercher une attraction…"
+          placeholder="Chercher une activité…"
           oninput="repaintStepAttractionOptions('${scenario.id}','${step.id}')"
           onkeydown="stepAttractionSearchKeydown(event,'${scenario.id}','${step.id}')"
         />
@@ -55,7 +55,7 @@ function stepAttractionOptions(scenarioId, stepId) {
            onclick="createStepAttractionFromCard('${scenarioId}','${stepId}')">
            ＋ Créer « ${escapeHtml(query)} »
          </button>`
-      : '<div class="inline-menu-group">Aucune attraction</div>';
+      : '<div class="inline-menu-group">Aucune activité</div>';
   return matches
     .map(
       (a) => `<button class="inline-menu-item"

@@ -14,6 +14,12 @@ COLUMN_SETS.voitures = [
     sortValue: (c) => (c.model || '').toLowerCase(),
   },
   {
+    key: 'status',
+    label: 'Statut',
+    cell: carStatusCell,
+    sortValue: (c) => dictSortIndex(CAR_STATUSES, carStatusKey(c.status)),
+  },
+  {
     key: 'pricePerDay',
     label: 'Prix / jour',
     nowrap: true,
@@ -49,6 +55,10 @@ function carNameCell(c) {
 
 function carModelCell(c) {
   return textCell(c.model);
+}
+
+function carStatusCell(c) {
+  return carStatusTag(c);
 }
 
 function carPricePerDayCell(c) {

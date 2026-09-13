@@ -44,6 +44,7 @@ const COLLECTIONS = {
   cars: [
     'travelId',
     'id',
+    'status',
     'name',
     'model',
     'pricePerDay',
@@ -70,6 +71,9 @@ const COLLECTIONS = {
     'lat',
     'lng',
     'link',
+    'budget',
+    'amountMin',
+    'amountMax',
     'tags',
     'favorite',
   ],
@@ -96,7 +100,17 @@ const COLLECTIONS = {
     'notes',
     'favorite',
   ],
-  scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite', 'isChosen'],
+  scenarios: [
+    'travelId',
+    'id',
+    'name',
+    'startDate',
+    'carId',
+    'costIds',
+    'transportIds',
+    'favorite',
+    'isChosen',
+  ],
   tripNotes: ['travelId', 'id', 'text'],
   steps: [
     'travelId',
@@ -116,7 +130,7 @@ const COLLECTIONS = {
 const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen'];
 const NUM_FIELDS = ['nights', 'travelers'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
-const LIST_FIELDS = ['costIds', 'tags'];
+const LIST_FIELDS = ['costIds', 'transportIds', 'tags'];
 
 function doGet(e) {
   var homeExchangeUrl = e && e.parameter ? e.parameter.homeExchange : '';

@@ -27,6 +27,13 @@ COLUMN_SETS.attractions = [
     cell: attractionStatusCell,
     sortValue: (a) => dictSortIndex(ATTRACTION_STATUSES, attractionStatusKey(a.status)),
   },
+  {
+    key: 'price',
+    label: 'Prix',
+    nowrap: true,
+    cell: attractionPriceCell,
+    sortValue: (a) => priceNumber(a.amountMin || a.amountMax || a.budget),
+  },
   { key: 'tags', label: 'Tags', cell: attractionTagsCell },
   {
     key: 'description',
@@ -70,6 +77,10 @@ function attractionTypeCell(a) {
 
 function attractionStatusCell(a) {
   return attractionStatusTag(a);
+}
+
+function attractionPriceCell(a) {
+  return priceLabel(a);
 }
 
 function attractionTagsCell(a) {

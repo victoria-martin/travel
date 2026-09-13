@@ -28,9 +28,15 @@ sur une carte, et **comparer plusieurs itinéraires chiffrés** avant de réserv
 Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste découle :
 
 - Le prix d'un hébergement est un prix **par nuit** → total d'un lieu = prix × nuits.
-- Le montant d'une charge fixe est pris **tel quel**, sans multiplication. Le coût d'une voiture
-  dans un scénario est son prix **multiplié par les nuits** du scénario — cf. [PLAN.md](../PLAN.md),
-  cette règle contredit la décision d'origine et reste à trancher.
+- Le montant d'une dépense saisie est pris **tel quel**, sans multiplication. Le coût d'une voiture
+  dans un scénario est son prix **multiplié par les jours**, comme un hébergement est multiplié par
+  ses nuits : une location se loue à la journée.
+- **Ce qui décide table ou type : la forme temporelle.** Dormir se compte en nuits (Hébergements),
+  disposer d'un bien loué en jours (Voitures), se déplacer va d'un départ à une arrivée
+  (Transports), faire occupe un créneau sur place (À faire), payer n'occupe rien (Dépenses). Une
+  chose neuve n'ouvre une table que si sa forme temporelle n'existe pas encore — sinon c'est un
+  type dans une table existante. C'est pourquoi un restaurant est un type d'« À faire », et une
+  location de voiture n'est pas un transport : le trajet **utilise** la location.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Voitures et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
@@ -74,11 +80,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                               | possède tout le reste ; un seul est ouvert à la fois            |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                       | la fiche de référence ; c'est elle qui porte le prix            |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                              | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, tags, favori                                                      | un lieu à visiter ; localisée comme une ville                   |
+| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, budget, prix mini / maxi, tags, favori                           | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori | un trajet du voyage ; en mode voiture il référence une location |
-| **Voiture**         | loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                     | liste simple ; une seule voiture par défaut                     |
+| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                            | liste simple ; une seule voiture par défaut                     |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                           | liste simple                                                    |
-| **Scénario**        | nom, favori, date de départ, voiture, charges, **étapes**                                                                                                | un itinéraire candidat                                          |
+| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                        | un itinéraire candidat                                          |
 | **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre, masquée                                                              | appartient à un scénario, l'ordre compte                        |
 | **Notes de voyage** | texte libre                                                                                                                                              | un bloc par voyage                                              |
 
@@ -96,7 +102,7 @@ réservation, la voiture référence une entrée de la table des locations.
 Go ✅ · À voir 👀 · Écarté 👎.
 
 **Type d'attraction** — Nature 🌿 · Patrimoine 🏛️ · Musée 🖼️ · Village 🏘️ · Plage 🏖️ ·
-Activité 🎟️.
+Activité 🎟️ · Restaurant 🍝.
 **Statuts d'une attraction**, dans l'ordre du workflow et du tri : À voir 👀 · Go ✅ · Vu ☑️ ·
 Écarté 👎. Les statuts d'hébergement ne s'appliquent pas : on ne réserve pas un point de vue.
 
@@ -207,9 +213,10 @@ La vue principale, en **tableau ou en cartes**.
 Liste triée par nom : nom, lieu (adresse géocodée, ou province · région), coordonnées, notes. Même
 bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
 
-### Attractions
+### À faire
 
-**Attraction** — un lieu à visiter.
+**Attraction** — un lieu à visiter. L'écran s'appelle « À faire » : la table réunit tout ce qui
+occupe un créneau sur place, restaurants compris.
 
 | Champ            | Détail                                             |
 | ---------------- | -------------------------------------------------- |
@@ -221,19 +228,23 @@ bloc de localisation que les hébergements. Sert à poser une étape de passage 
 | coordonnées      | latitude, longitude                                |
 | province, région | proposées par le géocodage, modifiables à la main  |
 | lien             |                                                    |
+| budget           | l'enveloppe qu'on se donne                         |
+| prix mini / maxi | la fourchette réelle, règle transverse « Budget et prix » |
 | tags             | texte libre, amorcés par un vocabulaire par défaut |
 | favori           | étoile en tête de ligne                            |
 
-Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, tags, description, lieu
+Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description, lieu
 (adresse géocodée, ou province · région), coordonnées (masquées par défaut), lien. Tri par défaut
 favoris d'abord, puis type, puis nom. Même bloc de localisation que les villes et les hébergements.
 
 - **Type et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
 - **Tags** : mêmes tags libres que les hébergements — un tag existe dès qu'il est saisi — mais la
   liste proposée est amorcée par un vocabulaire par défaut (paysage, village, marché, monument,
-  musée, église, jardin, point de vue, plage, thermes, randonnée, artisanat), pour qu'une première
-  attraction ait déjà quelque chose à choisir. Ils se saisissent depuis la modale ; le tableau les
-  affiche sans les éditer.
+  musée, église, jardin, point de vue, plage, thermes, randonnée, artisanat, trattoria, pizzeria,
+  gastronomique, terrasse, vue, cave / dégustation, fromager, glacier, street food, végétarien),
+  pour qu'une première attraction ait déjà quelque chose à choisir. Le vocabulaire est **commun à
+  tous les types** : un restaurant et un musée puisent dans la même liste. Ils se saisissent depuis
+  la modale ; le tableau les affiche sans les éditer.
 
 ### Transports
 
@@ -276,8 +287,9 @@ défaut par date de départ, puis par mode.
 | Champ                   | Détail                                                          |
 | ----------------------- | --------------------------------------------------------------- |
 | loueur, modèle          | les deux forment le libellé « loueur · modèle »                 |
-| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les nuits |
+| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les jours |
 | prix total              | texte libre ; saisi à la main, jamais calculé                   |
+| statut                  | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté      |
 | dates                   | texte libre                                                     |
 | lieu de prise en charge |                                                                 |
 | lien                    |                                                                 |
@@ -305,10 +317,14 @@ groupe par source, dont le titre mène à la page où la corriger :
 | --------------------- | ---------------------------------------------- |
 | Hébergements réservés | une ligne par hébergement au statut Réservé 🔒 |
 | Voiture par défaut    | la voiture marquée ◉, si elle en porte une     |
+| Transports réservés   | une ligne par transport au statut Réservé 🔒   |
+| À faire, validé       | une ligne par activité au statut Go ✅         |
 
-Une source sans montant ferme — un prix par nuit, un prix par jour — s'affiche avec son unité
-(« 120 € / nuit ») et reste **hors du total** tant que rien ne dit sur combien la multiplier. Une
-source sans aucune ligne ne s'affiche pas ; les deux vides donnent un message d'état vide.
+Une source sans montant ferme reste **hors du total** et s'affiche telle quelle : un prix par nuit
+ou par jour garde son unité (« 120 € / nuit ») tant que rien ne dit sur combien le multiplier, et
+une fourchette dont les deux bornes diffèrent s'affiche en fourchette. Un montant unique — une
+seule borne saisie, les deux égales, ou le budget à défaut — entre dans la somme. Une source sans
+aucune ligne ne s'affiche pas ; toutes vides donnent un message d'état vide.
 
 **Saisi** — la liste des charges fixes : tableau ou cartes, ajout et modification en modale,
 suppression confirmée, tri et colonnes configurables depuis l'en-tête.
@@ -335,6 +351,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | date de départ | par défaut celle du voyage ; date les étapes, vide aucune date ne s'affiche |
 | voiture        | une référence à la table Voitures                                           |
 | charges        | des références à la table Charges fixes                                     |
+| transports     | des références à la table Transports                                        |
 | étapes         | ordonnées ; l'ordre est le trajet                                           |
 
 **Étape** — appartient à un scénario.
@@ -383,7 +400,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   visible au survol de la carte, ouvre un menu qui s'ouvre sur un champ de recherche — les
   attractions d'un voyage se comptent par dizaines. La liste propose celles qui ne sont pas déjà
   attachées, `Entrée` prend la première. Un nom sans correspondance se crée sur place :
-  l'attraction ne porte alors que son nom, le reste se complète depuis la page Attractions. Les
+  l'activité ne porte alors que son nom, le reste se complète depuis la page À faire. Les
   attractions se choisissent aussi depuis la modale d'étape.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
@@ -480,17 +497,14 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du moment :
 
-- **Transports et scénarios** : la page Transports existe, mais aucun trajet ne se rattache encore
-  à un scénario — ni entre deux étapes, ni en aller-retour du voyage, ni dans le récap des
-  totaux. Le modèle de rattachement reste à choisir.
+- **Transports et scénarios** : un scénario porte `transportIds`, mais aucun écran ne rattache un
+  trajet — ni entre deux étapes, ni en aller-retour du voyage, ni dans le récap des totaux.
 - **Total des dépenses incomplet** : un hébergement au prix par nuit et une voiture au prix par
   jour restent hors du total tant que rien ne dit sur combien les multiplier. Le nombre de nuits
   n'existe que dans un scénario, et la page Dépenses n'en connaît aucun.
 - **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage.
 - **Charges fixes dans le scénario** : la relation (`costIds`) existe dans le modèle et alimente le
   total général, mais aucun écran ne rattache une charge à un scénario — la ligne reste donc à 0 €.
-- **Le coût d'une voiture est multiplié par les nuits**, contre la décision actée qui le prenait tel
-  quel — à trancher.
 - **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
   « arrivée le » resté dans la modale, affiché à côté.
 - **Attractions** : une attraction se rattache à une étape de scénario, mais pas à une ville —

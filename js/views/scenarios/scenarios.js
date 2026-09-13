@@ -29,6 +29,7 @@ function createScenario() {
     startDate: currentTravel()?.startDate || '',
     carId: defaultCar()?.id || null,
     costIds: [],
+    transportIds: [],
     favorite: false,
     steps: [],
   };

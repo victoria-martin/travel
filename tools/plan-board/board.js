@@ -180,10 +180,12 @@ const plainText = (markdown) =>
 // The card carries its own actions, so it is a row and not a button: the clickable part that opens
 // the drawer is the one inside it.
 function taskButton(task) {
-  return `<div class="task" data-id="${task.id}" draggable="true"
+  const doing = task.status === DOING_STATUS;
+  return `<div class="task ${doing ? 'task-doing' : ''}" data-id="${task.id}" draggable="true"
     data-section="${esc(task.section)}" data-subsection="${esc(task.subsection)}"
     aria-current="${task.id === openTaskId}">
     <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
+      ${doing ? '<span class="doing-dot" aria-hidden="true"></span>' : ''}
       ${pill(planStatus(task.status))}
       <span class="task-types">${task.types.map(typeDot).join('')}</span>
       <span class="task-title">${esc(task.title)}</span>

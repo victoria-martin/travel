@@ -12,7 +12,7 @@ function attractionMatches(query, usedIds) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Une attraction créée ici ne porte que son nom : le reste se complète depuis la page Attractions.
+// Une attraction créée ici ne porte que son nom : le reste se complète depuis la page À faire.
 function createAttractionNamed(name) {
   const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
   upsertAttraction(item);
