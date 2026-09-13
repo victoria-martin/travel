@@ -32,10 +32,12 @@ function stepCard(scenario, step, idx) {
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
           ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
         </div>
-        ${stepDetailLine(step)} ${stepOptionsBlock(scenario, step)}
-        ${(step.attractions || [])
+        <div class="test-red">
+          ${stepDetailLine(step)} ${stepOptionsBlock(scenario, step)}
+          ${(step.attractions || [])
           .map((entry, i) => stepAttractionRow(scenario, step, entry, i))
           .join('')}
+        </div>
       </div>
       <div class="step-actions">
         ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}

@@ -13,6 +13,7 @@ function readAttractionForm(id) {
     city: located.city,
     county: located.county,
     region: located.region,
+    accommodationId: document.getElementById('a-accommodation').value,
     link: document.getElementById('a-link').value.trim(),
     hours: document.getElementById('a-hours').value.trim(),
     phone: document.getElementById('a-phone').value.trim(),

@@ -42,7 +42,7 @@ les types.
 
 ### Step
 
-- **stepForm** <!--t:zfop--> — 🧩 ui · 🏷️ données · 🏷️ modal · ⏳ à faire :
+- **stepForm** <!--t:zfop--> — 🧩 ui · 💾 données · 🪟 modal · ⏳ à faire :
   ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
   j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
 - **Retirer les colonnes d'avant les options** <!--t:v4m2--> — 🔄 synchro · ⏳ à faire : `nights`,
@@ -60,9 +60,9 @@ les types.
 - **drag and drop** <!--t:yr9v--> — ⏳ à faire
   - ok pour move au meme niveau
   - pouvoir deplacer ds une sous session
-- **gerer scroll** <!--t:xwg8--> — 🧩 layout · ⏳ à faire : gerer scroll pr laisser le header qd on
+- **gerer scroll** <!--t:xwg8--> — 📐 layout · ⏳ à faire : gerer scroll pr laisser le header qd on
   scroll
-- **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — 🏷️ feature · ⏳ à faire : ouvre le sheet
+- **nouveau bouton dupliquer sur ligne :** <!--t:9870--> — ✨ feature · ⏳ à faire : ouvre le sheet
   et met mon focus dans l input pour le name
 - **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
 - **sessions actives dans la barre latérale** <!--t:ij8e--> — 🧩 ui · ✅ fait : un panneau
@@ -77,7 +77,7 @@ les types.
   on comprend pas bien quels tags sont selectionnés peut etr qu'il faut les faire passer au debut de
   la liste qd selectionn" ?
 
-- **update plan task statuses** <!--t:f54a--> — 🏷️ données · ✅ fait : dans
+- **update plan task statuses** <!--t:f54a--> — 💾 données · ✅ fait : dans
   tools/plan-board/statuses.js voici ce que je veux utiliser a la place du code actuel
 
   const PLAN_STATUSES = [
@@ -114,7 +114,7 @@ les types.
   - - status pas obligatoire pour une tâche,
   - les nouvelles tâches sont crées sans statut ou alors avec status. "a trier" c est mieux et
     prority null aussi
-- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · ✅ fait : un
+- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 📐 layout · 🧩 ui · ✅ fait : un
   clic sur la liste des sessions en cours ouvre cette liste ds le main panel
 
   un clic sur une section fait la même action, ouvre celle liste ds le main panel. on ajoute une
@@ -127,7 +127,7 @@ les types.
 
 - **indicateur visuel pour une tâche en cours** <!--t:oqg6--> — 🧩 ui · ✅ fait : la carte prend la
   teinte du statut et un point pulse dans la gouttière, à gauche des pastilles
-- **Simplifier les hooks Claude Code** <!--t:zg3m--> — 🔌 infra · 🔍 à étudier : les hooks de
+- **Simplifier les hooks Claude Code** <!--t:zg3m--> — ⚙️ infra · 🔍 à étudier : les hooks de
   `~/.claude/settings.json` ont été écrits vite, plusieurs pistes de simplification à trancher.
 
   `cc-status` est déclaré dix fois, une entrée par événement, alors qu'un même binaire les couvre
@@ -341,8 +341,6 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
   à choisir le mot au singulier, puis à décider si les clés suivent — c'est la même migration que
   <!--t:omun-->.
-- **Rattacher une attraction à un hébergement** <!--t:3cn1--> — 🗃️ modèle · ⏳ à faire : un
-  `hotelId` optionnel, pour la table d'hôtes ou le restaurant de l'hôtel.
 - **Scraper un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : depuis le formulaire,
   remplir nom, adresse, coordonnées et horaires à partir d'une URL `maps.app.goo.gl`.
 - **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🔍 à étudier : le type étant porté par
@@ -395,7 +393,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).
-- **gérer correctement les liens entre les prix entre les differentes entités** <!--t:8tln--> — 🏷️ données · 📄 archi · ⏳ à faire : faire
+- **gérer correctement les liens entre les prix entre les differentes entités** <!--t:8tln--> — 💾 données · 🏛️ archi · ⏳ à faire : faire
   un etat des lieux de comment la donnee est structuree sur chaque entité (car, transport,
   accomodation, restaurant etc.) et
 
@@ -418,7 +416,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 
 ## Layout
 
-- **fix scroll in page** <!--t:epip--> — 🧩 layout · ⏳ à faire : make thinkgs sticky and other
+- **fix scroll in page** <!--t:epip--> — 📐 layout · ⏳ à faire : make thinkgs sticky and other
   scrollables
 
 ## 📝 Données à saisir

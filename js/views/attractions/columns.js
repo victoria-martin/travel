@@ -53,6 +53,13 @@ COLUMN_SETS.attractions = [
     hiddenByDefault: true,
     cell: attractionCoordsCell,
   },
+  {
+    key: 'accommodation',
+    label: 'Hébergement',
+    hiddenByDefault: true,
+    cell: attractionAccommodationCell,
+    sortValue: (a) => attractionAccommodationName(a).toLowerCase(),
+  },
   { key: 'hours', label: 'Horaires', hiddenByDefault: true, cell: attractionHoursCell },
   {
     key: 'phone',
@@ -105,6 +112,15 @@ function attractionPlaceCell(a) {
 
 function attractionCoordsCell(a) {
   return escapeHtml(coordsLabel(a));
+}
+
+function attractionAccommodationName(a) {
+  const accommodation = getAccommodation(a.accommodationId);
+  return accommodation ? accommodation.name : '';
+}
+
+function attractionAccommodationCell(a) {
+  return textCell(attractionAccommodationName(a));
 }
 
 function attractionHoursCell(a) {

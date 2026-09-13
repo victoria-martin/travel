@@ -11,6 +11,7 @@ function emptyAttraction() {
     region: '',
     lat: '',
     lng: '',
+    accommodationId: '',
     link: '',
     hours: '',
     phone: '',
@@ -65,6 +66,18 @@ function attractionForm(p) {
       </select>
     </div>
     ${locateFields(p)}
+    <div class="field">
+      <label>Hébergement</label>
+      <select id="a-accommodation">
+        <option value="" ${p.accommodationId ? '' : 'selected'}>Aucun</option>
+        ${attractionAccommodations()
+          .map(
+            (a) =>
+              `<option value="${a.id}" ${p.accommodationId === a.id ? 'selected' : ''}>${accType(a.type).emoji} ${escapeHtml(a.name)}</option>`,
+          )
+          .join('')}
+      </select>
+    </div>
     <div class="field-row">
       <div class="field">
         <label>Budget</label
@@ -117,4 +130,10 @@ function attractionForm(p) {
       <button class="btn" id="f-save" onclick="saveAttraction('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
+}
+
+function attractionAccommodations() {
+  return ofCurrentTravel(state.accommodations).sort(
+    (a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0) || a.name.localeCompare(b.name),
+  );
 }

@@ -70,6 +70,7 @@ const COLLECTIONS = {
     'region',
     'lat',
     'lng',
+    'accommodationId',
     'link',
     'hours',
     'phone',

@@ -90,19 +90,19 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 ## 3. Modèle
 
-| Entité              | Porte                                                                                                                                                    | Notes                                                           |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                               | possède tout le reste ; un seul est ouvert à la fois            |
-| **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                       | la fiche de référence ; c'est elle qui porte le prix            |
-| **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                              | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori       | un lieu à visiter ; localisée comme une ville                   |
-| **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori | un trajet du voyage ; en mode voiture il référence une location |
-| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                             | liste simple ; une seule voiture par défaut                     |
-| **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                           | liste simple                                                    |
-| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                        | un itinéraire candidat                                          |
-| **Étape**           | titre, région, notes, date d'arrivée libre, masquée, **options**                                                                                         | appartient à un scénario, l'ordre compte                        |
-| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                      | appartient à une étape ; une seule est retenue                  |
-| **Notes de voyage** | texte libre                                                                                                                                              | un bloc par voyage                                              |
+| Entité              | Porte                                                                                                                                                           | Notes                                                           |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                      | possède tout le reste ; un seul est ouvert à la fois            |
+| **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                              | la fiche de référence ; c'est elle qui porte le prix            |
+| **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                                     | une étape de passage sans nuit, ou un repère                    |
+| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
+| **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori        | un trajet du voyage ; en mode voiture il référence une location |
+| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                    | liste simple ; une seule voiture par défaut                     |
+| **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                                  | liste simple                                                    |
+| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                               | un itinéraire candidat                                          |
+| **Étape**           | titre, région, notes, date d'arrivée libre, masquée, **options**                                                                                                | appartient à un scénario, l'ordre compte                        |
+| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                             | appartient à une étape ; une seule est retenue                  |
+| **Notes de voyage** | texte libre                                                                                                                                                     | un bloc par voyage                                              |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -243,6 +243,7 @@ occupe un créneau sur place, restaurants compris.
 | adresse géocodée | écrite par « Localiser »                                  |
 | coordonnées      | latitude, longitude                                       |
 | province, région | proposées par le géocodage, modifiables à la main         |
+| hébergement      | facultatif ; référence un hébergement du voyage           |
 | lien             |                                                           |
 | horaires         | texte libre, quel que soit le type                        |
 | téléphone        | texte libre                                               |
@@ -252,10 +253,13 @@ occupe un créneau sur place, restaurants compris.
 | favori           | étoile en tête de ligne                                   |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
-lieu (adresse géocodée, ou province · région), coordonnées, horaires et téléphone (masqués par
-défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de localisation que
-les villes et les hébergements.
+lieu (adresse géocodée, ou province · région), coordonnées, hébergement, horaires et téléphone
+(masqués par défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
+localisation que les villes et les hébergements.
 
+- **L'hébergement se choisit dans la modale** : la table d'hôtes ou le restaurant d'un hôtel
+  **référence** sa fiche plutôt que d'en recopier le nom, comme une option d'étape référence son
+  hébergement. Il reste facultatif — la plupart des activités n'en ont pas.
 - **Type et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
 - **Tags** : mêmes tags libres que les hébergements — un tag existe dès qu'il est saisi — mais la
   liste proposée est amorcée par un vocabulaire par défaut (paysage, village, marché, monument,
