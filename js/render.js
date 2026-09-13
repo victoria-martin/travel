@@ -1,4 +1,4 @@
-let view = 'hebergements'; // hebergements | voitures | depenses | villes | attractions | transports | scenarios | scenario-detail | carte | notes
+let view = 'scenarios'; // hebergements | voitures | depenses | villes | attractions | transports | scenarios | scenario-detail | carte | notes
 
 function render() {
   applyTravelAccent();

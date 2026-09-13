@@ -17,6 +17,10 @@ function claudeCommand({ sessionId, resumed, prompt, title }) {
 }
 
 function openInITerm(command) {
+  // TEMP: ne lance pas de terminal Claude, on se contente de logger la commande.
+  console.log(command);
+  return Promise.resolve();
+  // eslint-disable-next-line no-unreachable
   const script = `
     tell application "iTerm"
       activate

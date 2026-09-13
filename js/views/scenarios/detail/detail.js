@@ -14,7 +14,7 @@ function renderScenarioDetailView() {
     ${scenarioDetailHeader(s)}
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main">
-        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioTotalBlock(s)} ${scenarioRecap(s)}
+        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioTotalBlock(s)}
       </div>
       ${
         prefs.showScenarioMap
@@ -36,6 +36,13 @@ function renameStep(scenarioId, stepId, city) {
   step.city = city.trim() || step.city;
   saveNow();
   syncEditable(`step:${stepId}:city`, step.city);
+}
+
+function insertStep(scenarioId, index) {
+  const s = getScenario(scenarioId);
+  s.steps.splice(index, 0, { ...emptyStep(), id: uid() });
+  saveNow();
+  render();
 }
 
 function moveStep(scenarioId, stepId, dir) {
@@ -72,6 +79,29 @@ function setStepNights(scenarioId, stepId, nights) {
 
 function setStepBudget(scenarioId, stepId, budget) {
   getStep(scenarioId, stepId).budget = budget.trim();
+  saveNow();
+  render();
+}
+
+// La recherche reste ouverte après un ajout : on attache souvent plusieurs attractions d'affilée.
+function attachStepAttraction(scenarioId, stepId, attractionId) {
+  const step = getStep(scenarioId, stepId);
+  if (!step.attractions) step.attractions = [];
+  step.attractions.push({ attractionId, count: 1, budget: '' });
+  saveNow();
+  render();
+  focusStepAttractionSearch(stepId);
+}
+
+function setStepAttraction(scenarioId, stepId, index, attractionId) {
+  getStep(scenarioId, stepId).attractions[index].attractionId = attractionId;
+  saveNow();
+  render();
+}
+
+function detachStepAttraction(scenarioId, stepId, index) {
+  openInlineMenu = null;
+  getStep(scenarioId, stepId).attractions.splice(index, 1);
   saveNow();
   render();
 }

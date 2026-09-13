@@ -30,7 +30,7 @@ function stepCard(scenario, step, idx) {
         ${stepDetailLine(scenario, step, idx)}
         <div class="step-acc">
           ${stepPlaceDropdown(scenario, step)} ${stepNightsDropdown(scenario, step)}
-          ${stepBudgetSlot(scenario, step)}
+          ${stepBudgetSlot(scenario, step)} ${stepAttractionAddButton(scenario, step)}
         </div>
         ${(step.attractions || [])
           .map((entry, i) => stepAttractionRow(scenario, step, entry, i))

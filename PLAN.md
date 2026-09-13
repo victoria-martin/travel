@@ -53,10 +53,13 @@ les types.
 
 ### Step
 
-- **stepForm** <!--t:zfop--> — 🧩 ui · 🏷️ données · 🏷️ modal · ⏳ à faire : pouvoir choisir une
-  attraction ds le form,
+- **stepForm** <!--t:zfop--> — 🧩 ui · 🏷️ données · 🏷️ modal · ⏳ à faire :
   ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
   j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
+- **Un select d'attraction plus moderne** <!--t:z3pb--> — 🧩 ui · ⏳ à faire : le champ de la
+  modale d'étape ([attractions-field.js](js/views/scenarios/detail/step-modal/attractions-field.js))
+  est un input nu qui n'ouvre sa liste qu'à la frappe. Le rendre interactif : les suggestions
+  visibles au focus, la navigation au clavier, le résultat survolé mis en avant.
 
 ## 💻 plan-tool
 
@@ -178,8 +181,8 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 - **Supprimer un voyage** <!--t:kgci--> — 🧩 ui · 🗃️ modèle · 🌙 plus tard : avec la page Voyages,
   puisque c'est de là qu'on supprime. Confirmation obligatoire, et les données rattachées partent
   avec.
-- **Voyageurs → coût par personne** <!--t:th4r--> — 🧮 calcul · ⏳ à faire : le récap d'un scénario
-  affiche le total divisé par le nombre de voyageurs, à côté du total général.
+- **Voyageurs → coût par personne** <!--t:th4r--> — 🧮 calcul · ⏳ à faire : le total général d'un
+  scénario affiche le montant divisé par le nombre de voyageurs, à côté du total.
 
 ## 🏠 Hébergements
 
@@ -222,9 +225,9 @@ statuts, départ / arrivée, prix et tableau sont décrits dans
 la recopier.
 
 - **Prix dans le total d'un scénario** <!--t:8suc--> — 🧮 calcul · ⏳ à faire : les transports
-  rattachés à un scénario s'ajoutent au récap ([recap.js](js/views/scenarios/detail/recap.js)), à
-  côté des hébergements, de la voiture et des charges fixes, selon la règle transverse — prix s'il
-  existe, budget sinon.
+  rattachés à un scénario s'ajoutent au total général
+  ([total.js](js/views/scenarios/detail/total.js)), à côté des hébergements, de la voiture et des
+  charges fixes, selon la règle transverse — prix s'il existe, budget sinon.
 
 ### Intégration aux scénarios
 
@@ -243,10 +246,6 @@ la recopier.
 La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
-- **Rattachement à une étape** <!--t:f934--> — 🧩 ui · 🗃️ modèle · ⏳ à faire : une étape de
-  scénario référence déjà une ville ou un hébergement
-  ([step-place-dropdown.js](js/views/scenarios/detail/step-place-dropdown.js)) ; reste à décider si
-  elle porte en plus une liste d'attractions, et ce que le détail du scénario en affiche.
 - **Une attraction peut-elle être une ville ?** <!--t:4heo--> — 🗃️ modèle · 🔍 à étudier : Montefioralle
   est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
   l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville

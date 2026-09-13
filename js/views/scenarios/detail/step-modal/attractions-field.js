@@ -43,45 +43,19 @@ function stepAttractionQuery() {
   return input ? input.value.trim() : '';
 }
 
-function stepAttractionMatches(query) {
-  const used = modal.payload.attractions.map((entry) => entry.attractionId);
-  const needle = query.toLowerCase();
-  return ofCurrentTravel(state.attractions)
-    .filter((a) => !used.includes(a.id) && (a.name || '').toLowerCase().includes(needle))
-    .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-// Un nom sans résultat se crée sur place : l'attraction ne porte alors que son nom, le reste se
-// complète depuis la page Attractions.
-function stepAttractionResults() {
-  const query = stepAttractionQuery();
-  if (!query) return '';
-  const matches = stepAttractionMatches(query);
-  if (!matches.length)
-    return /* HTML */ `<button
-      type="button"
-      class="attraction-result attraction-result-create"
-      onclick="createStepAttraction()"
-    >
-      ＋ Créer « ${escapeHtml(query)} »
-    </button>`;
-  return matches
-    .map(
-      (
-        a,
-      ) => `<button type="button" class="attraction-result" onclick="addStepAttraction('${a.id}')">
-        ${tagLabel(attractionType(a.type).emoji, escapeHtml(a.name))}
-      </button>`,
-    )
-    .join('');
+function stepAttractionsUsed() {
+  return modal.payload.attractions.map((entry) => entry.attractionId);
 }
 
 function stepAttractionsKeydown(e) {
   if (e.key !== 'Enter') return;
   e.preventDefault();
-  const matches = stepAttractionMatches(stepAttractionQuery());
-  if (matches.length) return addStepAttraction(matches[0].id);
-  createStepAttraction();
+  pickFirstAttraction(
+    stepAttractionQuery(),
+    stepAttractionsUsed(),
+    addStepAttraction,
+    createStepAttraction,
+  );
 }
 
 function addStepAttraction(attractionId) {
@@ -98,9 +72,7 @@ function removeStepAttraction(index) {
 function createStepAttraction() {
   const name = stepAttractionQuery();
   if (!name) return;
-  const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
-  upsertAttraction(item);
-  addStepAttraction(item.id);
+  addStepAttraction(createAttractionNamed(name).id);
 }
 
 function repaintStepAttractionsField() {
@@ -111,6 +83,31 @@ function repaintStepAttractionsField() {
   repaintStepAttractionResults();
 }
 
+function attractionResults(query, usedIds, pickCall, createCall) {
+  if (!query) return '';
+  const matches = attractionMatches(query, usedIds);
+  if (!matches.length)
+    return /* HTML */ `<button
+      type="button"
+      class="attraction-result attraction-result-create"
+      onclick="${createCall}"
+    >
+      ＋ Créer « ${escapeHtml(query)} »
+    </button>`;
+  return matches
+    .map(
+      (a) => `<button type="button" class="attraction-result" onclick="${pickCall(a.id)}">
+        ${tagLabel(attractionType(a.type).emoji, escapeHtml(a.name))}
+      </button>`,
+    )
+    .join('');
+}
+
 function repaintStepAttractionResults() {
-  document.getElementById('step-attractions-results').innerHTML = stepAttractionResults();
+  document.getElementById('step-attractions-results').innerHTML = attractionResults(
+    stepAttractionQuery(),
+    stepAttractionsUsed(),
+    (id) => `addStepAttraction('${id}')`,
+    'createStepAttraction()',
+  );
 }

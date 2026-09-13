@@ -239,21 +239,21 @@ favoris d'abord, puis type, puis nom. Même bloc de localisation que les villes 
 
 **Transport** — un trajet du voyage.
 
-| Champ                | Détail                                                                |
-| -------------------- | --------------------------------------------------------------------- |
-| mode                 | liste figée ; décide des champs utiles                                |
-| statut               | liste propre, courte                                                  |
-| départ, arrivée      | une ville de la table Villes, plus une précision libre à côté         |
-| dates et heures      | date et heure de départ, date et heure d'arrivée                      |
-| compagnie, référence | pour l'avion, le train, le bus et le ferry                            |
-| voiture              | en mode voiture seulement : référence une entrée de la table Voitures |
-| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`        |
-| lien                 |                                                                       |
-| notes                |                                                                       |
-| favori               | étoile en tête de ligne                                               |
+| Champ                | Détail                                                                                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------- |
+| mode                 | liste figée ; décide des champs utiles                                                                         |
+| statut               | liste propre, courte                                                                                           |
+| départ, arrivée      | une ville de la table Villes, plus une précision libre à côté                                                  |
+| dates et heures      | date et heure de départ, date et heure d'arrivée                                                               |
+| compagnie, référence | pour l'avion, le train, le bus et le ferry                                                                     |
+| voiture              | en mode voiture seulement : référence une entrée de la table Voitures, dont le loueur et le modèle s'affichent |
+| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                                 |
+| lien                 |                                                                                                                |
+| notes                |                                                                                                                |
+| favori               | étoile en tête de ligne                                                                                        |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, mode, départ, arrivée, part le, arrive le
-(masquée par défaut), compagnie / référence, prix, statut, lien, notes (masquée par défaut). Tri par
+(masquée par défaut), compagnie / loueur, prix, statut, lien, notes (masquée par défaut). Tri par
 défaut par date de départ, puis par mode.
 
 - **Mode et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
@@ -261,8 +261,10 @@ défaut par date de départ, puis par mode.
   Villes, et la précision (« Aéroport de Pise », « Santa Maria Novella ») se saisit dans un champ
   libre à côté. Le tableau affiche la ville, la précision en dessous.
 - **La voiture se référence, jamais ne se recopie** : un transport de mode voiture pointe sur une
-  entrée de la table des locations. Changer de mode dans la modale échange le bloc compagnie et le
-  bloc voiture ; la valeur de l'autre mode reste enregistrée et n'est pas effacée.
+  entrée de la table des locations. Le loueur y tient la place de la compagnie et le modèle celle de
+  la référence — la colonne affiche « Hertz » avec « Fiat 500 » en dessous, comme elle affiche
+  « Trenitalia » avec son numéro de billet. Changer de mode dans la modale échange le bloc compagnie
+  et le bloc loueur ; la valeur de l'autre mode reste enregistrée et n'est pas effacée.
 - **Un transport de mode voiture porte quand même son prix** : la location et le trajet sont deux
   coûts distincts — le prix de la location vit sur la voiture, celui du trajet (péages, essence, un
   aller ponctuel) sur le transport. Le transport ne lit jamais le prix de la location.
@@ -352,7 +354,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   « (copie) »), supprimer.
 - **Date de départ** : un champ dans l'en-tête du détail. Il date la première étape, et les nuits
   de chaque étape décalent les suivantes. Sans date de départ, aucune date ne s'affiche.
-- **Détail**, en deux colonnes : étapes + voiture + récap à gauche, bloc « Trajet » dans une
+- **Détail**, en deux colonnes : étapes + voiture + total général à gauche, bloc « Trajet » dans une
   colonne de droite collante. Bouton « Masquer / Afficher la carte », dont l'état est retenu d'une
   session à l'autre. Sous 1100 px, la carte repasse sous les étapes.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
@@ -367,8 +369,21 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   comparer deux variantes d'un même trajet sans rien perdre.
 - **Dupliquer une étape** (⧉) : la copie s'insère **juste sous** l'originale, champs identiques, sans
   suffixe au nom — on ajuste l'une des deux, ou on en masque une.
+- **Insérer une étape entre deux autres** : un `＋` apparaît au survol de l'espace qui sépare deux
+  cartes et pose à cette position une étape vide d'une nuit, qu'on remplit sur la carte. Le bouton
+  « Ajouter une étape » de l'en-tête ouvre la modale et ajoute en fin de liste.
 - **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
   hébergements favoris passent en tête de leur groupe, précédés d'une ★.
+- **Les attractions d'une étape** : sous la ligne du lieu, une ligne par attraction — son nom
+  précédé de l'emoji de son type, un nombre de visites (1 à 10) et un budget éditable, sur la même
+  grille que la ligne du lieu. La pastille du nom ouvre le même menu inline que le lieu : en
+  changer, ou détacher l'attraction. Une étape ne porte jamais deux fois la même.
+- **Attacher une attraction depuis la carte** : une pastille `＋` au bout de la ligne du lieu,
+  visible au survol de la carte, ouvre un menu qui s'ouvre sur un champ de recherche — les
+  attractions d'un voyage se comptent par dizaines. La liste propose celles qui ne sont pas déjà
+  attachées, `Entrée` prend la première. Un nom sans correspondance se crée sur place :
+  l'attraction ne porte alors que son nom, le reste se complète depuis la page Attractions. Les
+  attractions se choisissent aussi depuis la modale d'étape.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix.
@@ -377,13 +392,15 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
   rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
   tient, et les scénarios existants ne bougent pas.
-- **Total général**, en tête du récap : une ligne par bloc (hébergements, hébergements en GP si le
-  scénario en compte, voiture, charges fixes rattachées), puis le total des nuits et le montant.
-  Les GuestPoints y gardent leur propre montant, à côté des euros.
-- **Récap** : une ligne par lieu (lieu · nuits · total), les lieux les plus dormis en tête — un lieu
-  revisité tient sur une seule ligne, ses nuits additionnées. Les deux bouts du trajet l'encadrent
-  dans l'ordre des étapes, avec leur date. Puis « Total hébergements » ; les nuits en home exchange
-  ont **leur propre ligne en GuestPoints**.
+- **Total général**, le seul bloc de chiffres de l'écran : une ligne par poste (hébergements,
+  hébergements en GP si le scénario en compte, voiture, charges fixes rattachées), puis le total des
+  nuits et le montant. Les GuestPoints y gardent leur propre montant, à côté des euros.
+- **Le détail des hébergements se déplie** sous la ligne « Hébergements », au chevron : une ligne
+  par lieu (lieu · nuits · dates · total), **dans l'ordre du trajet** — un lieu revisité tient sur
+  une seule ligne, ses nuits additionnées et ses dates listées, placée à sa première date. Une
+  dernière étape sans nuit ferme la liste avec sa seule date d'arrivée. Le dépli est retenu d'une
+  session à l'autre, comme la carte. Les nuits en home exchange y figurent avec leur montant en
+  GuestPoints, dont la somme est la ligne « Hébergements en GP » juste en dessous.
 - **Les totaux se calculent par étape** : le coût d'une étape (budget saisi, sinon prix/nuit ×
   nuits) alimente aussi bien la ligne de son lieu que les totaux du scénario.
 - **Trajet** : une pastille par étape portant sa lettre, le tracé routier réel, et des chevrons
@@ -475,6 +492,5 @@ Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du 
   quel — à trancher.
 - **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
   « arrivée le » resté dans la modale, affiché à côté.
-- **Attractions** : la page existe, mais une attraction ne se rattache ni à une étape de
-  scénario ni à une ville — Montefioralle est donc saisie deux fois si elle est à la fois une
-  étape et une visite.
+- **Attractions** : une attraction se rattache à une étape de scénario, mais pas à une ville —
+  Montefioralle est donc saisie deux fois si elle est à la fois une étape et une visite.

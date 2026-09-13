@@ -1,9 +1,9 @@
 function scenarioRecapRow(r) {
   const cost = placeCost(r);
-  return /* HTML */ `<div class="acc-recap-row">
+  return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
     <span>${recapPlaceLabel(r)}</span>
     <span class="acc-recap-nights"
-      >${nightsLabel(r.nights)}${r.dates.length ? ` · ${r.dates.join(', ')}` : ''}</span
+      >${r.dates.length ? `${r.dates.join(', ')} · ` : ''}${nightsLabel(r.nights)}</span
     >
     <strong>${formatCosts(cost)}</strong>
   </div>`;

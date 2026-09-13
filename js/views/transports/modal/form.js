@@ -71,13 +71,13 @@ function transportCarrierFields(p) {
   if (p.mode === 'car') {
     const cars = ofCurrentTravel(state.cars).sort((a, b) => a.name.localeCompare(b.name));
     return /* HTML */ `<div class="field">
-      <label>Voiture</label>
+      <label>Loueur</label>
       <select id="t-car">
         <option value="" ${p.carId ? '' : 'selected'}>Aucune voiture</option>
         ${cars
           .map(
             (c) =>
-              `<option value="${c.id}" ${p.carId === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`,
+              `<option value="${c.id}" ${p.carId === c.id ? 'selected' : ''}>${escapeHtml(transportCarLabel(c))}</option>`,
           )
           .join('')}
       </select>

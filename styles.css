@@ -853,6 +853,27 @@ tr:hover td {
   gap: 10px;
   margin: 18px 0;
 }
+
+/* La bande d'insertion ne prend pas de place : son bouton, invisible au repos, reste survolable. */
+.step-gap {
+  position: relative;
+  height: 0;
+  margin: -5px 0;
+}
+.step-gap .icon-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  opacity: 0;
+  background: var(--paper-raised);
+  transition: opacity 0.12s;
+}
+.step-gap:hover .icon-btn,
+.step-gap .icon-btn:focus-visible {
+  opacity: 1;
+}
 /* test */
 .step-card {
   display: flex;
@@ -930,7 +951,7 @@ tr:hover td {
 }
 .step-acc {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px auto;
+  grid-template-columns: minmax(0, 1fr) 96px auto auto;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
@@ -957,13 +978,33 @@ tr:hover td {
 .step-attraction {
   margin-top: 4px;
 }
-.inline-tag-static {
-  cursor: default;
+/* Ajouter ne concurrence pas la lecture : la pastille ＋ n'apparaît qu'au survol de la carte. */
+.step-add-attraction {
+  opacity: 0;
+  transition: opacity 0.15s;
 }
-.inline-tag-static:hover {
-  border-color: var(--line);
+.step-card:hover .step-add-attraction,
+.attraction-add-dropdown[open] .step-add-attraction {
+  opacity: 1;
+}
+.inline-menu-search {
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 12.5px;
+}
+.inline-menu-search:focus {
+  outline: none;
+  border-color: var(--stone);
+}
+.inline-menu-item-create {
   color: var(--ink-soft);
+  font-style: italic;
 }
+
 .attraction-results {
   display: flex;
   flex-direction: column;
@@ -1104,6 +1145,34 @@ tr:hover td {
 .acc-recap-city {
   color: var(--ink-soft);
   font-weight: 400;
+}
+.acc-recap-fold > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.acc-recap-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.acc-recap-fold > summary > span:first-child::before {
+  content: '\203A';
+  display: inline-block;
+  width: 12px;
+  color: var(--ink-soft);
+  transition: transform 0.15s;
+}
+.acc-recap-fold[open] > summary > span:first-child::before {
+  transform: rotate(90deg);
+}
+.acc-recap-fold .acc-recap-row {
+  border-top: 1px solid var(--line);
+}
+.acc-recap-sub {
+  padding-left: 12px;
+  color: var(--ink-soft);
+}
+.acc-recap-sub strong {
+  font-weight: 600;
+  color: var(--ink);
 }
 .icon-btn {
   background: none;

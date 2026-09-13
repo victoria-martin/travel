@@ -60,8 +60,8 @@ const MODAL_TYPES = {
   sync: { body: () => syncForm() },
 };
 
-function openModal(type, a, b) {
-  modal = { type, ...MODAL_TYPES[type].open(a, b, type) };
+function openModal(type, ...args) {
+  modal = { type, ...MODAL_TYPES[type].open(...args) };
   render();
 }
 

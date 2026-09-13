@@ -42,7 +42,7 @@ COLUMN_SETS.transports = [
     cell: transportArrivalCell,
     sortValue: (t) => transportMoment(t.arriveDate, t.arriveTime),
   },
-  { key: 'carrier', label: 'Compagnie / référence', cell: transportCarrierCell },
+  { key: 'carrier', label: 'Compagnie / loueur', cell: transportCarrierCell },
   {
     key: 'price',
     label: 'Prix',
