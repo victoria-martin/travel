@@ -331,6 +331,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | -------------- | --------------------------------------------------------------------------- |
 | nom            | éditable en ligne dans le détail                                            |
 | favori         | ⭐, remonte en tête de liste                                                |
+| choisi         | ◉ un seul par voyage ; c'est lui que lisent les écrans transverses          |
 | date de départ | par défaut celle du voyage ; date les étapes, vide aucune date ne s'affiche |
 | voiture        | une référence à la table Voitures                                           |
 | charges        | des références à la table Charges fixes                                     |

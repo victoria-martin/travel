@@ -3,7 +3,7 @@ function scenarioRow(s) {
   return /* HTML */ `<div class="scenario-row" onclick="openScenario('${s.id}')">
     <div style="display:flex; gap:10px; align-items:center;">
       <span onclick="event.stopPropagation();">
-        ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
+        ${chosenScenarioButton(s)} ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
       </span>
       <div>
         <h4>${escapeHtml(s.name)}</h4>

@@ -96,7 +96,7 @@ const COLLECTIONS = {
     'notes',
     'favorite',
   ],
-  scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
+  scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite', 'isChosen'],
   tripNotes: ['travelId', 'id', 'text'],
   steps: [
     'travelId',
@@ -113,7 +113,7 @@ const COLLECTIONS = {
     'hidden',
   ],
 };
-const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden'];
+const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen'];
 const NUM_FIELDS = ['nights', 'travelers'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'tags'];
