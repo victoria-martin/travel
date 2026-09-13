@@ -26,17 +26,15 @@ function stepCard(scenario, step, idx) {
       ${stepDragHandle(step)} ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, idx)}
       <div class="step-body">
         <div class="step-title">
-          ${editableText(step.city, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
-            key: `step:${step.id}:city`,
+          ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
+            key: `step:${step.id}:name`,
             placeholder: 'ville…',
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
           ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
         </div>
         <div class="test-red">
           ${stepDetailLine(step)} ${stepOptionsBlock(scenario, step)}
-          ${(step.attractions || [])
-          .map((entry, i) => stepAttractionRow(scenario, step, entry, i))
-          .join('')}
+          ${extrasBlock(scenario, step, '')}
         </div>
       </div>
       <div class="step-actions">

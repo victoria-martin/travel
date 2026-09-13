@@ -45,7 +45,7 @@ function stepPinPopup(scenario, stops) {
       const lines = [stepDateRange(scenario, idx), nights ? nightsLabel(nights) : '']
         .filter(Boolean)
         .join(' · ');
-      return `<strong>${stepLetter(idx)} · ${escapeHtml(step.city)}</strong>${lines ? `<br/>${lines}` : ''}`;
+      return `<strong>${stepLetter(idx)} · ${escapeHtml(step.name)}</strong>${lines ? `<br/>${lines}` : ''}`;
     })
     .join('<div class="step-pin-sep"></div>');
 }

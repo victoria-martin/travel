@@ -31,11 +31,11 @@ function renameScenario(id, name) {
   saveNow();
 }
 
-function renameStep(scenarioId, stepId, city) {
+function renameStep(scenarioId, stepId, name) {
   const step = getStep(scenarioId, stepId);
-  step.city = city.trim() || step.city;
+  step.name = name.trim() || step.name;
   saveNow();
-  syncEditable(`step:${stepId}:city`, step.city);
+  syncEditable(`step:${stepId}:name`, step.name);
 }
 
 function insertStep(scenarioId, index, optionCount) {
@@ -68,41 +68,6 @@ function toggleStepHidden(scenarioId, stepId) {
 function deleteStep(scenarioId, stepId) {
   const s = getScenario(scenarioId);
   s.steps = s.steps.filter((st) => st.id !== stepId);
-  saveNow();
-  render();
-}
-
-// La recherche reste ouverte après un ajout : on attache souvent plusieurs attractions d'affilée.
-function attachStepAttraction(scenarioId, stepId, attractionId) {
-  const step = getStep(scenarioId, stepId);
-  if (!step.attractions) step.attractions = [];
-  step.attractions.push({ id: uid(), attractionId, count: 1, budget: '' });
-  saveNow();
-  render();
-  focusStepAttractionSearch(stepId);
-}
-
-function setStepAttraction(scenarioId, stepId, index, attractionId) {
-  getStep(scenarioId, stepId).attractions[index].attractionId = attractionId;
-  saveNow();
-  render();
-}
-
-function detachStepAttraction(scenarioId, stepId, index) {
-  openInlineMenu = null;
-  getStep(scenarioId, stepId).attractions.splice(index, 1);
-  saveNow();
-  render();
-}
-
-function setStepAttractionCount(scenarioId, stepId, index, count) {
-  getStep(scenarioId, stepId).attractions[index].count = parseInt(count) || 1;
-  saveNow();
-  render();
-}
-
-function setStepAttractionBudget(scenarioId, stepId, index, budget) {
-  getStep(scenarioId, stepId).attractions[index].budget = budget.trim();
   saveNow();
   render();
 }

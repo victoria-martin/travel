@@ -80,6 +80,21 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   n'invente jamais de voyage pour les accueillir — une réponse du Sheet à laquelle il manque
   l'onglet `travels` ou la colonne `travelId` créait sinon un voyage fantôme qui repartait dans la
   synchro et détournait les entrées des autres.
+- **Une étape porte une seule liste de lignes**, activités et dépenses mêlées, et c'est
+  l'`optionId` de la ligne qui dit à qui elle appartient : vide, elle est à l'étape ; sinon à cette
+  option. Une visite de vignoble vaut pour l'étape quel que soit l'hôtel retenu, un massage n'existe
+  que dans l'un des deux — les deux cas se disent sur la même liste. Une liste portée par chaque
+  option a été écartée : la synchro n'imbrique qu'un niveau sous l'étape, et dans le Sheet une ligne
+  d'option serait de toute façon une ligne à plat portant son `optionId`.
+- **Une ligne référence une activité ou une dépense, jamais les deux**, comme une option référence
+  une ville ou un hébergement. Rien ne se saisit librement sur une étape : un nom inconnu crée
+  l'entrée dans sa table, et elle existe donc aussi sur sa page. Un montant libre posé sur l'étape
+  a été écarté — il aurait compté dans le Total général sans apparaître sur la page Dépenses.
+- **Le budget d'une ligne est une enveloppe pour la ligne entière** : le nombre ne le multiplie pas,
+  contrairement au prix de ce qu'elle référence, qui est unitaire.
+- **Une attraction naît « À trier »** : c'est le seul statut posé d'office, dans les quatre
+  vocabulaires. Une entrée qui vient d'apparaître n'a été jugée par personne, et le dire vaut mieux
+  que « Non renseigné », qui ne distingue pas le neuf de l'oublié.
 - **Un restaurant est une attraction**, d'un type de plus — pas une entité à part. Les champs qu'on
   croyait lui appartenir (fourchette de prix, horaires, téléphone) valent aussi pour un musée ou une
   dégustation : ils sont portés par l'attraction, quel que soit son type. Une collection séparée
@@ -389,6 +404,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | notes          |                                                           |
 | masquée        | l'étape reste dans la liste mais sort de tous les calculs |
 | options        | au moins une ; une seule retenue                          |
+| lignes         | ses activités et ses dépenses, et celles de ses options   |
 
 **Option d'étape** — appartient à une étape.
 
@@ -399,6 +415,15 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | nuits   | 0 à 14                                                        |
 | budget  | remplace le coût calculé de l'hébergement                     |
 | retenue | c'est elle qui donne à l'étape ses nuits, son lieu, son coût  |
+
+**Ligne d'étape** — une activité ou une dépense posée sur une étape ou sur l'une de ses options.
+
+| Champ     | Détail                                                           |
+| --------- | ---------------------------------------------------------------- |
+| porteur   | l'`optionId` de la ligne ; vide, elle appartient à l'étape       |
+| référence | une attraction **ou** une dépense, exclusives                    |
+| nombre    | 1 à 10 ; multiplie le prix de la référence, jamais le budget     |
+| budget    | enveloppe de la ligne entière ; remplace le prix de la référence |
 
 - **À l'ouverture de l'app** : l'écran de départ est la liste des scénarios. Si le voyage courant
   porte un scénario nommé « TEST », c'est son détail qui s'ouvre directement — un raccourci de
@@ -441,19 +466,31 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   « Ajouter une étape » de l'en-tête ouvre la modale et ajoute en fin de liste.
 - **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
   hébergements favoris passent en tête de leur groupe, précédés d'une ★.
-- **Les attractions d'une étape** : sous la ligne du lieu, une ligne par attraction — son nom
-  précédé de l'emoji de son type, un nombre de visites (1 à 10) et un budget éditable, sur la même
-  grille que la ligne du lieu. La pastille du nom ouvre le même menu inline que le lieu : en
-  changer, ou détacher l'attraction. Une étape ne porte jamais deux fois la même.
-- **Attacher une attraction depuis la carte** : une pastille `＋` au bout de la ligne du lieu,
-  visible au survol de la carte, ouvre un menu qui s'ouvre sur un champ de recherche — les
-  attractions d'un voyage se comptent par dizaines. La liste propose celles qui ne sont pas déjà
-  attachées, `Entrée` prend la première. Un nom sans correspondance se crée sur place :
-  l'activité ne porte alors que son nom, le reste se complète depuis la page À faire. Les
-  attractions se choisissent aussi depuis la modale d'étape.
+- **Les lignes d'une étape** : sous la ligne du lieu, et sous l'hébergement de chaque card
+  d'option, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
+  précédé de l'emoji de son type (💶 pour une dépense) prend la largeur, le nombre et le montant
+  s'épinglent à droite. Un nombre de 1 et un montant vide ne s'affichent qu'au survol de leur ligne,
+  sans la quitter — sa hauteur ne saute pas sous la souris. La pastille du nom ouvre un menu qui
+  détache la ligne ou la remplace par une autre du même genre : une activité par une activité, une
+  dépense par une dépense. Un porteur ne porte jamais deux fois la même.
+- **Rattacher depuis la carte** : la dernière ligne du bloc est un `＋ ajouter` qui porte à sa
+  droite le total du porteur. Son menu s'ouvre sur un champ de recherche qui interroge d'un coup les
+  activités du voyage et ses dépenses, rendues en deux groupes — on cherche un nom sans se demander
+  de quelle table il vient. `Entrée` prend la première correspondance, l'activité avant la dépense.
+  Un nom sans correspondance se crée sur place, dans l'un ou l'autre vocabulaire : l'entrée ne porte
+  alors que son nom, le reste se complète depuis sa page. La modale d'étape, elle, ne montre et
+  n'ajoute que les activités de l'étape : celles d'une option se posent sur sa card, là où l'on voit
+  à quelle option elles appartiennent.
+- **Le champ activités de la modale d'étape** : les chips de ce qui est attaché, puis un champ de
+  recherche dont la liste s'ouvre **au focus** — sans requête elle propose tout ce qui n'est pas
+  déjà attaché, la création n'apparaissant qu'une fois un nom tapé. `↑` et `↓` déplacent le résultat
+  marqué, `Entrée` le prend, `Échap` referme la liste. Le survol marque le même résultat que les
+  flèches : il n'y en a jamais deux en avant.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
-  rattachée à une ville — seul un hébergement porte un prix.
+  rattachée à une ville — seul un hébergement porte un prix. Ses lignes se comptent à part, sur la
+  ligne « Activités et dépenses » du Total général : celles de l'étape plus celles de l'option
+  retenue, les autres options étant des comparaisons.
 - **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
   / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
   Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**

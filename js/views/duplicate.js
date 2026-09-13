@@ -44,11 +44,20 @@ function duplicateTransport(id) {
 // Une copie d'étape ne partage rien avec l'originale : ses options et ses activités sont des
 // lignes à elles, donc elles reprennent des identifiants neufs.
 function copyStep(step) {
+  const newOptionId = {};
+  const options = stepOptions(step).map((option) => {
+    newOptionId[option.id] = uid();
+    return { ...option, id: newOptionId[option.id] };
+  });
   return {
     ...step,
     id: uid(),
-    options: stepOptions(step).map((o) => ({ ...o, id: uid() })),
-    attractions: (step.attractions || []).map((a) => ({ ...a, id: uid() })),
+    options,
+    extras: stepExtras(step).map((line) => ({
+      ...line,
+      id: uid(),
+      optionId: newOptionId[line.optionId] || '',
+    })),
   };
 }
 

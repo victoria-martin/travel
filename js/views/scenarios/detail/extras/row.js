@@ -1,0 +1,27 @@
+/*
+  Une ligne : le nom, le nombre, le montant. Le montant garde la construction d'un prix d'option —
+  le prix dérivé en gris derrière le budget saisi — sur une largeur qui tient dans une card.
+*/
+function extraRow(scenario, step, line) {
+  return /* HTML */ `<div class="step-extra-row">
+    ${extraMenu(scenario, step, line)} ${extraCountDropdown(scenario, step, line)}
+    <span class="step-total">
+      ${extraAutoPrice(line)}
+      <span class="step-budget"
+        >${editableText(
+          line.budget,
+          `setExtraBudget('${scenario.id}','${step.id}','${line.id}', this.innerText)`,
+          { key: `extra:${line.id}:budget`, placeholder: 'budget…' },
+        )}${hasPriceValue(line.budget) ? ' €' : ''}</span
+      >
+    </span>
+  </div>`;
+}
+
+// Sans budget saisi, le prix de ce que la ligne référence reste affiché en gris, comme sur une
+// option — c'est lui qui compte dans le total tant que rien n'est saisi.
+function extraAutoPrice(line) {
+  if (hasPriceValue(line.budget)) return '';
+  const amount = extraAmount(line);
+  return amount ? `<span class="step-total-auto">${formatEuros(amount)}</span>` : '';
+}

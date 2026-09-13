@@ -1,8 +1,7 @@
 /*
   La recherche d'une attraction, partagée par le champ de la modale d'étape et le ＋ d'une carte :
-  les correspondances du voyage courant hors celles déjà attachées, et la création du nom tapé
-  quand il n'y en a aucune. Chacun rend sa propre liste : la modale en résultats, la carte en
-  items de menu déroulant.
+  les correspondances du voyage courant hors celles déjà attachées, et la création du nom tapé.
+  Chacun rend sa propre liste : la modale en résultats, la carte en items de menu déroulant.
 */
 
 function attractionMatches(query, usedIds) {
@@ -17,10 +16,4 @@ function createAttractionNamed(name) {
   const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
   upsertAttraction(item);
   return item;
-}
-
-function pickFirstAttraction(query, usedIds, pick, create) {
-  if (!query) return;
-  const matches = attractionMatches(query, usedIds);
-  return matches.length ? pick(matches[0].id) : create();
 }

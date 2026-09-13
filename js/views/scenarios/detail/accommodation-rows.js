@@ -42,7 +42,7 @@ function scenarioLastDayRow(scenario, idx) {
   const step = visibleSteps(scenario)[idx];
   if (!step || stepNights(step) > 0) return '';
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
-    <span>${escapeHtml(step.city || 'Sans nom')}</span>
+    <span>${escapeHtml(step.name || 'Sans nom')}</span>
     <span class="acc-recap-nights">${stepArrivalDay(scenario, idx)}</span>
     <span></span>
   </div>`;

@@ -1070,17 +1070,51 @@ tr:hover td {
   gap: 6px;
   flex-shrink: 0;
 }
-.step-attraction {
-  margin-top: 4px;
+/* Les lignes d'une étape ou d'une option — activités et dépenses — sur une grille à elles, et non
+   sur celle du lieu : leur nom prend la largeur, le nombre et le montant s'épinglent à droite. */
+.step-extras {
+  margin-top: 6px;
 }
-/* Ajouter ne concurrence pas la lecture : la pastille ＋ n'apparaît qu'au survol de la carte. */
-.step-add-attraction {
+.step-extra-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 0;
+}
+.step-extra-row .step-total {
+  grid-template-columns: auto auto;
+  justify-content: end;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+/* Un nombre de 1 n'apprend rien et un montant vide non plus : les deux s'effacent hors survol,
+   sans quitter la ligne — sinon sa hauteur sauterait sous la souris. */
+.extra-count-once .inline-tag,
+.step-extra-row .editable:empty::before {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.step-card:hover .step-add-attraction,
-.attraction-add-dropdown[open] .step-add-attraction {
+.step-extra-row:hover .extra-count-once .inline-tag,
+.extra-count-once[open] .inline-tag,
+.step-extra-row:hover .editable:empty::before {
   opacity: 1;
+}
+/* Ajouter tient sa propre ligne, sous l'hébergement : elle reste lisible sans survol. */
+.step-extra-add {
+  justify-self: start;
+  padding: 3px 2px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.step-extra-add::-webkit-details-marker {
+  display: none;
+}
+.step-extra-add:hover {
+  color: var(--ink);
 }
 .inline-menu-search {
   width: 100%;
@@ -1123,7 +1157,8 @@ tr:hover td {
   text-align: left;
   cursor: pointer;
 }
-.attraction-result:hover {
+/* Un seul résultat est marqué à la fois : le survol pose le même rang que les flèches. */
+.attraction-result-active {
   background: var(--paper-raised);
 }
 .attraction-result-create {

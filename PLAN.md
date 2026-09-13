@@ -50,10 +50,6 @@ les types.
   ([Code.js](apps-script/Code.js)) comme seule source de la reprise, et repartent vides au premier
   enregistrement. Une fois la conversion passée dans le Sheet, les retirer de la collection avec
   `adoptLegacyStep`, des deux côtés — l'Apps Script et [storage.js](js/storage.js).
-- **Un select d'attraction plus moderne** <!--t:z3pb--> — 🧩 ui · ⏳ à faire : le champ de la
-  modale d'étape ([attractions-field.js](js/views/scenarios/detail/step-modal/attractions-field.js))
-  est un input nu qui n'ouvre sa liste qu'à la frappe. Le rendre interactif : les suggestions
-  visibles au focus, la navigation au clavier, le résultat survolé mis en avant.
 
 ## 💻 plan-tool
 
@@ -293,9 +289,11 @@ table et leur modale.
   des dépenses dérivées, et une condition par source qui dit ce qui y entre —
   `accommodation.status === 'booked'`, `scenario.isChosen`, et la troisième reste à nommer.
 - **Une dépense saisie appartient-elle au scénario ?** <!--t:x8dr--> — 🗃️ modèle · 🔍 à étudier :
-  aujourd'hui elle appartient au voyage. Reste à décider si certaines n'existent que dans un
-  scénario — et si oui, par un `scenarioId` optionnel sur la dépense, ou par la liste `costIds` que
-  le scénario porte déjà.
+  elle appartient au voyage, et le rattachement se fait par des listes portées côté scénario — les
+  `costIds` du scénario, les lignes d'une étape ou d'une option. Le `scenarioId` optionnel sur la
+  dépense est écarté : une dépense ne peut pas porter un champ par niveau de rattachement. Reste à
+  décider si une dépense peut n'exister **que** dans un scénario, donc disparaître de la page
+  Dépenses.
 
 ## ✈️ Transports
 

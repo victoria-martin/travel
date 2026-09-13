@@ -8,13 +8,10 @@ function stepOptionsBlock(scenario, step) {
   if (options.length < 2)
     return /* HTML */ `<div class="step-acc">
       ${optionLine(scenario, step, options[0] || NO_OPTION)} ${addOptionButton(scenario, step)}
-      ${stepAttractionAddButton(scenario, step)}
     </div>`;
   return /* HTML */ `<div class="step-options">
     ${options.map((option) => optionCard(scenario, step, option)).join('')}
-    <div class="step-option-adds">
-      ${addOptionButton(scenario, step)} ${stepAttractionAddButton(scenario, step)}
-    </div>
+    <div class="step-option-adds">${addOptionButton(scenario, step)}</div>
   </div>`;
 }
 
@@ -43,6 +40,7 @@ function optionCard(scenario, step, option) {
     <div class="option-foot">
       ${optionPriceSlot(scenario, step, option)} ${optionChosenButton(scenario, step, option)}
     </div>
+    ${extrasBlock(scenario, step, option.id)}
   </div>`;
 }
 

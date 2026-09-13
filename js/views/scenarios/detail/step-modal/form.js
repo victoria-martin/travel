@@ -1,11 +1,11 @@
 function emptyStep(optionCount = 1) {
   return {
     id: null,
-    city: '',
+    name: '',
     region: '',
     arrivalDate: '',
     notes: '',
-    attractions: [],
+    extras: [],
     hidden: false,
     options: Array.from({ length: optionCount }, (_, i) => ({
       ...emptyStepOption(),
@@ -21,7 +21,7 @@ function stepForm(p) {
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
     <div class="field">
       <label>Ville</label
-      ><input id="s-city" type="text" value="${escapeHtml(p.city)}" placeholder="Sienne" />
+      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" placeholder="Sienne" />
     </div>
     <div class="field-row">
       <div class="field">

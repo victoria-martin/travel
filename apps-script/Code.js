@@ -119,14 +119,16 @@ const COLLECTIONS = {
     'travelId',
     'id',
     'scenarioId',
-    'city',
+    'name',
     'region',
     'arrivalDate',
     'notes',
     'hidden',
-    // Lieu, nuits et budget vivaient sur l'étape avant les options : ces quatre colonnes ne sont
-    // plus que la source de la reprise, et repartent vides au premier enregistrement.
+    // Lieu, nuits et budget vivaient sur l'étape avant les options, et son titre s'appelait
+    // `city` : ces cinq colonnes ne sont plus que la source de la reprise, et repartent vides au
+    // premier enregistrement.
     'nights',
+    'city',
     'cityId',
     'accommodationId',
     'budget',
@@ -143,10 +145,22 @@ const COLLECTIONS = {
     'budget',
     'isSelected',
   ],
-  stepAttractions: ['travelId', 'id', 'scenarioId', 'stepId', 'attractionId', 'count', 'budget'],
+  // Une ligne référence une activité ou une dépense, et se rattache à l'étape ou à l'une de ses
+  // options : `optionId` vide la donne à l'étape.
+  stepAttractions: [
+    'travelId',
+    'id',
+    'scenarioId',
+    'stepId',
+    'optionId',
+    'attractionId',
+    'costId',
+    'count',
+    'budget',
+  ],
 };
-// Une étape porte deux listes filles, chacune dans son onglet : ses options et ses activités.
-const STEP_CHILDREN = { options: 'stepOptions', attractions: 'stepAttractions' };
+// Une étape porte deux listes filles, chacune dans son onglet : ses options et ses lignes.
+const STEP_CHILDREN = { options: 'stepOptions', extras: 'stepAttractions' };
 const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
@@ -250,6 +264,8 @@ function groupByParent(rows, parentColumn) {
 // de l'état à chaque lecture, et tout envoi se verrait refuser en conflit.
 // À retirer une fois la conversion passée dans le Sheet.
 function adoptLegacyStep(step) {
+  if (step.city) step.name = step.name || step.city;
+  delete step.city;
   if (step.options.length === 0)
     step.options = [
       {

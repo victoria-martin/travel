@@ -95,7 +95,11 @@ function fixedCostsTotal(scenario) {
 function scenarioTotal(scenario) {
   const acc = accommodationTotals(scenario);
   return {
-    euros: acc.euros.amount + carTotal(scenario) + fixedCostsTotal(scenario),
+    euros:
+      acc.euros.amount +
+      carTotal(scenario) +
+      fixedCostsTotal(scenario) +
+      scenarioExtrasTotal(scenario),
     guestPoints: acc.guestPoints.amount,
   };
 }

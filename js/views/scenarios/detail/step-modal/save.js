@@ -4,11 +4,11 @@ function saveStep(id) {
   const edited = editableOption(current);
   const item = {
     id: id || uid(),
-    city: document.getElementById('s-city').value.trim(),
+    name: document.getElementById('s-name').value.trim(),
     region: document.getElementById('s-region').value.trim(),
     arrivalDate: document.getElementById('s-date').value.trim(),
     notes: document.getElementById('s-notes').value.trim(),
-    attractions: [...(modal.payload.attractions || [])],
+    extras: [...(modal.payload.extras || [])],
     hidden: !!current.hidden,
     options: stepOptions(current).map((o) =>
       o.id === edited.id

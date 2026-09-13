@@ -10,6 +10,7 @@ function scenarioTotalBlock(scenario) {
     }
     ${scenarioTotalDetailRow('Voiture', formatEuros(carTotal(scenario)))}
     ${scenarioTotalDetailRow('Dépenses', formatEuros(fixedCostsTotal(scenario)))}
+    ${scenarioTotalDetailRow('Activités et dépenses', formatEuros(scenarioExtrasTotal(scenario)))}
     <div class="acc-recap-row acc-recap-total">
       <span>Total</span>
       <span class="acc-recap-nights">${nightsLabel(totalNights(scenario))}</span>
