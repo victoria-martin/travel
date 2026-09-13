@@ -243,12 +243,14 @@ function groupByParent(rows, parentColumn) {
 }
 
 // Reprise des étapes d'avant les options : le lieu, les nuits et le budget de l'étape deviennent
-// sa première option. À retirer une fois la conversion passée dans le Sheet.
+// sa première option, qui porte l'identifiant de l'étape — un `uid()` neuf changerait l'empreinte
+// de l'état à chaque lecture, et tout envoi se verrait refuser en conflit.
+// À retirer une fois la conversion passée dans le Sheet.
 function adoptLegacyStep(step) {
   if (step.options.length === 0)
     step.options = [
       {
-        id: uid(),
+        id: step.id,
         name: '',
         cityId: step.cityId || null,
         accommodationId: step.accommodationId || null,

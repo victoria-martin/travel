@@ -65,6 +65,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   nombre d'étapes. C'est une variante mise de côté, gardée sous la main plutôt que supprimée. Seule
   la liste du détail la montre, grisée. Conséquence : partout ailleurs, le rang d'une étape est son
   rang **parmi les visibles** — masquer la deuxième fait passer C en B, et décale les dates.
+- **Une reprise de format ne fabrique jamais d'identifiant neuf.** Elle se rejoue à chaque lecture,
+  des deux côtés de la synchro : l'option reconstituée d'une étape d'avant les options porte donc
+  l'identifiant de son étape. Un identifiant tiré au hasard change l'empreinte de l'état que le
+  Sheet renvoie, et la synchro compare des empreintes — tout envoi se verrait alors refuser en
+  conflit, indéfiniment.
 - **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`,
   placée en première colonne de chaque onglet pour trier et filtrer d'un coup d'œil — y compris sur
   l'onglet `steps`, où elle est recopiée depuis le scénario parent.
@@ -398,13 +403,13 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   colonne de droite collante. Bouton « Masquer / Afficher la carte », dont l'état est retenu d'une
   session à l'autre. Sous 1100 px, la carte repasse sous les étapes.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
-  le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne, puis en
-  dessous ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si 0 nuit),
-  sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite ses options.
-  Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la ligne où l'étape
-  atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste éditable en ligne,
-  d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable, masquable,
-  supprimable.
+  le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
+  même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
+  0 nuit), puis en dessous sa date d'arrivée libre si elle est saisie dans la modale, et ses notes.
+  Ensuite ses options. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
+  ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
+  éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
+  masquable, supprimable.
 - **Les options d'une étape** : à une seule option, elle se lit comme la ligne qu'elle a toujours
   été — un select de lieu (**une ville ou un hébergement**, les deux dans le même select,
   exclusifs), un select de nuits (0 à 14), et en bout de ligne le coût. À partir de deux, elles se

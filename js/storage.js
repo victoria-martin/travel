@@ -87,6 +87,9 @@ function migrateData(data) {
   Avant les options, le lieu, les nuits et le budget vivaient sur l'étape ; ils deviennent sa
   première option. Une activité d'étape, elle, n'avait pas d'identifiant : elle en gagne un, sans
   quoi le Sheet lui en inventerait un neuf à chaque lecture.
+  L'option de reprise porte l'identifiant de son étape, et jamais un `uid()` neuf : la reprise se
+  rejoue à chaque lecture des deux côtés, et deux résultats différents feraient diverger l'empreinte
+  du Sheet à chaque appel — donc un conflit à chaque envoi.
 */
 function adoptLegacyStep(step) {
   if (!Array.isArray(step.attractions)) step.attractions = [];
@@ -96,7 +99,7 @@ function adoptLegacyStep(step) {
   if (!Array.isArray(step.options) || step.options.length === 0)
     step.options = [
       {
-        id: uid(),
+        id: step.id,
         name: '',
         cityId: step.cityId || null,
         accommodationId: step.accommodationId || null,

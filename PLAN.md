@@ -20,7 +20,7 @@ les types.
 - **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🔍 à étudier : les dates se
   calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
   le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
-  ([step-card.js:94](js/views/scenarios/detail/step-card.js#L94)). Le retirer ou lui donner un rôle.
+  ([step-card.js:73](js/views/scenarios/detail/step-card.js#L73)). Le retirer ou lui donner un rôle.
 - **Bouton « + Ajouter une voiture »** <!--t:tzp2--> — 🧩 ui · 🔍 à étudier : ouvre la modale
   Voitures et rattache la nouvelle voiture au scénario.
 
