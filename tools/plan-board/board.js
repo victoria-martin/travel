@@ -97,13 +97,14 @@ function taskButton(task) {
     aria-current="${task.id === openTaskId}">
     <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
       ${doing ? '<span class="doing-dot" aria-hidden="true"></span>' : ''}
-      ${pill(planStatus(task.status))}
       ${rowPriorityButton(task)}
-      <span class="task-types">${task.types.map(typeDot).join('')}</span>
       <span class="task-title">${esc(task.title)}</span>
+      ${pill(planStatus(task.status))}
+      <span class="task-types">${task.types.map(typeDot).join('')}</span>
       <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
     </button>
     ${task.session ? '<span class="task-session" title="Session liée">💬</span>' : ''}
+    ${taskDoneButton(task)}
     ${taskActionButtons(task)}
   </div>`;
 }
@@ -189,7 +190,7 @@ function renderBoard() {
 // Un panneau flottant se referme dès qu'on clique hors de lui — hors de tout ce qu'il porte, et
 // pas seulement hors de ses boutons : son fond en fait partie.
 const DISMISSED = [
-  { inside: '.row-priority', close: closeRowPriority },
+  { inside: '.pill-menu', close: closePillMenu },
   { inside: '.toolbar', close: closeFilterPanel },
 ];
 
@@ -206,8 +207,14 @@ const CLICKS = {
   open: (target) => openDrawer(target.dataset.id),
   close: closeDrawer,
   cancel: closeDrawer,
-  'row-priority': (target) => toggleRowPriority(target.dataset.id),
+  'row-priority': (target) => togglePillMenu(rowPriorityKey(target.dataset.id)),
   'row-priority-pick': (target) => setRowPriority(target.dataset.id, target.dataset.value),
+  'new-task-type': () => togglePillMenu('new-task:type'),
+  'new-task-priority': () => togglePillMenu('new-task:priority'),
+  'new-task-status': () => togglePillMenu('new-task:status'),
+  'new-task-type-pick': (target) => pickNewTaskType(target.dataset.value),
+  'new-task-priority-pick': (target) => pickNewTaskPriority(target.dataset.value),
+  'new-task-status-pick': (target) => pickNewTaskStatus(target.dataset.value),
   'filter-archived': toggleArchived,
   'filter-clear': clearFilters,
   'filter-panel': toggleFilterPanel,
@@ -245,6 +252,8 @@ const CLICKS = {
   'view-section': (target) => openView('section', target.dataset.value),
   'view-subsection': (target) => openSubsectionView(target.dataset.section, target.dataset.value),
   'view-all': () => openView('all'),
+  'task-done': (target) => markTaskDone(target.dataset.id),
+  'close-sessions': runCloseSessions,
   'task-start': (target) => runTaskAction('task-start', target.dataset.id),
   'task-commit': (target) => runTaskAction('task-commit', target.dataset.id),
   detach: () => (detached && !detached.closed ? detached.close() : detachWindow()),
@@ -282,6 +291,17 @@ function bindApp() {
     const target = event.target.closest('[data-act]');
     if (target && INPUTS[target.dataset.act]) INPUTS[target.dataset.act](target);
   });
+  app.addEventListener('keydown', onSubmitKey);
+}
+
+// Enter is the ✓ of a typed line: the field names the act it fires, and an empty one fires
+// nothing — like the button, which stays disarmed.
+function onSubmitKey(event) {
+  if (event.key !== 'Enter') return;
+  const field = event.target.closest('[data-submit]');
+  if (!field || !field.value.trim()) return;
+  event.preventDefault();
+  CLICKS[field.dataset.submit]();
 }
 
 function onKeydown(event) {

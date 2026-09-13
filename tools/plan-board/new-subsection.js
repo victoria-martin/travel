@@ -73,7 +73,8 @@ function newSubsectionForm(section, where) {
   return `<div class="new-subsection">
     <div class="inline-form">
       <input class="subsection-input" id="subsection-name" data-act="subsection-name"
-        value="${esc(newSubsection.name)}" placeholder="Le nom du groupe" />
+        data-submit="subsection-add" value="${esc(newSubsection.name)}"
+        placeholder="Le nom du groupe" />
       ${confirmButton('subsection-add', 'subsection-add', newSubsection.name.trim())}
       ${cancelButton('subsection-cancel')}
     </div>

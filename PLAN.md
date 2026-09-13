@@ -60,9 +60,9 @@ les types.
   la carte comme dans le panneau : ▶ ouvre la session sur `/plan-tool-start-task`, ✓ sur `/plan-tool-commit-task`.
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
-- **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard
-- **tags dans task form (type et statut)** <!--t:ydld--> — 🚧 en cours : pas les mêmes tags entre
-  style et status prends le style de status
+- **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard · 🔵 basse
+- **tags dans task form (type et statut)** <!--t:ydld--> — ✅ fait : pas les mêmes tags entre style
+  et status prends le style de status
 
   on comprend pas bien quels tags sont selectionnés peut etr qu'il faut les faire passer au debut de
   la liste qd selectionn" ?
@@ -98,26 +98,44 @@ les types.
   };
 
   tu peux mettre à jour le nom de classes css + creer la classe focus stp
+
 - **donner une priorité aux taches !** <!--t:49ng--> — ✅ fait
   - priority : low, medium, high, null or to_determine
-  - + status pas obligatoire pour une tâche,
+  - - status pas obligatoire pour une tâche,
   - les nouvelles tâches sont crées sans statut ou alors avec status. "a trier" c est mieux et
     prority null aussi
-- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · 🚧 en cours : un
+- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · ✅ fait : un
   clic sur la liste des sessions en cours ouvre cette liste ds le main panel
 
   un clic sur une section fait la même action, ouvre celle liste ds le main panel. on ajoute une
   fleche gauche a gauche du nom de la section pr revenir plus facilement à la liste
 
-  voir comment filtrer les sections
+  voir comment filtrer les sections (fix par barre de filtre global pour l instant, cf - **créer une meilleur toolbar pour filtrer** <!--t:1ab9--> — 🧩 ui · ✅ fait : elle sera en
+  )
 
   tri ok (drag and drop)
+
 - **indicateur visuel pour une tâche en cours** <!--t:oqg6--> — 🧩 ui · ✅ fait : la carte prend la
   teinte du statut et un point pulse dans la gouttière, à gauche des pastilles
+- **Simplifier les hooks Claude Code** <!--t:zg3m--> — 🔌 infra · 🔍 à étudier : les hooks de
+  `~/.claude/settings.json` ont été écrits vite, plusieurs pistes de simplification à trancher.
+
+  `cc-status` est déclaré dix fois, une entrée par événement, alors qu'un même binaire les couvre
+  tous : une seule entrée sans filtre de matcher ferait pareil.
+
+  `postmortem-on-error-signal.py` porte des motifs morts — `\btu te tromp` couvre déjà
+  `\btu te trompes de\b`, `\bwrong\b` couvre déjà `\byou (got it |were )?wrong\b` — et un
+  `\bbordel\b` qui déclenche le rituel post-mortem sur un simple juron (« c'est un peu le
+  bordel »).
+
+  `pr-radar-session-start` recopie cinq fois la même phrase d'invocation, alors que seuls le nom du
+  skill et le préfixe changent : une table marqueur → skill le dirait en une ligne par cas.
+
+- **ajouter toasters** <!--t:o8vd--> — 🧩 ui · ⏳ à faire · 🔴 haute
 
 ### layout
 
-- **créer une meilleur toolbar  pour filtrer** <!--t:1ab9--> — 🧩 ui · ✅ fait : elle sera en
+- **créer une meilleur toolbar pour filtrer** <!--t:1ab9--> — 🧩 ui · ✅ fait : elle sera en
   header de l app a la palce de tous les pills
 
   fais un truc intelligent qui prend en compte le fait que j ai potentielement bcp d options pr les
@@ -125,6 +143,42 @@ les types.
 
   et qd on est ds une view genre une section ou la liste des sessions en cours ou sur la liste de
   toutes les tasts quasiment partout en fait
+
+- **ajouter un bouton pour filtrer. plusioeurs niveaux. s inspirer de celui dans /travel** <!--t:8bxq--> — 🧩 ui · ⏳ à faire · 🔴 haute
+- **task row** <!--t:cdjr--> — ✅ fait · 🔴 haute : quand creation de task inline : afficher le
+  pill avec le + pour ajouter un status un type ou une priorité
+
+  mets les elements dans l ordre : type priorité status ds la task aussi
+
+  touche "enter" submit qd le row est focus
+
+- **orga entre sous groupes et sections** <!--t:d6k4--> — 📥 à trier : actuellement, on a
+
+  titre de la section | bouton pour ajouter un groupe
+
+  liste des taches de la section
+  ajouter une tâche à la section
+
+  sous groupe
+  liste des items du sous groupe
+  ajouter une nouvelle tache au sous groupe
+
+  moi je veux
+
+  titre de la section
+
+  sous groupe
+  liste des items du sous groupe
+  ajouter une nouvelle tache au sous groupe
+
+  ajouter un sous groupe
+
+  liste des taches de la section
+  ajouter une tâche à la section
+
+### Exportation
+
+- **pouvoir ajouter des PR** <!--t:z7t5--> — 📥 à trier
 
 ## 🧳 Valise
 

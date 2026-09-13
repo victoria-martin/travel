@@ -60,6 +60,20 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — le panneau principal ne montre qu'**une liste à la fois** : tout le plan, une
+  page, ou les sessions ouvertes. C'est une préférence de vue et non un état du plan, donc elle vit
+  dans le navigateur ([view.js](tools/plan-board/view.js)) sur le modèle de
+  [fold.js](tools/plan-board/fold.js) — le board se recharge à chaque enregistrement, et une liste
+  ouverte exprès ne doit pas se refermer derrière nous. La barre latérale cesse d'être une liste
+  d'ancres pour devenir le sélecteur de ces vues, ce qui sort la liste des sessions de la barre
+  étroite : [sessions-nav.js](tools/plan-board/sessions-nav.js) n'en garde que l'entrée et son
+  compte, [sessions-view.js](tools/plan-board/sessions-view.js) tient la liste, où une session se
+  lit comme une carte de tâche. Une vue ne s'empile pas, elle remplace la précédente — d'où une
+  seule flèche `←` en tête de la page ouverte, et pas d'historique. Un `###` n'est pas une vue à
+  lui : ouvrir un groupe ouvre sa page et s'y pose. Une page renommée ou disparue emporte sa vue, on
+  retombe sur la liste complète. Le filtre, lui, reste global — il vit dans la topbar, au-dessus de
+  la liste — donc filtrer les pages ne demande rien de plus : la barre vaut dans toutes les vues.
+
 - **2026-09-13** — filtrer se lit comme **deux listes de mots** — ceux qu'on veut voir, ceux qu'on
   veut hors de la liste — et non comme un état posé sur chacun des trente mots du vocabulaire : le
   panneau porte alors ce qui est filtré, sa taille suit ce qu'on y pose, et un mot ne pouvant vivre

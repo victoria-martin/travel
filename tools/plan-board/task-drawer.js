@@ -2,6 +2,7 @@ let openTaskId = null;
 let preview = null;
 let archiveArmed = false;
 let sessionError = '';
+let saveError = '';
 let previewFailed = '';
 
 const findTask = (id) => allTasks().find((task) => task.id === id);
@@ -24,6 +25,7 @@ async function openDrawer(id) {
   preview = null;
   archiveArmed = false;
   sessionError = '';
+  saveError = '';
   previewFailed = '';
   renderBoard();
   renderDrawer();
@@ -84,7 +86,8 @@ function renderTaskDrawer() {
         <label class="field-label">Session Claude</label>
         ${sessionBlock()}
       </div>
-      ${draftFields()}`,
+      ${draftFields()}
+      ${saveError ? `<p class="hint hint-warn">${esc(saveError)}</p>` : ''}`,
     foot: `
       <button class="btn btn-primary" id="save" data-act="save" ${isDirty() ? '' : 'disabled'}>
         Enregistrer
@@ -105,23 +108,20 @@ function refreshDrawerFoot() {
   if (save) save.disabled = !currentDrawer().canSave();
 }
 
+// Saving closes the drawer, as it does for a section or a group: what was written reads back in
+// the list. A refusal from the server keeps it open, with the error under the fields.
 async function saveDraft() {
-  const id = openTaskId;
-  board = await api(`/api/tasks/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(draft),
-  });
-  const task = findTask(id);
-  draft = {
-    title: task.title,
-    types: [...task.types],
-    priority: task.priority,
-    status: task.status,
-    body: task.body,
-  };
-  renderBoard();
-  renderDrawer();
+  try {
+    board = await api(`/api/tasks/${openTaskId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(draft),
+    });
+    closeDrawer();
+  } catch (error) {
+    saveError = error.message;
+    renderDrawer();
+  }
 }
 
 async function launchSession() {

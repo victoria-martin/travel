@@ -672,11 +672,14 @@ code,
   box-shadow: var(--shadow-lift);
 }
 /* La carte porte le cadre et les actions ; ce bouton-ci est la part qui ouvre le tiroir. */
+/* Les colonnes se lisent d'une ligne à l'autre : seuls le titre et les notes s'étirent, les trois
+   pastilles gardent la largeur de leur mot le plus long. */
 .task-open {
   position: relative;
   flex: 1;
   min-width: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr) 112px 74px minmax(0, 1.2fr);
   align-items: center;
   gap: 10px;
   padding: 10px 6px 10px 32px;
@@ -718,6 +721,56 @@ code,
   border-color: var(--accent);
   color: var(--accent);
 }
+/* Deux familles de gestes sur une ligne : le ✅ écrit ici, il reste visible en retrait ; ▶ et ✓
+   ouvrent un terminal, ils n'apparaissent qu'au survol. */
+.task-done {
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: none;
+  font-size: 12px;
+  line-height: 1;
+  filter: grayscale(1);
+  opacity: 0.4;
+  cursor: pointer;
+  transition:
+    filter 0.15s,
+    opacity 0.15s,
+    border-color 0.15s;
+}
+.task:hover .task-done,
+.session-row:hover .task-done,
+.task-done:focus-visible {
+  outline: none;
+  filter: none;
+  opacity: 1;
+}
+.task-done:hover {
+  border-color: var(--hue-success);
+}
+.task-done + .task-action {
+  margin-left: 4px;
+}
+/* Un skill du board ne porte pas sur une ligne : il se tient en bout de titre, comme un bouton. */
+.board-skill {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.board-skill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .task[aria-current='true'] {
   border-color: var(--accent);
   box-shadow: inset 3px 0 0 var(--accent);
@@ -727,8 +780,16 @@ code,
   flex-shrink: 0;
   gap: 4px;
 }
+/* Trois types tiennent dans la colonne ; un quatrième se coupe plutôt que de pousser les notes. */
+.task-open .task-types {
+  overflow: hidden;
+}
+/* Une pastille épouse son mot : c'est le bord gauche de la colonne qui aligne, pas sa largeur. */
+.task-open > .pill,
+.task-open > .pill-menu {
+  justify-self: start;
+}
 .task-title {
-  flex: 1;
   min-width: 0;
   font-weight: 500;
   overflow: hidden;
@@ -736,7 +797,6 @@ code,
   white-space: nowrap;
 }
 .task-excerpt {
-  flex: 1.2;
   min-width: 0;
   color: var(--ink-soft);
   font-size: 13px;
@@ -748,28 +808,32 @@ code,
   flex-shrink: 0;
   font-size: 12px;
 }
-/* La priorité est la seule pastille qui s'édite depuis la ligne : elle ouvre l'échelle sous elle,
-   et le ＋ d'une tâche sans priorité attend le survol de sa ligne. */
-.row-priority {
+/* A pill opening its vocabulary under it: the priority from a row, the three axes from the line
+   one types. On a task the ＋ of an empty axis waits for the row to be hovered; on the line being
+   typed it shows from the start — that is where those words get put on. */
+.pill-menu {
   position: relative;
   flex-shrink: 0;
   display: inline-flex;
 }
-.row-priority .pill-add {
+.pill-menu .task-types,
+.pill-menu .pill {
+  cursor: pointer;
+}
+.task .pill-menu .pill-add {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.task:hover .row-priority .pill-add,
-.row-priority .pill-add[aria-pressed='true'] {
+.task:hover .pill-menu .pill-add,
+.task .pill-menu .pill-add[aria-pressed='true'] {
   opacity: 1;
 }
-.row-priority-menu {
+.pill-menu-items {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
   z-index: 5;
-  display: flex;
-  gap: 4px;
+  max-width: 420px;
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -1338,6 +1402,9 @@ code,
   .sections,
   .task-excerpt {
     display: none;
+  }
+  .task-open {
+    grid-template-columns: 118px minmax(0, 1fr) 112px 74px;
   }
   .section-title,
   .view-title {

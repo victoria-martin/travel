@@ -47,7 +47,7 @@ function newSectionForm() {
   return `<div class="new-section">
     <div class="inline-form">
       <input class="section-input" id="section-name" data-act="section-name"
-        value="${esc(newSection)}" placeholder="Le nom de la page" />
+        data-submit="section-add" value="${esc(newSection)}" placeholder="Le nom de la page" />
       ${confirmButton('section-add', 'section-add', newSection.trim())}
       ${cancelButton('section-cancel')}
     </div>
