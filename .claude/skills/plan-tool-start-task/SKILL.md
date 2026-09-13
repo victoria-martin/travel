@@ -1,11 +1,11 @@
 ---
-name: start-task
-description: Démarrer la tâche du board qui a ouvert cette session — la relire dans PLAN.md, l'état des lieux, le design proposé, puis attendre le go. Utiliser quand l'utilisatrice dit « /start-task », « on démarre la tâche », ou quand la session s'ouvre sur ce prompt.
+name: plan-tool-start-task
+description: Démarrer la tâche du board qui a ouvert cette session — la relire dans PLAN.md, l'état des lieux, le design proposé, puis attendre le go. Utiliser quand l'utilisatrice dit « /plan-tool-start-task », « on démarre la tâche », ou quand la session s'ouvre sur ce prompt.
 ---
 
 # Démarrer la tâche de la session
 
-Le board ouvre une session par tâche, et son prompt d'ouverture est `/start-task` : le détail de la
+Le board ouvre une session par tâche, et son prompt d'ouverture est `/plan-tool-start-task` : le détail de la
 tâche n'est pas dans la conversation, il est dans PLAN.md. Ce skill va le chercher.
 
 L'invocation EST le go pour **lire** — pas pour écrire. La sortie est du texte : ce que la tâche

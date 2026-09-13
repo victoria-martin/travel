@@ -1,13 +1,15 @@
 // The sidebar is the skeleton of PLAN.md: the `##` pages in the order of the file, each with the
 // `###` groups it holds. A section without any visible task shows up with an empty tally rather
 // than disappearing — nothing there can be filtered out, and it is where the first one gets typed.
-// The emoji is the handle that opens the section drawer; the rest of the row scrolls to the block.
+// The emoji is the handle that opens the section drawer; the rest of the row opens the page alone
+// in the main panel.
 function sectionRow(section, tally) {
   return `<div class="section-link" draggable="true" data-section="${esc(section.name)}">
     <button class="section-fold" ${foldAttributes('nav', section.name, '')}>${chevron()}</button>
     <button class="section-emoji" data-act="section-edit" data-value="${esc(section.name)}"
       title="Emoji et nom de la section">${section.emoji || '·'}</button>
-    <a href="#${anchorOf(section.name)}"><span>${esc(section.name)}</span></a>
+    <button class="section-name" data-act="view-section" data-value="${esc(section.name)}"
+      aria-pressed="${inView('section', section.name)}">${esc(section.name)}</button>
     ${showArchived ? '' : subsectionAddButton(section.name, 'nav')}
     <span class="tally">${tally}</span>
   </div>`;
@@ -18,9 +20,10 @@ function subsectionRow(section, name, tally) {
     data-subsection="${esc(name)}">
     <button class="subsection-edit" data-act="subsection-edit" data-section="${esc(section.name)}"
       data-value="${esc(name)}" title="Renommer le groupe">✎</button>
-    <a href="#${subAnchorOf(section.name, name)}">
+    <button class="subsection-name" data-act="view-subsection" data-section="${esc(section.name)}"
+      data-value="${esc(name)}">
       <span>${esc(name)}</span><span class="tally">${tally}</span>
-    </a>
+    </button>
   </div>`;
 }
 
@@ -36,7 +39,7 @@ function renderSections(visible) {
 
   const container = ui.getElementById('sections');
   container.innerHTML =
-    sessionsPanel() +
+    sessionsNav() +
     board.sections
       .map((section) => {
         const groups = groupsOf(section.name);

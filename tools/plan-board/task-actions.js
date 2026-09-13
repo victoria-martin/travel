@@ -37,7 +37,7 @@ async function runTaskAction(act, id) {
     await loadBoard();
   } catch (error) {
     actionError = `iTerm n’a pas répondu : ${error.message}`;
-    sessionsOpen = true;
+    openView('sessions');
   }
   renderBoard();
 }

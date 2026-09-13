@@ -57,7 +57,7 @@ les types.
 - **le style des boutons nouvelle section et nouvelle tache est pas fou joue plutot avec le hover stp, en mode edit de tache c est bien et au lieu d'un bouton aouter et annuler en dessous mets un check et une X en fin de ligne stp** <!--t:nfpb--> — ✅ fait
 - **sessions actives dans la barre latérale** <!--t:ij8e--> — 🧩 ui · ✅ fait : un panneau
   qui liste les tâches ayant une session, la plus récente en tête. Deux boutons par ligne, sur
-  la carte comme dans le panneau : ▶ ouvre la session sur `/start-task`, ✓ sur `/commit-task`.
+  la carte comme dans le panneau : ▶ ouvre la session sur `/plan-tool-start-task`, ✓ sur `/plan-tool-commit-task`.
 - **liste de taches sans section + bouton** <!--t:9fd9--> — ⏳ à faire : au dessus de la liste des
   tâches, afficher une liste de tache pas liée à une section + bouton pour ajouter
 - **le sortir du projet travel ?** <!--t:u4fp--> — 🌙 plus tard
@@ -98,7 +98,7 @@ les types.
   };
 
   tu peux mettre à jour le nom de classes css + creer la classe focus stp
-- **donner une priorité aux taches !** <!--t:49ng--> — 🚧 en cours
+- **donner une priorité aux taches !** <!--t:49ng--> — ✅ fait
   - priority : low, medium, high, null or to_determine
   - + status pas obligatoire pour une tâche,
   - les nouvelles tâches sont crées sans statut ou alors avec status. "a trier" c est mieux et
@@ -117,7 +117,7 @@ les types.
 
 ### layout
 
-- **créer une meilleur toolbar  pour filtrer** <!--t:1ab9--> — 🧩 ui · 🚧 en cours : elle sera en
+- **créer une meilleur toolbar  pour filtrer** <!--t:1ab9--> — 🧩 ui · ✅ fait : elle sera en
   header de l app a la palce de tous les pills
 
   fais un truc intelligent qui prend en compte le fait que j ai potentielement bcp d options pr les

@@ -105,6 +105,13 @@ function attachSession(res, id, sessionId) {
   send(res, 200, { session, task: plan.findTask(id) });
 }
 
+// A session that is over leaves the list but keeps its id: its task still resumes the conversation.
+function closeSession(res, id) {
+  const session = sessions.closeSession(id);
+  if (!session) return send(res, 404, { error: 'aucune session pour cette tâche' });
+  send(res, 200, { session });
+}
+
 async function openSession(res, id, prompt) {
   const task = taskOrArchived(id);
   if (!task) return send(res, 404, { error: 'tâche inconnue' });
@@ -205,6 +212,8 @@ const server = http.createServer(async (req, res) => {
     const { sessionId } = await readBody(req);
     return attachSession(res, session[1], sessionId);
   }
+
+  if (req.method === 'DELETE' && session) return closeSession(res, session[1]);
 
   if (req.method === 'PATCH' && rename) {
     const { title, status, priority, body, types } = await readBody(req);

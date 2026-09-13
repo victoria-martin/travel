@@ -1,6 +1,6 @@
 ---
-name: commit-task
-description: Clore la tâche du board ouverte dans cette session — la passer à ✅ fait dans PLAN.md, stager le travail, commiter et pousser. Utiliser quand l'utilisatrice dit « /commit-task », « commit et résous la tâche », « on clôt la tâche ».
+name: plan-tool-commit-task
+description: Clore la tâche du board ouverte dans cette session — la passer à ✅ fait dans PLAN.md, stager le travail, commiter et pousser. Utiliser quand l'utilisatrice dit « /plan-tool-commit-task », « commit et résous la tâche », « on clôt la tâche ».
 ---
 
 # Clore la tâche de la session

@@ -1,13 +1,13 @@
 ---
-name: update-plan-tool
-description: Passer à ✅ fait les tâches de la section plan-tool de PLAN.md que le diff courant termine. Utiliser quand l'utilisatrice dit « /update-plan-tool », ou avant tout commit qui touche tools/plan-board.
+name: plan-tool-update-plan-tool
+description: Passer à ✅ fait les tâches de la section plan-tool de PLAN.md que le diff courant termine. Utiliser quand l'utilisatrice dit « /plan-tool-update-plan-tool », ou avant tout commit qui touche tools/plan-board.
 ---
 
 # Mettre la section plan-tool de PLAN.md à jour
 
 Le board est son propre backlog : une tâche de `## 💻 plan-tool` ne sort pas du fichier quand elle
 est faite, elle passe à `✅ fait` et reste lisible à l'écran. C'est la différence avec
-`update-plan-spec`, qui vide le backlog du voyage et décrit la feature dans la spec —
+`plan-tool-update-plan-spec`, qui vide le backlog du voyage et décrit la feature dans la spec —
 [tools/plan-board/](../../../tools/plan-board) est un outil de dev, il n'entre pas dans
 [docs/spec-voyage-toscane.md](../../../docs/spec-voyage-toscane.md).
 

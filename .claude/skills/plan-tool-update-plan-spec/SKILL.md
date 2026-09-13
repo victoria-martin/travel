@@ -1,6 +1,6 @@
 ---
-name: update-plan-spec
-description: Faire suivre PLAN.md et docs/spec-voyage-toscane.md après un travail terminé — l'item fait sort du backlog, la feature est décrite dans la spec. Utiliser quand l'utilisatrice dit « /update-plan-spec », « mets à jour le plan et la spec », ou quand le pre-push refuse un push faute de changement dans PLAN.md ou docs/.
+name: plan-tool-update-plan-spec
+description: Faire suivre PLAN.md et docs/spec-voyage-toscane.md après un travail terminé — l'item fait sort du backlog, la feature est décrite dans la spec. Utiliser quand l'utilisatrice dit « /plan-tool-update-plan-spec », « mets à jour le plan et la spec », ou quand le pre-push refuse un push faute de changement dans PLAN.md ou docs/.
 ---
 
 # Mettre PLAN.md et la spec à jour

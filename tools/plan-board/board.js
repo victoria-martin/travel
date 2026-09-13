@@ -1,10 +1,5 @@
 let board = { tasks: [], archived: [], sections: [] };
 let firstRender = true;
-let activeStatuses = [];
-let activeTypes = [];
-let activePriorities = [];
-let showArchived = false;
-let search = '';
 
 // #app moves between documents when the window is detached; everything reads through this.
 let ui = document;
@@ -33,114 +28,10 @@ async function loadBoard() {
   renderBoard();
 }
 
-const allTasks = () => [
-  ...board.tasks,
-  ...board.archived.map((task) => ({ ...task, archived: true })),
-];
-
-function visibleTasks() {
-  const needle = search.trim().toLowerCase();
-  return allTasks().filter((task) => {
-    if (Boolean(task.archived) !== showArchived) return false;
-    if (activeStatuses.length && !activeStatuses.includes(task.status)) return false;
-    if (activePriorities.length && !activePriorities.includes(task.priority)) return false;
-    if (activeTypes.length && !task.types.some((type) => activeTypes.includes(type))) return false;
-    if (!needle) return true;
-    return `${task.title} ${task.body} ${task.section}`.toLowerCase().includes(needle);
-  });
-}
-
 // A row has no space for labels: the emoji alone, named by its tooltip.
 function typeDot(label) {
   const type = planType(label);
   return type ? `<span class="type-dot" title="${type.label}">${type.emoji}</span>` : '';
-}
-
-function toggleType(label) {
-  activeTypes = activeTypes.includes(label)
-    ? activeTypes.filter((entry) => entry !== label)
-    : [...activeTypes, label];
-  renderBoard();
-}
-
-function toggleStatus(label) {
-  activeStatuses = activeStatuses.includes(label)
-    ? activeStatuses.filter((entry) => entry !== label)
-    : [...activeStatuses, label];
-  renderBoard();
-}
-
-function togglePriority(label) {
-  activePriorities = activePriorities.includes(label)
-    ? activePriorities.filter((entry) => entry !== label)
-    : [...activePriorities, label];
-  renderBoard();
-}
-
-function clearFilters() {
-  activeStatuses = [];
-  activeTypes = [];
-  activePriorities = [];
-  renderBoard();
-}
-
-function toggleArchived() {
-  showArchived = !showArchived;
-  renderBoard();
-}
-
-function setSearch(value) {
-  search = value;
-  renderBoard();
-}
-
-function renderFilters() {
-  const shown = allTasks().filter((task) => Boolean(task.archived) === showArchived);
-  const tally = (key) => {
-    const counts = {};
-    shown.forEach((task) =>
-      [].concat(task[key]).forEach((value) => (counts[value] = (counts[value] || 0) + 1)),
-    );
-    return counts;
-  };
-  const byType = tally('types');
-  const byStatus = tally('status');
-  const byPriority = tally('priority');
-
-  const chip = (entry, count, act, active) => `<button class="filter" data-act="${act}"
-    data-value="${entry.label}" aria-pressed="${active}">
-    ${entry.emoji} ${entry.label} <span class="tally">${count || 0}</span>
-  </button>`;
-
-  const types = PLAN_TYPES.map((type) =>
-    chip(type, byType[type.label], 'type', activeTypes.includes(type.label)),
-  ).join('');
-  const statuses = PLAN_STATUSES.map((status) =>
-    chip(status, byStatus[status.label], 'status', activeStatuses.includes(status.label)),
-  ).join('');
-  const priorities = PLAN_PRIORITIES.map((priority) =>
-    chip(
-      priority,
-      byPriority[priority.label],
-      'priority',
-      activePriorities.includes(priority.label),
-    ),
-  ).join('');
-
-  const archived = `<button class="filter filter-archived" data-act="archived"
-    aria-pressed="${showArchived}">
-    📦 archivées <span class="tally">${board.archived.length}</span>
-  </button>`;
-
-  const clear =
-    activeStatuses.length || activeTypes.length || activePriorities.length
-      ? '<button class="filter-clear" data-act="clear-filters">tout afficher</button>'
-      : '';
-
-  ui.getElementById('filters').innerHTML =
-    `<div class="filter-row">${types}</div>` +
-    `<div class="filter-row">${priorities}</div>` +
-    `<div class="filter-row">${statuses}${archived}${clear}</div>`;
 }
 
 // The order of the file is the order on screen: the skeleton is PLAN.md and the visible tasks fall
@@ -227,8 +118,10 @@ const groupTitle = (section, group) => `<h3 class="group-title"
 </h3>`;
 
 // Clicking the page title folds it; the emoji, as in the sidebar, opens the drawer that edits it.
+// Ouverte seule, la page porte en tête la flèche qui ramène à la liste complète.
 const sectionTitle = (section) => `<h2 class="section-title"
   id="${anchorOf(section.name)}" ${foldAttributes('board', section.name, '')}>
+  ${inView('section', section.name) ? backButton() : ''}
   <button class="title-emoji" data-act="section-edit" data-value="${esc(section.name)}"
     title="Emoji et nom de la section">${sectionOf(section.name).emoji || '·'}</button>
   <span>${esc(section.name)}</span>
@@ -257,8 +150,25 @@ function sectionBody(section) {
   );
 }
 
+const sectionBlock = (section) => `<section class="section">
+  <div class="section-head">
+    ${sectionTitle(section)}
+    ${showArchived ? '' : subsectionAddButton(section.name, 'board')}
+  </div>
+  ${isFolded('board', section.name) ? '' : sectionBody(section)}
+</section>`;
+
+// La barre latérale liste toujours tout le plan ; le panneau principal, lui, suit la vue ouverte.
+function boardBody(sections) {
+  if (inView('sessions')) return sessionsView();
+  const shown =
+    view.kind === 'section' ? sections.filter((entry) => entry.name === view.name) : sections;
+  return shown.map(sectionBlock).join('') || '<p class="empty">Aucune tâche ne correspond.</p>';
+}
+
 function renderBoard() {
-  renderFilters();
+  settleView();
+  renderToolbar();
   const tasks = visibleTasks();
   const sections = showArchived ? groupBySection(tasks) : boardScopes(tasks);
 
@@ -272,19 +182,23 @@ function renderBoard() {
   const boardEl = ui.getElementById('board');
   boardEl.className = firstRender ? 'enter' : '';
   firstRender = false;
-  boardEl.innerHTML =
-    sections
-      .map(
-        (section) => `<section class="section">
-          <div class="section-head">
-            ${sectionTitle(section)}
-            ${showArchived ? '' : subsectionAddButton(section.name, 'board')}
-          </div>
-          ${isFolded('board', section.name) ? '' : sectionBody(section)}
-        </section>`,
-      )
-      .join('') || '<p class="empty">Aucune tâche ne correspond.</p>';
+  boardEl.innerHTML = boardBody(sections);
   bindTaskDrag(boardEl);
+}
+
+// Un panneau flottant se referme dès qu'on clique hors de lui — hors de tout ce qu'il porte, et
+// pas seulement hors de ses boutons : son fond en fait partie.
+const DISMISSED = [
+  { inside: '.row-priority', close: closeRowPriority },
+  { inside: '.toolbar', close: closeFilterPanel },
+];
+
+function dismissPanels(target) {
+  let closed = false;
+  DISMISSED.forEach((panel) => {
+    if (!(target && target.closest(panel.inside)) && panel.close()) closed = true;
+  });
+  return closed;
 }
 
 // One listener set, on the node that travels to the detached window.
@@ -292,13 +206,14 @@ const CLICKS = {
   open: (target) => openDrawer(target.dataset.id),
   close: closeDrawer,
   cancel: closeDrawer,
-  status: (target) => toggleStatus(target.dataset.value),
-  type: (target) => toggleType(target.dataset.value),
-  priority: (target) => togglePriority(target.dataset.value),
   'row-priority': (target) => toggleRowPriority(target.dataset.id),
   'row-priority-pick': (target) => setRowPriority(target.dataset.id, target.dataset.value),
-  archived: toggleArchived,
-  'clear-filters': clearFilters,
+  'filter-archived': toggleArchived,
+  'filter-clear': clearFilters,
+  'filter-panel': toggleFilterPanel,
+  'filter-add': (target) => toggleFilterPicker(target.dataset.list),
+  'filter-pick': (target) => addFilterWord(target.dataset.list, target.dataset.value),
+  'filter-remove': (target) => removeFilterWord(target.dataset.list, target.dataset.value),
   'pick-status': (target) => editDraft('status', target.dataset.value),
   'pick-type': (target) => toggleDraftType(target.dataset.value),
   'pick-priority': (target) => toggleDraftPriority(target.dataset.value),
@@ -326,7 +241,10 @@ const CLICKS = {
   save: () => currentDrawer().save(),
   launch: launchSession,
   archive: archiveTask,
-  sessions: toggleSessions,
+  'view-sessions': () => openView('sessions'),
+  'view-section': (target) => openView('section', target.dataset.value),
+  'view-subsection': (target) => openSubsectionView(target.dataset.section, target.dataset.value),
+  'view-all': () => openView('all'),
   'task-start': (target) => runTaskAction('task-start', target.dataset.id),
   'task-commit': (target) => runTaskAction('task-commit', target.dataset.id),
   detach: () => (detached && !detached.closed ? detached.close() : detachWindow()),
@@ -339,6 +257,7 @@ const INPUTS = {
   scope: (target) => pickScope(target.value),
   'scope-name': (target) => editDraft('scope', target.value),
   'emoji-search': (target) => setEmojiSearch(target.value),
+  'filter-search': (target) => setFilterSearch(target.value),
   'section-name': (target) => editNewSection(target.value),
   'task-name': (target) => editNewTask(target.value),
   'section-title': (target) => editSectionDraft(target.value),
@@ -352,7 +271,7 @@ function bindApp() {
   app.addEventListener('click', (event) => {
     const target = event.target.closest('[data-act]');
     const act = target ? target.dataset.act : '';
-    if (!act.startsWith('row-priority') && closeRowPriority()) renderBoard();
+    if (dismissPanels(event.target)) renderBoard();
     if (CLICKS[act]) CLICKS[act](target);
   });
   app.addEventListener('input', (event) => {
@@ -367,7 +286,7 @@ function bindApp() {
 
 function onKeydown(event) {
   if (event.key !== 'Escape') return;
-  if (closeRowPriority()) return renderBoard();
+  if (dismissPanels(null)) return renderBoard();
   closeDrawer();
 }
 

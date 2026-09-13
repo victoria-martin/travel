@@ -60,6 +60,16 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — une session se **ferme** sans disparaître : `closeSession` pose un `closedAt` sur
+  son entrée de [sessions.js](tools/plan-board/sessions.js) au lieu de la supprimer, parce que le
+  `sessionId` est le seul lien vers la conversation — la tâche sort de la liste, son ▶ rouvre quand
+  même la même session, et la rouvrir efface la marque. La route est `DELETE
+  /api/tasks/<id>/session`, le serveur restant le seul écrivain de `.claude/plan-sessions.json`.
+  Ce qui décide de la fermeture, lui, n'est pas mécanique : aucun commit ne porte l'id d'une tâche,
+  donc savoir si son travail est fait demande de lire sa puce contre le code — d'où un skill,
+  [plan-tool-close-sessions](.claude/skills/plan-tool-close-sessions/SKILL.md), et pas un bouton du board. Une session
+  orpheline (la tâche a été supprimée sous elle) et une tâche déjà close se ferment sans rien juger.
+
 - **2026-09-13** — une tâche porte une **priorité**, troisième vocabulaire à côté des types et des
   statuts : [priorities.js](tools/plan-board/priorities.js) sur le modèle de
   [statuses.js](tools/plan-board/statuses.js). Les trois listes s'écrivent dans la même énumération
@@ -82,8 +92,8 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   le board. Il passe par le serveur et non par le skill, parce que le serveur est le seul écrivain
   de `.claude/plan-sessions.json` et le seul endroit où un statut se décide — le rattachement
   emprunte le `markDoing` du lancement. Une tâche qui porte déjà une session se refuse (`409`) : le
-  lien pointe vers une autre conversation, on ne l'écrase pas. Côté skills, `start-task` et
-  `commit-task` recopiaient mot pour mot leur étape « retrouver la tâche » ; elle devient
+  lien pointe vers une autre conversation, on ne l'écrase pas. Côté skills, `plan-tool-start-task` et
+  `plan-tool-commit-task` recopiaient mot pour mot leur étape « retrouver la tâche » ; elle devient
   [.claude/skills/shared/retrouver-la-tache.md](.claude/skills/shared/retrouver-la-tache.md), un
   fichier parce qu'elle a deux consommateurs, et le cul-de-sac « demander de quelle tâche il s'agit »
   y devient la recherche des candidates dans PLAN.md.
@@ -110,8 +120,8 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   passe à `🚧 en cours` côté serveur ([server.js](tools/plan-board/server.js)), après qu'iTerm a
   répondu, et jamais sur une tâche close — `DOING_STATUS` et `CLOSED_STATUSES` rejoignent
   `NEW_STATUS` dans [statuses.js](tools/plan-board/statuses.js), qui reste le seul endroit où un
-  statut se nomme. La fin, elle, se décide : c'est le skill `commit-task`
-  ([.claude/skills/commit-task/SKILL.md](.claude/skills/commit-task/SKILL.md)), qui retrouve la
+  statut se nomme. La fin, elle, se décide : c'est le skill `plan-tool-commit-task`
+  ([.claude/skills/plan-tool-commit-task/SKILL.md](.claude/skills/plan-tool-commit-task/SKILL.md)), qui retrouve la
   tâche par le lien session ↔ `plan-sessions.json`, la passe à `✅ fait` et délègue le commit.
 
 - **2026-09-12** — la couleur d'une pastille devient un axe à elle, partagé par les deux

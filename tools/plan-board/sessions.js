@@ -26,6 +26,7 @@ function openSession(id) {
   const now = new Date().toISOString();
   if (existing) {
     existing.lastOpenedAt = now;
+    delete existing.closedAt;
     write(store);
     return { session: existing, resumed: true };
   }
@@ -47,6 +48,17 @@ function attachSession(id, sessionId) {
   return session;
 }
 
+// Closing a session takes its task out of the list without losing the conversation: the id stays,
+// so the task still resumes it. Reopening one clears the mark.
+function closeSession(id) {
+  const store = read();
+  const session = store.tasks[id];
+  if (!session) return null;
+  session.closedAt = new Date().toISOString();
+  write(store);
+  return session;
+}
+
 function archiveTask(task) {
   const store = read();
   store.archived = store.archived.filter((entry) => entry.id !== task.id);
@@ -59,4 +71,11 @@ function listArchived() {
   return store.archived.map((entry) => ({ ...entry, session: store.tasks[entry.id] || null }));
 }
 
-module.exports = { sessionOf, openSession, attachSession, archiveTask, listArchived };
+module.exports = {
+  sessionOf,
+  openSession,
+  attachSession,
+  closeSession,
+  archiveTask,
+  listArchived,
+};
