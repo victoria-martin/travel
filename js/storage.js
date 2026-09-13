@@ -33,6 +33,7 @@ function emptyData() {
 function loadData() {
   loadPrefs();
   state = migrateData(readStore(LOCAL_KEY) || emptyData());
+  selectTestScenario();
   render();
 }
 

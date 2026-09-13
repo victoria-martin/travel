@@ -26,6 +26,11 @@ les types.
 
   existe déjà avec le picker attendons deja le rework
 
+- **Ouvrir le scénario TEST après le premier pull** <!--t:k3vq--> — 🐛 fix · ⏳ à faire :
+  `selectTestScenario()` ([scenarios.js](js/views/scenarios/scenarios.js)) est appelé au chargement
+  du cache local ([storage.js](js/storage.js#L36)) ; sur un navigateur vierge, les scénarios
+  n'arrivent qu'au premier pull du Sheet et on reste sur la liste. En faire un one-shot consommé à
+  la première arrivée de données, sans déranger la vue courante lors des pulls suivants.
 - **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 💡 idée : on commence a
   répondre à ca dans la trasfo de charges fixes en depense normameent
 

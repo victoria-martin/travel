@@ -43,3 +43,15 @@ function openScenario(id) {
   view = 'scenario-detail';
   render();
 }
+
+// A scenario named TEST is the one being worked on: the app opens straight on its detail.
+const TEST_SCENARIO_NAME = 'TEST';
+
+function selectTestScenario() {
+  const test = ofCurrentTravel(state.scenarios).find(
+    (s) => (s.name || '').trim().toUpperCase() === TEST_SCENARIO_NAME,
+  );
+  if (!test) return;
+  activeScenarioId = test.id;
+  view = 'scenario-detail';
+}

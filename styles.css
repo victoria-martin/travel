@@ -958,18 +958,14 @@ tr:hover td {
   min-width: 0;
 }
 .step-title {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
   font-weight: 600;
   font-size: 14.5px;
 }
-.step-title-notes {
-  margin-left: auto;
+.step-title-dates {
+  margin-left: 8px;
   font-size: 12.5px;
   font-weight: 400;
   color: var(--ink-soft);
-  text-align: right;
 }
 .step-detail {
   font-size: 12.5px;

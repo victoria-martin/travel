@@ -30,9 +30,9 @@ function stepCard(scenario, step, idx) {
             key: `step:${step.id}:city`,
             placeholder: 'ville…',
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
-          ${step.notes ? `<span class="step-title-notes">${escapeHtml(step.notes)}</span>` : ''}
+          ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
         </div>
-        ${stepDetailLine(scenario, step, idx)} ${stepOptionsBlock(scenario, step)}
+        ${stepDetailLine(step)} ${stepOptionsBlock(scenario, step)}
         ${(step.attractions || [])
           .map((entry, i) => stepAttractionRow(scenario, step, entry, i))
           .join('')}
@@ -68,10 +68,10 @@ function stepHiddenCheckbox(scenario, step) {
   />`;
 }
 
-function stepDetailLine(scenario, step, idx) {
+function stepDetailLine(step) {
   const parts = [
-    idx === null ? '' : stepDateRange(scenario, idx),
     step.arrivalDate ? `arrivée le ${escapeHtml(step.arrivalDate)}` : '',
+    step.notes ? escapeHtml(step.notes) : '',
   ].filter(Boolean);
   if (parts.length === 0) return '';
   return `<div class="step-detail">${parts.join(' · ')}</div>`;

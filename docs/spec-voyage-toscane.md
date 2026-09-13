@@ -386,6 +386,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | budget  | remplace le coût calculé de l'hébergement                     |
 | retenue | c'est elle qui donne à l'étape ses nuits, son lieu, son coût  |
 
+- **À l'ouverture de l'app** : l'écran de départ est la liste des scénarios. Si le voyage courant
+  porte un scénario nommé « TEST », c'est son détail qui s'ouvre directement — un raccourci de
+  travail, lu dans le cache local au chargement.
 - **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
   tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
   « (copie) »), supprimer.
