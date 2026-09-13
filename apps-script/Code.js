@@ -71,6 +71,8 @@ const COLLECTIONS = {
     'lat',
     'lng',
     'link',
+    'hours',
+    'phone',
     'budget',
     'amountMin',
     'amountMax',

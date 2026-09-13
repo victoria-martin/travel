@@ -341,9 +341,6 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
   à choisir le mot au singulier, puis à décider si les clés suivent — c'est la même migration que
   <!--t:omun-->.
-- **Horaires et téléphone** <!--t:nvyg--> — 🗃️ modèle · ⏳ à faire : deux champs de plus sur
-  l'attraction, pour **tous** les types — un musée a des horaires autant qu'une trattoria. Le prix
-  est fait, à la règle transverse « Budget et prix ».
 - **Rattacher une attraction à un hébergement** <!--t:3cn1--> — 🗃️ modèle · ⏳ à faire : un
   `hotelId` optionnel, pour la table d'hôtes ou le restaurant de l'hôtel.
 - **Scraper un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : depuis le formulaire,

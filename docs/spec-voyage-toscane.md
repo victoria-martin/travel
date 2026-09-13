@@ -95,7 +95,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                               | possède tout le reste ; un seul est ouvert à la fois            |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                       | la fiche de référence ; c'est elle qui porte le prix            |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                              | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, budget, prix mini / maxi, tags, favori                            | un lieu à visiter ; localisée comme une ville                   |
+| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori       | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori | un trajet du voyage ; en mode voiture il référence une location |
 | **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                             | liste simple ; une seule voiture par défaut                     |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                           | liste simple                                                    |
@@ -244,14 +244,17 @@ occupe un créneau sur place, restaurants compris.
 | coordonnées      | latitude, longitude                                       |
 | province, région | proposées par le géocodage, modifiables à la main         |
 | lien             |                                                           |
+| horaires         | texte libre, quel que soit le type                        |
+| téléphone        | texte libre                                               |
 | budget           | l'enveloppe qu'on se donne                                |
 | prix mini / maxi | la fourchette réelle, règle transverse « Budget et prix » |
 | tags             | texte libre, amorcés par un vocabulaire par défaut        |
 | favori           | étoile en tête de ligne                                   |
 
-Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description, lieu
-(adresse géocodée, ou province · région), coordonnées (masquées par défaut), lien. Tri par défaut
-favoris d'abord, puis type, puis nom. Même bloc de localisation que les villes et les hébergements.
+Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
+lieu (adresse géocodée, ou province · région), coordonnées, horaires et téléphone (masqués par
+défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de localisation que
+les villes et les hébergements.
 
 - **Type et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
 - **Tags** : mêmes tags libres que les hébergements — un tag existe dès qu'il est saisi — mais la

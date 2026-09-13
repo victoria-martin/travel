@@ -14,6 +14,8 @@ function readAttractionForm(id) {
     county: located.county,
     region: located.region,
     link: document.getElementById('a-link').value.trim(),
+    hours: document.getElementById('a-hours').value.trim(),
+    phone: document.getElementById('a-phone').value.trim(),
     budget: document.getElementById('a-budget').value.trim(),
     amountMin: document.getElementById('a-amount-min').value.trim(),
     amountMax: document.getElementById('a-amount-max').value.trim(),

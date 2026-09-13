@@ -12,6 +12,8 @@ function emptyAttraction() {
     lat: '',
     lng: '',
     link: '',
+    hours: '',
+    phone: '',
     budget: '',
     amountMin: '',
     amountMax: '',
@@ -80,6 +82,26 @@ function attractionForm(p) {
     <div class="field">
       <label>Lien</label
       ><input id="a-link" type="text" value="${escapeHtml(p.link)}" placeholder="https://..." />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Horaires</label
+        ><input
+          id="a-hours"
+          type="text"
+          value="${escapeHtml(p.hours)}"
+          placeholder="mar.-dim. 12h-15h"
+        />
+      </div>
+      <div class="field">
+        <label>Téléphone</label
+        ><input
+          id="a-phone"
+          type="text"
+          value="${escapeHtml(p.phone)}"
+          placeholder="338 119 52 75"
+        />
+      </div>
     </div>
     ${tagsField(p, allAttractionTags)}
     <div class="field">

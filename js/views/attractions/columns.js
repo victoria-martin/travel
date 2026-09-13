@@ -53,6 +53,14 @@ COLUMN_SETS.attractions = [
     hiddenByDefault: true,
     cell: attractionCoordsCell,
   },
+  { key: 'hours', label: 'Horaires', hiddenByDefault: true, cell: attractionHoursCell },
+  {
+    key: 'phone',
+    label: 'Téléphone',
+    nowrap: true,
+    hiddenByDefault: true,
+    cell: attractionPhoneCell,
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
 ];
@@ -97,6 +105,14 @@ function attractionPlaceCell(a) {
 
 function attractionCoordsCell(a) {
   return escapeHtml(coordsLabel(a));
+}
+
+function attractionHoursCell(a) {
+  return textCell(a.hours);
+}
+
+function attractionPhoneCell(a) {
+  return textCell(a.phone);
 }
 
 function attractionActionsCell(a) {
