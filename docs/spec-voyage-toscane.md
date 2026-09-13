@@ -262,6 +262,7 @@ occupe un créneau sur place, restaurants compris.
 | coordonnées      | latitude, longitude                                       |
 | province, région | proposées par le géocodage, modifiables à la main         |
 | hébergement      | facultatif ; référence un hébergement du voyage           |
+| lien Google Maps | colle-le et la fiche se remplit                           |
 | lien             |                                                           |
 | horaires         | texte libre, quel que soit le type                        |
 | téléphone        | texte libre                                               |
@@ -275,6 +276,11 @@ lieu (adresse géocodée, ou province · région), coordonnées, hébergement, h
 (masqués par défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
 localisation que les villes et les hébergements.
 
+- **Un lien Google Maps collé remplit la fiche** : nom, adresse et coordonnées, lus par l'Apps
+  Script — le navigateur ne peut pas lire google.com lui-même. Le nom et les coordonnées viennent
+  de l'URL finale, que Google écrit et qu'un lien court (`maps.app.goo.gl`) ne porte qu'après
+  redirection ; l'adresse, des métadonnées de partage. Un champ déjà rempli n'est jamais écrasé,
+  comme pour un lien Booking.
 - **L'hébergement se choisit dans la modale** : la table d'hôtes ou le restaurant d'un hôtel
   **référence** sa fiche plutôt que d'en recopier le nom, comme une option d'étape référence son
   hébergement. Il reste facultatif — la plupart des activités n'en ont pas.

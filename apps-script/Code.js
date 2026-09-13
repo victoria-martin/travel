@@ -71,6 +71,7 @@ const COLLECTIONS = {
     'lat',
     'lng',
     'accommodationId',
+    'mapsLink',
     'link',
     'hours',
     'phone',
@@ -171,6 +172,8 @@ function doGet(e) {
   if (homeExchangeUrl) return json(scrapeHomeExchange(homeExchangeUrl));
   var bookingUrl = e && e.parameter ? e.parameter.booking : '';
   if (bookingUrl) return json(scrapeBooking(bookingUrl));
+  var googleMapsUrl = e && e.parameter ? e.parameter.googleMaps : '';
+  if (googleMapsUrl) return json(scrapeGoogleMaps(googleMapsUrl));
   return json(readState());
 }
 

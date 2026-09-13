@@ -334,8 +334,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
   à choisir le mot au singulier, puis à décider si les clés suivent — c'est la même migration que
   <!--t:omun-->.
-- **Scraper un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : depuis le formulaire,
-  remplir nom, adresse, coordonnées et horaires à partir d'une URL `maps.app.goo.gl`.
+- **Les horaires depuis un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : le nom,
+  l'adresse et les coordonnées se remplissent déjà
+  ([GoogleMaps.js](apps-script/GoogleMaps.js)), lus dans l'URL finale et dans les métadonnées de
+  partage. Les horaires, eux, ne vivent que dans le blob d'initialisation de la page : il faut
+  d'abord regarder ce qu'une vraie fiche renvoie, `testGoogleMaps()` depuis l'éditeur Apps Script.
 - **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🔍 à étudier : le type étant porté par
   l'attraction, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
   Attractions. À décider quand il y aura assez de contenu pour que la liste mixte devienne

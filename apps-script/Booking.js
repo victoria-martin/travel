@@ -12,10 +12,6 @@
 
 var BOOKING_URL = /^https?:\/\/([a-z0-9-]+\.)*booking\.com\//i;
 
-// Sans user-agent de navigateur, Booking sert une page réduite sans JSON-LD.
-var BROWSER_UA =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
-
 var BOOKING_NAME_PATTERNS = [
   /data-testid="title"[^>]*>([\s\S]*?)</,
   /<h2[^>]*class="[^"]*pp-header__title[^"]*"[^>]*>([\s\S]*?)<\/h2>/,
@@ -41,7 +37,7 @@ function scrapeBooking(url) {
   var res = UrlFetchApp.fetch(url, {
     followRedirects: true,
     muteHttpExceptions: true,
-    headers: { 'User-Agent': BROWSER_UA, 'Accept-Language': 'fr-FR,fr;q=0.9' },
+    headers: BROWSER_HEADERS,
   });
   if (res.getResponseCode() !== 200) {
     return { error: 'Booking a répondu ' + res.getResponseCode() + '.' };

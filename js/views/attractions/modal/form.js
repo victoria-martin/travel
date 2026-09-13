@@ -12,6 +12,7 @@ function emptyAttraction() {
     lat: '',
     lng: '',
     accommodationId: '',
+    mapsLink: '',
     link: '',
     hours: '',
     phone: '',
@@ -91,6 +92,17 @@ function attractionForm(p) {
         <label>Prix maxi</label
         ><input id="a-amount-max" type="text" value="${escapeHtml(p.amountMax)}" />
       </div>
+    </div>
+    <div class="field">
+      <label>Lien Google Maps</label
+      ><input
+        id="a-maps-link"
+        type="text"
+        value="${escapeHtml(p.mapsLink)}"
+        placeholder="https://maps.app.goo.gl/..."
+        onpaste="importGoogleMapsPaste()"
+        onchange="importGoogleMapsLink()"
+      />
     </div>
     <div class="field">
       <label>Lien</label

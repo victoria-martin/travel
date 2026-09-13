@@ -1,6 +1,13 @@
 /*
-  Shared HTML helpers for the scrapers (HomeExchange, Booking).
+  Shared HTML helpers for the scrapers (HomeExchange, Booking, Google Maps).
 */
+
+// Without a browser user-agent, these sites serve a reduced page without their structured data.
+var BROWSER_HEADERS = {
+  'User-Agent':
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36',
+  'Accept-Language': 'fr-FR,fr;q=0.9',
+};
 
 function matchOne(html, re) {
   var found = html.match(re);

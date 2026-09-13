@@ -14,6 +14,7 @@ function readAttractionForm(id) {
     county: located.county,
     region: located.region,
     accommodationId: document.getElementById('a-accommodation').value,
+    mapsLink: document.getElementById('a-maps-link').value.trim(),
     link: document.getElementById('a-link').value.trim(),
     hours: document.getElementById('a-hours').value.trim(),
     phone: document.getElementById('a-phone').value.trim(),
