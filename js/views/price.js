@@ -34,3 +34,15 @@ function priceLabel(entity) {
   if (price) return price;
   return hasPriceValue(entity.budget) ? `budget ${formatEuros(priceNumber(entity.budget))}` : '—';
 }
+
+/*
+  Une fourchette ouverte ne sait pas ce qu'elle vaut dans un total : elle s'affiche et reste
+  dehors, comme un prix par nuit. Seul un montant unique — les deux bornes égales, ou une seule
+  saisie, ou le budget à défaut — entre dans la somme.
+*/
+function firmPrice(entity) {
+  const bounds = [entity.amountMin, entity.amountMax].filter(hasPriceValue).map(priceNumber);
+  if (bounds.length === 2) return bounds[0] === bounds[1] ? bounds[0] : null;
+  if (bounds.length === 1) return bounds[0];
+  return hasPriceValue(entity.budget) ? priceNumber(entity.budget) : null;
+}

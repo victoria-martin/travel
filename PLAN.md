@@ -331,9 +331,6 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
   l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville
   existante, comme une étape de scénario référence un hébergement.
-- **Tags éditables depuis le tableau** <!--t:r1em--> — 🧩 ui · ⏳ à faire : les hébergements éditent
-  leurs tags sur place ([tags-cell.js](js/views/accommodations/table/tags-cell.js)), les attractions
-  passent par la modale. Généraliser la cellule demande de lui passer son getter et son vocabulaire.
 - **Attractions sur la carte** <!--t:4ehs--> — 🧩 ui · ⏳ à faire : elles portent des coordonnées
   mais [map.js](js/views/map.js) ne trace que les hébergements.
 - **Renommer l'entité en « À faire »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale

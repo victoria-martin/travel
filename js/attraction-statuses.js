@@ -1,6 +1,7 @@
 const UNSET_ATTRACTION_STATUS = { label: 'Non renseigné', emoji: '❔' };
 
 const ATTRACTION_STATUSES = {
+  toSort: { label: 'À trier', emoji: '📥' },
   toCheck: { label: 'À voir', emoji: '👀' },
   go: { label: 'Go', emoji: '✅' },
   visited: { label: 'Vu', emoji: '☑️' },

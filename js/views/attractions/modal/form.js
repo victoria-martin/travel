@@ -3,7 +3,7 @@ function emptyAttraction() {
     id: null,
     name: '',
     type: '',
-    status: '',
+    status: 'toSort',
     description: '',
     geoAddress: '',
     city: '',

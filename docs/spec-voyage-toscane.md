@@ -119,8 +119,10 @@ Go ✅ · À voir 👀 · Écarté 👎.
 
 **Type d'attraction** — Nature 🌿 · Patrimoine 🏛️ · Musée 🖼️ · Village 🏘️ · Plage 🏖️ ·
 Activité 🎟️ · Restaurant 🍝.
-**Statuts d'une attraction**, dans l'ordre du workflow et du tri : À voir 👀 · Go ✅ · Vu ☑️ ·
-Écarté 👎. Les statuts d'hébergement ne s'appliquent pas : on ne réserve pas un point de vue.
+**Statuts d'une attraction**, dans l'ordre du workflow et du tri : À trier 📥 · À voir 👀 ·
+Go ✅ · Vu ☑️ · Écarté 👎. Les statuts d'hébergement ne s'appliquent pas : on ne réserve pas un
+point de vue. C'est le seul statut qui soit posé d'office : une attraction naît « À trier », qu'elle
+vienne de la modale ou d'un nom créé au vol depuis une étape — elle n'a été triée par personne.
 
 Les deux champs peuvent rester vides : « Non renseigné ❔ » est l'état d'un hébergement créé ou
 importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne, popup de la carte,
@@ -266,8 +268,8 @@ localisation que les villes et les hébergements.
   musée, église, jardin, point de vue, plage, thermes, randonnée, artisanat, trattoria, pizzeria,
   gastronomique, terrasse, vue, cave / dégustation, fromager, glacier, street food, végétarien),
   pour qu'une première attraction ait déjà quelque chose à choisir. Le vocabulaire est **commun à
-  tous les types** : un restaurant et un musée puisent dans la même liste. Ils se saisissent depuis
-  la modale ; le tableau les affiche sans les éditer.
+  tous les types** : un restaurant et un musée puisent dans la même liste. Ils s'éditent sur place
+  depuis la cellule du tableau, comme ceux d'un hébergement, et depuis la modale.
 
 ### Transports
 

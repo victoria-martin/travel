@@ -34,7 +34,7 @@ COLUMN_SETS.attractions = [
     cell: attractionPriceCell,
     sortValue: (a) => priceNumber(a.amountMin || a.amountMax || a.budget),
   },
-  { key: 'tags', label: 'Tags', cell: attractionTagsCell },
+  { key: 'tags', label: 'Tags', cell: (a) => tagsCell(a, getAttraction, allAttractionTags) },
   {
     key: 'description',
     label: 'Description',
@@ -96,10 +96,6 @@ function attractionStatusCell(a) {
 
 function attractionPriceCell(a) {
   return priceLabel(a);
-}
-
-function attractionTagsCell(a) {
-  return tagChips(a.tags) || '—';
 }
 
 function attractionDescriptionCell(a) {

@@ -8,6 +8,7 @@ const ACCOMMODATION_STATUSES = {
   go: { label: 'Go', emoji: '✅' },
   interested: { label: 'Intéressé', emoji: '👍' },
   toCheck: { label: 'À voir', emoji: '👀' },
+  to: { label: 'À trier', emoji: '👀' },
   notAvailable: { label: 'Pas dispo', emoji: '🚫' },
   rejected: { label: 'Écarté', emoji: '👎' },
 };
