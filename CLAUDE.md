@@ -60,11 +60,29 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — filtrer se lit comme **deux listes de mots** — ceux qu'on veut voir, ceux qu'on
+  veut hors de la liste — et non comme un état posé sur chacun des trente mots du vocabulaire : le
+  panneau porte alors ce qui est filtré, sa taille suit ce qu'on y pose, et un mot ne pouvant vivre
+  que dans une liste, c'est la structure qui porte l'exclusivité plutôt qu'un état à trois
+  positions. Les trois vocabulaires étant disjoints, un mot se suffit à lui-même : son axe se
+  retrouve en l'interrogeant dans l'une puis l'autre liste, comme `splitRest` le fait sur une puce
+  de PLAN.md. Un mot inclus ouvre son axe, deux axes se croisent, un mot exclu sort la tâche quoi
+  qu'il arrive. D'où un seul `＋` par liste, qui déplie les trois vocabulaires d'un tenant — la
+  pastille porte sa couleur, on n'a pas à choisir l'axe d'abord — et une recherche qui ne repeint
+  que sa grille, comme [emoji-picker.js](tools/plan-board/emoji-picker.js), sans quoi le champ perd
+  le focus à chaque frappe. Les archivées, elles, ne sont pas un mot mais l'autre collection : elles
+  restent une bascule au pied du panneau, hors des deux listes. Le partage est
+  [filters.js](tools/plan-board/filters.js) pour ce qui est à l'écran et
+  [filter-panel.js](tools/plan-board/filter-panel.js) pour la façon de le poser ; la barre vit dans
+  la topbar, au-dessus de la liste, donc le filtre vaut dans toutes les vues. Un panneau flottant se
+  referme enfin sur l'**appartenance** (`.toolbar`, `.row-priority`) et non sur un préfixe
+  d'action : le fond d'un panneau n'a pas de `data-act`, et cliquer dedans le fermait.
+
 - **2026-09-13** — une session se **ferme** sans disparaître : `closeSession` pose un `closedAt` sur
   son entrée de [sessions.js](tools/plan-board/sessions.js) au lieu de la supprimer, parce que le
   `sessionId` est le seul lien vers la conversation — la tâche sort de la liste, son ▶ rouvre quand
   même la même session, et la rouvrir efface la marque. La route est `DELETE
-  /api/tasks/<id>/session`, le serveur restant le seul écrivain de `.claude/plan-sessions.json`.
+/api/tasks/<id>/session`, le serveur restant le seul écrivain de `.claude/plan-sessions.json`.
   Ce qui décide de la fermeture, lui, n'est pas mécanique : aucun commit ne porte l'id d'une tâche,
   donc savoir si son travail est fait demande de lire sa puce contre le code — d'où un skill,
   [plan-tool-close-sessions](.claude/skills/plan-tool-close-sessions/SKILL.md), et pas un bouton du board. Une session
