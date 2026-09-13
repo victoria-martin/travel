@@ -11,7 +11,7 @@ function extraRow(scenario, step, line) {
         >${editableText(
           line.budget,
           `setExtraBudget('${scenario.id}','${step.id}','${line.id}', this.innerText)`,
-          { key: `extra:${line.id}:budget`, placeholder: 'budget…' },
+          { key: `extra:${line.id}:budget`, placeholder: 'Budget…' },
         )}${hasPriceValue(line.budget) ? ' €' : ''}</span
       >
     </span>

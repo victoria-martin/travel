@@ -28,7 +28,7 @@ function stepCard(scenario, step, idx) {
         <div class="step-title">
           ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
             key: `step:${step.id}:name`,
-            placeholder: 'ville…',
+            placeholder: 'Nom de l’étape…',
           })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
           ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
         </div>

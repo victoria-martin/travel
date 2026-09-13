@@ -1,7 +1,7 @@
 function carNotesEditable(car) {
   return editableText(car.notes, `setCarNotes('${car.id}', this.innerText)`, {
     key: `car:${car.id}:notes`,
-    placeholder: 'notes…',
+    placeholder: 'Notes…',
   });
 }
 

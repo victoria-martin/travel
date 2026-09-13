@@ -103,7 +103,7 @@ function attractionForm(p) {
           id="a-hours"
           type="text"
           value="${escapeHtml(p.hours)}"
-          placeholder="mar.-dim. 12h-15h"
+          placeholder="Mar.-dim. 12h-15h"
         />
       </div>
       <div class="field">

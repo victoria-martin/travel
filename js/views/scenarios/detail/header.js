@@ -9,7 +9,7 @@ function scenarioDetailHeader(s) {
         ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
         ${editableText(s.name, `renameScenario('${s.id}', this.innerText)`, {
           key: `scenario:${s.id}:name`,
-          placeholder: 'nom du scénario…',
+          placeholder: 'Nom du scénario…',
         })}
       </h2>
       <p class="view-sub">

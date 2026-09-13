@@ -5,7 +5,8 @@ Spec fonctionnelle de l'app, écrite comme exemple de format : **décisions act�
 faire et les règles qui ne se devinent pas. Le backlog ne vit pas ici mais dans
 [PLAN.md](../PLAN.md), pour que la spec reste la description de ce qui existe.
 
-Documents liés : [blueprint réutilisable](blueprint-app-sheet.md) · [protocole de synchro](protocole-sync-sheet.md)
+Documents liés : [map des parcours](map-user-flows.md) · [blueprint réutilisable](blueprint-app-sheet.md) ·
+[protocole de synchro](protocole-sync-sheet.md)
 
 ---
 
@@ -586,15 +587,6 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 ## 6. Ce qui reste ouvert
 
-Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du moment :
-
-- **Transports et scénarios** : un scénario porte `transportIds`, mais aucun écran ne rattache un
-  trajet — ni entre deux étapes, ni en aller-retour du voyage, ni dans le récap des totaux.
-- **Total des dépenses incomplet** : un hébergement au prix par nuit et une voiture au prix par
-  jour restent hors du total tant que rien ne dit sur combien les multiplier. Le nombre de nuits
-  n'existe que dans un scénario, et la page Dépenses n'en connaît aucun.
-- **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage.
-- **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
-  « arrivée le » resté dans la modale, affiché à côté.
-- **Attractions** : une attraction se rattache à une étape de scénario, mais pas à une ville —
-  Montefioralle est donc saisie deux fois si elle est à la fois une étape et une visite.
+Les manques structurants sont tenus par la [map des parcours](map-user-flows.md#06--ce-que-la-map-met-à-nu),
+qui rattache chacun au parcours qu'il casse, et par le fichier de l'objectif concerné dans
+[docs/flows/](flows/). Le suivi détaillé, lui, vit dans [PLAN.md](../PLAN.md).

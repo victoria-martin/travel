@@ -1,7 +1,7 @@
 function fixedCostNotesEditable(cost) {
   return editableText(cost.notes, `setFixedCostNotes('${cost.id}', this.innerText)`, {
     key: `fixed-cost:${cost.id}:notes`,
-    placeholder: 'notes…',
+    placeholder: 'Notes…',
   });
 }
 

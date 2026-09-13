@@ -58,7 +58,7 @@ function optionPriceSlot(scenario, step, option) {
       >${editableText(
         option.budget,
         `setStepBudget('${scenario.id}','${step.id}','${option.id}', this.innerText)`,
-        { key: `option:${option.id}:budget`, placeholder: 'budget…' },
+        { key: `option:${option.id}:budget`, placeholder: 'Budget…' },
       )}${hasOptionBudget(option) ? ' €' : ''}</span
     >
   </span>`;

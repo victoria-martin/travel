@@ -20,8 +20,8 @@ function stepForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
     <div class="field">
-      <label>Ville</label
-      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" placeholder="Sienne" />
+      <label>Nom</label
+      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" placeholder="Arrivée à Pise" />
     </div>
     <div class="field-row">
       <div class="field">
@@ -37,7 +37,7 @@ function stepForm(p) {
           id="s-budget"
           type="text"
           value="${escapeHtml(option.budget)}"
-          placeholder="remplace le prix de l'hébergement"
+          placeholder="Remplace le prix de l'hébergement"
         />
       </div>
     </div>
