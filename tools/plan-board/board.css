@@ -627,6 +627,34 @@ code,
   flex-shrink: 0;
   font-size: 12px;
 }
+/* La priorité est la seule pastille qui s'édite depuis la ligne : elle ouvre l'échelle sous elle,
+   et le ＋ d'une tâche sans priorité attend le survol de sa ligne. */
+.row-priority {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+}
+.row-priority .pill-add {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.task:hover .row-priority .pill-add,
+.row-priority .pill-add[aria-pressed='true'] {
+  opacity: 1;
+}
+.row-priority-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-lift);
+}
 /* La seule ligne qui doit s'attraper au défilé : la carte prend la teinte du statut, et le point
    dit que ça tourne en ce moment. */
 .task-doing {

@@ -1,4 +1,5 @@
 function saveFixedCost(id) {
+  const { scenarioId } = modal;
   const cost = {
     id: id || uid(),
     travelId: currentTravelId(),
@@ -15,6 +16,8 @@ function saveFixedCost(id) {
   } else {
     state.fixedCosts.push(cost);
   }
+  const scenario = scenarioId ? getScenario(scenarioId) : null;
+  if (scenario && !scenario.costIds.includes(cost.id)) scenario.costIds.push(cost.id);
   saveNow();
   closeModal();
 }

@@ -1043,11 +1043,22 @@ tr:hover td {
   padding: 14px 16px;
   margin-bottom: 18px;
 }
+/* Les dépenses ne sont pas une étape : le bloc se distingue par sa teinte, pas par sa forme. */
+.scenario-extra-expenses {
+  background: #eef0e4;
+  border-color: #c7cfae;
+}
 .scenario-extra-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
+}
+.scenario-extra-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
 }
 .scenario-extra-empty {
   font-size: 13px;

@@ -35,6 +35,18 @@ function openSession(id) {
   return { session, resumed: false };
 }
 
+// A conversation started by hand has no task; attaching it writes the same link the board writes
+// when it launches one. An existing link is never overwritten: it points at another conversation.
+function attachSession(id, sessionId) {
+  const store = read();
+  if (store.tasks[id]) return null;
+  const now = new Date().toISOString();
+  const session = { sessionId, createdAt: now, lastOpenedAt: now };
+  store.tasks[id] = session;
+  write(store);
+  return session;
+}
+
 function archiveTask(task) {
   const store = read();
   store.archived = store.archived.filter((entry) => entry.id !== task.id);
@@ -47,4 +59,4 @@ function listArchived() {
   return store.archived.map((entry) => ({ ...entry, session: store.tasks[entry.id] || null }));
 }
 
-module.exports = { sessionOf, openSession, archiveTask, listArchived };
+module.exports = { sessionOf, openSession, attachSession, archiveTask, listArchived };

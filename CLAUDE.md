@@ -60,6 +60,34 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — une tâche porte une **priorité**, troisième vocabulaire à côté des types et des
+  statuts : [priorities.js](tools/plan-board/priorities.js) sur le modèle de
+  [statuses.js](tools/plan-board/statuses.js). Les trois listes s'écrivent dans la même énumération
+  `·` de PLAN.md et doivent rester disjointes, puisque `splitRest` reconnaît un morceau en
+  l'interrogeant dans l'une puis l'autre — d'où le refus de `vocabulary.js`, qui écrit pourtant dans
+  les trois fichiers depuis le `＋` du tiroir. La priorité est le seul axe facultatif : recliquer la
+  pastille active l'enlève, là où un statut est toujours porté. D'où `à trier` 📥, qui devient
+  `NEW_STATUS` : une tâche neuve n'a été triée par personne et n'a pas encore de priorité. Sur la
+  carte la pastille suit celle du statut ; dans le tiroir elle tient sa rangée entre Type et Statut,
+  les trois passant désormais par un `wordChoices` commun — la rangée de pastilles est l'invariant,
+  le libellé du champ reste écrit en clair. C'est aussi la seule chose qu'une ligne édite sans
+  ouvrir son tiroir ([row-priority.js](tools/plan-board/row-priority.js)) : on repèse une tâche en
+  lisant la liste, pas en l'ouvrant. Le déclencheur est une pastille `role="button"` et non un
+  bouton, parce qu'il vit dans le bouton qui ouvre le tiroir — c'est `closest('[data-act]')` qui
+  départage les deux gestes.
+
+- **2026-09-13** — le lien session ↔ tâche va désormais dans les deux sens : `PUT
+/api/tasks/<id>/session` rattache une conversation ouverte à la main, là où
+  [sessions.js](tools/plan-board/sessions.js) ne savait que générer un uuid neuf au lancement depuis
+  le board. Il passe par le serveur et non par le skill, parce que le serveur est le seul écrivain
+  de `.claude/plan-sessions.json` et le seul endroit où un statut se décide — le rattachement
+  emprunte le `markDoing` du lancement. Une tâche qui porte déjà une session se refuse (`409`) : le
+  lien pointe vers une autre conversation, on ne l'écrase pas. Côté skills, `start-task` et
+  `commit-task` recopiaient mot pour mot leur étape « retrouver la tâche » ; elle devient
+  [.claude/skills/shared/retrouver-la-tache.md](.claude/skills/shared/retrouver-la-tache.md), un
+  fichier parce qu'elle a deux consommateurs, et le cul-de-sac « demander de quelle tâche il s'agit »
+  y devient la recherche des candidates dans PLAN.md.
+
 - **2026-09-13** — `js/views/transports/` créé pour le domaine Transport, sur le découpage
   d'`attractions/`. Le mode est ce qui décide des champs : les quatre modes à compagnie portent
   `carrier` / `reference`, la voiture porte un `carId` qui **référence**

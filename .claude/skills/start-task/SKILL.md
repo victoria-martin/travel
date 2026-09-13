@@ -13,17 +13,8 @@ demande, l'état des lieux, le design proposé. Rien n'est modifié avant sa val
 
 ## 1. Retrouver la tâche
 
-L'id de la session courante est le dernier segment du dossier de scratchpad de la session.
-
-```sh
-python3 -c "
-import json, sys
-tasks = json.load(open('.claude/plan-sessions.json'))['tasks']
-print(next((id for id, t in tasks.items() if t['sessionId'] == sys.argv[1]), ''))" <session-id>
-```
-
-- Un id sort → sa puce est celle qui porte `<!--t:id-->` dans [PLAN.md](../../../PLAN.md).
-- Rien ne sort (session lancée à la main) → demander de quelle tâche il s'agit, et attendre.
+[retrouver-la-tache.md](../shared/retrouver-la-tache.md) : le lien session ↔ tâche, et le
+rattachement quand la conversation a été ouverte à la main.
 
 ## 2. Lire la tâche entière
 

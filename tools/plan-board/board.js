@@ -2,6 +2,7 @@ let board = { tasks: [], archived: [], sections: [] };
 let firstRender = true;
 let activeStatuses = [];
 let activeTypes = [];
+let activePriorities = [];
 let showArchived = false;
 let search = '';
 
@@ -42,6 +43,7 @@ function visibleTasks() {
   return allTasks().filter((task) => {
     if (Boolean(task.archived) !== showArchived) return false;
     if (activeStatuses.length && !activeStatuses.includes(task.status)) return false;
+    if (activePriorities.length && !activePriorities.includes(task.priority)) return false;
     if (activeTypes.length && !task.types.some((type) => activeTypes.includes(type))) return false;
     if (!needle) return true;
     return `${task.title} ${task.body} ${task.section}`.toLowerCase().includes(needle);
@@ -68,9 +70,17 @@ function toggleStatus(label) {
   renderBoard();
 }
 
+function togglePriority(label) {
+  activePriorities = activePriorities.includes(label)
+    ? activePriorities.filter((entry) => entry !== label)
+    : [...activePriorities, label];
+  renderBoard();
+}
+
 function clearFilters() {
   activeStatuses = [];
   activeTypes = [];
+  activePriorities = [];
   renderBoard();
 }
 
@@ -95,6 +105,7 @@ function renderFilters() {
   };
   const byType = tally('types');
   const byStatus = tally('status');
+  const byPriority = tally('priority');
 
   const chip = (entry, count, act, active) => `<button class="filter" data-act="${act}"
     data-value="${entry.label}" aria-pressed="${active}">
@@ -107,6 +118,14 @@ function renderFilters() {
   const statuses = PLAN_STATUSES.map((status) =>
     chip(status, byStatus[status.label], 'status', activeStatuses.includes(status.label)),
   ).join('');
+  const priorities = PLAN_PRIORITIES.map((priority) =>
+    chip(
+      priority,
+      byPriority[priority.label],
+      'priority',
+      activePriorities.includes(priority.label),
+    ),
+  ).join('');
 
   const archived = `<button class="filter filter-archived" data-act="archived"
     aria-pressed="${showArchived}">
@@ -114,12 +133,13 @@ function renderFilters() {
   </button>`;
 
   const clear =
-    activeStatuses.length || activeTypes.length
+    activeStatuses.length || activeTypes.length || activePriorities.length
       ? '<button class="filter-clear" data-act="clear-filters">tout afficher</button>'
       : '';
 
   ui.getElementById('filters').innerHTML =
     `<div class="filter-row">${types}</div>` +
+    `<div class="filter-row">${priorities}</div>` +
     `<div class="filter-row">${statuses}${archived}${clear}</div>`;
 }
 
@@ -187,6 +207,7 @@ function taskButton(task) {
     <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
       ${doing ? '<span class="doing-dot" aria-hidden="true"></span>' : ''}
       ${pill(planStatus(task.status))}
+      ${rowPriorityButton(task)}
       <span class="task-types">${task.types.map(typeDot).join('')}</span>
       <span class="task-title">${esc(task.title)}</span>
       <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
@@ -273,10 +294,14 @@ const CLICKS = {
   cancel: closeDrawer,
   status: (target) => toggleStatus(target.dataset.value),
   type: (target) => toggleType(target.dataset.value),
+  priority: (target) => togglePriority(target.dataset.value),
+  'row-priority': (target) => toggleRowPriority(target.dataset.id),
+  'row-priority-pick': (target) => setRowPriority(target.dataset.id, target.dataset.value),
   archived: toggleArchived,
   'clear-filters': clearFilters,
   'pick-status': (target) => editDraft('status', target.dataset.value),
   'pick-type': (target) => toggleDraftType(target.dataset.value),
+  'pick-priority': (target) => toggleDraftPriority(target.dataset.value),
   create: openCreateDrawer,
   'scope-pick': backToScopeList,
   emoji: (target) => toggleEmojiPicker(target.dataset.value),
@@ -326,7 +351,9 @@ function bindApp() {
   const app = document.getElementById('app');
   app.addEventListener('click', (event) => {
     const target = event.target.closest('[data-act]');
-    if (target && CLICKS[target.dataset.act]) CLICKS[target.dataset.act](target);
+    const act = target ? target.dataset.act : '';
+    if (!act.startsWith('row-priority') && closeRowPriority()) renderBoard();
+    if (CLICKS[act]) CLICKS[act](target);
   });
   app.addEventListener('input', (event) => {
     const target = event.target.closest('[data-act]');
@@ -339,7 +366,9 @@ function bindApp() {
 }
 
 function onKeydown(event) {
-  if (event.key === 'Escape') closeDrawer();
+  if (event.key !== 'Escape') return;
+  if (closeRowPriority()) return renderBoard();
+  closeDrawer();
 }
 
 ui.addEventListener('keydown', onKeydown);

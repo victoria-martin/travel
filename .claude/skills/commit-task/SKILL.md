@@ -11,19 +11,8 @@ redemander.
 
 ## 1. Retrouver la tâche
 
-Le board lance une session par tâche et garde le lien dans
-[.claude/plan-sessions.json](../../plan-sessions.json). L'id de la session courante est le dernier
-segment du dossier de scratchpad de la session.
-
-```sh
-python3 -c "
-import json, sys
-tasks = json.load(open('.claude/plan-sessions.json'))['tasks']
-print(next((id for id, t in tasks.items() if t['sessionId'] == sys.argv[1]), ''))" <session-id>
-```
-
-- Un id sort → c'est la tâche, son marqueur est `<!--t:id-->` dans [PLAN.md](../../../PLAN.md).
-- Rien ne sort (session lancée à la main) → demander de quelle tâche il s'agit, et attendre.
+[retrouver-la-tache.md](../shared/retrouver-la-tache.md) : le lien session ↔ tâche, et le
+rattachement quand la conversation a été ouverte à la main.
 
 ## 2. Lire ce qui a été fait
 

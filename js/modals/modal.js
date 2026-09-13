@@ -39,7 +39,10 @@ const MODAL_TYPES = {
     edits: true,
   },
   charge: {
-    open: (id) => ({ payload: id ? { ...getFixedCost(id) } : emptyFixedCost() }),
+    open: (id, scenarioId) => ({
+      scenarioId,
+      payload: id ? { ...getFixedCost(id) } : emptyFixedCost(),
+    }),
     body: (m) => fixedCostForm(m.payload),
     edits: true,
   },

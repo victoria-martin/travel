@@ -5,9 +5,11 @@ let draft = null;
 
 const drawerEl = () => ui.getElementById('drawer');
 
+const REPAINTED_FIELDS = ['status', 'priority', 'types'];
+
 function editDraft(field, value) {
   draft[field] = value;
-  if (field === 'status' || field === 'types') renderDrawer();
+  if (REPAINTED_FIELDS.includes(field)) renderDrawer();
   else refreshDrawerFoot();
 }
 
@@ -17,6 +19,9 @@ function toggleDraftType(label) {
     : [...draft.types, label];
   renderDrawer();
 }
+
+// A task carries one priority or none: clicking the one it wears takes it off again.
+const toggleDraftPriority = (label) => editDraft('priority', draft.priority === label ? '' : label);
 
 function closeDrawer() {
   closeEmojiPicker();
@@ -35,6 +40,18 @@ function closeDrawer() {
   runQueuedReload();
 }
 
+// A row of pills where one act picks a word, each saying whether the draft wears it.
+const wordChoices = (words, act, isActive) =>
+  words
+    .map((word) =>
+      pill(
+        word,
+        `role="button" tabindex="0" data-act="${act}" data-value="${word.label}"
+         aria-pressed="${isActive(word.label)}"`,
+      ),
+    )
+    .join('');
+
 function draftFields() {
   return `
     <div class="field">
@@ -46,28 +63,25 @@ function draftFields() {
     <div class="field">
       <label>Type <span class="field-note">plusieurs possibles</span></label>
       <div class="choices">
-        ${PLAN_TYPES.map((type) =>
-          pill(
-            type,
-            `role="button" tabindex="0" data-act="pick-type" data-value="${type.label}"
-             aria-pressed="${draft.types.includes(type.label)}"`,
-          ),
-        ).join('')}
+        ${wordChoices(PLAN_TYPES, 'pick-type', (label) => draft.types.includes(label))}
         ${newWordButton('type')}
       </div>
       ${newWordForm('type')}
     </div>
 
     <div class="field">
+      <label>Priorité <span class="field-note">facultative, recliquer l'enlève</span></label>
+      <div class="choices">
+        ${wordChoices(PLAN_PRIORITIES, 'pick-priority', (label) => draft.priority === label)}
+        ${newWordButton('priority')}
+      </div>
+      ${newWordForm('priority')}
+    </div>
+
+    <div class="field">
       <label>Statut</label>
       <div class="choices">
-        ${PLAN_STATUSES.map((status) =>
-          pill(
-            status,
-            `role="button" tabindex="0" data-act="pick-status" data-value="${status.label}"
-             aria-pressed="${draft.status === status.label}"`,
-          ),
-        ).join('')}
+        ${wordChoices(PLAN_STATUSES, 'pick-status', (label) => draft.status === label)}
         ${newWordButton('status')}
       </div>
       ${newWordForm('status')}

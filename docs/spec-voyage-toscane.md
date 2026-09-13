@@ -410,8 +410,13 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
   rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
   tient, et les scénarios existants ne bougent pas.
+- **Dépenses**, sous le bloc Voiture, dans sa propre teinte pour ne pas se lire comme une étape :
+  une ligne par dépense rattachée (libellé, montant, ✕), le total en tête. Deux gestes en pied —
+  « Rattacher une dépense » liste celles du voyage qui ne le sont pas encore, « Ajouter une
+  dépense » ouvre la modale Dépenses et rattache la nouvelle au retour. Le ✕ retire du scénario
+  sans supprimer la dépense, qui reste sur la page Dépenses.
 - **Total général**, le seul bloc de chiffres de l'écran : une ligne par poste (hébergements,
-  hébergements en GP si le scénario en compte, voiture, charges fixes rattachées), puis le total des
+  hébergements en GP si le scénario en compte, voiture, dépenses rattachées), puis le total des
   nuits et le montant. Les GuestPoints y gardent leur propre montant, à côté des euros.
 - **Le détail des hébergements se déplie** sous la ligne « Hébergements », au chevron : une ligne
   par lieu (lieu · nuits · dates · total), **dans l'ordre du trajet** — un lieu revisité tient sur
@@ -503,8 +508,6 @@ Le suivi détaillé vit dans [PLAN.md](../PLAN.md). Les manques structurants du 
   jour restent hors du total tant que rien ne dit sur combien les multiplier. Le nombre de nuits
   n'existe que dans un scénario, et la page Dépenses n'en connaît aucun.
 - **Autour des voyages** : pas de page Voyages, donc ni duplication ni suppression d'un voyage.
-- **Charges fixes dans le scénario** : la relation (`costIds`) existe dans le modèle et alimente le
-  total général, mais aucun écran ne rattache une charge à un scénario — la ligne reste donc à 0 €.
 - **Deux dates par étape** : celle calculée depuis le départ du scénario, et le champ libre
   « arrivée le » resté dans la modale, affiché à côté.
 - **Attractions** : une attraction se rattache à une étape de scénario, mais pas à une ville —

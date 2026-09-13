@@ -33,7 +33,15 @@ async function addNewTask() {
     board = await api('/api/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ section, subsection, title, types: [], status: NEW_STATUS, body: '' }),
+      body: JSON.stringify({
+        section,
+        subsection,
+        title,
+        types: [],
+        priority: '',
+        status: NEW_STATUS,
+        body: '',
+      }),
     });
     newTask = null;
     newTaskError = '';

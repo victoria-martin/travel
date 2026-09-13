@@ -17,11 +17,6 @@ les types.
 
 ## 🗓️ Scénarios
 
-- **Bloc des dépenses dans le détail** <!--t:ost1--> — 🧩 ui · 🚧 en cours : sous les étapes, dans
-  une autre couleur, les dépenses des étapes du scénario — une ligne par dépense (libellé, montant,
-  retirer), un select pour en rattacher une existante, et « + Ajouter » qui ouvre la modale puis
-  rattache. Même forme que le bloc Voiture ([car-block.js](js/views/scenarios/detail/car-block.js)).
-  Tant que `costIds` reste vide, la ligne « Dépenses » du total général affiche 0 €.
 - **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🔍 à étudier : les dates se
   calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
   le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
@@ -108,7 +103,7 @@ les types.
   - + status pas obligatoire pour une tâche,
   - les nouvelles tâches sont crées sans statut ou alors avec status. "a trier" c est mieux et
     prority null aussi
-- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · ⏳ à faire : un
+- **navigation entre les listes** <!--t:is4k--> — 🖼️ écran · 🧩 layout · 🧩 ui · 🚧 en cours : un
   clic sur la liste des sessions en cours ouvre cette liste ds le main panel
 
   un clic sur une section fait la même action, ouvre celle liste ds le main panel. on ajoute une
@@ -117,8 +112,19 @@ les types.
   voir comment filtrer les sections
 
   tri ok (drag and drop)
+- **indicateur visuel pour une tâche en cours** <!--t:oqg6--> — 🧩 ui · ✅ fait : la carte prend la
+  teinte du statut et un point pulse dans la gouttière, à gauche des pastilles
 
 ### layout
+
+- **créer une meilleur toolbar  pour filtrer** <!--t:1ab9--> — 🧩 ui · 🚧 en cours : elle sera en
+  header de l app a la palce de tous les pills
+
+  fais un truc intelligent qui prend en compte le fait que j ai potentielement bcp d options pr les
+  tris
+
+  et qd on est ds une view genre une section ou la liste des sessions en cours ou sur la liste de
+  toutes les tasts quasiment partout en fait
 
 ## 🧳 Valise
 

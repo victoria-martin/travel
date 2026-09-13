@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { planStatus } = require('./statuses.js');
 const { PLAN_TYPES, planType } = require('./types.js');
+const { planPriority } = require('./priorities.js');
 
 // TODO export in lib ?
 
@@ -35,15 +36,15 @@ function writePlan(lines) {
   fs.writeFileSync(PLAN_PATH, tidy.join('\n'), 'utf8');
 }
 
-// `— 🗃️ modèle · 🚧 en cours (une note) : le détail…`
-// Types and statuses share one `·` list; their vocabularies are disjoint, so each chunk tells them apart.
+// `— 🗃️ modèle · 🚧 en cours (une note) · 🔴 haute : le détail…`
+// The three vocabularies share one `·` list; they are disjoint, so each chunk tells them apart.
 function splitRest(rest) {
   const head = rest.replace(/^\s*—\s*/, '');
   const colon = head.indexOf(':');
   const meta = colon === -1 ? head : head.slice(0, colon);
   const lead = colon === -1 ? '' : head.slice(colon + 1).trim();
 
-  const parsed = { types: [], status: '', note: '', lead };
+  const parsed = { types: [], status: '', priority: '', note: '', lead };
   meta.split('·').forEach((chunk) => {
     const note = chunk.match(/\(([^)]*)\)/);
     if (note) parsed.note = note[0];
@@ -53,8 +54,9 @@ function splitRest(rest) {
       .replace(/^\S+\s+/, '');
     if (planType(label)) parsed.types.push(label);
     else if (planStatus(label)) parsed.status = label;
+    else if (planPriority(label)) parsed.priority = label;
   });
-  if (!parsed.status) return { types: [], status: '', note: '', lead: head.trim() };
+  if (!parsed.status) return { types: [], status: '', priority: '', note: '', lead: head.trim() };
   return parsed;
 }
 
@@ -165,7 +167,12 @@ const badge = (entry) => `${entry.emoji} ${entry.label}`;
 function taskLines(task) {
   const status = planStatus(task.status);
   const types = PLAN_TYPES.filter((type) => task.types.includes(type.label)).map(badge);
-  const meta = [...types, `${badge(status)}${task.note ? ` ${task.note}` : ''}`].join(' · ');
+  const priority = planPriority(task.priority);
+  const meta = [
+    ...types,
+    `${badge(status)}${task.note ? ` ${task.note}` : ''}`,
+    ...(priority ? [badge(priority)] : []),
+  ].join(' · ');
   const head = `- **${task.title}** <!--t:${task.id}--> — ${meta}`;
   const logical = task.body.split('\n');
   // A body that opens on a sub-bullet or a blank line starts below the head, not after `: `.
@@ -364,7 +371,15 @@ function insertionLine(lines, tasks, section, subsection) {
 
 const cleanHeading = (name) => (name || '').replace(/^#+\s*/, '').trim();
 
-function createTask({ section, subsection = '', title, types = [], status, body = '' }) {
+function createTask({
+  section,
+  subsection = '',
+  title,
+  types = [],
+  status,
+  priority = '',
+  body = '',
+}) {
   const block = { section: cleanHeading(section), subsection: cleanHeading(subsection) };
   if (!title || !title.trim() || !planStatus(status) || !block.section) return null;
   if (isSkipped(block.section)) return null;
@@ -379,6 +394,7 @@ function createTask({ section, subsection = '', title, types = [], status, body 
     title: title.trim(),
     types: types.filter(planType),
     status,
+    priority: planPriority(priority) ? priority : '',
     note: '',
     body: body.trim(),
   };
@@ -420,6 +436,7 @@ function updateTask(id, changes) {
   const updated = { ...task, ...changes };
   if (!planStatus(updated.status)) return null;
   updated.types = (updated.types || []).filter(planType);
+  if (!planPriority(updated.priority)) updated.priority = '';
   lines.splice(task.startLine, task.endLine - task.startLine + 1, ...taskLines(updated));
   writePlan(lines);
   return updated;

@@ -1,9 +1,14 @@
-// A type or a status the frozen lists do not hold yet, typed under the choices it joins. The server
-// writes it into types.js / statuses.js, so the next load reads it from code like every other entry.
+// A word the frozen lists do not hold yet, typed under the choices it joins. The server writes it
+// into types.js / statuses.js / priorities.js, so the next load reads it from code like the rest.
 let newWord = null;
 let newWordError = '';
 
-const wordList = (kind) => (kind === 'type' ? PLAN_TYPES : PLAN_STATUSES);
+const WORD_KINDS = {
+  type: { list: () => PLAN_TYPES, title: 'Nouveau type', placeholder: 'Le type' },
+  priority: { list: () => PLAN_PRIORITIES, title: 'Nouvelle priorité', placeholder: 'La priorité' },
+  status: { list: () => PLAN_STATUSES, title: 'Nouveau statut', placeholder: 'Le statut' },
+};
+
 const setWordEmoji = (char) => (newWord.emoji = char);
 
 // Clicking the open kind folds the form; clicking the other one switches it over.
@@ -52,10 +57,10 @@ async function addNewWord() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newWord),
     });
-    wordList(kind).push(word);
+    WORD_KINDS[kind].list().push(word);
     newWord = null;
     if (kind === 'type') toggleDraftType(word.label);
-    else editDraft('status', word.label);
+    else editDraft(kind, word.label);
     renderBoard();
   } catch (error) {
     newWordError = error.message;
@@ -65,7 +70,7 @@ async function addNewWord() {
 
 // The row already says what it holds: the plus joins it as one more choice, named by its tooltip.
 function newWordButton(kind) {
-  const title = kind === 'type' ? 'Nouveau type' : 'Nouveau statut';
+  const { title } = WORD_KINDS[kind];
   const open = Boolean(newWord) && newWord.kind === kind;
   return `<span class="pill pill-add" role="button"
     tabindex="0" data-act="new-word" data-value="${kind}" title="${title}" aria-label="${title}"
@@ -93,7 +98,7 @@ function newWordForm(kind) {
         ${newWord.emoji}
       </button>
       <input class="word-label" id="word-label" data-act="word-label" value="${esc(newWord.label)}"
-        placeholder="${kind === 'type' ? 'Le type, en un ou deux mots' : 'Le statut, en un ou deux mots'}" />
+        placeholder="${WORD_KINDS[kind].placeholder}, en un ou deux mots" />
     </div>
     ${emojiPanel('vocabulary')}
     <label class="field-label">Couleur <span class="field-note">la teinte de la pastille</span></label>

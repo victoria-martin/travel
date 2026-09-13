@@ -94,6 +94,17 @@ function markDoing(id) {
   plan.updateTask(id, { status: DOING_STATUS });
 }
 
+// A session started by hand claims its task after the fact: the board never launched it, so the
+// link has to be written from the conversation itself.
+function attachSession(res, id, sessionId) {
+  if (!plan.findTask(id)) return send(res, 404, { error: 'tâche inconnue' });
+  if (!sessionId) return send(res, 400, { error: 'sessionId manquant' });
+  const session = sessions.attachSession(id, sessionId);
+  if (!session) return send(res, 409, { error: 'tâche déjà liée à une session' });
+  markDoing(id);
+  send(res, 200, { session, task: plan.findTask(id) });
+}
+
 async function openSession(res, id, prompt) {
   const task = taskOrArchived(id);
   if (!task) return send(res, 404, { error: 'tâche inconnue' });
@@ -190,10 +201,21 @@ const server = http.createServer(async (req, res) => {
     return openSession(res, session[1], prompt);
   }
 
+  if (req.method === 'PUT' && session) {
+    const { sessionId } = await readBody(req);
+    return attachSession(res, session[1], sessionId);
+  }
+
   if (req.method === 'PATCH' && rename) {
-    const { title, status, body, types } = await readBody(req);
+    const { title, status, priority, body, types } = await readBody(req);
     if (!title || !title.trim()) return send(res, 400, { error: 'titre vide' });
-    const updated = plan.updateTask(rename[1], { title: title.trim(), status, body, types });
+    const updated = plan.updateTask(rename[1], {
+      title: title.trim(),
+      status,
+      priority,
+      body,
+      types,
+    });
     return updated
       ? send(res, 200, tasksPayload())
       : send(res, 400, { error: 'mise à jour refusée' });

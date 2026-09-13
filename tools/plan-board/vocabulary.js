@@ -2,10 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const { PLAN_STATUSES, planStatus } = require('./statuses.js');
 const { PLAN_TYPES, planType } = require('./types.js');
+const { PLAN_PRIORITIES, planPriority } = require('./priorities.js');
 const { PILL_VARIANTS } = require('./pill.js');
 
 // A word typed on the board joins the frozen list it belongs to — both the file, so the next load
-// reads it from code, and the live array, which `planType` / `planStatus` close over.
+// reads it from code, and the live array, which `planType` / `planStatus` / `planPriority` close over.
 const LISTS = {
   type: { file: 'types.js', array: 'PLAN_TYPES', entries: PLAN_TYPES, fields: ['variant'] },
   status: {
@@ -14,12 +15,18 @@ const LISTS = {
     entries: PLAN_STATUSES,
     fields: ['variant'],
   },
+  priority: {
+    file: 'priorities.js',
+    array: 'PLAN_PRIORITIES',
+    entries: PLAN_PRIORITIES,
+    fields: ['variant'],
+  },
 };
 
-// PLAN.md tells a type from a status by looking the chunk up in one list then the other, so a word
-// held by both would make the line unreadable. The rest is what the bullet format uses as syntax.
+// PLAN.md tells the three vocabularies apart by looking a chunk up in one list then the next, so a
+// word held by two would make the line unreadable. The rest is what the bullet format uses as syntax.
 const FORBIDDEN = /[·:()—*`|#<>\[\]\n]/;
-const taken = (label) => Boolean(planType(label) || planStatus(label));
+const taken = (label) => Boolean(planType(label) || planStatus(label) || planPriority(label));
 
 function validate(kind, { label, emoji, variant }) {
   const list = LISTS[kind];
@@ -27,7 +34,7 @@ function validate(kind, { label, emoji, variant }) {
   if (!label) return 'libellé vide';
   if (label.length > 24) return 'libellé trop long';
   if (FORBIDDEN.test(label)) return 'le libellé ne peut pas porter · : ( ) — * ` | # < > [ ]';
-  if (taken(label)) return `« ${label} » est déjà un type ou un statut`;
+  if (taken(label)) return `« ${label} » est déjà un type, un statut ou une priorité`;
   if (!emoji || /\s/.test(emoji) || emoji.length > 8) return 'emoji invalide';
   if (/^[\w-]+$/.test(emoji)) return 'emoji invalide';
   if (!PILL_VARIANTS[variant]) return 'couleur inconnue';

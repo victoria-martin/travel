@@ -17,6 +17,7 @@ function openCreateDrawer() {
     newScope: false,
     title: '',
     types: [],
+    priority: '',
     status: NEW_STATUS,
     body: '',
   };

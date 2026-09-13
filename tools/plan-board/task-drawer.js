@@ -14,7 +14,13 @@ async function openDrawer(id) {
   resetNewWord();
   openTaskId = id;
   if (location.hash !== `#t-${id}`) history.replaceState(null, '', `#t-${id}`);
-  draft = { title: task.title, types: [...task.types], status: task.status, body: task.body };
+  draft = {
+    title: task.title,
+    types: [...task.types],
+    priority: task.priority,
+    status: task.status,
+    body: task.body,
+  };
   preview = null;
   archiveArmed = false;
   sessionError = '';
@@ -33,11 +39,10 @@ function isDirty() {
   const task = findTask(openTaskId);
   if (!task) return false;
   return (
-    ['title', 'status', 'body'].some((field) => draft[field] !== task[field]) ||
+    ['title', 'status', 'priority', 'body'].some((field) => draft[field] !== task[field]) ||
     draft.types.join() !== task.types.join()
   );
 }
-
 
 function sessionBlock() {
   if (previewFailed) {
@@ -108,7 +113,13 @@ async function saveDraft() {
     body: JSON.stringify(draft),
   });
   const task = findTask(id);
-  draft = { title: task.title, types: [...task.types], status: task.status, body: task.body };
+  draft = {
+    title: task.title,
+    types: [...task.types],
+    priority: task.priority,
+    status: task.status,
+    body: task.body,
+  };
   renderBoard();
   renderDrawer();
 }
