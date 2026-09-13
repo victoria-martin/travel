@@ -18,10 +18,22 @@ function scenarioDetailHeader(s) {
     </div>
     <div class="view-header-actions">
       ${scenarioStartDateField(s)} ${count > 0 ? scenarioMapToggleBtn() : ''}
-      ${toolbarButton({
+      ${toolbarPanel({
+        key: 'add-step',
         icon: '+',
         label: 'Ajouter une étape',
-        onclick: `openModal('step','${s.id}')`,
+        body: /* HTML */ ` <button
+            class="inline-menu-item"
+            onclick="openToolbarPanel = null; openModal('step','${s.id}',null,1)"
+          >
+            Créer une étape
+          </button>
+          <button
+            class="inline-menu-item"
+            onclick="openToolbarPanel = null; openModal('step','${s.id}',null,2)"
+          >
+            Créer une étape avec options
+          </button>`,
       })}
       ${toolbarMenu()}
     </div>

@@ -71,6 +71,7 @@ function migrateData(data) {
     if (!Array.isArray(s.costIds)) s.costIds = [];
     if (!Array.isArray(s.transportIds)) s.transportIds = [];
     if (s.favorite === undefined) s.favorite = false;
+    (s.steps || []).forEach(adoptLegacyStep);
   });
   data.cities.forEach((c) => {
     if (c.geoAddress === undefined) {
@@ -79,6 +80,34 @@ function migrateData(data) {
     }
   });
   return data;
+}
+
+/*
+  Avant les options, le lieu, les nuits et le budget vivaient sur l'étape ; ils deviennent sa
+  première option. Une activité d'étape, elle, n'avait pas d'identifiant : elle en gagne un, sans
+  quoi le Sheet lui en inventerait un neuf à chaque lecture.
+*/
+function adoptLegacyStep(step) {
+  if (!Array.isArray(step.attractions)) step.attractions = [];
+  step.attractions.forEach((entry) => {
+    if (!entry.id) entry.id = uid();
+  });
+  if (!Array.isArray(step.options) || step.options.length === 0)
+    step.options = [
+      {
+        id: uid(),
+        name: '',
+        cityId: step.cityId || null,
+        accommodationId: step.accommodationId || null,
+        nights: step.nights || 0,
+        budget: step.budget || '',
+        isSelected: true,
+      },
+    ];
+  delete step.nights;
+  delete step.cityId;
+  delete step.accommodationId;
+  delete step.budget;
 }
 
 /*

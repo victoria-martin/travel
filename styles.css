@@ -860,18 +860,22 @@ tr:hover td {
   height: 0;
   margin: -5px 0;
 }
-.step-gap .icon-btn {
+.step-gap .insert-step-dropdown {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
   opacity: 0;
-  background: var(--paper-raised);
   transition: opacity 0.12s;
 }
-.step-gap:hover .icon-btn,
-.step-gap .icon-btn:focus-visible {
+.step-gap .icon-btn {
+  background: var(--paper-raised);
+  list-style: none;
+}
+.step-gap:hover .insert-step-dropdown,
+.step-gap .insert-step-dropdown[open],
+.step-gap .insert-step-dropdown:focus-within {
   opacity: 1;
 }
 /* test */
@@ -884,6 +888,24 @@ tr:hover td {
   border-radius: 10px;
   padding: 12px 16px;
   /* padding: 18px 12px; */
+}
+/* Dragging a step: the hovered card wears the line where the step will land. */
+.step-drag-handle {
+  color: var(--ink-soft);
+  cursor: grab;
+  font-size: 13px;
+  line-height: 1;
+  margin: 7px 0 0 -6px;
+  flex-shrink: 0;
+}
+.step-dragging {
+  opacity: 0.4;
+}
+.step-drop-before {
+  box-shadow: 0 -3px 0 -1px var(--stone);
+}
+.step-drop-after {
+  box-shadow: 0 3px 0 -1px var(--stone);
 }
 .step-order {
   width: 26px;
@@ -936,8 +958,18 @@ tr:hover td {
   min-width: 0;
 }
 .step-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   font-weight: 600;
   font-size: 14.5px;
+}
+.step-title-notes {
+  margin-left: auto;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  text-align: right;
 }
 .step-detail {
   font-size: 12.5px;
@@ -951,7 +983,7 @@ tr:hover td {
 }
 .step-acc {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px auto auto;
+  grid-template-columns: minmax(0, 1fr) 96px auto auto auto;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
@@ -974,6 +1006,73 @@ tr:hover td {
   grid-column: 2;
   text-align: right;
   font-weight: 600;
+}
+/* Plusieurs options se comparent côte à côte ; seule, une option reste la ligne qu'elle était. */
+.step-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.option-card {
+  flex: 1 1 215px;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.option-card-chosen {
+  border-color: var(--stone);
+  background: var(--paper-raised);
+}
+.option-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.option-head .editable {
+  flex: 1;
+  min-width: 0;
+}
+.option-remove,
+.step-add-option {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.option-card:hover .option-remove,
+.step-card:hover .step-add-option {
+  opacity: 1;
+}
+.option-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.option-chosen {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--line);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.option-chosen-on {
+  color: #c98a3e;
+}
+.step-option-adds {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 .step-attraction {
   margin-top: 4px;

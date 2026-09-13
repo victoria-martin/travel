@@ -3,12 +3,12 @@ function nightPrice(acc) {
   return acc ? priceNumber(acc.price) : 0;
 }
 
-function accommodationCost(step) {
-  return nightPrice(getAccommodation(step.accommodationId)) * (parseInt(step.nights) || 0);
+function optionAccommodationCost(option) {
+  return nightPrice(getAccommodation(option.accommodationId)) * (parseInt(option.nights) || 0);
 }
 
-function hasStepBudget(step) {
-  return String(step.budget == null ? '' : step.budget).trim() !== '';
+function hasOptionBudget(option) {
+  return String(option.budget == null ? '' : option.budget).trim() !== '';
 }
 
 // Un montant se garde en deux monnaies séparées : elles ne s'additionnent jamais.
@@ -18,14 +18,18 @@ function addCosts(a, b) {
   return { euros: a.euros + b.euros, guestPoints: a.guestPoints + b.guestPoints };
 }
 
-// Le budget saisi sur l'étape remplace le prix de l'hébergement, et se compte toujours en euros.
-function stepCost(step) {
-  if (hasStepBudget(step)) return { euros: priceNumber(step.budget), guestPoints: 0 };
-  const acc = getAccommodation(step.accommodationId);
-  const amount = nightPrice(acc) * (parseInt(step.nights) || 0);
+// Le budget saisi sur l'option remplace le prix de l'hébergement, et se compte toujours en euros.
+function optionCost(option) {
+  if (hasOptionBudget(option)) return { euros: priceNumber(option.budget), guestPoints: 0 };
+  const acc = getAccommodation(option.accommodationId);
+  const amount = nightPrice(acc) * (parseInt(option.nights) || 0);
   return isGuestPointsAccommodation(acc)
     ? { euros: 0, guestPoints: amount }
     : { euros: amount, guestPoints: 0 };
+}
+
+function stepCost(step) {
+  return optionCost(chosenOption(step));
 }
 
 function placeCost(row) {
@@ -44,7 +48,7 @@ function accommodationTotals(scenario) {
       const cost = stepCost(step);
       const bucket = cost.guestPoints ? totals.guestPoints : totals.euros;
       bucket.amount += cost.euros + cost.guestPoints;
-      bucket.nights += parseInt(step.nights) || 0;
+      bucket.nights += stepNights(step);
       return totals;
     },
     { euros: { amount: 0, nights: 0 }, guestPoints: { amount: 0, nights: 0 } },

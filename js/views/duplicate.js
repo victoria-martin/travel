@@ -41,10 +41,21 @@ function duplicateTransport(id) {
 }
 
 // La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une.
+// Une copie d'étape ne partage rien avec l'originale : ses options et ses activités sont des
+// lignes à elles, donc elles reprennent des identifiants neufs.
+function copyStep(step) {
+  return {
+    ...step,
+    id: uid(),
+    options: stepOptions(step).map((o) => ({ ...o, id: uid() })),
+    attractions: (step.attractions || []).map((a) => ({ ...a, id: uid() })),
+  };
+}
+
 function duplicateStep(scenarioId, stepId) {
   const s = getScenario(scenarioId);
   const i = s.steps.findIndex((st) => st.id === stepId);
-  s.steps.splice(i + 1, 0, { ...s.steps[i], id: uid() });
+  s.steps.splice(i + 1, 0, copyStep(s.steps[i]));
   saveNow();
   render();
 }
@@ -54,7 +65,7 @@ function duplicateScenario(id) {
   const copy = JSON.parse(JSON.stringify(s));
   copy.id = uid();
   copy.name = s.name + ' (copie)';
-  copy.steps.forEach((st) => (st.id = uid()));
+  copy.steps = copy.steps.map(copyStep);
   state.scenarios.push(copy);
   saveNow();
   render();

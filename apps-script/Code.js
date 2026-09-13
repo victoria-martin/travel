@@ -119,16 +119,33 @@ const COLLECTIONS = {
     'city',
     'region',
     'arrivalDate',
+    'notes',
+    'hidden',
+    // Lieu, nuits et budget vivaient sur l'étape avant les options : ces quatre colonnes ne sont
+    // plus que la source de la reprise, et repartent vides au premier enregistrement.
     'nights',
     'cityId',
     'accommodationId',
     'budget',
-    'notes',
-    'hidden',
   ],
+  stepOptions: [
+    'travelId',
+    'id',
+    'scenarioId',
+    'stepId',
+    'name',
+    'cityId',
+    'accommodationId',
+    'nights',
+    'budget',
+    'isSelected',
+  ],
+  stepAttractions: ['travelId', 'id', 'scenarioId', 'stepId', 'attractionId', 'count', 'budget'],
 };
-const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen'];
-const NUM_FIELDS = ['nights', 'travelers'];
+// Une étape porte deux listes filles, chacune dans son onglet : ses options et ses activités.
+const STEP_CHILDREN = { options: 'stepOptions', attractions: 'stepAttractions' };
+const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
+const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'transportIds', 'tags'];
 
@@ -180,13 +197,18 @@ function readState() {
     rows[name] = readSheet(name);
   });
 
-  var stepsByScenario = {};
-  rows.steps.forEach(function (step) {
-    var key = step.scenarioId || '';
-    if (!stepsByScenario[key]) stepsByScenario[key] = [];
-    delete step.scenarioId;
-    delete step.travelId;
-    stepsByScenario[key].push(step);
+  var stepsByScenario = groupByParent(rows.steps, 'scenarioId');
+  var childrenByStep = {};
+  Object.keys(STEP_CHILDREN).forEach(function (field) {
+    childrenByStep[field] = groupByParent(rows[STEP_CHILDREN[field]], 'stepId');
+  });
+  Object.keys(stepsByScenario).forEach(function (scenarioId) {
+    stepsByScenario[scenarioId].forEach(function (step) {
+      Object.keys(STEP_CHILDREN).forEach(function (field) {
+        step[field] = childrenByStep[field][step.id] || [];
+      });
+      adoptLegacyStep(step);
+    });
   });
 
   var data = {
@@ -204,6 +226,40 @@ function readState() {
     tripNotes: rows.tripNotes,
   };
   return { rev: fingerprint(data), data: data };
+}
+
+// Une ligne fille porte son rattachement en colonne : il redevient l'imbrication côté client.
+function groupByParent(rows, parentColumn) {
+  var groups = {};
+  (rows || []).forEach(function (row) {
+    var key = row[parentColumn] || '';
+    if (!groups[key]) groups[key] = [];
+    delete row[parentColumn];
+    delete row.scenarioId;
+    delete row.travelId;
+    groups[key].push(row);
+  });
+  return groups;
+}
+
+// Reprise des étapes d'avant les options : le lieu, les nuits et le budget de l'étape deviennent
+// sa première option. À retirer une fois la conversion passée dans le Sheet.
+function adoptLegacyStep(step) {
+  if (step.options.length === 0)
+    step.options = [
+      {
+        id: uid(),
+        name: '',
+        cityId: step.cityId || null,
+        accommodationId: step.accommodationId || null,
+        nights: step.nights || 0,
+        budget: step.budget || '',
+        isSelected: true,
+      },
+    ];
+  ['nights', 'cityId', 'accommodationId', 'budget'].forEach(function (column) {
+    delete step[column];
+  });
 }
 
 // Les cellules se lisent par nom d'en-tête : ajouter ou déplacer une colonne dans
@@ -246,11 +302,25 @@ function normalizeState(data) {
     if (!normalized) return;
     normalized.steps = [];
     (scenario.steps || []).forEach(function (step) {
-      var flat = flattenStep(normalized, step);
-      var normalizedStep = normalizeItem('steps', flat);
+      var normalizedStep = normalizeItem('steps', flattenChild(normalized, step, 'scenarioId'));
       if (!normalizedStep) return;
       delete normalizedStep.scenarioId;
       delete normalizedStep.travelId;
+      Object.keys(STEP_CHILDREN).forEach(function (field) {
+        normalizedStep[field] = (step[field] || [])
+          .map(function (child) {
+            var row = normalizeItem(STEP_CHILDREN[field], flattenChild(step, child, 'stepId'));
+            if (!row) return null;
+            delete row.stepId;
+            delete row.scenarioId;
+            delete row.travelId;
+            return row;
+          })
+          .filter(function (row) {
+            return !!row;
+          });
+      });
+      adoptLegacyStep(normalizedStep);
       normalized.steps.push(normalizedStep);
     });
     scenarios.push(normalized);
@@ -320,11 +390,12 @@ function decodeCell(column, raw) {
   return value;
 }
 
-// Une étape n'existe que dans son scénario : ses deux colonnes de rattachement viennent du parent.
-function flattenStep(scenario, step) {
-  var flat = { scenarioId: scenario.id, travelId: scenario.travelId };
-  COLLECTIONS.steps.forEach(function (column) {
-    if (column !== 'scenarioId' && column !== 'travelId') flat[column] = step[column];
+// Une ligne fille n'existe que dans son parent : son rattachement et son voyage en viennent.
+function flattenChild(parent, child, parentColumn) {
+  var flat = { travelId: parent.travelId };
+  flat[parentColumn] = parent.id;
+  Object.keys(child).forEach(function (key) {
+    if (key !== 'travelId' && key !== parentColumn) flat[key] = child[key];
   });
   return flat;
 }
@@ -334,9 +405,17 @@ function flattenStep(scenario, step) {
 function writeState(data) {
   var scenarios = data.scenarios || [];
   var steps = [];
+  var children = { stepOptions: [], stepAttractions: [] };
   scenarios.forEach(function (scenario) {
     (scenario.steps || []).forEach(function (step) {
-      steps.push(flattenStep(scenario, step));
+      steps.push(flattenChild(scenario, step, 'scenarioId'));
+      Object.keys(STEP_CHILDREN).forEach(function (field) {
+        (step[field] || []).forEach(function (child) {
+          var row = flattenChild(step, child, 'stepId');
+          row.travelId = scenario.travelId;
+          children[STEP_CHILDREN[field]].push(row);
+        });
+      });
     });
   });
 
@@ -349,6 +428,8 @@ function writeState(data) {
   writeSheet('transports', data.transports || []);
   writeSheet('tripNotes', data.tripNotes || []);
   writeSheet('scenarios', scenarios);
+  writeSheet('stepOptions', children.stepOptions);
+  writeSheet('stepAttractions', children.stepAttractions);
   writeSheet('steps', steps);
 }
 

@@ -51,6 +51,16 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
+- **Le contenu d'une étape vit dans ses options**, jamais sur l'étape : lieu, nuits et budget
+  appartiennent à l'option. Toute étape en porte au moins une, il n'existe donc pas deux formes
+  d'étape à réconcilier — une étape ordinaire est une étape à une option. Tout l'aval (dates,
+  nuits, totaux, carte, récap) lit l'option retenue. Changer l'option retenue d'une étape recalcule
+  ses dates **et décale toutes les étapes suivantes**, puisque l'arrivée d'une étape somme les
+  nuits qui la précèdent.
+- **Une seule option retenue par étape**, tenue comme le scénario choisi : un drapeau par option
+  plutôt qu'un identifiant sur l'étape — la colonne se lit à l'œil dans le Sheet, et un identifiant
+  y renverrait à un autre onglet. Recliquer l'option retenue n'en laisse aucune : l'étape ne compte
+  alors ni nuit, ni lieu, ni coût.
 - **Une étape masquée ne compte nulle part** : ni dates, ni nuits, ni totaux, ni carte, ni récap, ni
   nombre d'étapes. C'est une variante mise de côté, gardée sous la main plutôt que supprimée. Seule
   la liste du détail la montre, grisée. Conséquence : partout ailleurs, le rang d'une étape est son
@@ -80,12 +90,13 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                               | possède tout le reste ; un seul est ouvert à la fois            |
 | **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                       | la fiche de référence ; c'est elle qui porte le prix            |
 | **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                              | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, budget, prix mini / maxi, tags, favori                           | un lieu à visiter ; localisée comme une ville                   |
+| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, lien, budget, prix mini / maxi, tags, favori                            | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori | un trajet du voyage ; en mode voiture il référence une location |
-| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                            | liste simple ; une seule voiture par défaut                     |
+| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                             | liste simple ; une seule voiture par défaut                     |
 | **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                           | liste simple                                                    |
 | **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                        | un itinéraire candidat                                          |
-| **Étape**           | lieu (une ville **ou** un hébergement), nuits, budget, notes, date d'arrivée libre, masquée                                                              | appartient à un scénario, l'ordre compte                        |
+| **Étape**           | titre, région, notes, date d'arrivée libre, masquée, **options**                                                                                         | appartient à un scénario, l'ordre compte                        |
+| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                      | appartient à une étape ; une seule est retenue                  |
 | **Notes de voyage** | texte libre                                                                                                                                              | un bloc par voyage                                              |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
@@ -218,20 +229,20 @@ bloc de localisation que les hébergements. Sert à poser une étape de passage 
 **Attraction** — un lieu à visiter. L'écran s'appelle « À faire » : la table réunit tout ce qui
 occupe un créneau sur place, restaurants compris.
 
-| Champ            | Détail                                             |
-| ---------------- | -------------------------------------------------- |
-| nom              |                                                    |
-| type             | liste figée, comme le type d'un hébergement        |
-| statut           | liste propre, courte                               |
-| description      | texte libre                                        |
-| adresse géocodée | écrite par « Localiser »                           |
-| coordonnées      | latitude, longitude                                |
-| province, région | proposées par le géocodage, modifiables à la main  |
-| lien             |                                                    |
-| budget           | l'enveloppe qu'on se donne                         |
+| Champ            | Détail                                                    |
+| ---------------- | --------------------------------------------------------- |
+| nom              |                                                           |
+| type             | liste figée, comme le type d'un hébergement               |
+| statut           | liste propre, courte                                      |
+| description      | texte libre                                               |
+| adresse géocodée | écrite par « Localiser »                                  |
+| coordonnées      | latitude, longitude                                       |
+| province, région | proposées par le géocodage, modifiables à la main         |
+| lien             |                                                           |
+| budget           | l'enveloppe qu'on se donne                                |
 | prix mini / maxi | la fourchette réelle, règle transverse « Budget et prix » |
-| tags             | texte libre, amorcés par un vocabulaire par défaut |
-| favori           | étoile en tête de ligne                            |
+| tags             | texte libre, amorcés par un vocabulaire par défaut        |
+| favori           | étoile en tête de ligne                                   |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description, lieu
 (adresse géocodée, ou province · région), coordonnées (masquées par défaut), lien. Tri par défaut
@@ -360,12 +371,20 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | -------------- | --------------------------------------------------------- |
 | titre          | éditable en ligne                                         |
 | région         | affichée à côté du titre                                  |
-| lieu           | une ville **ou** un hébergement, exclusifs                |
-| nuits          | 0 à 14                                                    |
-| budget         | remplace le coût calculé de l'hébergement                 |
 | date d'arrivée | champ libre de la modale, en plus de la date calculée     |
 | notes          |                                                           |
 | masquée        | l'étape reste dans la liste mais sort de tous les calculs |
+| options        | au moins une ; une seule retenue                          |
+
+**Option d'étape** — appartient à une étape.
+
+| Champ   | Détail                                                        |
+| ------- | ------------------------------------------------------------- |
+| nom     | éditable en ligne ; vide, la card affiche « Option 1 », « 2 » |
+| lieu    | une ville **ou** un hébergement, exclusifs                    |
+| nuits   | 0 à 14                                                        |
+| budget  | remplace le coût calculé de l'hébergement                     |
+| retenue | c'est elle qui donne à l'étape ses nuits, son lieu, son coût  |
 
 - **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
   tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
@@ -378,9 +397,22 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne, puis en
   dessous ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si 0 nuit),
-  sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite un select de lieu
-  (**une ville ou un hébergement**, les deux dans le même select, exclusifs), un select de nuits
-  (0 à 14), et en bout de ligne le coût. Réordonnable ↑↓, duplicable, masquable, supprimable.
+  sa date d'arrivée libre si elle est saisie dans la modale, et ses notes. Ensuite ses options.
+  Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la ligne où l'étape
+  atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste éditable en ligne,
+  d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable, masquable,
+  supprimable.
+- **Les options d'une étape** : à une seule option, elle se lit comme la ligne qu'elle a toujours
+  été — un select de lieu (**une ville ou un hébergement**, les deux dans le même select,
+  exclusifs), un select de nuits (0 à 14), et en bout de ligne le coût. À partir de deux, elles se
+  comparent en cards côte à côte : le nom en tête, les mêmes selects de lieu et de nuits, le coût,
+  et une pastille ◉ / ○ qui retient l'option. La card retenue se détache par sa bordure.
+  Le ＋ au bout de la rangée ajoute une option, qui reprend le lieu et les nuits de celle qui est
+  retenue — on n'en change qu'un bout. La dernière option ne se retire pas.
+- **Créer une étape** : le ＋ entre deux cartes comme le bouton de l'en-tête ouvrent le même choix,
+  « Créer une étape » ou « Créer une étape avec options » — la seconde pose deux options d'emblée.
+- **La modale d'étape** édite les nuits et le budget de l'option retenue : ce sont ceux qui
+  comptent. Le lieu, lui, ne se choisit que sur la card.
 - **Masquer une étape** (case à cocher en haut à gauche de la carte) : cochée, la carte passe en
   grisé-pointillé, son contenu et ses actions se désaturent, son titre se barre, sa pastille devient
   un point, ses dates disparaissent, et le scénario se lit comme si elle n'existait pas. Sert à

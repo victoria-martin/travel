@@ -47,9 +47,9 @@ const MODAL_TYPES = {
     edits: true,
   },
   step: {
-    open: (scenarioId, stepId) => ({
+    open: (scenarioId, stepId, optionCount) => ({
       scenarioId,
-      payload: stepId ? { ...getStep(scenarioId, stepId) } : emptyStep(),
+      payload: stepId ? { ...getStep(scenarioId, stepId) } : emptyStep(optionCount),
     }),
     body: (m) => stepForm(m.payload),
     edits: true,

@@ -2,12 +2,13 @@
 function nightsByPlace(scenario) {
   const rows = new Map();
   visibleSteps(scenario).forEach((st, idx) => {
-    const nights = parseInt(st.nights) || 0;
+    const nights = stepNights(st);
     if (nights === 0) return;
-    const key = st.cityId
-      ? `ville:${st.cityId}`
-      : st.accommodationId
-        ? `heb:${st.accommodationId}`
+    const option = chosenOption(st);
+    const key = option.cityId
+      ? `ville:${option.cityId}`
+      : option.accommodationId
+        ? `heb:${option.accommodationId}`
         : '';
     if (!rows.has(key)) rows.set(key, { nights: 0, stays: [], steps: [] });
     const row = rows.get(key);
@@ -39,7 +40,7 @@ function accommodationDetailRows(scenario) {
 // Une dernière étape sans nuit n'entre dans aucun lieu : elle ferme la liste avec sa seule date.
 function scenarioLastDayRow(scenario, idx) {
   const step = visibleSteps(scenario)[idx];
-  if (!step || (parseInt(step.nights) || 0) > 0) return '';
+  if (!step || stepNights(step) > 0) return '';
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
     <span>${escapeHtml(step.city || 'Sans nom')}</span>
     <span class="acc-recap-nights">${stepArrivalDay(scenario, idx)}</span>

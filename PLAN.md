@@ -40,6 +40,11 @@ les types.
 - **stepForm** <!--t:zfop--> — 🧩 ui · 🏷️ données · 🏷️ modal · ⏳ à faire :
   ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
   j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
+- **Retirer les colonnes d'avant les options** <!--t:v4m2--> — 🔄 synchro · ⏳ à faire : `nights`,
+  `cityId`, `accommodationId` et `budget` restent déclarées dans `COLLECTIONS.steps`
+  ([Code.js](apps-script/Code.js)) comme seule source de la reprise, et repartent vides au premier
+  enregistrement. Une fois la conversion passée dans le Sheet, les retirer de la collection avec
+  `adoptLegacyStep`, des deux côtés — l'Apps Script et [storage.js](js/storage.js).
 - **Un select d'attraction plus moderne** <!--t:z3pb--> — 🧩 ui · ⏳ à faire : le champ de la
   modale d'étape ([attractions-field.js](js/views/scenarios/detail/step-modal/attractions-field.js))
   est un input nu qui n'ouvre sa liste qu'à la frappe. Le rendre interactif : les suggestions

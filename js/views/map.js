@@ -134,7 +134,7 @@ function initMap() {
     if (s) {
       scenarioAccIds = new Set(
         visibleSteps(s)
-          .map((st) => st.accommodationId)
+          .map((st) => chosenOption(st).accommodationId)
           .filter(Boolean),
       );
       drawScenarioOnMap(leafletMap, s, 'route-notice', ROUTE_HELP);

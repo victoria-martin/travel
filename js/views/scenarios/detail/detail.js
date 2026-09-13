@@ -38,19 +38,22 @@ function renameStep(scenarioId, stepId, city) {
   syncEditable(`step:${stepId}:city`, step.city);
 }
 
-function insertStep(scenarioId, index) {
+function insertStep(scenarioId, index, optionCount) {
+  openInlineMenu = null;
   const s = getScenario(scenarioId);
-  s.steps.splice(index, 0, { ...emptyStep(), id: uid() });
+  s.steps.splice(index, 0, { ...emptyStep(optionCount), id: uid() });
   saveNow();
   render();
 }
 
-function moveStep(scenarioId, stepId, dir) {
+function moveStepBefore(scenarioId, stepId, targetId, before) {
+  if (stepId === targetId) return;
   const s = getScenario(scenarioId);
-  const i = s.steps.findIndex((st) => st.id === stepId);
-  const j = i + dir;
-  if (j < 0 || j >= s.steps.length) return;
-  [s.steps[i], s.steps[j]] = [s.steps[j], s.steps[i]];
+  const step = s.steps.find((st) => st.id === stepId);
+  if (!step) return;
+  s.steps = s.steps.filter((st) => st.id !== stepId);
+  const at = s.steps.findIndex((st) => st.id === targetId);
+  s.steps.splice(before ? at : at + 1, 0, step);
   saveNow();
   render();
 }
@@ -69,25 +72,11 @@ function deleteStep(scenarioId, stepId) {
   render();
 }
 
-function setStepNights(scenarioId, stepId, nights) {
-  const s = getScenario(scenarioId);
-  const st = s.steps.find((x) => x.id === stepId);
-  st.nights = parseInt(nights) || 0;
-  saveNow();
-  render();
-}
-
-function setStepBudget(scenarioId, stepId, budget) {
-  getStep(scenarioId, stepId).budget = budget.trim();
-  saveNow();
-  render();
-}
-
 // La recherche reste ouverte après un ajout : on attache souvent plusieurs attractions d'affilée.
 function attachStepAttraction(scenarioId, stepId, attractionId) {
   const step = getStep(scenarioId, stepId);
   if (!step.attractions) step.attractions = [];
-  step.attractions.push({ attractionId, count: 1, budget: '' });
+  step.attractions.push({ id: uid(), attractionId, count: 1, budget: '' });
   saveNow();
   render();
   focusStepAttractionSearch(stepId);
@@ -114,17 +103,6 @@ function setStepAttractionCount(scenarioId, stepId, index, count) {
 
 function setStepAttractionBudget(scenarioId, stepId, index, budget) {
   getStep(scenarioId, stepId).attractions[index].budget = budget.trim();
-  saveNow();
-  render();
-}
-
-// Une étape se rattache soit à une ville, soit à un hébergement : le même select porte les deux.
-function setStepPlace(scenarioId, stepId, value) {
-  const s = getScenario(scenarioId);
-  const st = s.steps.find((x) => x.id === stepId);
-  const [kind, placeId] = value.split(':');
-  st.cityId = kind === 'ville' ? placeId : null;
-  st.accommodationId = kind === 'heb' ? placeId : null;
   saveNow();
   render();
 }

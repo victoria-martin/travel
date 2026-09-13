@@ -14,12 +14,18 @@ function stepList(scenario) {
 
 function stepInsertGap(scenario, index) {
   return /* HTML */ `<div class="step-gap">
-    <button
-      class="icon-btn"
-      onclick="insertStep('${scenario.id}',${index})"
-      title="Insérer une étape ici"
-    >
-      ＋
-    </button>
+    ${inlineDropdown(
+      `insert-step:${index}`,
+      'insert-step-dropdown',
+      /* HTML */ `<summary class="icon-btn" title="Insérer une étape ici">＋</summary>
+        <div class="inline-menu">
+          <button class="inline-menu-item" onclick="insertStep('${scenario.id}',${index},1)">
+            Créer une étape
+          </button>
+          <button class="inline-menu-item" onclick="insertStep('${scenario.id}',${index},2)">
+            Créer une étape avec options
+          </button>
+        </div>`,
+    )}
   </div>`;
 }

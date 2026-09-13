@@ -41,7 +41,8 @@ function stepPin(letters) {
 function stepPinPopup(scenario, stops) {
   return stops
     .map(({ step, idx }) => {
-      const lines = [stepDateRange(scenario, idx), step.nights ? nightsLabel(step.nights) : '']
+      const nights = stepNights(step);
+      const lines = [stepDateRange(scenario, idx), nights ? nightsLabel(nights) : '']
         .filter(Boolean)
         .join(' · ');
       return `<strong>${stepLetter(idx)} · ${escapeHtml(step.city)}</strong>${lines ? `<br/>${lines}` : ''}`;
