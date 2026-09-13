@@ -60,6 +60,19 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — `js/views/transports/` créé pour le domaine Transport, sur le découpage
+  d'`attractions/`. Le mode est ce qui décide des champs : les quatre modes à compagnie portent
+  `carrier` / `reference`, la voiture porte un `carId` qui **référence**
+  [get-car.js](js/views/cars/get-car.js) au lieu de recopier la location — d'où deux blocs exclusifs
+  dans la modale, repeints au changement de mode, et une lecture du formulaire qui garde la valeur
+  du bloc absent plutôt que de l'effacer. Un départ est une ville **plus** une précision libre :
+  un aéroport n'est pas une ville, mais il est dans une ville. `price.js` est la première
+  implémentation de la règle transverse « budget et prix » — la fourchette `amountMin` / `amountMax`
+  gagne dès qu'un montant est saisi, le budget sinon, et la cellule dit lequel elle affiche ; il
+  reste dans le domaine tant qu'il n'a qu'un consommateur. Il appelle `priceNumber` / `formatEuros`,
+  qui vivent encore dans [money.js](js/views/scenarios/money.js) : deux domaines les lisent
+  désormais, donc ce fichier devrait remonter à plat dans `js/views/`.
+
 - **2026-09-13** — une session ouverte par le board porte son nom : `claude --name '◉ <titre>'`
   dans [iterm.js](tools/plan-board/iterm.js). Le nom est fixe, contrairement à l'`ai-title` que le
   CLI régénère à chaque tour, et le `◉` de tête distingue ces conversations des autres dans le

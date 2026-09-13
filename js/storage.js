@@ -11,6 +11,7 @@ const TRAVEL_COLLECTIONS = [
   'fixedCosts',
   'cities',
   'attractions',
+  'transports',
   'scenarios',
   'tripNotes',
 ];
@@ -23,6 +24,7 @@ function emptyData() {
     fixedCosts: [],
     cities: [],
     attractions: [],
+    transports: [],
     scenarios: [],
     tripNotes: [],
   };
@@ -42,6 +44,7 @@ function migrateData(data) {
   if (!data.travels) data.travels = [];
   if (!data.cities) data.cities = [];
   if (!data.attractions) data.attractions = [];
+  if (!data.transports) data.transports = [];
   if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
     unshiftAccommodation(a);

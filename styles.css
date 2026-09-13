@@ -1374,3 +1374,45 @@ tr:hover td {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
 }
+
+.expense-section {
+  margin-bottom: 18px;
+}
+.expense-section-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.expense-group {
+  margin-bottom: 10px;
+}
+.expense-group-head {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.expense-group-head:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+.expense-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.expense-label {
+  flex: 1;
+}
+.expense-amount-open {
+  color: var(--ink-soft);
+  font-weight: 400;
+}

@@ -1,4 +1,4 @@
-let view = 'hebergements'; // hebergements | voitures | charges | villes | attractions | scenarios | scenario-detail | carte | notes
+let view = 'hebergements'; // hebergements | voitures | depenses | villes | attractions | transports | scenarios | scenario-detail | carte | notes
 
 function render() {
   applyTravelAccent();
@@ -7,10 +7,10 @@ function render() {
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
-      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('charges', '💶', 'Charges fixes')}
+      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', '💶', 'Dépenses')}
       ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Attractions')}
-      ${navBtn('scenarios', '🧭', 'Scénarios')} ${navBtn('carte', '🗺️', 'Carte')}
-      ${navBtn('notes', '📝', 'Notes')}
+      ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
+      ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
@@ -58,9 +58,10 @@ function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'voitures') main.innerHTML = renderCarsView();
-  else if (view === 'charges') main.innerHTML = renderFixedCostsView();
+  else if (view === 'depenses') main.innerHTML = renderExpensesView();
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
+  else if (view === 'transports') main.innerHTML = renderTransportsView();
   else if (view === 'scenarios') main.innerHTML = renderScenariosView();
   else if (view === 'scenario-detail') {
     main.innerHTML = renderScenarioDetailView();

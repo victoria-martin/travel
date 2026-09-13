@@ -196,6 +196,7 @@ function mergeStates(remote, local, base) {
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
     cities: mergeCollections(remote.cities, local.cities, base.cities),
     attractions: mergeCollections(remote.attractions, local.attractions, base.attractions),
+    transports: mergeCollections(remote.transports, local.transports, base.transports),
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
     tripNotes: mergeCollections(remote.tripNotes, local.tripNotes, base.tripNotes),
   };

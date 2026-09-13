@@ -194,8 +194,18 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
   leurs `onchange`.
 
-## 💶 Charges fixes
+## 💶 Dépenses
 
+La page existe : les deux blocs Calculé / Saisi, les sources dérivées et le récap sont décrits dans
+[la spec](docs/spec-voyage-toscane.md). Les charges fixes sont le bloc Saisi ; elles gardent leur
+table et leur modale.
+
+- **Sources dérivées à montant ouvert** <!--t:3kq7--> — 🧮 calcul · ⏳ à faire : un hébergement à
+  prix par nuit et une voiture à prix par jour s'affichent avec leur unité et restent hors du total
+  ([derived.js](js/views/expenses/derived.js)). Décider sur combien de nuits / de jours les
+  multiplier — le nombre ne vit nulle part hors d'un scénario.
+- **Transports dans le bloc Calculé** <!--t:5wpe--> — 🧮 calcul · ⏳ à faire : une troisième source
+  dans `DERIVED_EXPENSE_SOURCES`, selon la règle transverse « budget et prix ».
 - **Budget et prix** <!--t:w4qe--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type`
   `budget total` / `cost` envisagé ici n'a plus lieu d'être : une charge sans prix saisi **est** une
@@ -205,32 +215,12 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## ✈️ Transports
 
-Les trajets d'un voyage — avion, train, bus, ferry, voiture. Rien n'est commencé. La voiture garde
-sa propre entrée de barre latérale : `cars` reste la table de location, et un transport de mode
-voiture la **référence** plutôt que de la recopier.
+Les trajets d'un voyage — avion, train, bus, ferry, voiture. La page existe : modèle, modes,
+statuts, départ / arrivée, prix et tableau sont décrits dans
+[la spec](docs/spec-voyage-toscane.md). La voiture garde sa propre entrée de barre latérale :
+`cars` reste la table de location, et un transport de mode voiture la **référence** plutôt que de
+la recopier.
 
-- **Créer la page** <!--t:qfr9--> — 🖼️ écran · 💡 idée : `navBtn('transports', '✈️', 'Transports')`
-  dans la barre latérale, après Voitures ([render.js:10](js/render.js#L10)), et
-  `js/views/transports/` pour le domaine.
-- **Entité `transports`** <!--t:9wxo--> — 🗃️ modèle · 💡 idée : une collection de plus dans
-  `COLLECTIONS` ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()`
-  ([storage.js:17](js/storage.js#L17)), avec son `travelId` en première colonne. Modèle proposé :
-  mode, départ, arrivée, date et heure de départ, date et heure d'arrivée, compagnie, numéro /
-  référence de réservation, budget, `amountMin` / `amountMax`, lien, statut, favori, notes.
-- **Modes** <!--t:hk8r--> — 🗃️ modèle · 🔍 à étudier : une liste figée sur le modèle d'
-  [accommodation-types.js](js/accommodation-types.js) — ✈️ avion, 🚆 train, 🚌 bus, ⛴️ ferry, 🚗
-  voiture. C'est le mode qui décide des champs utiles : un vol a une compagnie et un numéro, une
-  voiture a un `carId`.
-- **Départ et arrivée : des villes** <!--t:vn43--> — 🗃️ modèle · 🔍 à étudier : deux `cityId` qui
-  pointent sur `cities`, comme une étape de scénario référence une ville, plutôt que deux champs
-  texte. Un aéroport n'est pas une ville — à voir si on ajoute un champ libre à côté ou si on
-  l'accepte tel quel.
-- **Mode voiture → `carId`** <!--t:rsft--> — 🗃️ modèle · ⏳ à faire : un transport de mode voiture
-  référence une entrée de `cars` ([get-car.js](js/views/cars/get-car.js)).
-- **Budget et prix** <!--t:fi2n--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
-  et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`.
-- **Prix sur le transport** <!--t:4ojw--> — 🗃️ modèle · 📓 à planifier : `amountMin` / `amountMax` sur le
-  transport lui-même, pour tous les modes, voiture comprise.
 - **Prix dans le total d'un scénario** <!--t:8suc--> — 🧮 calcul · ⏳ à faire : les transports
   rattachés à un scénario s'ajoutent au récap ([recap.js](js/views/scenarios/detail/recap.js)), à
   côté des hébergements, de la voiture et des charges fixes, selon la règle transverse — prix s'il
@@ -296,15 +286,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 
 ## 🧩 Transverse
 
-- **Budget et prix** <!--t:u6zh--> — 🗃️ modèle · 📓 à planifier : partout où une entité coûte — charge
-  fixe, transport, hébergement, voiture — deux notions distinctes et jamais un champ `type` pour les
-  départager.
-  - Le **budget** est l'enveloppe qu'on se donne : un champ, optionnel, saisi à la main.
-  - Le **prix** est ce que ça coûte vraiment : `amountMin` / `amountMax`.
-  - Dans un total : le prix s'il est connu, le budget sinon, et la ligne dit laquelle des deux est
-    affichée. Une entité sans prix **est** une enveloppe — rien de plus à déclarer.
-  - Les deux se saisissent et s'affichent pareil d'un écran à l'autre, donc les briques de
-    formulaire et de cellule sont communes.
+- **Budget et prix : étendre la règle** <!--t:u6zh--> — 🗃️ modèle · ⏳ à faire : la règle est actée
+  dans [la spec](docs/spec-voyage-toscane.md) et implémentée sur les transports, les briques
+  communes vivant dans [price.js](js/views/price.js). Restent les hébergements (`price`), les
+  voitures (`pricePerDay` / `priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur
+  champ de prix unique.
 
 - **Renommer `notes` en `userNotes`** <!--t:f4k6--> — 🗃️ modèle · 🧹 refacto · ⏳ à faire : sur
   toutes les entités, Sheet compris — donc une colonne renommée dans chaque liste de `COLLECTIONS`
@@ -318,11 +304,12 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voyage en cours. Reste à décider s'il est toujours affiché ou repliable comme la carte d'un
   scénario. Remplace la page **Browse**, à renommer.
 - **Nommer les vues en anglais** <!--t:omun--> — 🧹 refacto · 🌙 plus tard : deux espaces de noms
-  cohabitent, les vues en français (`hebergements`, `voitures`, `charges`, `villes` — clés de
+  cohabitent, les vues en français (`hebergements`, `voitures`, `depenses`, `villes` — clés de
   `view`, `listViewMode`, `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`,
   `cars`, `fixedCosts`, `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
-  repartent à zéro une fois.
+  repartent à zéro une fois. La page Dépenses ajoute un troisième nom : sa clé de `view` est
+  `depenses`, ses clés de `listViewMode`, `COLUMN_SETS` et `prefs.sort` sont restées `charges`.
 - **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire : 95 lignes à plat alors
   que `js/views/accommodations/` existe, et trois responsabilités dans le même fichier — le render,
   les filtres (`listFilters`, `tagFilterBlock`, `toggleTagFilter`, `toggleFavOnly`, tous lus par
@@ -330,6 +317,13 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).
+- **gérer correctement les liens entre les prix entre les differentes entités** <!--t:8tln--> — 🏷️ données · 📄 archi · ⏳ à faire : faire
+  un etat des lieux de comment la donnee est structuree sur chaque entité (car, transport,
+  accomodation, restaurant etc.) et
+
+  voir a qui il faut donner le prix et dans quel cas il faut affichier quoi
+  qui doit pouvoit editer
+  qui doit calculer une valeur dynamiquement donc ne dois pas pouvoir êtr emodifié (ui particuliere)
 
 ## 🔄 Synchro
 

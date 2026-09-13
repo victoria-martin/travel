@@ -1,17 +1,4 @@
-/*
-  Un prix d'hébergement se saisit à la main ("120", "1 200,50 €") : on n'en garde que le nombre,
-  compris par nuit.
-*/
-
-function priceNumber(value) {
-  const n = parseFloat(
-    String(value == null ? '' : value)
-      .replace(',', '.')
-      .replace(/[^0-9.]/g, ''),
-  );
-  return Number.isFinite(n) ? n : 0;
-}
-
+// Le prix d'un hébergement est compris par nuit.
 function nightPrice(acc) {
   return acc ? priceNumber(acc.price) : 0;
 }
@@ -62,10 +49,6 @@ function accommodationTotals(scenario) {
     },
     { euros: { amount: 0, nights: 0 }, guestPoints: { amount: 0, nights: 0 } },
   );
-}
-
-function formatEuros(amount) {
-  return `${Math.round(amount).toLocaleString('fr-FR')} €`;
 }
 
 function formatGuestPoints(amount) {

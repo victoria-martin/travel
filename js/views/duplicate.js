@@ -33,6 +33,13 @@ function duplicateAttraction(id) {
   render();
 }
 
+function duplicateTransport(id) {
+  const t = getTransport(id);
+  state.transports.push({ ...t, id: uid() });
+  saveNow();
+  render();
+}
+
 // La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une.
 function duplicateStep(scenarioId, stepId) {
   const s = getScenario(scenarioId);

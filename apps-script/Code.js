@@ -73,6 +73,29 @@ const COLLECTIONS = {
     'tags',
     'favorite',
   ],
+  transports: [
+    'travelId',
+    'id',
+    'mode',
+    'status',
+    'fromCityId',
+    'fromPrecision',
+    'toCityId',
+    'toPrecision',
+    'departDate',
+    'departTime',
+    'arriveDate',
+    'arriveTime',
+    'carrier',
+    'reference',
+    'carId',
+    'budget',
+    'amountMin',
+    'amountMax',
+    'link',
+    'notes',
+    'favorite',
+  ],
   scenarios: ['travelId', 'id', 'name', 'startDate', 'carId', 'costIds', 'favorite'],
   tripNotes: ['travelId', 'id', 'text'],
   steps: [
@@ -159,6 +182,7 @@ function readState() {
     fixedCosts: rows.fixedCosts,
     cities: rows.cities,
     attractions: rows.attractions,
+    transports: rows.transports,
     scenarios: rows.scenarios.map(function (scenario) {
       scenario.steps = stepsByScenario[scenario.id] || [];
       return scenario;
@@ -225,6 +249,7 @@ function normalizeState(data) {
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
     attractions: normalizeCollection('attractions', data.attractions),
+    transports: normalizeCollection('transports', data.transports),
     scenarios: scenarios,
     tripNotes: normalizeCollection('tripNotes', data.tripNotes),
   };
@@ -307,6 +332,7 @@ function writeState(data) {
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);
   writeSheet('attractions', data.attractions || []);
+  writeSheet('transports', data.transports || []);
   writeSheet('tripNotes', data.tripNotes || []);
   writeSheet('scenarios', scenarios);
   writeSheet('steps', steps);
