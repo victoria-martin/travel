@@ -16,6 +16,7 @@ function sessionRow(task) {
       <span class="session-title">${esc(task.title)}</span>
       <span class="session-when">${openedAt(task.session)}</span>
     </button>
+    ${taskDoneButton(task)}
     ${taskActionButtons(task)}
   </div>`;
 }
@@ -28,6 +29,7 @@ function sessionsView() {
       <h2 class="view-title">
         ${backButton()}<span>💬 Sessions</span><span class="tally">${rows.length}</span>
       </h2>
+      ${closeSessionsButton()}
     </div>
     <div class="sessions-view">
       ${rows.length ? rows.map(sessionRow).join('') : '<p class="empty">Aucune session ouverte.</p>'}

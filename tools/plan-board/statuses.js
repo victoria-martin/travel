@@ -20,9 +20,17 @@ const NEW_STATUS = 'à trier';
 // Opening its session is the gesture that starts the work, so the board writes it down — unless
 // the task is already over, which reopening a session does not undo.
 const DOING_STATUS = 'en cours';
-const CLOSED_STATUSES = ['fait', 'abandonné'];
+const DONE_STATUS = 'fait';
+const CLOSED_STATUSES = [DONE_STATUS, 'abandonné'];
 
 const planStatus = (label) => PLAN_STATUSES.find((status) => status.label === label);
 
 if (typeof module !== 'undefined')
-  module.exports = { PLAN_STATUSES, NEW_STATUS, DOING_STATUS, CLOSED_STATUSES, planStatus };
+  module.exports = {
+    PLAN_STATUSES,
+    NEW_STATUS,
+    DOING_STATUS,
+    DONE_STATUS,
+    CLOSED_STATUSES,
+    planStatus,
+  };

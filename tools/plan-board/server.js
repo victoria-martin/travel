@@ -112,6 +112,18 @@ function closeSession(res, id) {
   send(res, 200, { session });
 }
 
+// Un skill qui porte sur tout le board n'appartient à aucune tâche : sa conversation ne se reprend
+// pas, donc rien n'entre dans plan-sessions.json.
+async function openSkill(res, prompt, title) {
+  const command = iterm.claudeCommand({ prompt, title });
+  try {
+    await iterm.openInITerm(command);
+    send(res, 200, { command });
+  } catch (error) {
+    send(res, 500, { error: error.message, command });
+  }
+}
+
 async function openSession(res, id, prompt) {
   const task = taskOrArchived(id);
   if (!task) return send(res, 404, { error: 'tâche inconnue' });
@@ -147,6 +159,12 @@ const server = http.createServer(async (req, res) => {
     const created = plan.createTask(await readBody(req));
     if (!created) return send(res, 400, { error: 'section ou titre invalide' });
     return send(res, 200, { ...tasksPayload(), created: created.id });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/skills') {
+    const { prompt, title } = await readBody(req);
+    if (!prompt) return send(res, 400, { error: 'prompt vide' });
+    return openSkill(res, prompt, title);
   }
 
   if (req.method === 'POST' && url.pathname === '/api/vocabulary') {

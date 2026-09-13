@@ -75,17 +75,6 @@ async function addNewTask() {
 }
 
 // The three axes of the line, in the order the task will wear them.
-const newTaskTypeMenu = () => {
-  const key = 'new-task:type';
-  const attributes = triggerAttributes(key, 'new-task-type', '', 'Type');
-  const trigger = newTask.types.length
-    ? `<span class="task-types" ${attributes}>${newTask.types.map(typeDot).join('')}</span>`
-    : addTrigger(attributes);
-  return pillMenu(key, trigger, () =>
-    wordChoices(PLAN_TYPES, 'new-task-type-pick', (label) => newTask.types.includes(label)),
-  );
-};
-
 const newTaskPriorityMenu = () => {
   const key = 'new-task:priority';
   const attributes = triggerAttributes(key, 'new-task-priority', '', 'Priorité');
@@ -102,6 +91,17 @@ const newTaskStatusMenu = () => {
   );
 };
 
+const newTaskTypeMenu = () => {
+  const key = 'new-task:type';
+  const attributes = triggerAttributes(key, 'new-task-type', '', 'Type');
+  const trigger = newTask.types.length
+    ? `<span class="task-types" ${attributes}>${newTask.types.map(typeDot).join('')}</span>`
+    : addTrigger(attributes);
+  return pillMenu(key, trigger, () =>
+    wordChoices(PLAN_TYPES, 'new-task-type-pick', (label) => newTask.types.includes(label)),
+  );
+};
+
 function newTaskForm(section, subsection) {
   const scope = `data-section="${esc(section)}" data-subsection="${esc(subsection)}"`;
   if (!newTaskOpen(section, subsection)) {
@@ -110,9 +110,9 @@ function newTaskForm(section, subsection) {
 
   return `<div class="new-task">
     <div class="inline-form">
-      ${newTaskTypeMenu()}${newTaskPriorityMenu()}${newTaskStatusMenu()}
       <input class="new-task-input" id="task-name" data-act="task-name" data-submit="task-add"
         value="${esc(newTask.title)}" placeholder="Ce qu’il y a à faire" />
+      ${newTaskPriorityMenu()}${newTaskStatusMenu()}${newTaskTypeMenu()}
       ${confirmButton('task-add', 'task-add', newTask.title.trim())}
       ${cancelButton('task-cancel')}
     </div>

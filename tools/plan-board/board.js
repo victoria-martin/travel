@@ -79,15 +79,6 @@ const subAnchorOf = (section, name) => `${anchorOf(section)}-${anchorOf(name)}`;
 // The board groups the visible tasks by section name; the emoji is carried by the heading itself.
 const sectionOf = (name) => board.sections.find((entry) => entry.name === name) || { emoji: '' };
 
-// Markdown reads badly on one line: keep the words, drop the syntax.
-const plainText = (markdown) =>
-  markdown
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/[`*_]/g, '')
-    .replace(/^\s*-\s+/gm, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
 // The card carries its own actions, so it is a row and not a button: the clickable part that opens
 // the drawer is the one inside it.
 function taskButton(task) {
@@ -97,11 +88,10 @@ function taskButton(task) {
     aria-current="${task.id === openTaskId}">
     <button class="task-open" draggable="true" data-act="open" data-id="${task.id}">
       ${doing ? '<span class="doing-dot" aria-hidden="true"></span>' : ''}
-      ${rowPriorityButton(task)}
       <span class="task-title">${esc(task.title)}</span>
+      ${rowPriorityButton(task)}
       ${pill(planStatus(task.status))}
       <span class="task-types">${task.types.map(typeDot).join('')}</span>
-      <span class="task-excerpt">${esc(plainText(task.body).slice(0, 140))}</span>
     </button>
     ${task.session ? '<span class="task-session" title="Session liée">💬</span>' : ''}
     ${taskDoneButton(task)}

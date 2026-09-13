@@ -4,4 +4,8 @@
 const START_PROMPT = '/plan-tool-start-task';
 const COMMIT_PROMPT = '/plan-tool-commit-task';
 
-if (typeof module !== 'undefined') module.exports = { START_PROMPT, COMMIT_PROMPT };
+// Celui-ci ne vise aucune tâche : il les trie toutes, donc il s'ouvre hors d'une session de tâche.
+const CLOSE_SESSIONS_PROMPT = '/plan-tool-close-sessions';
+
+if (typeof module !== 'undefined')
+  module.exports = { START_PROMPT, COMMIT_PROMPT, CLOSE_SESSIONS_PROMPT };

@@ -40,8 +40,17 @@ reste, statut inchangé, et le dire.
 ## 4. Commiter et pousser
 
 Invoquer `commit`. Il fait suivre le reste des docs — les skills `update-plan-*` du dépôt, qu'il
-liste lui-même —, rédige le message, stage, commit et pousse. Répondre « j'ajoute tout » à sa
-question de périmètre : le travail de la tâche part en entier.
+liste lui-même —, rédige le message, stage, commit et pousse.
+
+Le périmètre est **le travail de cette tâche**, nommé fichier par fichier — jamais « tout ». Le
+board ouvre une session par tâche dans le même dossier : ce que le worktree porte en plus appartient
+à une conversation voisine, en cours d'écriture, et l'emporter la prive de son commit. Donc
+`git add <chemins>` puis `git commit <chemins>`, jamais `git add -A` ni un `git commit` qui prend
+l'index tel quel.
+
+Le voisin commite pendant qu'on travaille : relire `git log` et `git status` juste avant de
+commiter, et si le travail de la tâche est déjà parti dans son commit, le dire plutôt que de le
+recommiter.
 
 ## 5. Livrer
 

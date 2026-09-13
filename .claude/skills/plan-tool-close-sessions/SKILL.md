@@ -58,23 +58,29 @@ Trois verdicts, rien d'autre :
 
 - **fait et commité** — tout ce que la puce demande se lit dans le code.
 - **entamé** — une partie seulement : nommer ce qui reste, la tâche ne se ferme pas.
-- **rien** — la session a été ouverte, le travail n'a pas commencé.
+- **rien** — la session a été ouverte, le travail n'a pas commencé. Elle se ferme quand même :
+  une tâche jamais entamée n'a pas de conversation à reprendre. Son statut, lui, ne bouge pas — elle
+  reste dans le backlog telle quelle.
 
 Une puce qui demande plusieurs choses ne se ferme que si elles y sont toutes : dans le doute, c'est
 *entamé*.
 
 ## 3. Fermer ce qui est fait
 
-Les ids à clore — fait et commité, close, ou orpheline. Une tâche encore dans PLAN.md passe à
-✅ fait au passage ; une orpheline n'a que sa session à fermer.
+Fermer une session ne dit pas que la tâche est faite : ce sont deux gestes, et deux listes.
 
-Une tâche déjà ✅ fait ne se réécrit pas : un `PATCH` renvoie la puce entière au board, qui la
-reformate, et un corps qui n'est pas de la prose — du code collé, une liste indentée — n'y survit
-pas. Seul un statut qui change justifie l'écriture.
+- `IDS_DONE` — le travail est fait et commité : ✅ fait, puis fermeture.
+- `IDS_CLOSE` — rien à retenir de la conversation : fermeture seule, le statut reste ce qu'il est.
+  Les orphelines et les tâches jamais entamées vont là, les déjà ✅ fait aussi.
+
+Une tâche dont le statut ne change pas ne se réécrit jamais : un `PATCH` renvoie la puce entière au
+board, qui la reformate, et un corps qui n'est pas de la prose — du code collé, une liste indentée —
+n'y survit pas.
 
 ```sh
 python3 - <<'PY'
-IDS = ['abcd', 'efgh']
+IDS_DONE = ['abcd']
+IDS_CLOSE = ['efgh']
 
 import json, urllib.request
 API = 'http://localhost:4321/api/tasks'
@@ -89,9 +95,9 @@ def call(url, method, body=None):
     return json.load(urllib.request.urlopen(request))
 
 tasks = {task['id']: task for task in call(API, 'GET')['tasks']}
-for id in IDS:
+for id in IDS_DONE + IDS_CLOSE:
     task = tasks.get(id)
-    wrote = task and task['status'] != 'fait'
+    wrote = id in IDS_DONE and task and task['status'] != 'fait'
     if wrote:
         call(f'{API}/{id}', 'PATCH', {**task, 'status': 'fait'})
     call(f'{API}/{id}/session', 'DELETE')

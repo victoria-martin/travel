@@ -31,9 +31,9 @@ les types.
 
 ### Plus tard
 
-- **Distance entre deux étapes** <!--t:mc15--> — 🧮 calcul · 🔌 intégration · ⏸️ en attente
-- **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · ⏸️ en attente
-- **Estimation des péages** <!--t:dlde--> — 🧮 calcul · ⏸️ en attente
+- **Distance entre deux étapes** <!--t:mc15--> — 🧮 calcul · 🔌 intégration · 🌙 plus tard
+- **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · 🌙 plus tard
+- **Estimation des péages** <!--t:dlde--> — 🧮 calcul · 🌙 plus tard
 
 ### Step
 

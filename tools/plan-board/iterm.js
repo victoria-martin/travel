@@ -9,11 +9,12 @@ const appleQuote = (value) => `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\
 // Marks a session as born on the board, in the /resume picker and the terminal title.
 const MARKER = '◉';
 
+// Sans sessionId la conversation n'est pas suivie : rien à reprendre, donc rien à nommer au board.
 function claudeCommand({ sessionId, resumed, prompt, title }) {
-  const flag = resumed ? `--resume ${sessionId}` : `--session-id ${sessionId}`;
+  const flag = sessionId ? ` ${resumed ? '--resume' : '--session-id'} ${sessionId}` : '';
   const name = title ? ` --name ${shellQuote(`${MARKER} ${title}`)}` : '';
   const opening = prompt ? ` ${shellQuote(prompt)}` : '';
-  return `cd ${shellQuote(REPO)} && claude ${flag}${name}${opening}`;
+  return `cd ${shellQuote(REPO)} && claude${flag}${name}${opening}`;
 }
 
 function openInITerm(command) {

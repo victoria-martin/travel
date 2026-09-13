@@ -672,14 +672,14 @@ code,
   box-shadow: var(--shadow-lift);
 }
 /* La carte porte le cadre et les actions ; ce bouton-ci est la part qui ouvre le tiroir. */
-/* Les colonnes se lisent d'une ligne à l'autre : seuls le titre et les notes s'étirent, les trois
-   pastilles gardent la largeur de leur mot le plus long. */
+/* Les colonnes se lisent d'une ligne à l'autre : seul le titre s'étire, les pastilles gardent la
+   largeur de leur mot le plus long. */
 .task-open {
   position: relative;
   flex: 1;
   min-width: 0;
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr) 112px 74px minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 1fr) 118px 112px 74px;
   align-items: center;
   gap: 10px;
   padding: 10px 6px 10px 32px;
@@ -796,14 +796,6 @@ code,
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.task-excerpt {
-  min-width: 0;
-  color: var(--ink-soft);
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .task-session {
   flex-shrink: 0;
   font-size: 12px;
@@ -839,6 +831,13 @@ code,
   border-radius: var(--radius);
   background: var(--paper-raised);
   box-shadow: var(--shadow-lift);
+}
+/* Les axes sont en bout de ligne : leur menu se déroule vers l'intérieur, sinon il sort de
+   l'écran. */
+.task-open .pill-menu-items,
+.inline-form .pill-menu-items {
+  left: auto;
+  right: 0;
 }
 /* La seule ligne qui doit s'attraper au défilé : la carte prend la teinte du statut, et le point
    dit que ça tourne en ce moment. */
@@ -1399,12 +1398,8 @@ code,
   #board {
     padding: 16px 0 48px;
   }
-  .sections,
-  .task-excerpt {
+  .sections {
     display: none;
-  }
-  .task-open {
-    grid-template-columns: 118px minmax(0, 1fr) 112px 74px;
   }
   .section-title,
   .view-title {

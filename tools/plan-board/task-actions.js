@@ -10,7 +10,7 @@ const TASK_ACTIONS = [
   },
   {
     act: 'task-commit',
-    icon: '✓',
+    icon: '⏹',
     prompt: COMMIT_PROMPT,
     title: () => 'Clore et commiter dans iTerm',
   },
