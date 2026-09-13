@@ -60,6 +60,15 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-13** — `js/views/map.js` devient le dossier [js/views/map/](js/views/map/) quand la
+  carte cesse d'être celle des hébergements : [filters.js](js/views/map/filters.js) tient l'état et
+  les bascules, [filter-panel.js](js/views/map/filter-panel.js) le panneau,
+  [markers.js](js/views/map/markers.js) le tracé, `map.js` le seul `renderMapView`. Les types se
+  filtrent par **collection** — deux listes plutôt qu'une liste mêlée — parce qu'un type
+  d'hébergement et un type d'activité ne se comparent pas ; province, favoris et scénario restent
+  communs, ce sont des questions sur le voyage et non sur la collection. Le style inline du panneau
+  devient `.filter-hint` et `.map-scenario-select`, et la pastille d'attraction `.map-pin`.
+
 - **2026-09-13** — `js/views/accommodations/table/tags-cell.js` remonte à plat dans
   [tags-cell.js](js/views/tags-cell.js) : la cellule qui édite les tags sur place a deux
   consommateurs dès que les attractions s'en servent, donc elle prend son getter et son vocabulaire

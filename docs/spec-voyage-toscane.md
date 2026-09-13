@@ -524,11 +524,17 @@ Aucune entité propre — l'écran lit :
 | Entité          | Champs lus                          | Notes                               |
 | --------------- | ----------------------------------- | ----------------------------------- |
 | **Hébergement** | coordonnées, type, province, favori | sans coordonnées, pas de marqueur   |
+| **Attraction**  | coordonnées, type, province, favori | sans coordonnées, pas de marqueur   |
 | **Scénario**    | étapes                              | choisi en filtre, il donne le tracé |
 
-Tous les hébergements géolocalisés, en couleur par type. Filtres : type, province, ⭐ favoris,
-et **scénario** — choisir un scénario trace son trajet et n'affiche que les hébergements qu'il
-utilise.
+Les deux collections géolocalisées, chacune en couleur par type : un hébergement est un disque,
+une attraction une pastille portant l'emoji de son type — la couleur dit la famille, la forme dit
+la collection.
+
+Le panneau porte **une liste de types par collection**, puis trois filtres qui valent pour les
+deux : province, ⭐ favoris, et **scénario**. Choisir un scénario trace son trajet et ne garde que
+les lieux qu'il utilise — l'hébergement de l'option retenue de chaque étape, et les activités
+attachées à l'étape ou à cette option.
 
 ### Notes
 

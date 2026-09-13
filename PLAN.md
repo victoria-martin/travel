@@ -329,8 +329,6 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
   l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville
   existante, comme une étape de scénario référence un hébergement.
-- **Attractions sur la carte** <!--t:4ehs--> — 🧩 ui · ⏳ à faire : elles portent des coordonnées
-  mais [map.js](js/views/map.js) ne trace que les hébergements.
 - **Renommer l'entité en « À faire »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale
   et le titre disent « À faire », mais les libellés d'item disent encore « une attraction »
   (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste

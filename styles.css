@@ -1415,6 +1415,29 @@ tr:hover td {
   display: inline-block;
   margin-right: 6px;
 }
+.map-pin {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  border: 1px solid #24312b;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+}
+.filter-hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.map-scenario-select {
+  width: 100%;
+  font-size: 13px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
 
 ::-webkit-scrollbar {
   width: 9px;
