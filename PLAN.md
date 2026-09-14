@@ -433,6 +433,19 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   5801 des 7397 lignes de `js/` sont du rendu DOM à réécrire, Leaflet n'y existe pas, et on perdrait
   le lien à envoyer. À reprendre une fois la navigation revue.
 
+- **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
+  dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
+  Netlify le fait en gratuit — pas de build, déploiement au push. Reste à trancher le dossier
+  publié : avec `.`, tout le dépôt est servi par URL directe — [PLAN.md](PLAN.md), [docs/](docs/),
+  [apps-script/](apps-script/), [tools/](tools/) —, donc ne publier que ce que le navigateur
+  charge, ce qui met `index.html`, `styles.css` et `js/` sous un dossier. Le code applicatif, lui,
+  reste lisible dans l'onglet Sources quoi qu'il arrive : ce qu'on gagne, c'est l'historique git et
+  les fichiers hors app. Fermer le *contenu* du voyage est une autre question — il y faudrait une
+  auth devant le site (Cloudflare Access, gratuit jusqu'à 50 comptes). Deux lignes de la spec
+  nomment GitHub Pages comme hôte, le `#` des adresses
+  ([spec](docs/spec-voyage-toscane.md#L43)) et la pastille « local » de la favicon
+  ([spec](docs/spec-voyage-toscane.md#L188)) : elles suivront.
+
 ## 🔄 Synchro
 
 - **Création du Sheet à la première utilisation** <!--t:ylrv--> — 🔌 intégration · ⏳ à faire : le

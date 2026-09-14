@@ -590,8 +590,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   des familles, puisqu'ils ne s'additionnent à rien.
 - **Une famille se déplie au chevron** et porte son détail, fermé par une ligne « Total ». Son
   montant se lit en face de son titre, repliée comme dépliée, et la ligne de pied le redit sous le
-  détail. Chaque famille garde son propre dépli d'une session à l'autre, comme la carte, et
-  « Tout déplier / Tout replier », en face du titre du bloc, les mène toutes les trois d'un geste.
+  détail. Les familles sont indépendantes — les trois peuvent rester ouvertes — et chacune garde son
+  dépli d'une session à l'autre, comme la carte.
 - **Le détail des hébergements** : une ligne par lieu (lieu · nuits · dates · total), **dans
   l'ordre du trajet** — un lieu revisité tient sur une seule ligne, ses nuits additionnées et ses
   dates listées, placée à sa première date. Une dernière étape sans nuit ferme la liste avec sa
