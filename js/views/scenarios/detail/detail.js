@@ -10,17 +10,15 @@ function renderScenarioDetailView() {
       emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
     );
   }
+  // on a enlevé scenarioRouteTrails temportairement
+  // ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
   return /* HTML */ `
-    ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
+    ${scenarioDetailHeader(s)}
     <div class="scenario-detail-cols">
-      <div class="scenario-detail-main">
+      <div class="scenario-detail-main view-scroller">
         ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
       </div>
-      ${
-        prefs.showScenarioMap
-          ? /* HTML */ `<aside class="scenario-detail-side">${scenarioMapBlock(s)}</aside>`
-          : ''
-      }
+      ${prefs.showScenarioSidePanel ? scenarioSidePanel(s) : ''}
     </div>
   `;
 }

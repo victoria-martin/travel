@@ -587,17 +587,19 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   cartes et pose à cette position une étape vide d'une nuit, qu'on remplit sur la carte. Le bouton
   « Ajouter une étape » de l'en-tête ouvre la modale et ajoute en fin de liste.
 - **La route entre deux étapes** : la bande qui sépare deux cartes porte son tronçon routier —
-  le temps de conduite puis la distance, « 1 h 11 · 55 km », lus dans le même itinéraire que le
-  tracé de la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
+  le temps de conduite puis la distance, « 1 h 11 » sur « 55 km », l'un sous l'autre, lus dans le
+  même itinéraire que le tracé de la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
   tronçon qui enjamberait une étape masquée, écartée ou sans lieu ne dirait pas la distance des
   deux cartes qu'on lit. Dans un groupe, il se lit donc entre deux cartes de la colonne retenue. Le `＋` d'insertion sort à droite du libellé au survol.
 - **La gouttière du scénario** : à gauche de la liste, un trait vertical court d'un bout à l'autre
   et porte un point par étape ; l'écart entre deux points est la route qui les sépare, le plus long
   tronçon du scénario tenant l'écart plein et les autres s'y rapportant, avec un plancher qui garde
   le plus court lisible. Le trait est d'un seul tenant, à une seule largeur : c'est l'écart entre
-  deux points qui dit la route, la grossir ne le dirait pas deux fois. Il longe le bord gauche, et
-  le chiffre de la route se range entre lui et les cartes, calé contre elles ; le ＋ d'insertion, lui,
-  se pose au milieu de la largeur des cartes.
+  deux points qui dit la route, la grossir ne le dirait pas deux fois. Il longe le bord gauche et
+  la gouttière ne porte que lui : la bande entre deux cartes tient le ＋ qui ouvre une étape au
+  milieu de leur largeur, entre deux traits qui rejoignent l'une et l'autre, et la route chiffrée à
+  son bord gauche, sur la même ligne que le ＋. Le ＋ y reste visible sans survol, et la bande ne
+  descend jamais sous sa hauteur, sinon il déborderait sur les cartes.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
   — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
   passent en tête, précédés d'une ★, le reste est trié par nom. Chaque en-tête de groupe le replie

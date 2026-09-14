@@ -3,7 +3,6 @@ let scenarioDetailMap = null;
 function scenarioMapBlock(scenario) {
   const hasPlaces = visibleSteps(scenario).some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">
-    <div class="acc-recap-title">Trajet</div>
     ${
       hasPlaces
         ? /* HTML */ `<div id="scenario-map"></div>
@@ -15,28 +14,14 @@ function scenarioMapBlock(scenario) {
   </div>`;
 }
 
-function scenarioMapToggleBtn() {
-  return toolbarButton({
-    icon: '🗺️',
-    label: prefs.showScenarioMap ? 'Masquer la carte' : 'Afficher la carte',
-    onclick: 'toggleScenarioMap()',
-    active: prefs.showScenarioMap,
-  });
-}
-
-function toggleScenarioMap() {
-  prefs.showScenarioMap = !prefs.showScenarioMap;
-  persistPrefs();
-  render();
-}
-
+// La carte ne vit que dans son onglet : quitter l'onglet la démonte, y revenir la refait.
 function initScenarioDetailMap() {
-  const el = document.getElementById('scenario-map');
-  if (!el || typeof L === 'undefined') return;
   if (scenarioDetailMap) {
     scenarioDetailMap.remove();
     scenarioDetailMap = null;
   }
+  const el = document.getElementById('scenario-map');
+  if (!el || typeof L === 'undefined') return;
   const scenario = getScenario(activeScenarioId);
   if (!scenario) return;
 

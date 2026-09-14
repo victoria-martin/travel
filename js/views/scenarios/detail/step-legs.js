@@ -43,13 +43,7 @@ async function fillStepLegs() {
   try {
     const { legs } = await fetchRoute(points);
     const longest = Math.max(...legs.map((leg) => leg.distance));
-    legs.forEach((leg, i) =>
-      setStepLeg(
-        i,
-        `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
-        legHeight(leg.distance, longest),
-      ),
-    );
+    legs.forEach((leg, i) => setStepLeg(i, leg, legHeight(leg.distance, longest)));
   } catch (e) {
     console.warn('Tronçons routiers indisponibles', e);
     document.querySelectorAll('.step-leg').forEach((slot) => (slot.textContent = '⚠️'));
@@ -60,8 +54,8 @@ async function fillStepLegs() {
   Les écarts se mesurent entre eux et non sur une échelle absolue : le plus long tronçon du scénario
   tient la hauteur pleine, les autres s'y rapportent. Un plancher garde le plus court lisible.
 */
-const LEG_MIN_HEIGHT = 22;
-const LEG_MAX_HEIGHT = 88;
+const LEG_MIN_HEIGHT = 26;
+const LEG_MAX_HEIGHT = 34;
 
 function legHeight(distance, longest) {
   const share = longest ? distance / longest : 0;
@@ -70,10 +64,10 @@ function legHeight(distance, longest) {
 
 // Seule la liste du scénario porte la gouttière : dans une colonne d'option, la bande garde sa
 // hauteur naturelle et n'affiche que le chiffre.
-function setStepLeg(index, text, height) {
+function setStepLeg(index, leg, height) {
   const slot = document.getElementById(`step-leg-${index}`);
   if (!slot) return;
-  slot.textContent = text;
+  slot.textContent = `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`;
   const gap = slot.closest('.step-list > .step-gap');
   if (gap) gap.style.height = `${height}px`;
 }

@@ -234,6 +234,54 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
+/* L'en-tête d'un scénario porte son total : l'identité tient les deux rangées de gauche, les
+   boutons la première à droite, le total la seconde — en face des métadonnées, comme sur la carte
+   de la liste. */
+.scenario-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+.scenario-header-identity {
+  grid-row: 1 / span 2;
+  min-width: 0;
+}
+/* L'étoile borde le nom : le décompte des étapes s'aligne sur le nom, et non sur elle. */
+.scenario-header-name {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.scenario-header-name-text {
+  min-width: 0;
+}
+.scenario-header .view-header-actions {
+  grid-column: 2;
+  grid-row: 1;
+  justify-content: flex-end;
+}
+.scenario-header-money {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.scenario-header-total {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.15;
+}
 .header-field {
   display: flex;
   align-items: center;
@@ -1091,8 +1139,9 @@ tr:hover td {
 /*
   La liste garde une gouttière à gauche, où le trait du voyage court d'une étape à la dernière :
   chaque carte y pose son point, et l'écart entre deux points est la route qui les sépare — c'est la
-  bande, dont la hauteur vient des tronçons, qui l'impose. Le trait longe le bord, et la route se
-  chiffre entre lui et les cartes, calée contre elles.
+  bande, dont la hauteur vient des tronçons, qui l'impose. La gouttière ne porte que le trait ; la
+  bande, elle, reste vide — la route chiffrée à son bord droit, et le ＋ d'insertion au milieu, qui
+  n'apparaît qu'au survol.
 */
 .step-list {
   position: relative;
@@ -1100,7 +1149,7 @@ tr:hover td {
   flex-direction: column;
   gap: 0;
   margin: 18px 0;
-  padding-left: 120px;
+  padding-left: 34px;
 }
 .step-list::before {
   content: '';
@@ -1120,25 +1169,28 @@ tr:hover td {
 .step-list > .step-group::before {
   content: '';
   position: absolute;
-  left: -117px;
+  left: -31px;
   top: 21px;
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--stone);
 }
-/* Le ＋ se pose au milieu de la largeur des cartes ; le chiffre, sorti du flux, n'y compte pas. */
+/*
+  La hauteur minimale est celle du ＋ : en dessous, il déborderait. Le ＋ tient le milieu de la
+  bande, la route chiffrée son bord droit, sur la même ligne.
+*/
 .step-list > .step-gap {
   position: relative;
+  min-height: 26px;
   margin: 0;
 }
 .step-list > .step-gap .step-leg {
   position: absolute;
-  right: calc(100% + 14px);
-  text-align: right;
+  right: 0;
 }
 
-/* La bande entre deux cartes porte le tronçon routier ; son ＋ d'insertion sort au survol. */
+/* La bande entre deux cartes porte le tronçon routier et son ＋ d'insertion. */
 .step-gap {
   display: flex;
   align-items: center;
@@ -1149,20 +1201,25 @@ tr:hover td {
 }
 .step-leg {
   font-size: 11px;
+  line-height: 1.35;
   color: var(--ink-soft);
   white-space: nowrap;
 }
-.step-gap .insert-step-dropdown {
+/* Le ＋ est un fantôme : sa bordure garde sa place sans se voir, le survol seul le pose. */
+.step-gap .icon-btn {
+  border-color: transparent;
+  background: none;
+  list-style: none;
+}
+/* Le ＋ ne se montre qu'au survol de la bande, ou tant que son menu est ouvert. */
+.step-gap > .icon-btn,
+.step-gap > .inline-dropdown {
   opacity: 0;
   transition: opacity 0.12s;
 }
-.step-gap .icon-btn {
-  background: var(--paper-raised);
-  list-style: none;
-}
-.step-gap:hover .insert-step-dropdown,
-.step-gap .insert-step-dropdown[open],
-.step-gap .insert-step-dropdown:focus-within {
+.step-gap:hover > .icon-btn,
+.step-gap:hover > .inline-dropdown,
+.step-gap > .inline-dropdown[open] {
   opacity: 1;
 }
 .step-card {
@@ -1693,34 +1750,142 @@ tr:hover td {
   text-overflow: ellipsis;
 }
 
+/* Le détail d'un scénario tient en trois zones : l'en-tête et le fil du trajet restent en haut,
+   la liste des étapes et le panneau de droite scrollent chacun pour soi. */
+.main:has(.scenario-detail-cols) {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+/* Les deux bandes du haut ne se compriment pas sous une longue liste : elles la surplombent. */
+.main:has(.scenario-detail-cols) > .view-header,
+.main:has(.scenario-detail-cols) > .route-trail {
+  flex-shrink: 0;
+}
+.main:has(.scenario-detail-cols) .route-trail {
+  position: static;
+  margin-bottom: 12px;
+}
 .scenario-detail-cols {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 .scenario-detail-cols:not(:has(.scenario-detail-side)) {
   grid-template-columns: minmax(0, 1fr);
 }
 .scenario-detail-main {
   min-width: 0;
+  overflow-y: auto;
+  padding-bottom: var(--main-pad-y);
 }
 .scenario-detail-side {
-  position: sticky;
-  top: calc(var(--view-header-h, 0px) + 24px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: var(--main-pad-y);
+}
+.side-tabs {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+.side-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-raised);
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.side-tab:hover {
+  border-color: var(--stone);
+  background: var(--white);
+}
+.side-tab-on {
+  background: var(--white);
+  border-color: var(--stone);
+  color: var(--ink);
+  font-weight: 600;
+}
+.side-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+/* Le pied porte le total quel que soit l'onglet : c'est le chiffre qu'on vient chercher. */
+.side-foot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink-soft);
+}
+.side-foot-nights {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.side-foot strong {
+  font-size: 18px;
 }
 @media (max-width: 1100px) {
+  .main:has(.scenario-detail-cols) {
+    overflow-y: auto;
+    display: block;
+    padding-bottom: var(--main-pad-y);
+  }
+  .main:has(.scenario-detail-cols) .route-trail {
+    position: sticky;
+    margin-bottom: 16px;
+  }
   .scenario-detail-cols {
     grid-template-columns: minmax(0, 1fr);
   }
-  .scenario-detail-side {
-    position: static;
+  .scenario-detail-main,
+  .scenario-detail-side,
+  .side-panel {
+    overflow: visible;
+    padding-bottom: 0;
   }
 }
+/* Dans son onglet, la carte prend la hauteur du panneau ; en une colonne, la sienne. */
+.scenario-map-block {
+  flex: 1;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
 #scenario-map {
-  height: min(560px, calc(100vh - 180px));
+  flex: 1;
+  min-height: 0;
   border-radius: 10px;
   border: 1px solid var(--line);
+}
+@media (max-width: 1100px) {
+  .scenario-map-block {
+    flex: none;
+  }
+  #scenario-map {
+    flex: none;
+    height: min(560px, calc(100vh - 180px));
+  }
 }
 .scenario-route-notice {
   font-size: 12px;

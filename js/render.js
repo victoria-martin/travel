@@ -1,13 +1,19 @@
 /*
-  Every gesture re-renders the whole app, so the scrolling `.main` is built anew each time. The
+  Every gesture re-renders the whole app, so the scrolling element is built anew each time. The
   route tells a redraw of the same screen from a move to another one: only the first keeps its
   place, changing page still lands at the top.
 */
 let renderedRoute;
 
-function keptScroll() {
+// `.main` scrolls unless the view holds its own scrolling area, as the scenario detail does.
+function viewScroller() {
   const main = document.getElementById('main');
-  return main && renderedRoute === routeHash() ? main.scrollTop : 0;
+  return (main && main.querySelector('.view-scroller')) || main;
+}
+
+function keptScroll() {
+  const scroller = viewScroller();
+  return scroller && renderedRoute === routeHash() ? scroller.scrollTop : 0;
 }
 
 function render() {
@@ -40,7 +46,7 @@ function render() {
     <div class="main" id="main"></div>
   `;
   renderMain();
-  document.getElementById('main').scrollTop = scrollTop;
+  viewScroller().scrollTop = scrollTop;
   if (modal) renderModal();
 }
 

@@ -1,23 +1,27 @@
 function scenarioDetailHeader(s) {
   const count = visibleSteps(s).length;
-  return /* HTML */ `<div class="view-header">
-    <div>
+  return /* HTML */ `<div class="view-header scenario-header">
+    <div class="scenario-header-identity">
       <button class="btn-ghost btn btn-small back-link" onclick="goTo('scenarios')">
         ← Tous les scénarios
       </button>
-      <h2 class="view-title" style="display:flex; gap:10px; align-items:center;">
+      <div class="scenario-header-name">
         ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
-        ${editableText(s.name, `renameScenario('${s.id}', this.innerText)`, {
-          key: `scenario:${s.id}:name`,
-          placeholder: 'Nom du scénario…',
-        })}
-      </h2>
-      <p class="view-sub">
-        ${count} étape${count > 1 ? 's' : ''} — clique sur le titre pour le renommer
-      </p>
+        <div class="scenario-header-name-text">
+          <h2 class="view-title">
+            ${editableText(s.name, `renameScenario('${s.id}', this.innerText)`, {
+              key: `scenario:${s.id}:name`,
+              placeholder: 'Nom du scénario…',
+            })}
+          </h2>
+          <p class="view-sub">
+            ${count} étape${count > 1 ? 's' : ''} · ${nightsLabel(totalNights(s))}
+          </p>
+        </div>
+      </div>
     </div>
     <div class="view-header-actions">
-      ${scenarioStartDateField(s)} ${count > 0 ? scenarioMapToggleBtn() : ''}
+      ${scenarioStartDateField(s)} ${count > 0 ? scenarioSidePanelToggleBtn() : ''}
       ${toolbarPanel({
         key: 'add-step',
         icon: '+',
@@ -37,6 +41,16 @@ function scenarioDetailHeader(s) {
       })}
       ${toolbarMenu()}
     </div>
+    ${scenarioHeaderMoney(s)}
+  </div>`;
+}
+
+// Le total se lit comme sur la carte de la liste : les euros en grand, les GuestPoints sous eux.
+function scenarioHeaderMoney(s) {
+  const total = scenarioTotal(s);
+  return /* HTML */ `<div class="scenario-header-money">
+    <strong class="scenario-header-total">${formatEuros(total.euros)}</strong>
+    ${total.guestPoints ? `<span>${formatGuestPoints(total.guestPoints)}</span>` : ''}
   </div>`;
 }
 

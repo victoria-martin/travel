@@ -7,7 +7,8 @@ const PREFS_KEY = 'voyage-toscane-prefs';
 
 let prefs = {
   hiddenColumns: {},
-  showScenarioMap: true,
+  showScenarioSidePanel: true,
+  scenarioSideTab: 'map',
   recapFolds: {},
   sort: {},
   sortOrder: {},
