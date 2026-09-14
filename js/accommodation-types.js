@@ -1,6 +1,12 @@
 const UNSET_ACCOMMODATION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
 
 const ACCOMMODATION_TYPES = {
+  airbnb: {
+    label: 'Airbnb',
+    emoji: '🛏️',
+    color: '#D4726A',
+    aliases: ['airbnb', 'air bnb', 'bnb'],
+  },
   homeExchange: {
     label: 'Home exchange',
     emoji: '🏡',

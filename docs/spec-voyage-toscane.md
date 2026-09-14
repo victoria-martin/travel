@@ -123,7 +123,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
 
-**Type d'hébergement** — Home exchange 🔁 · Hôtel 🏨 · Maison 🏡 · Camping ⛺.
+**Type d'hébergement** — Airbnb 🛏️ · Home exchange 🔁 · Hôtel 🏨 · Maison 🏡 · Camping ⛺.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
 Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎.
 
@@ -183,7 +183,7 @@ pastilles, avant même l'enregistrement.
 
 | Champ                     | Détail                                                                                          |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| type                      | Home exchange · Hôtel · Maison · Camping, ou non renseigné                                      |
+| type                      | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné                             |
 | statut                    | les neuf statuts du workflow, ou non renseigné                                                  |
 | nom                       |                                                                                                 |
 | adresse                   | saisie libre, c'est elle qu'on géocode                                                          |

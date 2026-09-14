@@ -32,16 +32,16 @@ Hors périmètre, assumé : ni moteur de réservation, ni agrégateur d'offres. 
 
 ## 02 — USER GOALS
 
-| # | Objectif | En une phrase | État |
-| - | -------- | ------------- | ---- |
-| **G1** | [Rassembler les candidats](flows/g1-rassembler.md) | Poser dans l'app tout ce qu'on a trouvé ailleurs | complet |
-| **G2** | [Situer](flows/g2-situer.md) | Voir sur une carte ce qui est proche de quoi | complet, sauf les attractions |
-| **G3** | [Composer des itinéraires](flows/g3-composer.md) | Construire plusieurs trajets possibles | **trou : les transports** |
-| **G4** | [Comparer chiffré](flows/g4-comparer.md) | Savoir lequel coûte quoi, et pour combien de nuits | complet, aux transports près |
-| **G5** | [Décider et figer](flows/g5-decider.md) | Trancher : ce scénario, cet hébergement, cette voiture | complet |
-| **G6** | [Savoir ce que ça coûte](flows/g6-couts.md) | Un total qui agrège ce qui est réservé | **cassé par construction** |
-| **G7** | [Travailler à deux](flows/g7-a-deux.md) | Que l'autre voie mes saisies sans rien installer | complet |
-| **G8** | [Gérer plusieurs voyages](flows/g8-voyages.md) | Un carnet par voyage, sans mélange | **sans écran** |
+| #      | Objectif                                           | En une phrase                                          | État                          |
+| ------ | -------------------------------------------------- | ------------------------------------------------------ | ----------------------------- |
+| **G1** | [Rassembler les candidats](flows/g1-rassembler.md) | Poser dans l'app tout ce qu'on a trouvé ailleurs       | complet                       |
+| **G2** | [Situer](flows/g2-situer.md)                       | Voir sur une carte ce qui est proche de quoi           | complet, sauf les attractions |
+| **G3** | [Composer des itinéraires](flows/g3-composer.md)   | Construire plusieurs trajets possibles                 | **trou : les transports**     |
+| **G4** | [Comparer chiffré](flows/g4-comparer.md)           | Savoir lequel coûte quoi, et pour combien de nuits     | complet, aux transports près  |
+| **G5** | [Décider et figer](flows/g5-decider.md)            | Trancher : ce scénario, cet hébergement, cette voiture | complet                       |
+| **G6** | [Savoir ce que ça coûte](flows/g6-couts.md)        | Un total qui agrège ce qui est réservé                 | **cassé par construction**    |
+| **G7** | [Travailler à deux](flows/g7-a-deux.md)            | Que l'autre voie mes saisies sans rien installer       | complet                       |
+| **G8** | [Gérer plusieurs voyages](flows/g8-voyages.md)     | Un carnet par voyage, sans mélange                     | **sans écran**                |
 
 ```
 G1 rassembler ──┬──► G2 situer
@@ -65,18 +65,18 @@ flow en ASCII, écrans touchés, données que le flow exige, ce qui reste ouvert
 
 Les écrans, vus de haut : dix, une barre latérale.
 
-| Écran | Sert | Forme |
-| ----- | ---- | ----- |
+| Écran               | Sert    | Forme                                                             |
+| ------------------- | ------- | ----------------------------------------------------------------- |
 | **Hébergements** 🏠 | G1 · G5 | tableau **ou** cartes · tri, filtres, colonnes · édition en ligne |
-| **Villes** 📍 | G1 | tableau simple |
-| **À faire** 🏛️ | G1 · G5 | tableau seul |
-| **Transports** ✈️ | G1 · G5 | tableau seul |
-| **Voitures** 🚗 | G1 · G5 | tableau **ou** cartes |
-| **Dépenses** 💶 | G6 | deux blocs (Calculé / Saisi) + récap |
-| **Scénarios** 🧭 | G3 · G4 | liste → **détail**, le seul écran composite |
-| **Carte** 🗺️ | G2 | pleine page, filtres dont scénario |
-| **Notes** 📝 | — | une zone de texte partagée |
-| **Modale Voyage** | G8 | ouverte depuis la barre latérale |
+| **Villes** 📍       | G1      | tableau simple                                                    |
+| **À faire** 🏛️      | G1 · G5 | tableau seul                                                      |
+| **Transports** ✈️   | G1 · G5 | tableau seul                                                      |
+| **Voitures** 🚗     | G1 · G5 | tableau **ou** cartes                                             |
+| **Dépenses** 💶     | G6      | deux blocs (Calculé / Saisi) + récap                              |
+| **Scénarios** 🧭    | G3 · G4 | liste → **détail**, le seul écran composite                       |
+| **Carte** 🗺️        | G2      | pleine page, filtres dont scénario                                |
+| **Notes** 📝        | —       | une zone de texte partagée                                        |
+| **Modale Voyage**   | G8      | ouverte depuis la barre latérale                                  |
 
 **L'invariant de barre d'outils** — mêmes contrôles, même ordre, en haut à droite de chaque
 écran : Trier · Filtrer · Colonnes · filtres propres à l'écran · bascule tableau/cartes ·
@@ -88,19 +88,19 @@ Ajouter · menu ⋮. C'est ce qui fait qu'un écran neuf ne se réapprend pas.
 
 Chaque entité, et **le flow qui la justifie** :
 
-| Entité | Justifiée par | Porte, pour l'essentiel |
-| ------ | ------------- | ----------------------- |
-| **Voyage** | G8 | nom, emoji, image, dates, destination, statut, accent, voyageurs |
-| **Hébergement** | G1 → G3 | type, statut, lieu géocodé, **prix/nuit**, liens, tags, favori |
-| **Ville** | G1 → G3 | nom, lieu géocodé, notes |
-| **Attraction** | G1 → G3 | nom, type, statut, lieu, hébergement, horaires, tél., budget/prix, tags |
-| **Transport** | G1 | mode, statut, départ/arrivée, dates, compagnie **ou** voiture, budget/prix |
-| **Voiture** | G1 · G6 | loueur, modèle, prix/jour, statut, **par défaut** |
-| **Charge fixe** | G6 | libellé, montant, catégorie, récurrence |
-| **Scénario** | G3 · G4 | nom, favori, **choisi**, date de départ, voiture, charges, étapes |
-| **Étape** | G3 | titre, région, notes, masquée, **options** |
-| **Option d'étape** | **G4** | nom, lieu (ville **ou** hébergement), nuits, budget, **retenue** |
-| **Notes de voyage** | — | texte libre |
+| Entité              | Justifiée par | Porte, pour l'essentiel                                                    |
+| ------------------- | ------------- | -------------------------------------------------------------------------- |
+| **Voyage**          | G8            | nom, emoji, image, dates, destination, statut, accent, voyageurs           |
+| **Hébergement**     | G1 → G3       | type, statut, lieu géocodé, **prix/nuit**, liens, tags, favori             |
+| **Ville**           | G1 → G3       | nom, lieu géocodé, notes                                                   |
+| **Attraction**      | G1 → G3       | nom, type, statut, lieu, hébergement, horaires, tél., budget/prix, tags    |
+| **Transport**       | G1            | mode, statut, départ/arrivée, dates, compagnie **ou** voiture, budget/prix |
+| **Voiture**         | G1 · G6       | loueur, modèle, prix/jour, statut, **par défaut**                          |
+| **Charge fixe**     | G6            | libellé, montant, catégorie, récurrence                                    |
+| **Scénario**        | G3 · G4       | nom, favori, **choisi**, date de départ, voiture, charges, étapes          |
+| **Étape**           | G3            | titre, région, notes, masquée, **options**                                 |
+| **Option d'étape**  | **G4**        | nom, lieu (ville **ou** hébergement), nuits, budget, **retenue**           |
+| **Notes de voyage** | —             | texte libre                                                                |
 
 ### Ce que la relecture par les flows éclaire
 
@@ -146,14 +146,14 @@ La règle « pas de donnée sans flow qui la justifie », appliquée à l'exista
 listés au §6 de la [spec](spec-voyage-toscane.md) ; la map dit **quel parcours ils cassent**, et
 chacun vit désormais dans le fichier de son objectif.
 
-| Constat | Objectif touché |
-| ------- | --------------- |
+| Constat                                                                                                                                                                                                                                          | Objectif touché                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
 | **`transportIds` — donnée sans flow.** Le champ existe, aucun écran ne rattache un trajet, aucun total ne le compte. Exactement la donnée conçue « parce qu'elle pourrait être utile ». Le parcours manquant : entre deux étapes, on se déplace. | [G3](flows/g3-composer.md#ouvert) · [G4](flows/g4-comparer.md#ouvert) |
-| **Le total des dépenses est cassé par construction.** La page Dépenses ne connaît aucun scénario, donc aucune nuit : les deux plus gros postes du voyage restent hors de la somme. Deux voies à trancher. | [G6](flows/g6-couts.md#ouvert) |
-| **Deux dates par étape.** Celle calculée depuis le départ, et un champ libre resté dans la modale. Deux réponses à la même question, affichées côte à côte. | [G3](flows/g3-composer.md#ouvert) |
-| **Une attraction ne se rattache qu'à une étape**, jamais à une ville : un village qui est les deux se saisit deux fois. | [G3](flows/g3-composer.md#ouvert) |
-| **Les attractions ne sont pas sur la carte**, alors qu'elles portent des coordonnées saisies par le même bloc que les hébergements. | [G2](flows/g2-situer.md#ouvert) |
-| **G8 n'a pas d'écran.** Pas de page Voyages : ni duplication, ni suppression, ni vue d'ensemble. | [G8](flows/g8-voyages.md#ouvert) |
+| **Le total des dépenses est cassé par construction.** La page Dépenses ne connaît aucun scénario, donc aucune nuit : les deux plus gros postes du voyage restent hors de la somme. Deux voies à trancher.                                        | [G6](flows/g6-couts.md#ouvert)                                        |
+| **Deux dates par étape.** Celle calculée depuis le départ, et un champ libre resté dans la modale. Deux réponses à la même question, affichées côte à côte.                                                                                      | [G3](flows/g3-composer.md#ouvert)                                     |
+| **Une attraction ne se rattache qu'à une étape**, jamais à une ville : un village qui est les deux se saisit deux fois.                                                                                                                          | [G3](flows/g3-composer.md#ouvert)                                     |
+| **Les attractions ne sont pas sur la carte**, alors qu'elles portent des coordonnées saisies par le même bloc que les hébergements.                                                                                                              | [G2](flows/g2-situer.md#ouvert)                                       |
+| **G8 n'a pas d'écran.** Pas de page Voyages : ni duplication, ni suppression, ni vue d'ensemble.                                                                                                                                                 | [G8](flows/g8-voyages.md#ouvert)                                      |
 
 **Notes de voyage** ne sert aucun objectif énoncé. Ce n'est pas un défaut : c'est le débord assumé
 de tout ce que la structure n'accueille pas.

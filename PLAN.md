@@ -267,6 +267,27 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
   leurs `onchange`.
 
+## 🚗 Voitures
+
+La page existe : modèle, statuts, prix, voiture par défaut et tableau sont décrits dans
+[la spec](docs/spec-voyage-toscane.md). Ce qui reste :
+
+- **Table des loueurs** <!--t:rl4q--> — 📋 table · 🗃️ modèle · ⏳ à faire : les loueurs deviennent
+  une liste à part, qu'une voiture **référence** au lieu de retaper son nom — `name` est aujourd'hui
+  un texte libre (« Hertz »). Un loueur porte nom, url, adresse, logo et ses options. Le libellé
+  « loueur · modèle » ([car-label.js](js/views/cars/car-label.js)), lu par les transports et les
+  scénarios, se recompose alors depuis la référence.
+- **Options d'un loueur** <!--t:cb7u--> — 🗃️ modèle · 🔍 à étudier : deuxième conducteur,
+  assistance — et on doit pouvoir en ajouter. Certaines valent pour tous les loueurs : reste à
+  trancher entre un vocabulaire global dont chaque loueur coche ce qu'il propose, et une liste
+  propre à chacun.
+- **Type de motorisation** <!--t:md3s--> — 🗃️ modèle · ⏳ à faire : essence, diesel, hybride,
+  électrique. Une liste figée sur le modèle de [car-statuses.js](js/car-statuses.js), plus une
+  colonne et un champ de modale.
+- **Modèles équivalents** <!--t:eq9v--> — 🗃️ modèle · ⏳ à faire : `model` devient le modèle
+  **choisi**, et la voiture porte à côté les autres modèles proposés par le loueur pour la même
+  location.
+
 ## 💶 Dépenses
 
 La page existe : les deux blocs Calculé / Saisi, les sources dérivées et le récap sont décrits dans
