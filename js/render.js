@@ -1,5 +1,3 @@
-let view = 'scenarios'; // hebergements | voitures | depenses | villes | attractions | transports | scenarios | scenario-detail | carte | notes
-
 function render() {
   applyTravelAccent();
   applyTravelTab();
@@ -43,17 +41,6 @@ function navBtn(key, icon, label) {
   </button>`;
 }
 
-// function goToView(v) {
-function goTo(v) {
-  view = v;
-  if (v === 'carte') {
-    render();
-    setTimeout(initMap, 30);
-  } else {
-    render();
-  }
-}
-
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
@@ -66,6 +53,8 @@ function renderMain() {
   else if (view === 'scenario-detail') {
     main.innerHTML = renderScenarioDetailView();
     setTimeout(initScenarioDetailMap, 30);
-  } else if (view === 'carte') main.innerHTML = renderMapView();
-  else if (view === 'notes') main.innerHTML = renderNotesView();
+  } else if (view === 'carte') {
+    main.innerHTML = renderMapView();
+    setTimeout(initMap, 30);
+  } else if (view === 'notes') main.innerHTML = renderNotesView();
 }

@@ -42,7 +42,7 @@ COLUMN_SETS.attractions = [
   },
   {
     key: 'place',
-    label: 'Adresse à localiser / zone',
+    label: 'Adresse',
     cell: attractionPlaceCell,
     sortValue: (a) => placeLabel(a).toLowerCase(),
   },

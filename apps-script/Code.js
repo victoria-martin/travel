@@ -27,10 +27,10 @@ const COLLECTIONS = {
     'status',
     'name',
     'address',
-    'geoAddress',
-    'city',
-    'county',
+    'country',
     'region',
+    'county',
+    'city',
     'lat',
     'lng',
     'price',
@@ -56,7 +56,19 @@ const COLLECTIONS = {
     'isDefault',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'category', 'recurrence', 'notes'],
-  cities: ['travelId', 'id', 'name', 'geoAddress', 'lat', 'lng', 'county', 'region', 'notes'],
+  cities: [
+    'travelId',
+    'id',
+    'name',
+    'address',
+    'country',
+    'region',
+    'county',
+    'city',
+    'lat',
+    'lng',
+    'notes',
+  ],
   attractions: [
     'travelId',
     'id',
@@ -64,10 +76,11 @@ const COLLECTIONS = {
     'type',
     'status',
     'description',
-    'geoAddress',
-    'city',
-    'county',
+    'address',
+    'country',
     'region',
+    'county',
+    'city',
     'lat',
     'lng',
     'accommodationId',
@@ -121,7 +134,6 @@ const COLLECTIONS = {
     'id',
     'scenarioId',
     'name',
-    'region',
     'arrivalDate',
     'notes',
     'hidden',
@@ -166,6 +178,8 @@ const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'transportIds', 'tags'];
+// Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
+const LEGACY_HEADERS = { address: 'geoAddress' };
 
 function doGet(e) {
   var homeExchangeUrl = e && e.parameter ? e.parameter.homeExchange : '';
@@ -310,6 +324,7 @@ function readSheet(name) {
       var item = {};
       columns.forEach(function (column) {
         var index = header.indexOf(column);
+        if (index < 0 && LEGACY_HEADERS[column]) index = header.indexOf(LEGACY_HEADERS[column]);
         item[column] = decodeCell(column, index >= 0 ? row[index] : '');
       });
       if (!item.id) item.id = uid();

@@ -5,7 +5,6 @@ function saveStep(id) {
   const item = {
     id: id || uid(),
     name: document.getElementById('s-name').value.trim(),
-    region: document.getElementById('s-region').value.trim(),
     arrivalDate: document.getElementById('s-date').value.trim(),
     notes: document.getElementById('s-notes').value.trim(),
     extras: [...(modal.payload.extras || [])],

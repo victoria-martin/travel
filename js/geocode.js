@@ -34,8 +34,9 @@ function locationFromNominatim(result) {
     label: result.display_name || '',
     lat: result.lat,
     lng: result.lon,
-    city: parts.city || parts.town || parts.village || parts.municipality || '',
-    county: parts.county || '',
+    country: parts.country || '',
     region: parts.state || '',
+    county: parts.county || '',
+    city: parts.city || parts.town || parts.village || parts.municipality || '',
   };
 }

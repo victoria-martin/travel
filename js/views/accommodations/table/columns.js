@@ -29,6 +29,7 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'county', label: 'Province', cell: accommodationCountyCell },
   { key: 'region', label: 'Région', hiddenByDefault: true, cell: accommodationRegionCell },
+  { key: 'country', label: 'Pays', hiddenByDefault: true, cell: accommodationCountryCell },
   {
     key: 'tags',
     label: 'Tags',
@@ -78,6 +79,10 @@ function accommodationCountyCell(a) {
 
 function accommodationRegionCell(a) {
   return textCell(a.region);
+}
+
+function accommodationCountryCell(a) {
+  return textCell(a.country);
 }
 
 function accommodationAddressCell(a) {

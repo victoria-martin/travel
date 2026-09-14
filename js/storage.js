@@ -34,6 +34,7 @@ function loadData() {
   loadPrefs();
   state = migrateData(readStore(LOCAL_KEY) || emptyData());
   selectTestScenario();
+  applyRoute();
   render();
 }
 
@@ -49,8 +50,7 @@ function migrateData(data) {
   if (!data.tripNotes) data.tripNotes = [];
   (data.accommodations || []).forEach((a) => {
     unshiftAccommodation(a);
-    if (a.address === undefined) a.address = '';
-    if (a.geoAddress === undefined) a.geoAddress = a.address;
+    adoptPlace(a);
     if (a.county === undefined) {
       a.county = a.region || '';
       a.region = '';
@@ -58,6 +58,7 @@ function migrateData(data) {
     if (!Array.isArray(a.tags)) a.tags = [];
   });
   data.attractions.forEach((a) => {
+    adoptPlace(a);
     if (!Array.isArray(a.tags)) a.tags = [];
     if (a.favorite === undefined) a.favorite = false;
   });
@@ -75,12 +76,22 @@ function migrateData(data) {
     (s.steps || []).forEach(adoptLegacyStep);
   });
   data.cities.forEach((c) => {
-    if (c.geoAddress === undefined) {
-      c.geoAddress = c.address || '';
-      delete c.address;
-    }
+    adoptPlace(c);
+    if (!c.city) c.city = c.name || '';
   });
   return data;
+}
+
+/*
+  Une adresse libre et une adresse à géocoder faisaient deux champs pour la même chose, et le pays
+  manquait au-dessus de la région. Le nom retenu est `address` : `geoAddress` nommait le mécanisme.
+*/
+function adoptPlace(place) {
+  place.address = place.address || place.geoAddress || '';
+  delete place.geoAddress;
+  PLACE_LEVEL_KEYS.forEach((key) => {
+    if (place[key] === undefined) place[key] = '';
+  });
 }
 
 /*
@@ -96,6 +107,7 @@ function migrateData(data) {
 function adoptLegacyStep(step) {
   if (step.city) step.name = step.name || step.city;
   delete step.city;
+  delete step.region;
   if (Array.isArray(step.attractions)) step.extras = step.attractions;
   delete step.attractions;
   if (!Array.isArray(step.extras)) step.extras = [];
@@ -144,7 +156,6 @@ function unshiftAccommodation(a) {
   a.county = '';
   a.region = '';
   a.bookingLink = '';
-  if (!a.geoAddress) a.geoAddress = a.address || '';
 }
 
 function saveNow() {

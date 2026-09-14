@@ -5,10 +5,7 @@ function emptyAccommodation() {
     status: '',
     name: '',
     address: '',
-    geoAddress: '',
-    city: '',
-    county: '',
-    region: '',
+    ...emptyPlaceLevels(),
     lat: '',
     lng: '',
     price: '',
@@ -57,15 +54,6 @@ function accommodationForm(p) {
           )
           .join('')}
       </select>
-    </div>
-    <div class="field">
-      <label>Adresse</label
-      ><input
-        id="f-address"
-        type="text"
-        value="${escapeHtml(p.address)}"
-        placeholder="Borgo La Torre alle Tolfe, Siena"
-      />
     </div>
     ${locateFields(p)}
     <div class="field-row">

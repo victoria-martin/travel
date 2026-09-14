@@ -385,6 +385,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voitures (`pricePerDay` / `priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur
   champ de prix unique.
 
+- **Filtrer sur les quatre niveaux de lieu** <!--t:w8q2--> — 🧩 ui · 🔌 intégration · ⏳ à faire : le
+  panneau de la carte ne propose que la province, et `distinctCounties()`
+  ([map/filters.js](js/views/map/filters.js#L14)) ignore `state.cities`. Le remplacer par une
+  cascade Pays → Région → Province → Ville lue sur `PLACE_LEVELS`, alimentée par les trois
+  collections localisées, puis poser la même brique dans les en-têtes Hébergements et Activités.
 - **Renommer `notes` en `userNotes`** <!--t:f4k6--> — 🗃️ modèle · 🧹 refacto · ⏳ à faire : sur
   toutes les entités, Sheet compris — donc une colonne renommée dans chaque liste de `COLLECTIONS`
   ([Code.js:8](apps-script/Code.js#L8)) et une migration dans `migrateData()`
@@ -417,6 +422,16 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voir a qui il faut donner le prix et dans quel cas il faut affichier quoi
   qui doit pouvoit editer
   qui doit calculer une valeur dynamiquement donc ne dois pas pouvoir êtr emodifié (ui particuliere)
+
+- **Ouvrir une ligne dans un panneau de détail** <!--t:n3vd--> — 🧩 ui · 🖼️ écran · 💡 idée :
+  cliquer une ligne de tableau ouvre la ressource dans un panneau latéral, à la Notion, plutôt que
+  dans la modale d'édition. Les hébergements d'abord. C'est la revue de navigation qui précède la
+  PWA.
+- **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un
+  service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
+  puisque tout est déjà dans `localStorage`, et l'URL reste partageable. React Native est écarté :
+  5801 des 7397 lignes de `js/` sont du rendu DOM à réécrire, Leaflet n'y existe pas, et on perdrait
+  le lien à envoyer. À reprendre une fois la navigation revue.
 
 ## 🔄 Synchro
 

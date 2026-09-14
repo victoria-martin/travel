@@ -8,7 +8,7 @@ COLUMN_SETS.villes = [
   },
   {
     key: 'place',
-    label: 'Adresse à localiser / zone',
+    label: 'Adresse',
     cell: cityPlaceCell,
     sortValue: (c) => placeLabel(c).toLowerCase(),
   },

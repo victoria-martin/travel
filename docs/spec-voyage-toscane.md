@@ -38,6 +38,16 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   chose neuve n'ouvre une table que si sa forme temporelle n'existe pas encore — sinon c'est un
   type dans une table existante. C'est pourquoi un restaurant est un type d'« À faire », et une
   location de voiture n'est pas un transport : le trajet **utilise** la location.
+- **Une page a une adresse, et c'est un `#`.** `index.html#villes`, `index.html#scenario/<id>` :
+  l'adresse se recharge, se met en favori et s'envoie. Un vrai chemin (`/villes`) demanderait un
+  serveur qui réécrit tout vers `index.html` — ni `file://` ni GitHub Pages ne le font, et le
+  rechargement tomberait sur un 404.
+- **Un lieu se situe sur quatre niveaux** — pays, région, province, ville — et une seule adresse,
+  celle qu'on géocode. Ces quatre-là valent pour tout ce qui se localise : hébergements, villes,
+  activités. C'est l'ordre du fil d'Ariane HomeExchange, et celui qu'on lit : « Italie · Ligurie ·
+  Savone · Castelbianco ». Une ville prend son nom comme niveau ville à défaut de géocodage.
+- **Une étape n'a pas de lieu à elle** : elle tient le sien de l'option retenue. Son titre montre la
+  ville et la région de ce lieu, moins ce que son propre nom et la pastille du lieu disent déjà.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Voitures et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
@@ -106,19 +116,19 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 ## 3. Modèle
 
-| Entité              | Porte                                                                                                                                                           | Notes                                                           |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                      | possède tout le reste ; un seul est ouvert à la fois            |
-| **Hébergement**     | type, statut, nom, adresse, ville, province, région, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                              | la fiche de référence ; c'est elle qui porte le prix            |
-| **Ville**           | nom, adresse géocodée, coordonnées, province, région, notes                                                                                                     | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse géocodée, coordonnées, province, région, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
-| **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori        | un trajet du voyage ; en mode voiture il référence une location |
-| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                    | liste simple ; une seule voiture par défaut                     |
-| **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                                  | liste simple                                                    |
-| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                               | un itinéraire candidat                                          |
-| **Étape**           | titre, région, notes, date d'arrivée libre, masquée, **options**                                                                                                | appartient à un scénario, l'ordre compte                        |
-| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                             | appartient à une étape ; une seule est retenue                  |
-| **Notes de voyage** | texte libre                                                                                                                                                     | un bloc par voyage                                              |
+| Entité              | Porte                                                                                                                                                               | Notes                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                          | possède tout le reste ; un seul est ouvert à la fois            |
+| **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix            |
+| **Ville**           | nom, adresse, pays, région, province, ville, coordonnées, notes                                                                                                     | une étape de passage sans nuit, ou un repère                    |
+| **Attraction**      | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
+| **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
+| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                        | liste simple ; une seule voiture par défaut                     |
+| **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                                      | liste simple                                                    |
+| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                                   | un itinéraire candidat                                          |
+| **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
+| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
+| **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                              |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -181,27 +191,26 @@ pastilles, avant même l'enregistrement.
 
 **Hébergement** — la fiche de référence ; c'est elle qui porte le prix.
 
-| Champ                     | Détail                                                                                          |
-| ------------------------- | ----------------------------------------------------------------------------------------------- |
-| type                      | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné                             |
-| statut                    | les neuf statuts du workflow, ou non renseigné                                                  |
-| nom                       |                                                                                                 |
-| adresse                   | saisie libre, c'est elle qu'on géocode                                                          |
-| adresse géocodée          | écrite par « Localiser »                                                                        |
-| ville · province · région | proposées par le géocodage, modifiables à la main                                               |
-| coordonnées               | latitude, longitude                                                                             |
-| prix/nuit                 | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
-| dates                     | texte libre (« 12–14 juin »)                                                                    |
-| lien                      | l'annonce ; un lien HomeExchange collé pré-remplit la fiche                                     |
-| lien de réservation       | Booking ; un lien collé pré-remplit la fiche                                                    |
-| notes                     | éditables depuis la ligne                                                                       |
-| tags                      | liste libre, sans administration                                                                |
-| favori                    | ⭐, et un critère de tri                                                                        |
+| Champ                            | Détail                                                                                          |
+| -------------------------------- | ----------------------------------------------------------------------------------------------- |
+| type                             | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné                             |
+| statut                           | les neuf statuts du workflow, ou non renseigné                                                  |
+| nom                              |                                                                                                 |
+| adresse                          | une seule, c'est elle qu'on géocode                                                             |
+| pays · région · province · ville | proposés par le géocodage, modifiables à la main                                                |
+| coordonnées                      | latitude, longitude                                                                             |
+| prix/nuit                        | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
+| dates                            | texte libre (« 12–14 juin »)                                                                    |
+| lien                             | l'annonce ; un lien HomeExchange collé pré-remplit la fiche                                     |
+| lien de réservation              | Booking ; un lien collé pré-remplit la fiche                                                    |
+| notes                            | éditables depuis la ligne                                                                       |
+| tags                             | liste libre, sans administration                                                                |
+| favori                           | ⭐, et un critère de tri                                                                        |
 
 La vue principale, en **tableau ou en cartes**.
 
-- **Colonnes** : favori, nom (+ notes en dessous), type, statut, ville, province, région, tags,
-  adresse, prix, dates, notes, lien, Booking, actions. Région, adresse et notes sont masquées par
+- **Colonnes** : favori, nom (+ notes en dessous), type, statut, ville, province, région, pays,
+  tags, adresse, prix, dates, notes, lien, Booking, actions. Région, pays, adresse et notes sont masquées par
   défaut ; nom, favori et actions ne sont jamais masquables. Le sélecteur « Colonnes » garde le
   choix d'une session à l'autre.
 - **Tri** — panneau « Trier » : une liste ordonnée de critères (« statut, puis ville »),
@@ -216,15 +225,15 @@ La vue principale, en **tableau ou en cartes**.
   saisis — un tag existe dès qu'il est tapé quelque part, et disparaît avec son dernier porteur.
   Un tag coché puis disparu est retiré du filtre tout seul.
 - **Créer / modifier** : une modale. L'adresse se géocode sur clic du bouton « Localiser », qui
-  propose des résultats ; le choix d'un résultat écrase ville, province, région et coordonnées.
-  Ville, province et région restent saisissables à la main, avec les valeurs déjà présentes en
+  propose des résultats ; le choix d'un résultat écrase pays, région, province, ville et coordonnées.
+  Les quatre niveaux restent saisissables à la main, avec les valeurs déjà présentes en
   suggestion.
 - **Import d'un lien HomeExchange** : coller le lien dans le champ pré-remplit type, nom,
-  GuestPoints/nuit, ville, province et région — **seuls les champs vides**, jamais une saisie déjà
+  GuestPoints/nuit, pays, région, province et ville — **seuls les champs vides**, jamais une saisie déjà
   faite. Nécessite la synchro configurée : la page est lue par l'Apps Script, le navigateur ne peut
   pas la lire lui-même.
 - **Import d'un lien Booking** : coller le lien dans le champ « Lien Booking » pré-remplit nom,
-  type, prix, adresse (fiche et champ à géocoder), ville et région — **seuls les champs vides**,
+  type, prix, adresse, pays, région et ville — **seuls les champs vides**,
   comme pour HomeExchange, et même dépendance à la synchro. Le nom et l'adresse viennent du JSON-LD
   de la page, le prix du bloc `data-testid` — il n'existe que si le lien porte des dates.
 - **Import depuis un tableau** : coller des lignes copiées d'un tableur crée les hébergements
@@ -236,15 +245,15 @@ La vue principale, en **tableau ou en cartes**.
 
 **Ville** — une étape de passage sans nuit, ou un repère.
 
-| Champ            | Détail                                            |
-| ---------------- | ------------------------------------------------- |
-| nom              |                                                   |
-| adresse géocodée | écrite par « Localiser »                          |
-| coordonnées      | latitude, longitude                               |
-| province, région | proposées par le géocodage, modifiables à la main |
-| notes            |                                                   |
+| Champ                         | Détail                                                                            |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| nom                           |                                                                                   |
+| adresse                       | c'est elle qu'on géocode                                                          |
+| coordonnées                   | latitude, longitude                                                               |
+| pays, région, province, ville | proposés par le géocodage, modifiables à la main ; la ville prend le nom à défaut |
+| notes                         |                                                                                   |
 
-Liste triée par nom : nom, lieu (adresse géocodée, ou province · région), coordonnées, notes. Même
+Liste triée par nom : nom, adresse (ou les niveaux renseignés), coordonnées, notes. Même
 bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
 
 ### À faire
@@ -252,27 +261,27 @@ bloc de localisation que les hébergements. Sert à poser une étape de passage 
 **Attraction** — un lieu à visiter. L'écran s'appelle « À faire » : la table réunit tout ce qui
 occupe un créneau sur place, restaurants compris.
 
-| Champ            | Détail                                                    |
-| ---------------- | --------------------------------------------------------- |
-| nom              |                                                           |
-| type             | liste figée, comme le type d'un hébergement               |
-| statut           | liste propre, courte                                      |
-| description      | texte libre                                               |
-| adresse géocodée | écrite par « Localiser »                                  |
-| coordonnées      | latitude, longitude                                       |
-| province, région | proposées par le géocodage, modifiables à la main         |
-| hébergement      | facultatif ; référence un hébergement du voyage           |
-| lien Google Maps | colle-le et la fiche se remplit                           |
-| lien             |                                                           |
-| horaires         | texte libre, quel que soit le type                        |
-| téléphone        | texte libre                                               |
-| budget           | l'enveloppe qu'on se donne                                |
-| prix mini / maxi | la fourchette réelle, règle transverse « Budget et prix » |
-| tags             | texte libre, amorcés par un vocabulaire par défaut        |
-| favori           | étoile en tête de ligne                                   |
+| Champ                         | Détail                                                    |
+| ----------------------------- | --------------------------------------------------------- |
+| nom                           |                                                           |
+| type                          | liste figée, comme le type d'un hébergement               |
+| statut                        | liste propre, courte                                      |
+| description                   | texte libre                                               |
+| adresse                       | c'est elle qu'on géocode                                  |
+| coordonnées                   | latitude, longitude                                       |
+| pays, région, province, ville | proposés par le géocodage, modifiables à la main          |
+| hébergement                   | facultatif ; référence un hébergement du voyage           |
+| lien Google Maps              | colle-le et la fiche se remplit                           |
+| lien                          |                                                           |
+| horaires                      | texte libre, quel que soit le type                        |
+| téléphone                     | texte libre                                               |
+| budget                        | l'enveloppe qu'on se donne                                |
+| prix mini / maxi              | la fourchette réelle, règle transverse « Budget et prix » |
+| tags                          | texte libre, amorcés par un vocabulaire par défaut        |
+| favori                        | étoile en tête de ligne                                   |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
-lieu (adresse géocodée, ou province · région), coordonnées, hébergement, horaires et téléphone
+lieu (adresse, ou les niveaux renseignés), coordonnées, hébergement, horaires et téléphone
 (masqués par défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
 localisation que les villes et les hébergements.
 
@@ -406,7 +415,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | Champ          | Détail                                                    |
 | -------------- | --------------------------------------------------------- |
 | titre          | éditable en ligne                                         |
-| région         | affichée à côté du titre                                  |
+| lieu           | hérité de l'option retenue, affiché à côté du titre       |
 | date d'arrivée | champ libre de la modale, en plus de la date calculée     |
 | notes          |                                                           |
 | masquée        | l'étape reste dans la liste mais sort de tous les calculs |
@@ -556,6 +565,10 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 
 ## 5. Règles transverses
 
+- **Adresse d'une page** : le `#` de l'URL dit où on est — `#carte`, `#hebergements`,
+  `#scenario/<id>` pour le détail d'un scénario. Recharger revient au même endroit, et les flèches
+  du navigateur parcourent les pages visitées. Une adresse inconnue laisse la page courante ; un
+  scénario supprimé retombe sur la liste. Sans `#`, l'app ouvre le scénario **TEST** comme avant.
 - **Suppression** : toujours confirmée, jamais de corbeille.
 - **Barre d'outils** : les mêmes contrôles, dans le même ordre, en haut à droite de chaque écran —
   « Trier », « Filtrer », « Colonnes », les filtres propres à l'écran, la bascule tableau / cartes,

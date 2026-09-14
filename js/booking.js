@@ -6,15 +6,12 @@
 
 const BOOKING_URL = /^https?:\/\/([a-z0-9-]+\.)*booking\.com\//i;
 
-// L'adresse remplit les deux champs : celui de la fiche, et celui que « Localiser » géocode.
 const BOOKING_FIELDS = [
   { key: 'name', id: 'f-name' },
   { key: 'type', id: 'f-type' },
   { key: 'price', id: 'f-price' },
-  { key: 'address', id: 'f-address' },
   { key: 'address', id: 'geo-address' },
-  { key: 'city', id: 'geo-city' },
-  { key: 'region', id: 'geo-region' },
+  ...PLACE_LEVEL_KEYS.map((key) => ({ key, id: `geo-${key}` })),
 ];
 
 function isBookingUrl(url) {

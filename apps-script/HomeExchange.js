@@ -17,9 +17,10 @@ function scrapeHomeExchange(url) {
   var html = res.getContentText();
   var home = {
     name: hostFirstName(matchOne(html, /<h1[^>]*id="title"[^>]*>([\s\S]*?)<\/h1>/)),
-    city: breadcrumbLevel(html, 'admin3'),
-    county: breadcrumbLevel(html, 'admin2'),
+    country: breadcrumbLevel(html, 'country'),
     region: breadcrumbLevel(html, 'admin1'),
+    county: breadcrumbLevel(html, 'admin2'),
+    city: breadcrumbLevel(html, 'admin3'),
     gp: matchOne(html, /itemprop="price"\s+content="([0-9]+)"/),
   };
   if (!home.name && !home.city) return { error: 'Annonce illisible : la page a peut-être changé.' };
@@ -34,7 +35,7 @@ function hostFirstName(title) {
   return found ? 'Chez ' + found[2] + ' - ' + found[1] : title;
 }
 
-// Les fils d'Ariane portent le niveau administratif : admin1 région, admin2 province, admin3 ville.
+// Les fils d'Ariane portent le niveau : country pays, admin1 région, admin2 province, admin3 ville.
 function breadcrumbLevel(html, level) {
   return matchOne(
     html,

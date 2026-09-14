@@ -2,11 +2,10 @@ function emptyCity() {
   return {
     id: null,
     name: '',
-    geoAddress: '',
+    address: '',
+    ...emptyPlaceLevels(),
     lat: '',
     lng: '',
-    county: '',
-    region: '',
     notes: '',
   };
 }

@@ -5,9 +5,10 @@ const IMPORT_FIELDS = [
   { key: 'type', labels: ['type'] },
   { key: 'status', labels: ['statut', 'status'] },
   { key: 'name', labels: ['nom', 'name', 'hebergement', 'logement'] },
-  { key: 'city', labels: ['ville', 'city'] },
-  { key: 'county', labels: ['province'] },
+  { key: 'country', labels: ['pays', 'country'] },
   { key: 'region', labels: ['region'] },
+  { key: 'county', labels: ['province'] },
+  { key: 'city', labels: ['ville', 'city'] },
   { key: 'address', labels: ['adresse', 'address'] },
   { key: 'price', labels: ['prix', 'price'] },
   { key: 'dates', labels: ['dates', 'date'] },
@@ -118,10 +119,7 @@ function runPasteImport() {
       status: accStatusFromText(fields.status),
       name: fields.name || fields.city || 'Sans nom',
       address: fields.address || '',
-      geoAddress: '',
-      city: fields.city || '',
-      county: fields.county || '',
-      region: fields.region || '',
+      ...placeLevelsOf(fields),
       lat: '',
       lng: '',
       price: fields.price || '',
@@ -135,9 +133,6 @@ function runPasteImport() {
   });
   saveNow();
   closeModal();
-  alert(
-    added +
-      ' hébergement(s) importé(s). Renseigne une adresse à localiser pour les placer sur la carte.',
-  );
+  alert(added + ' hébergement(s) importé(s). Renseigne une adresse pour les placer sur la carte.');
   render();
 }

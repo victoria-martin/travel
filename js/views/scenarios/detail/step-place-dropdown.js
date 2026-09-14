@@ -1,9 +1,5 @@
-function placeLocationLabel(place) {
-  return [place.city, place.county, place.region].filter(Boolean).join(' · ');
-}
-
 function placeOptionLabel(place) {
-  const location = placeLocationLabel(place);
+  const location = placeLevelsLabel(place);
   return escapeHtml(place.name) + (location ? ` — ${escapeHtml(location)}` : '');
 }
 

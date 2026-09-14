@@ -41,11 +41,11 @@ function createScenario() {
 function openScenario(id) {
   activeScenarioId = id;
   view = 'scenario-detail';
-  render();
+  showRoute();
 }
 
 // A scenario named TEST is the one being worked on: the app opens straight on its detail.
-const TEST_SCENARIO_NAME = 'TEST';
+const TEST_SCENARIO_NAME = 'TEST_NO';
 
 function selectTestScenario() {
   const test = ofCurrentTravel(state.scenarios).find(

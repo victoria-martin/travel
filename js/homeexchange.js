@@ -10,9 +10,7 @@ const HOME_EXCHANGE_URL = /^https?:\/\/([a-z0-9-]+\.)*homeexchange\.(fr|com)\//i
 const HOME_EXCHANGE_FIELDS = [
   { key: 'name', id: 'f-name' },
   { key: 'gp', id: 'f-price' },
-  { key: 'city', id: 'geo-city' },
-  { key: 'county', id: 'geo-county' },
-  { key: 'region', id: 'geo-region' },
+  ...PLACE_LEVEL_KEYS.map((key) => ({ key, id: `geo-${key}` })),
 ];
 
 function isHomeExchangeUrl(url) {
@@ -64,6 +62,6 @@ function applyHomeExchange(home) {
 
 function homeExchangeSummary(home, filledCount) {
   if (!filledCount) return '🔁 HomeExchange : la fiche est déjà remplie, rien à compléter.';
-  const place = [home.city, home.county, home.region].filter(Boolean).join(' · ');
+  const place = placeLevelsLabel(home);
   return `🔁 ${[place, home.gp && `${home.gp} GP/nuit`].filter(Boolean).join(' — ')}`;
 }

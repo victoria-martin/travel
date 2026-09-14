@@ -29,7 +29,7 @@ function stepCard(scenario, step, idx) {
           ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
             key: `step:${step.id}:name`,
             placeholder: 'Nom de l’étape…',
-          })}${step.region ? ` <span style="color:var(--ink-soft); font-weight:400;">· ${escapeHtml(step.region)}</span>` : ''}
+          })}${stepPlaceSuffix(step)}
           ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
         </div>
         <div class="test-red">
@@ -66,6 +66,24 @@ function stepHiddenCheckbox(scenario, step) {
     onchange="toggleStepHidden('${scenario.id}','${step.id}')"
     title="Masquer — hors des dates, des totaux et de la carte"
   />`;
+}
+
+/*
+  Le titre dit la ville et la région de l'étape, moins ce que son propre nom et la pastille du lieu
+  affichent déjà : une étape « Castelbianco » posée sur un hébergement de Castelbianco n'ajoute que
+  « Ligurie ». La province, elle, est un axe de filtre et non un libellé de titre.
+*/
+const STEP_TITLE_LEVELS = ['city', 'region'];
+
+function stepPlaceSuffix(step) {
+  const place = stepPlace(step);
+  if (!place) return '';
+  const alreadySaid = [step.name, place.name].join(' ').toLowerCase();
+  const levels = STEP_TITLE_LEVELS.map((key) => place[key]).filter(
+    (value) => value && !alreadySaid.includes(value.toLowerCase()),
+  );
+  if (!levels.length) return '';
+  return ` <span class="step-title-place">· ${escapeHtml(levels.reverse().join(' · '))}</span>`;
 }
 
 function stepDetailLine(step) {

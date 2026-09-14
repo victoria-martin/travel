@@ -1,16 +1,17 @@
 /*
-  Bloc de localisation partagé par les modales hébergement et ville : une seule modale est
-  ouverte à la fois, les ids sont donc fixes.
+  Bloc de localisation partagé par les modales hébergement, ville et activité : une seule modale est
+  ouverte à la fois, les ids sont donc fixes. Les quatre niveaux viennent de `PLACE_LEVELS`, par
+  rangées de deux.
 */
 function locateFields(p) {
   return /* HTML */ `
     <div class="field">
-      <label>Adresse à localiser</label>
+      <label>Adresse</label>
       <div class="locate-row">
         <input
           id="geo-address"
           type="text"
-          value="${escapeHtml(p.geoAddress)}"
+          value="${escapeHtml(p.address || '')}"
           placeholder="Piazza del Campo, Siena"
         />
         <button type="button" class="btn btn-ghost btn-small" onclick="locateAddress()">
@@ -30,38 +31,40 @@ function locateFields(p) {
         ><input id="geo-lng" type="text" value="${escapeHtml(p.lng)}" placeholder="11.3308" />
       </div>
     </div>
-    <input type="hidden" id="geo-city" value="${escapeHtml(p.city || '')}" />
-    <div class="field-row">
-      <div class="field">
-        <label>Province</label
-        ><input
-          id="geo-county"
-          type="text"
-          list="geo-county-options"
-          value="${escapeHtml(p.county || '')}"
-          placeholder="Sienne"
-        />
-        ${locateOptions('geo-county-options', 'county')}
-      </div>
-      <div class="field">
-        <label>Région</label
-        ><input
-          id="geo-region"
-          type="text"
-          list="geo-region-options"
-          value="${escapeHtml(p.region || '')}"
-          placeholder="Toscane"
-        />
-        ${locateOptions('geo-region-options', 'region')}
-      </div>
-    </div>
+    ${placeLevelRows(p)}
   `;
 }
 
-/* Existing values from both located collections, so a place can reuse one or introduce its own. */
+function placeLevelRows(p) {
+  const rows = [];
+  for (let i = 0; i < PLACE_LEVELS.length; i += 2) rows.push(PLACE_LEVELS.slice(i, i + 2));
+  return rows
+    .map(
+      (row) =>
+        `<div class="field-row">${row.map((level) => placeLevelField(p, level)).join('')}</div>`,
+    )
+    .join('');
+}
+
+function placeLevelField(p, level) {
+  const listId = `geo-${level.key}-options`;
+  return /* HTML */ `<div class="field">
+    <label>${level.label}</label
+    ><input
+      id="geo-${level.key}"
+      type="text"
+      list="${listId}"
+      value="${escapeHtml(p[level.key] || '')}"
+      placeholder="${level.placeholder}"
+    />
+    ${locateOptions(listId, level.key)}
+  </div>`;
+}
+
+/* Existing values from every located collection, so a place can reuse one or introduce its own. */
 function locateOptions(id, key) {
   const values = new Set();
-  [...ofCurrentTravel(state.accommodations), ...ofCurrentTravel(state.cities)].forEach((place) => {
+  locatedPlaces().forEach((place) => {
     if (place[key]) values.add(place[key]);
   });
   return /* HTML */ `<datalist id="${id}">
@@ -72,9 +75,16 @@ function locateOptions(id, key) {
   </datalist>`;
 }
 
+function locatedPlaces() {
+  return [
+    ...ofCurrentTravel(state.accommodations),
+    ...ofCurrentTravel(state.cities),
+    ...ofCurrentTravel(state.attractions),
+  ];
+}
+
 function locateSummary(p) {
-  if (p.lat && p.lng)
-    return `📍 ${[p.city, p.county, p.region].filter(Boolean).join(' · ') || 'Position enregistrée'}`;
-  if (p.geoAddress) return '⚠️ Aucune position — clique sur Localiser, ou saisis les coordonnées.';
+  if (p.lat && p.lng) return `📍 ${placeLevelsLabel(p) || 'Position enregistrée'}`;
+  if (p.address) return '⚠️ Aucune position — clique sur Localiser, ou saisis les coordonnées.';
   return "Localise une adresse, ou saisis les coordonnées si l'endroit est imprécis.";
 }

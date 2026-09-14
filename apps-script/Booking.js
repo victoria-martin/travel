@@ -50,8 +50,9 @@ function scrapeBooking(url) {
     type: BOOKING_TYPES[ld['@type']] || 'hotel',
     address:
       decodeEntities(address.streetAddress || '') || matchFirst(html, BOOKING_ADDRESS_PATTERNS),
-    city: decodeEntities(address.addressLocality || ''),
+    country: decodeEntities(address.addressCountry || ''),
     region: decodeEntities(address.addressRegion || ''),
+    city: decodeEntities(address.addressLocality || ''),
     price: bookingPrice(html),
   };
   if (!stay.name && !stay.address) {

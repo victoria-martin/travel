@@ -2,7 +2,6 @@ function emptyStep(optionCount = 1) {
   return {
     id: null,
     name: '',
-    region: '',
     arrivalDate: '',
     notes: '',
     extras: [],
@@ -24,9 +23,6 @@ function stepForm(p) {
       ><input id="s-name" type="text" value="${escapeHtml(p.name)}" placeholder="Arrivée à Pise" />
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>Région</label><input id="s-region" type="text" value="${escapeHtml(p.region)}" />
-      </div>
       <div class="field">
         <label>Nuits</label
         ><input id="s-nights" type="number" min="0" value="${option.nights || 0}" />
