@@ -183,12 +183,16 @@ const LIST_FIELDS = ['costIds', 'transportIds', 'tags'];
 const LEGACY_HEADERS = { address: 'geoAddress' };
 
 function doGet(e) {
-  var homeExchangeUrl = e && e.parameter ? e.parameter.homeExchange : '';
-  if (homeExchangeUrl) return json(scrapeHomeExchange(homeExchangeUrl));
-  var bookingUrl = e && e.parameter ? e.parameter.booking : '';
-  if (bookingUrl) return json(scrapeBooking(bookingUrl));
-  var googleMapsUrl = e && e.parameter ? e.parameter.googleMaps : '';
-  if (googleMapsUrl) return json(scrapeGoogleMaps(googleMapsUrl));
+  var params = (e && e.parameter) || {};
+  var scrapers = [
+    { param: 'homeExchange', scrape: scrapeHomeExchange },
+    { param: 'airbnb', scrape: scrapeAirbnb },
+    { param: 'booking', scrape: scrapeBooking },
+    { param: 'googleMaps', scrape: scrapeGoogleMaps },
+  ];
+  for (var i = 0; i < scrapers.length; i++) {
+    if (params[scrapers[i].param]) return json(scrapers[i].scrape(params[scrapers[i].param]));
+  }
   return json(readState());
 }
 

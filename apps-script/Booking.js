@@ -61,22 +61,11 @@ function scrapeBooking(url) {
   return stay;
 }
 
-// La page porte plusieurs blocs JSON-LD (fil d'Ariane, FAQ…) : on garde celui de l'hébergement.
+// L'hébergement est le seul nœud à porter une adresse postale.
 function bookingJsonLd(html) {
-  var blocks = html.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
-  if (!blocks) return {};
-  for (var i = 0; i < blocks.length; i++) {
-    var body = blocks[i].replace(/^[\s\S]*?>/, '').replace(/<\/script>$/i, '');
-    var parsed;
-    try {
-      parsed = JSON.parse(body);
-    } catch (err) {
-      continue;
-    }
-    var nodes = [].concat(parsed['@graph'] || parsed);
-    for (var j = 0; j < nodes.length; j++) {
-      if (nodes[j] && nodes[j].address) return nodes[j];
-    }
+  var nodes = jsonLdNodes(html);
+  for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i] && nodes[i].address) return nodes[i];
   }
   return {};
 }

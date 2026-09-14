@@ -29,8 +29,7 @@ function accommodationsHeader(items) {
               onclick: "openModal('paste-import')",
             })
       }
-      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('accommodation')" })}
-      ${toolbarMenu()}
+      ${accommodationAddMenu()} ${toolbarMenu()}
     </div>
   </div>`;
 }

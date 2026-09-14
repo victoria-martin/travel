@@ -31,14 +31,14 @@ async function fillStepLegs() {
 
   try {
     const { legs } = await fetchRoute(points);
-    scenario.steps.forEach((st, i) => {
+    scenario.steps.forEach((_, i) => {
       const rank = stepLegRank(scenario, i);
       const leg = rank === null ? null : legs[rank];
       if (leg) setStepLeg(i, `🚗 ${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`);
     });
   } catch (e) {
     console.warn('Tronçons routiers indisponibles', e);
-    scenario.steps.forEach((st, i) => setStepLeg(i, '⚠️'));
+    scenario.steps.forEach((_, i) => setStepLeg(i, '⚠️'));
   }
 }
 

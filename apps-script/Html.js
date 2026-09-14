@@ -38,3 +38,21 @@ function matchFirst(html, patterns) {
   }
   return '';
 }
+
+// Une page porte plusieurs blocs JSON-LD (fil d'Ariane, FAQ, produit…), parfois sous un `@graph` :
+// chaque scraper reconnaît ensuite le sien.
+function jsonLdNodes(html) {
+  var blocks =
+    html.match(/<script[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/gi) || [];
+  var nodes = [];
+  for (var i = 0; i < blocks.length; i++) {
+    var body = blocks[i].replace(/^[\s\S]*?>/, '').replace(/<\/script>$/i, '');
+    try {
+      var parsed = JSON.parse(body);
+      nodes = nodes.concat(parsed['@graph'] || parsed);
+    } catch (err) {
+      continue;
+    }
+  }
+  return nodes;
+}

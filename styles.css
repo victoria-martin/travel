@@ -860,7 +860,8 @@ tr:hover td {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 20px;
+  min-height: 18px;
+  margin: -4px 0;
 }
 .step-leg {
   font-size: 12px;
@@ -1383,6 +1384,23 @@ tr:hover td {
 }
 .filter-option input {
   accent-color: var(--stone);
+}
+.panel-action {
+  display: block;
+  width: 100%;
+  padding: 7px 8px;
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.panel-action:hover {
+  background: var(--paper-raised);
 }
 #map {
   height: 600px;

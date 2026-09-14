@@ -36,7 +36,6 @@ les types.
 
 ### Plus tard
 
-- **Distance entre deux étapes** <!--t:mc15--> — 🧮 calcul · 🔌 intégration · 🌙 plus tard
 - **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · 🌙 plus tard
 - **Estimation des péages** <!--t:dlde--> — 🧮 calcul · 🌙 plus tard
 
@@ -438,6 +437,10 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Création du Sheet à la première utilisation** <!--t:ylrv--> — 🔌 intégration · ⏳ à faire : le
   flux complet — quand le fichier est créé, quand les données le sont, et si on les crée au bon
   moment.
+- **Résolution de conflits visuelle** <!--t:yx4a--> — 🧩 ui · 🔌 intégration · 🌙 plus tard : le
+  3-voies de [sync.js](js/sync.js) fusionne entrée par entrée sans rien montrer, et un push qui
+  reste en conflit après une deuxième tentative ne laisse qu'un message d'erreur. Un écran qui pose
+  les deux versions côte à côte et laisse trancher champ par champ.
 - **Plusieurs versions du script `travel`** <!--t:gx5n--> — 🔌 intégration · ⏳ à faire : comprendre
   d'où viennent les déploiements multiples de l'Apps Script et n'en garder qu'un. Le dépôt ne porte
   qu'un [Code.js](apps-script/Code.js) : les versions vivent côté Google, dans l'historique de

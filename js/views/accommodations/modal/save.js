@@ -1,22 +1,33 @@
+/*
+  Les portes d'ajout n'affichent que leurs champs : celui qui n'est pas dans le DOM garde la valeur
+  que la fiche portait déjà.
+*/
+function accommodationFieldValue(id, kept) {
+  const field = document.getElementById(id);
+  return field ? field.value.trim() : kept || '';
+}
+
 function readAccommodationForm(id) {
+  const p = modal.payload;
   const located = readLocateFields();
+  const favorite = document.getElementById('f-favorite');
   return {
     id: id || uid(),
     travelId: currentTravelId(),
-    type: document.getElementById('f-type').value,
-    status: document.getElementById('f-status').value,
-    name: document.getElementById('f-name').value.trim() || 'Sans nom',
+    type: accommodationFieldValue('f-type', p.type),
+    status: accommodationFieldValue('f-status', p.status),
+    name: accommodationFieldValue('f-name', p.name) || 'Sans nom',
     address: located.address,
     ...placeLevelsOf(located),
     lat: located.lat,
     lng: located.lng,
-    price: document.getElementById('f-price').value.trim(),
-    dates: document.getElementById('f-dates').value.trim(),
-    link: document.getElementById('f-link').value.trim(),
-    bookingLink: document.getElementById('f-booking-link').value.trim(),
-    notes: document.getElementById('f-notes').value.trim(),
-    tags: [...modal.payload.tags],
-    favorite: document.getElementById('f-favorite').checked,
+    price: accommodationFieldValue('f-price', p.price),
+    dates: accommodationFieldValue('f-dates', p.dates),
+    link: accommodationFieldValue('f-link', p.link),
+    bookingLink: accommodationFieldValue('f-booking-link', p.bookingLink),
+    notes: accommodationFieldValue('f-notes', p.notes),
+    tags: [...p.tags],
+    favorite: favorite ? favorite.checked : p.favorite,
   };
 }
 

@@ -22,20 +22,7 @@ function accommodationForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un hébergement</h3>
     <div class="field-row">
-      <div class="field">
-        <label>Type</label>
-        <select id="f-type">
-          <option value="" ${p.type ? '' : 'selected'}>
-            ${UNSET_ACCOMMODATION_TYPE.emoji} ${UNSET_ACCOMMODATION_TYPE.label}
-          </option>
-          ${Object.entries(ACCOMMODATION_TYPES)
-            .map(
-              ([key, t]) =>
-                `<option value="${key}" ${p.type === key ? 'selected' : ''}>${t.label}</option>`,
-            )
-            .join('')}
-        </select>
-      </div>
+      ${accommodationTypeField(p)}
       <div class="field">
         <label>Nom</label
         ><input id="f-name" type="text" value="${escapeHtml(p.name)}" placeholder="Antico Casale" />
@@ -73,8 +60,8 @@ function accommodationForm(p) {
         type="text"
         value="${escapeHtml(p.link)}"
         placeholder="https://..."
-        onpaste="importHomeExchangePaste()"
-        onchange="importHomeExchangeLink()"
+        onpaste="importHomeExchangePaste(); importAirbnbPaste()"
+        onchange="importHomeExchangeLink(); importAirbnbLink()"
       />
     </div>
     <div class="field">

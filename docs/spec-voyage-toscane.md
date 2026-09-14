@@ -111,6 +111,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   dégustation : ils sont portés par l'attraction, quel que soit son type. Une collection séparée
   aurait obligé à fusionner deux tables à la main dès qu'un écran veut montrer les deux — carte,
   suggestions, rattachement à une étape — alors qu'ici une page Restaurants n'est qu'un filtre.
+- **Ajouter, c'est d'abord choisir sa source.** Un hébergement s'ajoute depuis un lien Booking,
+  HomeExchange ou Airbnb, ou à la main : quatre portes, quatre formulaires. Chacun ne porte que ce
+  que sa source remplit, là où une modale unique montrait les trois champs de lien à la fois et
+  demandait de deviner lequel valait pour l'annonce en cours. Modifier, en revanche, rouvre toujours
+  la fiche complète : une fois créée, une fiche n'a plus de source.
 
 ---
 
@@ -201,7 +206,7 @@ pastilles, avant même l'enregistrement.
 | coordonnées                      | latitude, longitude                                                                             |
 | prix/nuit                        | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
 | dates                            | texte libre (« 12–14 juin »)                                                                    |
-| lien                             | l'annonce ; un lien HomeExchange collé pré-remplit la fiche                                     |
+| lien                             | l'annonce ; un lien HomeExchange ou Airbnb collé pré-remplit la fiche                           |
 | lien de réservation              | Booking ; un lien collé pré-remplit la fiche                                                    |
 | notes                            | éditables depuis la ligne                                                                       |
 | tags                             | liste libre, sans administration                                                                |
@@ -224,7 +229,13 @@ La vue principale, en **tableau ou en cartes**.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
   saisis — un tag existe dès qu'il est tapé quelque part, et disparaît avec son dernier porteur.
   Un tag coché puis disparu est retiré du filtre tout seul.
-- **Créer / modifier** : une modale. L'adresse se géocode sur clic du bouton « Localiser », qui
+- **Ajouter** : le `+` ouvre un panneau de quatre portes — depuis un lien Booking, depuis un lien
+  HomeExchange, depuis un lien Airbnb, ou à la main. Chaque porte a son formulaire : le lien en
+  tête, puis nom, localisation, prix, dates et notes. Statut, tags et coup de cœur ne s'y trouvent
+  pas, ils se posent depuis la liste. Le type est celui de la porte pour HomeExchange et Airbnb ;
+  Booking logeant aussi bien un hôtel qu'une maison, sa porte garde le select que l'import remplit.
+- **Créer / modifier** : la modale complète, celle de la porte « à la main » et de toute
+  modification. L'adresse se géocode sur clic du bouton « Localiser », qui
   propose des résultats ; le choix d'un résultat écrase pays, région, province, ville et coordonnées.
   Les quatre niveaux restent saisissables à la main, avec les valeurs déjà présentes en
   suggestion.
@@ -232,6 +243,12 @@ La vue principale, en **tableau ou en cartes**.
   GuestPoints/nuit, pays, région, province et ville — **seuls les champs vides**, jamais une saisie déjà
   faite. Nécessite la synchro configurée : la page est lue par l'Apps Script, le navigateur ne peut
   pas la lire lui-même.
+- **Import d'un lien Airbnb** : collé dans le même champ « Lien » que HomeExchange, il pré-remplit
+  type, nom, coordonnées, pays, région et ville — **seuls les champs vides**, et même dépendance à
+  la synchro. Les coordonnées viennent du JSON-LD, donc la fiche se place sur la carte sans passer
+  par « Localiser » ; elles sont celles qu'Airbnb publie avant réservation, approximatives. La
+  région et le pays se lisent dans le titre de la page. Il n'y a **ni prix ni province** : Airbnb
+  ne sert pas le montant dans sa page, même quand le lien porte des dates.
 - **Import d'un lien Booking** : coller le lien dans le champ « Lien Booking » pré-remplit nom,
   type, prix, adresse, pays, région et ville — **seuls les champs vides**,
   comme pour HomeExchange, et même dépendance à la synchro. Le nom et l'adresse viennent du JSON-LD
@@ -486,6 +503,11 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Insérer une étape entre deux autres** : un `＋` apparaît au survol de l'espace qui sépare deux
   cartes et pose à cette position une étape vide d'une nuit, qu'on remplit sur la carte. Le bouton
   « Ajouter une étape » de l'en-tête ouvre la modale et ajoute en fin de liste.
+- **La route entre deux étapes** : la bande qui sépare deux cartes porte son tronçon routier —
+  distance et temps de conduite, « 🚗 55 km · 1 h 11 », lus dans le même itinéraire que le tracé de
+  la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
+  tronçon qui enjamberait une étape masquée ou sans lieu ne dirait pas la distance des deux cartes
+  qu'on lit. Le `＋` d'insertion sort à droite du libellé au survol.
 - **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
   hébergements favoris passent en tête de leur groupe, précédés d'une ★.
 - **Les lignes d'une étape** : sous la ligne du lieu, et sous l'hébergement de chaque card

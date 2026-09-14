@@ -18,6 +18,21 @@ const MODAL_TYPES = {
     body: (m) => accommodationForm(m.payload),
     edits: true,
   },
+  'accommodation-booking': {
+    open: () => ({ payload: emptyAccommodation() }),
+    body: (m) => bookingAccommodationForm(m.payload),
+    edits: true,
+  },
+  'accommodation-home-exchange': {
+    open: () => ({ payload: { ...emptyAccommodation(), type: 'homeExchange' } }),
+    body: (m) => homeExchangeAccommodationForm(m.payload),
+    edits: true,
+  },
+  'accommodation-airbnb': {
+    open: () => ({ payload: { ...emptyAccommodation(), type: 'airbnb' } }),
+    body: (m) => airbnbAccommodationForm(m.payload),
+    edits: true,
+  },
   ville: {
     open: (id) => ({ payload: id ? { ...getCity(id) } : emptyCity() }),
     body: (m) => cityForm(m.payload),
