@@ -1,5 +1,6 @@
 function saveStep(id) {
   const s = getScenario(modal.scenarioId);
+  const withOptions = !id && modal.options === 2;
   const current = (id && s.steps.find((x) => x.id === id)) || modal.payload;
   const item = {
     ...current,
@@ -18,4 +19,5 @@ function saveStep(id) {
   }
   saveNow();
   closeModal();
+  if (withOptions) makeStepGroup(s.id, item.id);
 }

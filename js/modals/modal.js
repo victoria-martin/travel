@@ -65,8 +65,10 @@ const MODAL_TYPES = {
     edits: true,
   },
   step: {
-    open: (scenarioId, stepId) => ({
+    // Une étape neuve naît seule ou déjà ouverte en options : c'est le bouton qui l'a dit.
+    open: (scenarioId, stepId, options = 1) => ({
       scenarioId,
+      options,
       payload: stepId ? structuredClone(getStep(scenarioId, stepId)) : emptyStep(),
     }),
     body: (m) => stepForm(m.payload),

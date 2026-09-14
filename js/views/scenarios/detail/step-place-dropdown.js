@@ -22,7 +22,7 @@ function stepPlaceLabel(step) {
   if (city) return tagLabel('📍', escapeHtml(city.name));
   const acc = getAccommodation(step.accommodationId);
   if (acc) return tagLabel('', escapeHtml(acc.name));
-  return tagLabel('', 'Aucun lieu choisi');
+  return tagLabel('', '＋ lieu');
 }
 
 function stepPlaceDropdown(scenario, step) {
@@ -30,7 +30,7 @@ function stepPlaceDropdown(scenario, step) {
     `place:${step.id}`,
     'place-dropdown',
     /* HTML */ `<summary
-        class="inline-tag"
+        class="inline-tag step-place-tag${stepPlace(step) ? '' : ' inline-tag-empty'}"
         onclick="setTimeout(() => focusPlaceSearch('${step.id}'))"
       >
         ${stepPlaceLabel(step)}

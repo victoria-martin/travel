@@ -11,7 +11,7 @@ function renderScenarioDetailView() {
     );
   }
   return /* HTML */ `
-    ${scenarioDetailHeader(s)}
+    ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main">
         ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}

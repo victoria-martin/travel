@@ -1,6 +1,20 @@
+/*
+  Every gesture re-renders the whole app, so the scrolling `.main` is built anew each time. The
+  route tells a redraw of the same screen from a move to another one: only the first keeps its
+  place, changing page still lands at the top.
+*/
+let renderedRoute;
+
+function keptScroll() {
+  const main = document.getElementById('main');
+  return main && renderedRoute === routeHash() ? main.scrollTop : 0;
+}
+
 function render() {
   applyTravelAccent();
   applyTravelTab();
+  const scrollTop = keptScroll();
+  renderedRoute = routeHash();
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
@@ -26,6 +40,7 @@ function render() {
     <div class="main" id="main"></div>
   `;
   renderMain();
+  document.getElementById('main').scrollTop = scrollTop;
   if (modal) renderModal();
 }
 

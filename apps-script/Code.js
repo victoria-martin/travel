@@ -337,7 +337,7 @@ function explodeStepOptions(scenario, step) {
   var group = {
     id: step.id + '-groupe',
     options: options.map(function (option) {
-      return { id: option.id, name: option.name || '', isSelected: !!option.isSelected };
+      return { id: option.id, isSelected: !!option.isSelected };
     }),
     extras: lines.filter(function (line) {
       return !line.optionId;

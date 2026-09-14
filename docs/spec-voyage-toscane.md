@@ -476,10 +476,11 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 **Groupe** — appartient à un scénario ; l'endroit où plusieurs suites d'étapes se comparent.
 
-| Champ    | Détail                                                   |
-| -------- | -------------------------------------------------------- |
-| colonnes | au moins deux ; une seule retenue                        |
-| lignes   | les activités et dépenses communes à toutes ses colonnes |
+| Champ    | Détail                                                            |
+| -------- | ----------------------------------------------------------------- |
+| nom      | éditable en ligne ; celui de l'étape qui s'est ouverte en options |
+| colonnes | au moins deux ; une seule retenue                                 |
+| lignes   | les activités et dépenses communes à toutes ses colonnes          |
 
 **Colonne** — appartient à un groupe.
 
@@ -535,14 +536,24 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   0 nuit), puis en dessous sa date d'arrivée libre si elle est saisie dans la modale, et ses notes.
   Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**une ville ou un
   hébergement**, les deux dans le même select, exclusifs), un select de nuits (0 à 14), et en bout
-  de ligne le coût. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
+  de ligne le coût. Les pastilles passent à la ligne plutôt que de se réduire, une colonne étroite
+  ne devant jamais rendre un select inatteignable ; un champ vide se montre en pastille creuse
+  (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
   ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
-  masquable, supprimable.
-- **Un groupe** : ses colonnes côte à côte dans la largeur, chacune empilant de vraies cartes
-  d'étape. En tête de colonne, son nom éditable, la pastille ◉ / ○ qui la retient et le ✕ qui la
-  retire avec ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la
-  hauteur de la colonne d'à côté. La colonne retenue se détache par sa bordure. Toutes les colonnes
+  masquable, supprimable. Son coût se lit **en haut à droite** de la carte, sur le modèle du total
+  d'un scénario dans la liste : le montant qui compte en gros, et sous lui celui qu'un budget
+  remplace ou l'invite à le saisir. Ses trois actions se posent **en bas à droite** et n'apparaissent
+  qu'au survol, la seule zone libre — en haut elles couvriraient le prix.
+- **Un groupe** : son nom en tête — celui de l'étape qui s'est ouverte en options, éditable en
+  ligne comme un titre d'étape, puisque les colonnes comparent des façons de faire _cette_ étape-là
+  et que chacune de leurs cartes garde son propre nom —, la date à laquelle il commence, et le
+  compte de ses colonnes. Elles se posent côte à côte dans la largeur, chacune empilant de vraies
+  cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, son nom
+  éditable, la pastille ◉ / ○ qui la retient et le ✕ qui la retire avec ses étapes ; au pied, ses
+  nuits et son coût, alignés en bas quelle que soit la hauteur de la colonne d'à côté. La colonne
+  retenue est cernée de jaune — liseré, trait sous son nom, trait au-dessus de son pied et pastille
+  pleine : on la repère sans la lire. Toutes les colonnes
   partent du même jour et se datent comme si elles étaient retenues, sinon rien ne les comparerait ;
   seules les cartes de la colonne retenue portent une lettre, les autres n'étant sur aucun tracé.
   Le ＋ sous la rangée ajoute une colonne, qui recopie les étapes de celle qui est retenue — on n'en
@@ -556,6 +567,11 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Changer de type efface un lieu qui n'en relève plus, sinon la pastille montrerait un lieu absent
   de sa propre liste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
   lieu comme ses niveaux — « Toscane » trouve tout ce qui y est.
+- **Le fil du trajet** : sous l'en-tête du détail, une bande de maillons, un par étape retenue,
+  dans l'ordre du trajet. Chacun porte un trait de la couleur du type de son hébergement, sa lettre,
+  son nom et ses nuits, et il est large comme ses nuits — la même lecture que la bande de la liste,
+  en cliquable : le maillon mène à sa carte. Il reste collé sous l'en-tête quand la liste défile,
+  puisque c'est là qu'il sert. Il ne s'affiche qu'à partir de deux étapes retenues.
 - **Créer une étape** : le ＋ entre deux rangées comme le bouton de l'en-tête ouvrent le même choix,
   « Créer une étape » ou « Créer une étape avec options » — la seconde pose un groupe de deux
   colonnes d'emblée. Dans une colonne, le ＋ n'a qu'un geste, donc pas de menu : l'étape y naît.
@@ -571,10 +587,17 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   cartes et pose à cette position une étape vide d'une nuit, qu'on remplit sur la carte. Le bouton
   « Ajouter une étape » de l'en-tête ouvre la modale et ajoute en fin de liste.
 - **La route entre deux étapes** : la bande qui sépare deux cartes porte son tronçon routier —
-  distance et temps de conduite, « 🚗 55 km · 1 h 11 », lus dans le même itinéraire que le tracé de
-  la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
+  le temps de conduite puis la distance, « 1 h 11 · 55 km », lus dans le même itinéraire que le
+  tracé de la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
   tronçon qui enjamberait une étape masquée, écartée ou sans lieu ne dirait pas la distance des
   deux cartes qu'on lit. Dans un groupe, il se lit donc entre deux cartes de la colonne retenue. Le `＋` d'insertion sort à droite du libellé au survol.
+- **La gouttière du scénario** : à gauche de la liste, un trait vertical court d'un bout à l'autre
+  et porte un point par étape ; l'écart entre deux points est la route qui les sépare, le plus long
+  tronçon du scénario tenant l'écart plein et les autres s'y rapportant, avec un plancher qui garde
+  le plus court lisible. Le trait est d'un seul tenant, à une seule largeur : c'est l'écart entre
+  deux points qui dit la route, la grossir ne le dirait pas deux fois. Il longe le bord gauche, et
+  le chiffre de la route se range entre lui et les cartes, calé contre elles ; le ＋ d'insertion, lui,
+  se pose au milieu de la largeur des cartes.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
   — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
   passent en tête, précédés d'une ★, le reste est trié par nom. Chaque en-tête de groupe le replie

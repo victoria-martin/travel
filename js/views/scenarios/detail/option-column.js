@@ -22,11 +22,7 @@ function optionColumn(scenario, group, option, ranks) {
 
 function optionColumnHead(scenario, group, option) {
   return /* HTML */ `<div class="option-head">
-    ${editableText(
-      option.name,
-      `setGroupOptionName('${scenario.id}','${group.id}','${option.id}', this.innerText)`,
-      { key: `option:${option.id}:name`, placeholder: groupOptionName(group, option) },
-    )}
+    <span class="option-rank">${groupOptionName(group, option)}</span>
     ${optionChosenButton(scenario, group, option)}
     <button
       class="icon-btn option-remove"

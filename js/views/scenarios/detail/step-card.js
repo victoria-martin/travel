@@ -19,6 +19,7 @@ function stepOrderBadge(step, rank) {
 function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
+      id="step-card-${step.id}"
       class="step-card${step.hidden ? ' step-card-hidden' : ''}"
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
@@ -39,6 +40,7 @@ function stepCard(scenario, step, rank, arrival) {
         </div>
         ${extrasBlock(scenario, step)}
       </div>
+      <div class="step-money">${stepMoney(scenario, step)}</div>
       <div class="step-actions">
         ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
         <button
@@ -58,6 +60,25 @@ function stepCard(scenario, step, rank, arrival) {
       </div>
     </div>
   `;
+}
+
+// Le budget saisi remplace le prix calculé de l'hébergement ; sans budget, on montre le calcul.
+function stepMoney(scenario, step) {
+  const acc = getAccommodation(step.accommodationId);
+  const auto = stepAccommodationCost(step);
+  return /* HTML */ `<span class="step-total">
+    ${
+      !hasStepBudget(step) && auto
+        ? `<span class="step-total-auto">${formatAccommodationCost(acc, auto)}</span>`
+        : ''
+    }
+    <span class="step-budget${hasStepBudget(step) ? ' step-budget-set' : ''}"
+      >${editableText(step.budget, `setStepBudget('${scenario.id}','${step.id}', this.innerText)`, {
+        key: `step:${step.id}:budget`,
+        placeholder: 'Budget…',
+      })}${hasStepBudget(step) ? ' €' : ''}</span
+    >
+  </span>`;
 }
 
 // Comparer commence sur l'étape qu'on a : elle devient la première colonne, sa copie la seconde.

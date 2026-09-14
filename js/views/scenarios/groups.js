@@ -25,7 +25,7 @@ function chosenGroupOption(group) {
   return groupOptions(group).find((o) => o.isSelected) || null;
 }
 
-// Le nom est facultatif : sans lui, une colonne se repère par son rang.
+// Une colonne se repère par son rang : c'est le groupe qui porte le nom de ce qu'on compare.
 function groupOptionName(group, option) {
   return `Option ${groupOptions(group).indexOf(option) + 1}`;
 }
@@ -47,5 +47,5 @@ function isStepRetained(scenario, step) {
 }
 
 function emptyGroupOption(isSelected) {
-  return { id: uid(), name: '', isSelected };
+  return { id: uid(), isSelected };
 }

@@ -1,7 +1,9 @@
 /*
-  Le tronçon routier entre deux étapes se lit dans la bande qui les sépare. Il vient des `legs` du
-  même appel OSRM que le tracé, donc il n'arrive qu'après le rendu : la bande porte un emplacement
-  vide, rempli quand la réponse revient. Une bande le porte pour l'étape qui la suit.
+  Le tronçon routier se lit dans la gouttière du scénario, à gauche de la liste : le trait y court
+  d'un bout à l'autre, et l'écart entre deux étapes dit la route qui les sépare. C'est la bande qui
+  porte cet écart — sa hauteur est la distance — et le chiffre se pose contre le trait. Le tronçon
+  vient des `legs` du même appel OSRM que le tracé, donc il n'arrive qu'après le rendu : la bande
+  porte un emplacement vide, rempli quand la réponse revient, pour l'étape qui la suit.
 */
 
 // Position de chaque étape retenue dans les waypoints envoyés à OSRM, `null` si elle n'y est pas.
@@ -28,7 +30,8 @@ function stepLegRank(scenario, step) {
 
 function stepLegSlot(scenario, step) {
   const rank = stepLegRank(scenario, step);
-  return rank === null ? '' : `<span class="step-leg" id="step-leg-${rank}"></span>`;
+  if (rank === null) return '';
+  return `<span class="step-leg" id="step-leg-${rank}"></span>`;
 }
 
 async function fillStepLegs() {
@@ -39,8 +42,13 @@ async function fillStepLegs() {
 
   try {
     const { legs } = await fetchRoute(points);
+    const longest = Math.max(...legs.map((leg) => leg.distance));
     legs.forEach((leg, i) =>
-      setStepLeg(i, `🚗 ${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`),
+      setStepLeg(
+        i,
+        `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
+        legHeight(leg.distance, longest),
+      ),
     );
   } catch (e) {
     console.warn('Tronçons routiers indisponibles', e);
@@ -48,9 +56,26 @@ async function fillStepLegs() {
   }
 }
 
-function setStepLeg(index, text) {
+/*
+  Les écarts se mesurent entre eux et non sur une échelle absolue : le plus long tronçon du scénario
+  tient la hauteur pleine, les autres s'y rapportent. Un plancher garde le plus court lisible.
+*/
+const LEG_MIN_HEIGHT = 22;
+const LEG_MAX_HEIGHT = 88;
+
+function legHeight(distance, longest) {
+  const share = longest ? distance / longest : 0;
+  return Math.round(LEG_MIN_HEIGHT + (LEG_MAX_HEIGHT - LEG_MIN_HEIGHT) * share);
+}
+
+// Seule la liste du scénario porte la gouttière : dans une colonne d'option, la bande garde sa
+// hauteur naturelle et n'affiche que le chiffre.
+function setStepLeg(index, text, height) {
   const slot = document.getElementById(`step-leg-${index}`);
-  if (slot) slot.textContent = text;
+  if (!slot) return;
+  slot.textContent = text;
+  const gap = slot.closest('.step-list > .step-gap');
+  if (gap) gap.style.height = `${height}px`;
 }
 
 function distanceLabel(metres) {

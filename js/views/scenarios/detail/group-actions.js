@@ -19,7 +19,7 @@ function makeStepGroup(scenarioId, stepId) {
   const step = getStep(scenarioId, stepId);
   if (step.groupId) return;
   const [first, second] = [emptyGroupOption(true), emptyGroupOption(false)];
-  const group = { id: uid(), options: [first, second], extras: [] };
+  const group = { id: uid(), name: step.name, options: [first, second], extras: [] };
   scenarioGroups(scenario).push(group);
   step.groupId = group.id;
   step.optionId = first.id;
@@ -57,8 +57,9 @@ function chooseGroupOption(scenarioId, groupId, optionId) {
   render();
 }
 
-function setGroupOptionName(scenarioId, groupId, optionId, name) {
-  getGroupOption(getStepGroup(getScenario(scenarioId), groupId), optionId).name = name.trim();
+// Le groupe porte le nom de l'étape qui s'est ouverte en options ; ses colonnes gardent le leur.
+function renameStepGroup(scenarioId, groupId, name) {
+  getStepGroup(getScenario(scenarioId), groupId).name = name.trim();
   saveNow();
 }
 
@@ -86,9 +87,13 @@ function pruneEmptyOption(scenario, groupId, optionId) {
   if (group.options.length < 2) dissolveGroup(scenario, group);
 }
 
+// Le groupe défait rend son nom à l'étape qui survit, sauf si elle en porte déjà un à elle.
 function dissolveGroup(scenario, group) {
   const steps = groupSteps(scenario, group);
-  if (steps.length) holderExtras(steps[0]).push(...holderExtras(group));
+  if (steps.length) {
+    holderExtras(steps[0]).push(...holderExtras(group));
+    steps[0].name = steps[0].name || group.name || '';
+  }
   steps.forEach((st) => {
     st.groupId = '';
     st.optionId = '';

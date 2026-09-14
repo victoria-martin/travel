@@ -20,7 +20,7 @@ function stepTypeDropdown(scenario, step) {
   return inlineDropdown(
     `acc-type:${step.id}`,
     'type-dropdown',
-    /* HTML */ `<summary class="inline-tag${current ? '' : ' step-add-type'}">
+    /* HTML */ `<summary class="inline-tag${current ? '' : ' inline-tag-empty'}">
         ${stepTypeLabel(current)}
       </summary>
       <div class="inline-menu">
