@@ -1,7 +1,10 @@
 function scenarioTotalBlock(scenario) {
   const acc = accommodationTotals(scenario);
   return /* HTML */ `<div class="acc-recap">
-    <div class="acc-recap-title">Total général</div>
+    <div class="acc-recap-head">
+      <div class="acc-recap-title">Total général</div>
+      ${recapFoldAllButton()}
+    </div>
     ${recapGroup(
       'accommodations',
       'Hébergements',
@@ -49,6 +52,25 @@ function recapGroup(key, title, total, rows) {
     </summary>
     ${rows} ${recapRow('Total', total, 'acc-recap-sub acc-recap-subtotal')}
   </details>`;
+}
+
+// Les trois familles se déplient d'un geste : on lit le bloc entier ou on n'en garde que les
+// totaux, sans passer par chacune.
+const RECAP_GROUPS = ['accommodations', 'charges', 'attractions'];
+
+function recapFoldAllButton() {
+  const allOpen = RECAP_GROUPS.every(recapFoldOpen);
+  return /* HTML */ `<button class="acc-recap-fold-all" onclick="setAllRecapFolds(${!allOpen})">
+    ${allOpen ? 'Tout replier' : 'Tout déplier'}
+  </button>`;
+}
+
+function setAllRecapFolds(open) {
+  RECAP_GROUPS.forEach((key) => {
+    prefs.recapFolds[key] = open;
+  });
+  persistPrefs();
+  render();
 }
 
 function recapFoldOpen(key) {

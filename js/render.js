@@ -41,6 +41,19 @@ function navBtn(key, icon, label) {
   </button>`;
 }
 
+let viewHeaderObserver;
+
+// Sticky blocks below the header offset themselves from its height, which wraps with the window.
+function trackViewHeaderHeight(main) {
+  if (viewHeaderObserver) viewHeaderObserver.disconnect();
+  const header = main.querySelector('.view-header');
+  if (!header) return main.style.setProperty('--view-header-h', '0px');
+  viewHeaderObserver = new ResizeObserver(() =>
+    main.style.setProperty('--view-header-h', `${header.offsetHeight}px`),
+  );
+  viewHeaderObserver.observe(header);
+}
+
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
@@ -58,4 +71,5 @@ function renderMain() {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);
   } else if (view === 'notes') main.innerHTML = renderNotesView();
+  trackViewHeaderHeight(main);
 }

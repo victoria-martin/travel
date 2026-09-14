@@ -1,10 +1,13 @@
-const UNSET_ACCOMMODATION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
+// Les quatre types se répartissent sur quatre teintes distinctes de la palette : deux couleurs de
+// même teinte à des clartés différentes ne se lisent pas comme deux catégories, ni sur la carte ni
+// dans la bande d'itinéraire d'un scénario.
+const UNSET_ACCOMMODATION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#C4B9A3' };
 
 const ACCOMMODATION_TYPES = {
   airbnb: {
     label: 'Airbnb',
     emoji: '🛏️',
-    color: '#D4726A',
+    color: '#C98A3E',
     aliases: ['airbnb', 'air bnb', 'bnb'],
   },
   homeExchange: {

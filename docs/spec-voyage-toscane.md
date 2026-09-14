@@ -162,7 +162,9 @@ importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne
 filtre de type — et se trie **après** toutes les valeurs connues.
 
 > Les deux listes vivent dans une map unique qui pilote à la fois les selects, les couleurs de la
-> carte et l'ordre de départ de leur colonne. Cet ordre est celui du workflow, et le lecteur le
+> carte et de la bande d'itinéraire, et l'ordre de départ de leur colonne. Les quatre types portent
+> quatre teintes distinctes de la palette — rouille, ocre, sauge, vert profond — parce que deux
+> couleurs de même teinte à des clartés différentes ne se lisent pas comme deux catégories. Cet ordre est celui du workflow, et le lecteur le
 > range à sa main depuis le panneau « Trier » — voir le tri des hébergements. Un mot ajouté au
 > vocabulaire prend place après ceux qu'on a déjà rangés.
 
@@ -476,9 +478,22 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **À l'ouverture de l'app** : l'écran de départ est la liste des scénarios. Si le voyage courant
   porte un scénario nommé « TEST », c'est son détail qui s'ouvre directement — un raccourci de
   travail, lu dans le cache local au chargement.
-- **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
-  tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
-  « (copie) »), supprimer.
+- **Liste** : une carte par scénario. En tête, l'étoile de favori, le nom, et la pastille du
+  scénario **choisi** — pleine et ocre sur celui qui est retenu, simple invite « choisir » au
+  survol des autres ; la carte retenue porte en plus un liseré ocre à son bord gauche. Dessous,
+  ses nuits et son nombre d'étapes. À droite, le total en euros en gros, puis
+  le total en GuestPoints s'il y en a et le prix par nuit — qui ne compte que les euros, les
+  GuestPoints ne se ramenant pas à une nuit. L'ordre de la liste est le choisi, puis les favoris,
+  puis les autres. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
+  « (copie) »), supprimer — les deux dernières n'apparaissent qu'au survol de la carte.
+- **La bande d'itinéraire** ferme chaque carte : un segment par lieu du trajet, dans l'ordre, large
+  comme ses nuits et peint de la couleur du type d'hébergement (gris quand aucun n'est posé). Elle
+  porte ses dates à ses deux bouts, chacune sous un tiret : le départ à gauche, le retour là où
+  elle s'arrête — donc plus tôt que celui d'un scénario plus long. Son échelle est celle de la
+  liste entière — le scénario le plus long tient toute la largeur, les autres se mesurent contre
+  lui — de sorte qu'une durée se compare sans lire un chiffre. Le nom du lieu s'écrit sous son
+  segment, sauf sous 8 % de la barre où il ne tiendrait pas : il reste alors dans l'infobulle. Un
+  scénario sans étape affiche « Aucune étape ».
 - **Comparer** : le bouton ⚖ de l'en-tête bascule la liste en mode compare. Chaque ligne gagne alors
   une case à cocher et la cliquer coche au lieu d'ouvrir le scénario ; les scénarios cochés se
   posent sous la liste, côte à côte dans la largeur, une carte chacun. La carte porte le nom, le
@@ -575,7 +590,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   des familles, puisqu'ils ne s'additionnent à rien.
 - **Une famille se déplie au chevron** et porte son détail, fermé par une ligne « Total ». Son
   montant se lit en face de son titre, repliée comme dépliée, et la ligne de pied le redit sous le
-  détail. Chaque famille garde son propre dépli d'une session à l'autre, comme la carte.
+  détail. Chaque famille garde son propre dépli d'une session à l'autre, comme la carte, et
+  « Tout déplier / Tout replier », en face du titre du bloc, les mène toutes les trois d'un geste.
 - **Le détail des hébergements** : une ligne par lieu (lieu · nuits · dates · total), **dans
   l'ordre du trajet** — un lieu revisité tient sur une seule ligne, ses nuits additionnées et ses
   dates listées, placée à sa première date. Une dernière étape sans nuit ferme la liste avec sa

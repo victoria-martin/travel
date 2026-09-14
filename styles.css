@@ -12,6 +12,8 @@
   --rust: #a6462e;
   --sage: #7c8b5e;
   --white: #ffffff;
+  --main-pad-x: 40px;
+  --main-pad-y: 32px;
 }
 
 * {
@@ -30,7 +32,8 @@ body {
 }
 #app {
   display: flex;
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 /* ---------- Sidebar ---------- */
@@ -43,6 +46,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  overflow-y: auto;
 }
 .travel-selector {
   position: relative;
@@ -206,16 +210,22 @@ body {
 /* ---------- Main ---------- */
 .main {
   flex: 1;
-  padding: 32px 40px;
+  padding: 0 var(--main-pad-x) var(--main-pad-y);
   min-width: 0;
+  overflow-y: auto;
 }
 .view-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 22px;
+  margin: 0 calc(var(--main-pad-x) * -1) 14px;
+  padding: var(--main-pad-y) var(--main-pad-x) 8px;
   gap: 16px;
   flex-wrap: wrap;
+  background: var(--paper);
 }
 .view-header-actions {
   display: flex;
@@ -866,29 +876,170 @@ tr:hover td {
 .scenario-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
-.scenario-row {
+.scenario-card {
+  position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 24px;
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px 18px;
+  border-left: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px 18px;
   cursor: pointer;
 }
-.scenario-row:hover {
+.scenario-card:hover {
   border-color: var(--stone);
 }
-.scenario-row h4 {
-  margin: 0 0 3px 0;
-  font-family: 'Fraunces', serif;
-  font-size: 16px;
+.scenario-card.is-chosen {
+  border-left-color: var(--ochre);
 }
-.scenario-row span {
+.scenario-card-body {
+  min-width: 0;
+  flex: 1;
+}
+.scenario-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.scenario-card-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scenario-card-meta {
   font-size: 12.5px;
   color: var(--ink-soft);
+  margin-top: 3px;
+}
+/* Les chiffres restent en IBM Plex, comme partout ailleurs : Fraunces est la voix des titres, et
+   ses chiffres à empattements se comparent mal d'une carte à l'autre. */
+.scenario-card-money {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.scenario-card-total {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 1px;
+}
+/* Les actions vivent sous la bande, la seule zone libre : en haut elles couvriraient le total. */
+.scenario-card-actions {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+.scenario-card:hover .scenario-card-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* La pastille du scénario retenu ; sur les autres cartes elle n'est qu'une invite au survol. */
+.scenario-chosen-pill {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+}
+.scenario-card:hover .scenario-chosen-pill {
+  opacity: 1;
+}
+.scenario-chosen-pill.is-chosen {
+  opacity: 1;
+  border-color: var(--ochre);
+  background: var(--ochre);
+  color: var(--white);
+}
+
+/* La bande d'itinéraire : sa largeur est celle du voyage dans la liste, ses segments les lieux. */
+.scenario-route {
+  margin-top: 20px;
+  min-width: 120px;
+}
+/* Un tiret à chaque bout de la bande : le départ à gauche, le retour là où la bande s'arrête. */
+.scenario-route-dates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.scenario-route-dates span {
+  position: relative;
+  padding-bottom: 9px;
+}
+.scenario-route-dates span::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: 7px;
+  background: var(--ink-soft);
+  opacity: 0.5;
+}
+.scenario-route-dates span:first-child::after {
+  left: 0;
+}
+.scenario-route-dates span:last-child::after {
+  right: 0;
+}
+/* Deux séjours voisins du même type ne feraient qu'un bloc : le fond de la carte les sépare. */
+.scenario-route-bar {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.scenario-route-seg {
+  min-width: 3px;
+}
+.scenario-route-legend {
+  display: flex;
+  margin-top: 8px;
+}
+.scenario-route-name {
+  font-size: 11px;
+  color: var(--ink-soft);
+  min-width: 0;
+  padding-right: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scenario-route-empty {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--line);
+  padding-top: 6px;
 }
 .scenario-compare-check {
   width: 16px;
@@ -1310,7 +1461,7 @@ tr:hover td {
 }
 .scenario-detail-side {
   position: sticky;
-  top: 24px;
+  top: calc(var(--view-header-h, 0px) + 24px);
 }
 @media (max-width: 1100px) {
   .scenario-detail-cols {
@@ -1345,11 +1496,29 @@ tr:hover td {
   border-radius: 10px;
   padding: 14px 16px;
 }
+.acc-recap-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
 .acc-recap-title {
   font-size: 12px;
   font-weight: 700;
   color: var(--ink-soft);
   margin-bottom: 8px;
+}
+.acc-recap-fold-all {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+}
+.acc-recap-fold-all:hover {
+  color: var(--ink);
 }
 .acc-recap-row {
   display: grid;
@@ -1636,8 +1805,9 @@ tr:hover td {
     font-size: 19px;
     width: auto;
   }
-  .main {
-    padding: 20px;
+  :root {
+    --main-pad-x: 20px;
+    --main-pad-y: 20px;
   }
   .map-layout {
     flex-direction: column;

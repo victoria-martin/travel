@@ -1,9 +1,7 @@
 let activeScenarioId = null;
 
 function renderScenariosView() {
-  const items = ofCurrentTravel(state.scenarios).sort(
-    (a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0),
-  );
+  const items = ofCurrentTravel(state.scenarios).sort((a, b) => scenarioRank(a) - scenarioRank(b));
   return /* HTML */ `
     ${scenariosHeader()}
     ${
@@ -12,6 +10,11 @@ function renderScenariosView() {
         : scenarioList(items) + (compareMode ? scenarioCompare(items) : '')
     }
   `;
+}
+
+// Le scénario retenu ouvre la liste, les favoris le suivent : on lit d'abord ce qui est décidé.
+function scenarioRank(s) {
+  return s.isChosen ? 0 : s.favorite ? 1 : 2;
 }
 
 function toggleScenarioFavorite(id) {

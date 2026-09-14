@@ -10,15 +10,14 @@ function chosenScenario() {
   return ofCurrentTravel(state.scenarios).find((s) => s.isChosen) || null;
 }
 
-function chosenScenarioButton(s) {
+// L'état se lit sans survol sur le scénario retenu ; sur les autres, l'invite n'apparaît qu'au
+// survol de la carte, sinon la liste porterait autant d'appels à l'action que de lignes.
+function chosenScenarioPill(s) {
   return /* HTML */ `<button
-    class="icon-btn"
-    style="border:none; font-size:15px; flex-shrink:0; color:${
-      s.isChosen ? '#C98A3E' : 'var(--line)'
-    };"
-    onclick="setChosenScenario('${s.id}')"
+    class="scenario-chosen-pill ${s.isChosen ? 'is-chosen' : ''}"
+    onclick="event.stopPropagation(); setChosenScenario('${s.id}')"
     title="${s.isChosen ? 'Ne plus être le scénario choisi' : 'Scénario choisi'}"
   >
-    ${s.isChosen ? '◉' : '○'}
+    ${s.isChosen ? '● choisi' : 'choisir'}
   </button>`;
 }

@@ -1,47 +1,30 @@
-function scenarioRow(s) {
+function scenarioRow(s, maxNights) {
   const count = visibleSteps(s).length;
-  const dates = scenarioDateRange(s);
-  const rate = scenarioNightRate(s);
-  const guestPoints = scenarioTotal(s).guestPoints;
+  const total = scenarioTotal(s);
+  const meta = [nightsLabel(totalNights(s)), `${count} étape${count > 1 ? 's' : ''}`];
   return /* HTML */ `<div
-    class="scenario-row"
+    class="scenario-card ${s.isChosen ? 'is-chosen' : ''}"
     onclick="${compareMode ? `toggleComparedScenario('${s.id}')` : `openScenario('${s.id}')`}"
   >
-    <div style="display:flex; gap:10px; align-items:center;">
-      ${compareMode ? scenarioCompareCheck(s) : ''}
-      <span onclick="event.stopPropagation();">
-        ${chosenScenarioButton(s)} ${favoriteStar(s.favorite, `toggleScenarioFavorite('${s.id}')`)}
-      </span>
-      <div>
-        <h4>${escapeHtml(s.name)}</h4>
-        <span
-          >${[nightsLabel(totalNights(s)), dates, `${count} étape${count > 1 ? 's' : ''}`]
-            .filter(Boolean)
-            .join(' — ')}</span
-        >
+    <div class="scenario-card-body">
+      <div class="scenario-card-head">
+        ${compareMode ? scenarioCompareCheck(s) : ''}
+        ${favoriteStar(s.favorite, `event.stopPropagation(); toggleScenarioFavorite('${s.id}')`)}
+        <h4 class="scenario-card-name">${escapeHtml(s.name)}</h4>
+        ${chosenScenarioPill(s)}
       </div>
+      <div class="scenario-card-meta">${meta.join(' · ')}</div>
+      ${scenarioRouteBar(s, maxNights)}
     </div>
-    <div style="display:flex; gap:18px; align-items:center;">
-      <div style="display:flex; flex-direction:column; align-items:flex-end;">
-        <strong>${formatEuros(scenarioTotal(s).euros)}</strong>
-        ${guestPoints ? `<span>${formatGuestPoints(guestPoints)}</span>` : ''}
-        ${rate ? `<span>${rate}</span>` : ''}
-      </div>
-      <div style="display:flex; gap:6px;" onclick="event.stopPropagation();">
-        ${duplicateButton(`duplicateScenario('${s.id}')`)} ${deleteButton('scenarios', s.id)}
-      </div>
+    <div class="scenario-card-money">
+      <strong class="scenario-card-total">${formatEuros(total.euros)}</strong>
+      ${total.guestPoints ? `<span>${formatGuestPoints(total.guestPoints)}</span>` : ''}
+      ${scenarioNightRate(s) ? `<span>${scenarioNightRate(s)}</span>` : ''}
+    </div>
+    <div class="scenario-card-actions" onclick="event.stopPropagation();">
+      ${duplicateButton(`duplicateScenario('${s.id}')`)} ${deleteButton('scenarios', s.id)}
     </div>
   </div>`;
-}
-
-// Le scénario part de sa date de départ et dure ses nuits : ses étapes n'ont pas à être parcourues.
-function scenarioDateRange(s) {
-  const start = stepArrival(s, 0);
-  if (!start) return '';
-  const nights = totalNights(s);
-  if (!nights) return escapeHtml(formatStepDay(start));
-  const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + nights);
-  return escapeHtml(`${formatStepDay(start)} → ${formatStepDay(end)}`);
 }
 
 // Les GuestPoints ne se ramènent pas à une nuit en euros : le prix par nuit ne compte que les euros.
