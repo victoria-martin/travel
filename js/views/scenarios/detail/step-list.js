@@ -14,6 +14,7 @@ function stepList(scenario) {
 
 function stepInsertGap(scenario, index) {
   return /* HTML */ `<div class="step-gap">
+    ${stepLegSlot(scenario, index)}
     ${inlineDropdown(
       `insert-step:${index}`,
       'insert-step-dropdown',

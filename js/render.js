@@ -53,6 +53,7 @@ function renderMain() {
   else if (view === 'scenario-detail') {
     main.innerHTML = renderScenarioDetailView();
     setTimeout(initScenarioDetailMap, 30);
+    fillStepLegs();
   } else if (view === 'carte') {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);
