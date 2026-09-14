@@ -25,7 +25,14 @@ function homeExchangeAccommodationForm(p) {
     <div class="field-row">
       <div class="field">
         <label>GP / nuit</label
-        ><input id="f-price" type="text" value="${escapeHtml(p.price)}" placeholder="140" />
+        ><input
+          id="f-price"
+          type="text"
+          value="${escapeHtml(p.price)}"
+          placeholder="140"
+          title="Un calcul marche aussi : =625/4"
+          onblur="applyPriceFormula(this)"
+        />
       </div>
       <div class="field">
         <label>Dates</label

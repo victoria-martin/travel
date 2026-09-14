@@ -19,13 +19,19 @@ COLUMN_SETS.attractions = [
     key: 'type',
     label: 'Type',
     cell: attractionTypeCell,
-    sortValue: (a) => dictSortIndex(ATTRACTION_TYPES, attractionTypeKey(a.type)),
+    sortValue: (a) => attractionTypeKey(a.type),
+    sortOrder: { key: 'attractionType', dict: ATTRACTION_TYPES, label: 'Ordre des types' },
   },
   {
     key: 'status',
     label: 'Statut',
     cell: attractionStatusCell,
-    sortValue: (a) => dictSortIndex(ATTRACTION_STATUSES, attractionStatusKey(a.status)),
+    sortValue: (a) => attractionStatusKey(a.status),
+    sortOrder: {
+      key: 'attractionStatus',
+      dict: ATTRACTION_STATUSES,
+      label: 'Ordre des statuts',
+    },
   },
   {
     key: 'price',

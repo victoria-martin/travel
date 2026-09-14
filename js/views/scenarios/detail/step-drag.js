@@ -21,36 +21,23 @@ function startStepDrag(event, stepId) {
   card.classList.add('step-dragging');
 }
 
-function overStepTopHalf(card, clientY) {
-  const box = card.getBoundingClientRect();
-  return clientY < box.top + box.height / 2;
-}
-
-function markStepDrop(card, clientY) {
-  document
-    .querySelectorAll('.step-drop-before, .step-drop-after')
-    .forEach((marked) => marked.classList.remove('step-drop-before', 'step-drop-after'));
-  if (card)
-    card.classList.add(overStepTopHalf(card, clientY) ? 'step-drop-before' : 'step-drop-after');
-}
-
 function overStepCard(event) {
   if (!draggedStep) return;
   event.preventDefault();
-  markStepDrop(event.currentTarget, event.clientY);
+  markDrop(event.currentTarget, event.clientY, 'step-drop-before', 'step-drop-after');
 }
 
 function dropOnStepCard(event, scenarioId, stepId) {
   if (!draggedStep) return;
   event.preventDefault();
-  const [dragged, before] = [draggedStep, overStepTopHalf(event.currentTarget, event.clientY)];
+  const [dragged, before] = [draggedStep, overTopHalf(event.currentTarget, event.clientY)];
   endStepDrag();
   moveStepBefore(scenarioId, dragged, stepId, before);
 }
 
 function endStepDrag() {
   draggedStep = '';
-  markStepDrop(null);
+  markDrop(null, 0, 'step-drop-before', 'step-drop-after');
   document
     .querySelectorAll('.step-dragging')
     .forEach((card) => card.classList.remove('step-dragging'));

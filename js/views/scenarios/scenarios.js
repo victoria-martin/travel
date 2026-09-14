@@ -9,7 +9,7 @@ function renderScenariosView() {
     ${
       items.length === 0
         ? emptyState('Aucun scénario', 'Crée un premier scénario pour poser tes étapes.')
-        : scenarioList(items)
+        : scenarioList(items) + (compareMode ? scenarioCompare(items) : '')
     }
   `;
 }

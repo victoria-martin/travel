@@ -407,10 +407,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
   repartent à zéro une fois. La page Dépenses ajoute un troisième nom : sa clé de `view` est
   `depenses`, ses clés de `listViewMode`, `COLUMN_SETS` et `prefs.sort` sont restées `charges`.
-- **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire : 95 lignes à plat alors
-  que `js/views/accommodations/` existe, et trois responsabilités dans le même fichier — le render,
-  les filtres (`listFilters`, `tagFilterBlock`, `toggleTagFilter`, `toggleFavOnly`, tous lus par
-  [header.js](js/views/accommodations/header.js)) et les setters (`setAccommodationType`/`Status` →
+- **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire : 58 lignes à plat alors
+  que `js/views/accommodations/` existe. Les filtres en sont sortis dans
+  [filters.js](js/views/accommodations/filters.js) et
+  [filter-panel.js](js/views/accommodations/filter-panel.js) ; restent le render et les setters
+  (`setAccommodationType`/`Status` →
   [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).

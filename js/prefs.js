@@ -8,8 +8,9 @@ const PREFS_KEY = 'voyage-toscane-prefs';
 let prefs = {
   hiddenColumns: {},
   showScenarioMap: true,
-  showAccommodationDetail: true,
+  recapFolds: {},
   sort: {},
+  sortOrder: {},
   showButtonLabels: true,
 };
 

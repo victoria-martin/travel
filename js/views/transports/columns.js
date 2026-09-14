@@ -13,7 +13,8 @@ COLUMN_SETS.transports = [
     label: 'Mode',
     locked: true,
     cell: transportModeCell,
-    sortValue: (t) => dictSortIndex(TRANSPORT_MODES, transportModeKey(t.mode)),
+    sortValue: (t) => transportModeKey(t.mode),
+    sortOrder: { key: 'transportMode', dict: TRANSPORT_MODES, label: 'Ordre des modes' },
   },
   {
     key: 'from',
@@ -54,7 +55,12 @@ COLUMN_SETS.transports = [
     key: 'status',
     label: 'Statut',
     cell: transportStatusCell,
-    sortValue: (t) => dictSortIndex(TRANSPORT_STATUSES, transportStatusKey(t.status)),
+    sortValue: (t) => transportStatusKey(t.status),
+    sortOrder: {
+      key: 'transportStatus',
+      dict: TRANSPORT_STATUSES,
+      label: 'Ordre des statuts',
+    },
   },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: transportNotesCell },

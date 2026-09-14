@@ -13,13 +13,23 @@ const ACCOMMODATION_COLUMNS = [
     key: 'type',
     label: 'Type',
     cell: accommodationTypeCell,
-    sortValue: (a) => dictSortIndex(ACCOMMODATION_TYPES, accTypeKey(a.type)),
+    sortValue: (a) => accTypeKey(a.type),
+    sortOrder: {
+      key: 'accommodationType',
+      dict: ACCOMMODATION_TYPES,
+      label: 'Ordre des types',
+    },
   },
   {
     key: 'status',
     label: 'Statut',
     cell: accommodationStatusCell,
-    sortValue: (a) => dictSortIndex(ACCOMMODATION_STATUSES, accStatusKey(a.status)),
+    sortValue: (a) => accStatusKey(a.status),
+    sortOrder: {
+      key: 'accommodationStatus',
+      dict: ACCOMMODATION_STATUSES,
+      label: 'Ordre des statuts',
+    },
   },
   {
     key: 'city',

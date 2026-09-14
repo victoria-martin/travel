@@ -60,6 +60,29 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-14** — comparer est un **mode de la liste** des scénarios et non une vue à elle : les
+  lignes restent, elles gagnent une case, et les scénarios cochés se posent sous la liste dans
+  [js/views/scenarios/compare/](js/views/scenarios/compare/) — `mode.js` pour la sélection,
+  `cards.js` pour la rangée, `card.js` pour la carte, sur le découpage de `list/`. La carte ne
+  calcule rien : elle rappelle `accommodationDetailRows` et les totaux de
+  [money.js](js/views/scenarios/money.js), ceux-là mêmes que le Total général du détail — une
+  seconde écriture du récap les ferait diverger. La sélection vit dans une globale du module, comme
+  `activeScenarioId` : ce n'est pas une préférence qu'on retrouve, c'est le geste en cours.
+
+- **2026-09-14** — un critère de tri portant un vocabulaire (statut, type, mode) ne se renverse
+  pas, il se **range** : `croissant / décroissant` ne dit rien de dix statuts, l'ordre des mots
+  oui. La colonne déclare donc un `sortOrder` — le dictionnaire, son libellé, et la clé sous
+  laquelle son ordre vit dans `prefs` — et son `sortValue` redevient le mot brut, c'est
+  [sort-order.js](js/sort-order.js) qui le classe ; `dictSortIndex` disparaît, il calculait ce
+  rang depuis le seul ordre de déclaration. Ce qui est rangé n'est que ce qu'on a posé : un mot
+  ajouté au code plus tard tombe après, à la place que sa déclaration lui donne. Le second champ
+  du niveau devient alors le menu de ces mots
+  ([sort-order-menu.js](js/sort-order-menu.js)) au lieu du select de sens, et une colonne de
+  vocabulaire perd le `desc` — l'en-tête y cycle croissant → aucun, sans quoi le panneau porterait
+  un sens qu'il ne sait pas montrer. Le glisser étant le second de l'app, le marquage de la ligne
+  de dépôt sort dans [drag.js](js/views/drag.js), comme le board l'avait fait pour ses deux
+  familles, et [step-drag.js](js/views/scenarios/detail/step-drag.js) le partage.
+
 - **2026-09-13** — `js/views/map.js` devient le dossier [js/views/map/](js/views/map/) quand la
   carte cesse d'être celle des hébergements : [filters.js](js/views/map/filters.js) tient l'état et
   les bascules, [filter-panel.js](js/views/map/filter-panel.js) le panneau,

@@ -17,7 +17,8 @@ COLUMN_SETS.voitures = [
     key: 'status',
     label: 'Statut',
     cell: carStatusCell,
-    sortValue: (c) => dictSortIndex(CAR_STATUSES, carStatusKey(c.status)),
+    sortValue: (c) => carStatusKey(c.status),
+    sortOrder: { key: 'carStatus', dict: CAR_STATUSES, label: 'Ordre des statuts' },
   },
   {
     key: 'pricePerDay',

@@ -54,6 +54,8 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   euros. Ils ont leur propre ligne de total.
 - Un prix se saisit en texte libre (`120`, `1 200,50 €`) : seul le nombre est extrait pour les
   calculs, l'affichage garde la saisie.
+- Un champ prix accepte un **calcul** : une saisie commençant par `=` (`=625/4`) est évaluée quand
+  le champ perd le focus, et remplacée par son résultat arrondi à l'entier.
 - **Une dépense se corrige à sa source** : la page Dépenses lit les montants portés par les autres
   entités — un hébergement réservé, la voiture par défaut — et ne les édite jamais. Seules les
   charges fixes se saisissent là, parce qu'elles n'ont pas d'autre page. D'où les deux blocs,
@@ -160,7 +162,9 @@ importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne
 filtre de type — et se trie **après** toutes les valeurs connues.
 
 > Les deux listes vivent dans une map unique qui pilote à la fois les selects, les couleurs de la
-> carte et l'ordre de tri de leur colonne. Les réordonner change le tri.
+> carte et l'ordre de départ de leur colonne. Cet ordre est celui du workflow, et le lecteur le
+> range à sa main depuis le panneau « Trier » — voir le tri des hébergements. Un mot ajouté au
+> vocabulaire prend place après ceux qu'on a déjà rangés.
 
 ---
 
@@ -222,8 +226,18 @@ La vue principale, en **tableau ou en cartes**.
   chacun avec son sens, réordonnable. Le clic sur un en-tête est le raccourci : il remplace tout
   par un tri simple et cycle croissant → décroissant → aucun. Tri de départ : favoris, puis type,
   puis statut. Les favoris sont un critère comme un autre.
-- **Filtres** : ⭐ favoris uniquement — un bouton à part, toujours visible — et par tag dans le
-  panneau « Filtrer », un hébergement sortant dès qu'il porte **un** des tags cochés.
+- **Un critère de vocabulaire se trie en rangeant ses mots** : sur type, statut ou mode, croissant
+  et décroissant ne veulent rien dire — c'est l'ordre des statuts qui fait le tri. Le second champ
+  du niveau ouvre donc la liste des mots, qu'on glisse l'un au-dessus de l'autre ; l'ordre obtenu
+  vaut pour toute l'app et se garde d'une session à l'autre, à côté des colonnes masquées. Ces
+  colonnes n'ont pas de sens inverse : l'en-tête y cycle croissant → aucun.
+- **Filtres** : ⭐ favoris uniquement — un bouton à part, toujours visible — et quatre axes dans le
+  panneau « Filtrer » : type, statut, ville, tags. Chaque axe est une rangée des pastilles qu'on lit
+  déjà dans la liste, et on filtre en cliquant celle qu'on voit. Un axe ne propose que les valeurs
+  qu'un hébergement porte vraiment, et disparaît s'il n'en reste qu'une : un statut que personne n'a
+  ne filtrerait rien. Au sein d'un axe les valeurs s'additionnent — un hébergement sort dès qu'il
+  porte **une** des pastilles allumées — et les axes se croisent. Au-delà de huit villes, un champ
+  de recherche réduit la liste sans masquer les pastilles déjà allumées.
 - **Édition en ligne** : type, statut, prix et notes se changent directement dans la ligne comme
   dans la carte, sans ouvrir la fiche. Le prix garde sa monnaie (€ ou GP) affichée à côté du champ.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
@@ -465,6 +479,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Liste** : nom, nombre d'étapes, total des nuits, étoile de favori — les favoris remontent en
   tête. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
   « (copie) »), supprimer.
+- **Comparer** : le bouton ⚖ de l'en-tête bascule la liste en mode compare. Chaque ligne gagne alors
+  une case à cocher et la cliquer coche au lieu d'ouvrir le scénario ; les scénarios cochés se
+  posent sous la liste, côte à côte dans la largeur, une carte chacun. La carte porte le nom, le
+  détail des hébergements — le même que celui du Total général du détail, lieu par lieu, avec ses
+  dates, ses nuits et son coût —, puis le total des hébergements, celui des charges, celui des
+  attractions, et le total général avec les nuits. Charges et attractions ne montrent que leur
+  total : leur détail se lit dans le scénario. La sélection ne dure que la session, comme le
+  scénario ouvert.
 - **Date de départ** : un champ dans l'en-tête du détail. Il date la première étape, et les nuits
   de chaque étape décalent les suivantes. Sans date de départ, aucune date ne s'affiche.
 - **Détail**, en deux colonnes : étapes + voiture + total général à gauche, bloc « Trajet » dans une
@@ -508,8 +530,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
   tronçon qui enjamberait une étape masquée ou sans lieu ne dirait pas la distance des deux cartes
   qu'on lit. Le `＋` d'insertion sort à droite du libellé au survol.
-- **Le select de lieu** : deux groupes, Villes puis Hébergements, chacun trié par nom. Les
-  hébergements favoris passent en tête de leur groupe, précédés d'une ★.
+- **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
+  — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
+  passent en tête, précédés d'une ★, le reste est trié par nom.
 - **Les lignes d'une étape** : sous la ligne du lieu, et sous l'hébergement de chaque card
   d'option, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
   précédé de l'emoji de son type (💶 pour une dépense) prend la largeur, le nombre et le montant
@@ -532,9 +555,10 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   flèches : il n'y en a jamais deux en avant.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
-  rattachée à une ville — seul un hébergement porte un prix. Ses lignes se comptent à part, sur la
-  ligne « Activités et dépenses » du Total général : celles de l'étape plus celles de l'option
-  retenue, les autres options étant des comparaisons.
+  rattachée à une ville — seul un hébergement porte un prix. Ses lignes se comptent à part et se rangent
+  par genre dans le Total général — une activité dans la famille Attractions, une dépense avec les
+  Charges : celles de l'étape plus celles de l'option retenue, les autres options étant des
+  comparaisons.
 - **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
   / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
   Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
@@ -545,15 +569,20 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   « Rattacher une dépense » liste celles du voyage qui ne le sont pas encore, « Ajouter une
   dépense » ouvre la modale Dépenses et rattache la nouvelle au retour. Le ✕ retire du scénario
   sans supprimer la dépense, qui reste sur la page Dépenses.
-- **Total général**, le seul bloc de chiffres de l'écran : une ligne par poste (hébergements,
-  hébergements en GP si le scénario en compte, voiture, dépenses rattachées), puis le total des
-  nuits et le montant. Les GuestPoints y gardent leur propre montant, à côté des euros.
-- **Le détail des hébergements se déplie** sous la ligne « Hébergements », au chevron : une ligne
-  par lieu (lieu · nuits · dates · total), **dans l'ordre du trajet** — un lieu revisité tient sur
-  une seule ligne, ses nuits additionnées et ses dates listées, placée à sa première date. Une
-  dernière étape sans nuit ferme la liste avec sa seule date d'arrivée. Le dépli est retenu d'une
-  session à l'autre, comme la carte. Les nuits en home exchange y figurent avec leur montant en
-  GuestPoints, dont la somme est la ligne « Hébergements en GP » juste en dessous.
+- **Total général**, le seul bloc de chiffres de l'écran : trois familles — Hébergements, Charges
+  (voiture, dépenses), Attractions — puis le total des nuits et le montant. Les GuestPoints y
+  gardent leur propre montant, à côté des euros : « Hébergements en GP » est une ligne à part, hors
+  des familles, puisqu'ils ne s'additionnent à rien.
+- **Une famille se déplie au chevron** et porte son détail, fermé par une ligne « Total ». Son
+  montant se lit en face de son titre, repliée comme dépliée, et la ligne de pied le redit sous le
+  détail. Chaque famille garde son propre dépli d'une session à l'autre, comme la carte.
+- **Le détail des hébergements** : une ligne par lieu (lieu · nuits · dates · total), **dans
+  l'ordre du trajet** — un lieu revisité tient sur une seule ligne, ses nuits additionnées et ses
+  dates listées, placée à sa première date. Une dernière étape sans nuit ferme la liste avec sa
+  seule date d'arrivée. Les nuits en home exchange y figurent avec leur montant en GuestPoints.
+- **Le détail des attractions** : une ligne par activité rattachée aux étapes, dans l'ordre du
+  trajet, avec son nombre quand il dépasse un. Une dépense rattachée à une étape n'y figure pas :
+  elle grossit la ligne « Dépenses » des Charges, aux côtés des dépenses du scénario.
 - **Les totaux se calculent par étape** : le coût d'une étape (budget saisi, sinon prix/nuit ×
   nuits) alimente aussi bien la ligne de son lieu que les totaux du scénario.
 - **Trajet** : une pastille par étape portant sa lettre, le tracé routier réel, et des chevrons

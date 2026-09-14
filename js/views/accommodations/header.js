@@ -11,7 +11,7 @@ function accommodationsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${mode === 'table' ? sortPanel('hebergements') : ''} ${filterPanel([tagFilterBlock()])}
+      ${mode === 'table' ? sortPanel('hebergements') : ''} ${filterPanel(accommodationFilterBlocks())}
       ${mode === 'table' ? columnPicker('hebergements') : ''}
       ${toolbarButton({
         icon: '⭐',

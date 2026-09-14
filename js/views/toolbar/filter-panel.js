@@ -10,6 +10,6 @@ function filterPanel(blocks) {
     icon: '▽',
     label: 'Filtrer',
     count: own.reduce((total, block) => total + block.count, 0),
-    body: own.map((block) => block.html).join(''),
+    body: `<div class="filter-panel">${own.map((block) => block.html).join('')}</div>`,
   });
 }

@@ -1,3 +1,17 @@
+// Les lignes du récap : une famille au premier niveau, son détail en retrait, et la ligne qui la
+// ferme sur son total.
+function recapRow(label, amount, className) {
+  return /* HTML */ `<div class="acc-recap-row${className ? ` ${className}` : ''}">
+    <span>${label}</span>
+    <span></span>
+    <strong>${amount}</strong>
+  </div>`;
+}
+
+function recapSubRow(label, amount) {
+  return recapRow(label, amount, 'acc-recap-sub');
+}
+
 function scenarioRecapRow(r) {
   const cost = placeCost(r);
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub">

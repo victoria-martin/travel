@@ -92,14 +92,19 @@ function fixedCostsTotal(scenario) {
     .reduce((sum, c) => sum + priceNumber(c.amount), 0);
 }
 
+// Les dépenses du scénario et celles rattachées à ses étapes se comptent ensemble.
+function scenarioExpensesTotal(scenario) {
+  return fixedCostsTotal(scenario) + scenarioExtraCostsTotal(scenario);
+}
+
+function scenarioChargesTotal(scenario) {
+  return carTotal(scenario) + scenarioExpensesTotal(scenario);
+}
+
 function scenarioTotal(scenario) {
   const acc = accommodationTotals(scenario);
   return {
-    euros:
-      acc.euros.amount +
-      carTotal(scenario) +
-      fixedCostsTotal(scenario) +
-      scenarioExtrasTotal(scenario),
+    euros: acc.euros.amount + scenarioChargesTotal(scenario) + scenarioAttractionsTotal(scenario),
     guestPoints: acc.guestPoints.amount,
   };
 }

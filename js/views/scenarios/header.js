@@ -6,6 +6,12 @@ function scenariosHeader() {
     </div>
     <div class="view-header-actions">
       ${toolbarButton({ icon: '+', label: 'Nouveau scénario', onclick: 'createScenario()' })}
+      ${toolbarButton({
+        icon: '⚖',
+        label: 'Comparer',
+        onclick: 'toggleCompareMode()',
+        active: compareMode,
+      })}
       ${toolbarMenu()}
     </div>
   </div>`;

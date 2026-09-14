@@ -2,15 +2,30 @@ function scenarioTotalBlock(scenario) {
   const acc = accommodationTotals(scenario);
   return /* HTML */ `<div class="acc-recap">
     <div class="acc-recap-title">Total général</div>
-    ${scenarioAccommodationRow(scenario, formatEuros(acc.euros.amount))}
+    ${recapGroup(
+      'accommodations',
+      'Hébergements',
+      formatEuros(acc.euros.amount),
+      accommodationDetailRows(scenario),
+    )}
     ${
       acc.guestPoints.amount
-        ? scenarioTotalDetailRow('Hébergements en GP', formatGuestPoints(acc.guestPoints.amount))
+        ? recapRow('Hébergements en GP', formatGuestPoints(acc.guestPoints.amount))
         : ''
     }
-    ${scenarioTotalDetailRow('Voiture', formatEuros(carTotal(scenario)))}
-    ${scenarioTotalDetailRow('Dépenses', formatEuros(fixedCostsTotal(scenario)))}
-    ${scenarioTotalDetailRow('Activités et dépenses', formatEuros(scenarioExtrasTotal(scenario)))}
+    ${recapGroup(
+      'charges',
+      'Charges',
+      formatEuros(scenarioChargesTotal(scenario)),
+      recapSubRow('Voiture', formatEuros(carTotal(scenario))) +
+        recapSubRow('Dépenses', formatEuros(scenarioExpensesTotal(scenario))),
+    )}
+    ${recapGroup(
+      'attractions',
+      'Attractions',
+      formatEuros(scenarioAttractionsTotal(scenario)),
+      attractionDetailRows(scenario),
+    )}
     <div class="acc-recap-row acc-recap-total">
       <span>Total</span>
       <span class="acc-recap-nights">${nightsLabel(totalNights(scenario))}</span>
@@ -19,31 +34,28 @@ function scenarioTotalBlock(scenario) {
   </div>`;
 }
 
-// La ligne Hébergements déplie le détail par lieu : il n'a plus de bloc à lui.
-function scenarioAccommodationRow(scenario, amount) {
+// Une famille porte son détail et se replie pour elle-même. Son montant se lit sur son titre, que
+// le groupe soit ouvert ou non, et la ligne qui ferme le détail le redit au pied.
+function recapGroup(key, title, total, rows) {
   return /* HTML */ `<details
     class="acc-recap-fold"
-    ${prefs.showAccommodationDetail ? 'open' : ''}
-    ontoggle="setAccommodationDetail(this.open)"
+    ${recapFoldOpen(key) ? 'open' : ''}
+    ontoggle="setRecapFold('${key}', this.open)"
   >
     <summary class="acc-recap-row">
-      <span>Hébergements</span>
+      <span>${title}</span>
       <span></span>
-      <strong>${amount}</strong>
+      <strong>${total}</strong>
     </summary>
-    ${accommodationDetailRows(scenario)}
+    ${rows} ${recapRow('Total', total, 'acc-recap-sub acc-recap-subtotal')}
   </details>`;
 }
 
-function setAccommodationDetail(open) {
-  prefs.showAccommodationDetail = open;
-  persistPrefs();
+function recapFoldOpen(key) {
+  return prefs.recapFolds[key] !== false;
 }
 
-function scenarioTotalDetailRow(label, amount) {
-  return /* HTML */ `<div class="acc-recap-row">
-    <span>${label}</span>
-    <span></span>
-    <strong>${amount}</strong>
-  </div>`;
+function setRecapFold(key, open) {
+  prefs.recapFolds[key] = open;
+  persistPrefs();
 }

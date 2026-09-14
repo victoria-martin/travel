@@ -1,8 +1,9 @@
 /*
-  Le second des deux selects d'une option : le lieu. Il se restreint aux hébergements du type
-  retenu, et n'ajoute les villes que lorsqu'aucun type ne l'est. Le menu s'ouvre sur un champ de
-  recherche qui interroge le nom et les niveaux du lieu ; la frappe ne repeint que la liste, sinon
-  le champ perdrait sa saisie à chaque lettre.
+  Le second des deux selects d'une option : le lieu. Les hébergements viennent en premier, un
+  groupe par type et les favoris en tête de chacun ; les villes ferment la liste, et ne sont là que
+  lorsqu'aucun type n'est retenu. Le menu s'ouvre sur un champ de recherche qui interroge le nom et
+  les niveaux du lieu ; la frappe ne repeint que la liste, sinon le champ perdrait sa saisie à
+  chaque lettre.
 */
 function placeOptionLabel(place) {
   const location = placeLevelsLabel(place);
@@ -14,11 +15,13 @@ function pickStepPlace(scenarioId, stepId, optionId, value) {
   setStepPlace(scenarioId, stepId, optionId, value);
 }
 
+// La pastille de type, juste avant, dit déjà de quel hébergement il s'agit : le lieu n'affiche
+// que son nom, qui a besoin de toute la place.
 function optionPlaceLabel(option) {
   const city = getCity(option.cityId);
   if (city) return tagLabel('📍', escapeHtml(city.name));
   const acc = getAccommodation(option.accommodationId);
-  if (acc) return tagLabel(accType(acc.type).emoji, escapeHtml(acc.name));
+  if (acc) return tagLabel('', escapeHtml(acc.name));
   return tagLabel('', 'Aucun lieu choisi');
 }
 
@@ -64,6 +67,18 @@ function placeGroup(title, items) {
   return items.length ? `<div class="inline-menu-group">${title}</div>${items.join('')}` : '';
 }
 
+// Un groupe par type d'hébergement, dans l'ordre du vocabulaire, ceux sans type connu à la fin.
+function accommodationTypeGroups(accommodations, item) {
+  return [...Object.keys(ACCOMMODATION_TYPES), '']
+    .map((key) =>
+      placeGroup(
+        key ? accType(key).label : UNSET_ACCOMMODATION_TYPE.label,
+        accommodations.filter((a) => accTypeKey(a.type) === key).map(item),
+      ),
+    )
+    .join('');
+}
+
 function placeOptions(scenarioId, stepId, optionId) {
   const option = getStepOption(getStep(scenarioId, stepId), optionId);
   const needle = placeSearchQuery(optionId);
@@ -83,7 +98,14 @@ function placeOptions(scenarioId, stepId, optionId) {
   >
     Aucun lieu choisi
   </button>`;
+  const accommodationItem = (a) => `<button
+      class="inline-menu-item ${option.accommodationId === a.id ? 'selected' : ''}"
+      onclick="${pick(`heb:${a.id}`)}"
+    >
+      ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
+    </button>`;
   const groups =
+    accommodationTypeGroups(accommodations, accommodationItem) +
     placeGroup(
       'Villes',
       cities.map(
@@ -92,17 +114,6 @@ function placeOptions(scenarioId, stepId, optionId) {
           onclick="${pick(`ville:${c.id}`)}"
         >
           ${tagLabel('📍', placeOptionLabel(c))}
-        </button>`,
-      ),
-    ) +
-    placeGroup(
-      'Hébergements',
-      accommodations.map(
-        (a) => `<button
-          class="inline-menu-item ${option.accommodationId === a.id ? 'selected' : ''}"
-          onclick="${pick(`heb:${a.id}`)}"
-        >
-          ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
         </button>`,
       ),
     );

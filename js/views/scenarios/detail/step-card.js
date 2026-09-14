@@ -23,7 +23,10 @@ function stepCard(scenario, step, idx) {
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >
-      ${stepDragHandle(step)} ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, idx)}
+      <div class="step-reorder">
+        ${stepDragHandle(step)} ${stepMoveButtons(scenario, step)}
+      </div>
+      ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, idx)}
       <div class="step-body">
         <div class="step-title">
           ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {

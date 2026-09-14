@@ -12,8 +12,13 @@ function defaultSortCriteria(kind) {
   return SORT_DEFAULTS[kind] || [];
 }
 
+// A dictionary column carries its own order, so reversing it says nothing: those levels stay asc.
 function sortCriteria(kind) {
-  return prefs.sort[kind] || defaultSortCriteria(kind);
+  const columns = columnsFor(kind);
+  return (prefs.sort[kind] || defaultSortCriteria(kind)).map((criterion) => {
+    const column = columns.find((c) => c.key === criterion.key);
+    return column && column.sortOrder ? { ...criterion, dir: 'asc' } : criterion;
+  });
 }
 
 function sortableColumns(kind) {
@@ -26,10 +31,9 @@ function setSortCriteria(kind, criteria) {
   render();
 }
 
-// Order by a dictionary's declaration order; an unknown key sorts last.
-function dictSortIndex(dict, key) {
-  const keys = Object.keys(dict);
-  return keys.includes(key) ? keys.indexOf(key) : keys.length;
+function columnSortValue(column, item) {
+  const value = column.sortValue(item);
+  return column.sortOrder ? sortOrderIndex(column.sortOrder, value) : value;
 }
 
 function compareValues(left, right) {
@@ -45,7 +49,7 @@ function sortItems(kind, items) {
   if (!levels.length) return [...items];
   return [...items].sort((a, b) => {
     for (const { column, dir } of levels) {
-      const diff = compareValues(column.sortValue(a), column.sortValue(b));
+      const diff = compareValues(columnSortValue(column, a), columnSortValue(column, b));
       if (diff) return dir === 'desc' ? -diff : diff;
     }
     return 0;
@@ -54,10 +58,11 @@ function sortItems(kind, items) {
 
 // Clicking a header is the shortcut: it drops every level and cycles that single column.
 function toggleSort(kind, key) {
+  const column = columnsFor(kind).find((c) => c.key === key);
   const criteria = sortCriteria(kind);
   const alone = criteria.length === 1 && criteria[0].key === key ? criteria[0] : null;
   if (!alone) setSortCriteria(kind, [{ key, dir: 'asc' }]);
-  else if (alone.dir === 'asc') setSortCriteria(kind, [{ key, dir: 'desc' }]);
+  else if (alone.dir === 'asc' && !column.sortOrder) setSortCriteria(kind, [{ key, dir: 'desc' }]);
   else setSortCriteria(kind, []);
 }
 
@@ -156,14 +161,7 @@ function sortLevelRow(kind, criterion, index, total) {
     <select class="inline-select" onchange="setSortKey('${kind}',${index},this.value)">
       ${columnOptions}
     </select>
-    <select class="inline-select" onchange="setSortDir('${kind}',${index},this.value)">
-      <option value="asc" ${criterion.dir === 'asc' ? 'selected' : ''}>
-        ${escapeHtml(directionLabel(column, 'asc'))}
-      </option>
-      <option value="desc" ${criterion.dir === 'desc' ? 'selected' : ''}>
-        ${escapeHtml(directionLabel(column, 'desc'))}
-      </option>
-    </select>
+    ${column && column.sortOrder ? sortOrderMenu(kind, column) : sortDirectionSelect(kind, criterion, index, column)}
     <button
       class="icon-btn"
       onclick="moveSortLevel('${kind}',${index},-1)"
@@ -184,4 +182,18 @@ function sortLevelRow(kind, criterion, index, total) {
       ✕
     </button>
   </div>`;
+}
+
+function sortDirectionSelect(kind, criterion, index, column) {
+  return /* HTML */ `<select
+    class="inline-select"
+    onchange="setSortDir('${kind}',${index},this.value)"
+  >
+    <option value="asc" ${criterion.dir === 'asc' ? 'selected' : ''}>
+      ${escapeHtml(directionLabel(column, 'asc'))}
+    </option>
+    <option value="desc" ${criterion.dir === 'desc' ? 'selected' : ''}>
+      ${escapeHtml(directionLabel(column, 'desc'))}
+    </option>
+  </select>`;
 }
