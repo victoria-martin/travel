@@ -16,8 +16,9 @@ function stepOptionsBlock(scenario, step) {
 }
 
 function optionLine(scenario, step, option) {
-  return /* HTML */ `${stepPlaceDropdown(scenario, step, option)}
-  ${stepNightsDropdown(scenario, step, option)} ${optionPriceSlot(scenario, step, option)}`;
+  return /* HTML */ `${stepTypeDropdown(scenario, step, option)}
+  ${stepPlaceDropdown(scenario, step, option)} ${stepNightsDropdown(scenario, step, option)}
+  ${optionPriceSlot(scenario, step, option)}`;
 }
 
 function optionCard(scenario, step, option) {
@@ -36,7 +37,8 @@ function optionCard(scenario, step, option) {
         ✕
       </button>
     </div>
-    ${stepPlaceDropdown(scenario, step, option)} ${stepNightsDropdown(scenario, step, option)}
+    ${stepTypeDropdown(scenario, step, option)} ${stepPlaceDropdown(scenario, step, option)}
+    ${stepNightsDropdown(scenario, step, option)}
     <div class="option-foot">
       ${optionPriceSlot(scenario, step, option)} ${optionChosenButton(scenario, step, option)}
     </div>

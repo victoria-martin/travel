@@ -9,6 +9,7 @@ const NO_OPTION = {
   name: '',
   cityId: null,
   accommodationId: null,
+  accommodationType: '',
   nights: 0,
   budget: '',
   isSelected: false,

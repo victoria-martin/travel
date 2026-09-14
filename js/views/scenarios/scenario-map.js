@@ -54,10 +54,10 @@ function stepPinPopup(scenario, stops) {
 async function drawScenarioRoute(map, points, noticeId, idleMessage) {
   setRouteNotice(noticeId, '⏳ Calcul du trajet routier…');
   try {
-    const route = await fetchRoute(points);
+    const { line } = await fetchRoute(points);
     if (!map.getContainer().isConnected) return;
-    L.polyline(route, { color: '#3E6259', weight: 4, opacity: 0.9 }).addTo(map);
-    drawRouteArrows(map, route);
+    L.polyline(line, { color: '#3E6259', weight: 4, opacity: 0.9 }).addTo(map);
+    drawRouteArrows(map, line);
     setRouteNotice(noticeId, idleMessage);
   } catch (e) {
     console.warn('Trajet routier indisponible', e);

@@ -129,6 +129,9 @@ function adoptLegacyStep(step) {
         isSelected: true,
       },
     ];
+  step.options.forEach((option) => {
+    if (option.accommodationType === undefined) option.accommodationType = '';
+  });
   delete step.nights;
   delete step.cityId;
   delete step.accommodationId;

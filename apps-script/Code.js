@@ -154,6 +154,7 @@ const COLLECTIONS = {
     'name',
     'cityId',
     'accommodationId',
+    'accommodationType',
     'nights',
     'budget',
     'isSelected',

@@ -28,6 +28,22 @@ function setStepPlace(scenarioId, stepId, optionId, value) {
   render();
 }
 
+/*
+  Le type restreint la liste des lieux aux hébergements qui en relèvent : un lieu qui n'y figure
+  plus s'efface, sinon la pastille montrerait un lieu absent de sa propre liste.
+*/
+function setStepAccommodationType(scenarioId, stepId, optionId, type) {
+  const option = stepOption(scenarioId, stepId, optionId);
+  option.accommodationType = type;
+  const acc = getAccommodation(option.accommodationId);
+  if (type && (!acc || accTypeKey(acc.type) !== type)) {
+    option.cityId = null;
+    option.accommodationId = null;
+  }
+  saveNow();
+  render();
+}
+
 function setStepOptionName(scenarioId, stepId, optionId, name) {
   stepOption(scenarioId, stepId, optionId).name = name.trim();
   saveNow();

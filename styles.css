@@ -1040,12 +1040,18 @@ tr:hover td {
   min-width: 0;
 }
 .option-remove,
-.step-add-option {
+.step-add-option,
+.step-add-type {
   opacity: 0;
   transition: opacity 0.15s;
 }
 .option-card:hover .option-remove,
-.step-card:hover .step-add-option {
+.step-card:hover .step-add-option,
+.step-card:hover .step-add-type {
+  opacity: 1;
+}
+/* Un menu ouvert garde sa pastille : la souris en sort pour y descendre. */
+.inline-dropdown[open] .step-add-type {
   opacity: 1;
 }
 .option-foot {

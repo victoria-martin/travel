@@ -427,6 +427,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | Champ   | Détail                                                        |
 | ------- | ------------------------------------------------------------- |
 | nom     | éditable en ligne ; vide, la card affiche « Option 1 », « 2 » |
+| type    | un type d'hébergement, facultatif ; il restreint le lieu      |
 | lieu    | une ville **ou** un hébergement, exclusifs                    |
 | nuits   | 0 à 14                                                        |
 | budget  | remplace le coût calculé de l'hébergement                     |
@@ -461,12 +462,17 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
   masquable, supprimable.
 - **Les options d'une étape** : à une seule option, elle se lit comme la ligne qu'elle a toujours
-  été — un select de lieu (**une ville ou un hébergement**, les deux dans le même select,
-  exclusifs), un select de nuits (0 à 14), et en bout de ligne le coût. À partir de deux, elles se
-  comparent en cards côte à côte : le nom en tête, les mêmes selects de lieu et de nuits, le coût,
-  et une pastille ◉ / ○ qui retient l'option. La card retenue se détache par sa bordure.
+  été — un select de type d'hébergement, un select de lieu (**une ville ou un hébergement**, les
+  deux dans le même select, exclusifs), un select de nuits (0 à 14), et en bout de ligne le coût.
+  À partir de deux, elles se comparent en cards côte à côte : le nom en tête, les mêmes selects, le
+  coût, et une pastille ◉ / ○ qui retient l'option. La card retenue se détache par sa bordure.
   Le ＋ au bout de la rangée ajoute une option, qui reprend le lieu et les nuits de celle qui est
   retenue — on n'en change qu'un bout. La dernière option ne se retire pas.
+- **Le type restreint le lieu, il ne le remplace pas** : posé sur une option, il réduit le select
+  de lieu aux hébergements de ce type et en retire les villes ; sans type, le select propose tout.
+  Changer de type efface un lieu qui n'en relève plus, sinon la pastille montrerait un lieu absent
+  de sa propre liste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
+  lieu comme ses niveaux — « Toscane » trouve tout ce qui y est.
 - **Créer une étape** : le ＋ entre deux cartes comme le bouton de l'en-tête ouvrent le même choix,
   « Créer une étape » ou « Créer une étape avec options » — la seconde pose deux options d'emblée.
 - **La modale d'étape** édite les nuits et le budget de l'option retenue : ce sont ceux qui
