@@ -4,11 +4,10 @@ function nightsByPlace(scenario) {
   visibleSteps(scenario).forEach((st, idx) => {
     const nights = stepNights(st);
     if (nights === 0) return;
-    const option = chosenOption(st);
-    const key = option.cityId
-      ? `ville:${option.cityId}`
-      : option.accommodationId
-        ? `heb:${option.accommodationId}`
+    const key = st.cityId
+      ? `ville:${st.cityId}`
+      : st.accommodationId
+        ? `heb:${st.accommodationId}`
         : '';
     if (!rows.has(key)) rows.set(key, { nights: 0, stays: [], steps: [] });
     const row = rows.get(key);

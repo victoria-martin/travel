@@ -1,31 +1,36 @@
-// Reordering a step by clicking, one rank at a time, under the handle that drags it further.
+/*
+  Une étape se déplace dans sa portée, un rang à la fois, sous la poignée qui la glisse plus loin :
+  sa colonne si elle appartient à un groupe, la liste sinon. Deux étapes de portées différentes ne
+  s'échangent jamais — la seconde enjamberait un groupe et le couperait en deux.
+*/
+function stepPeers(scenario, step) {
+  return scenario.steps.filter((st) => st.optionId === step.optionId);
+}
+
+function stepNeighbour(scenario, step, dir) {
+  const peers = stepPeers(scenario, step);
+  return peers[peers.indexOf(step) + dir] || null;
+}
+
 function stepMoveButtons(scenario, step) {
-  const at = scenario.steps.findIndex((st) => st.id === step.id);
-  return /* HTML */ `
-    <button
+  const moveButton = (dir, label, title) =>
+    /* HTML */ `<button
       class="icon-btn step-move-btn"
-      ${at === 0 ? 'disabled' : ''}
-      onclick="moveStep('${scenario.id}','${step.id}',-1)"
-      title="Monter"
+      ${stepNeighbour(scenario, step, dir) ? '' : 'disabled'}
+      onclick="moveStep('${scenario.id}','${step.id}',${dir})"
+      title="${title}"
     >
-      ↑
-    </button>
-    <button
-      class="icon-btn step-move-btn"
-      ${at === scenario.steps.length - 1 ? 'disabled' : ''}
-      onclick="moveStep('${scenario.id}','${step.id}',1)"
-      title="Descendre"
-    >
-      ↓
-    </button>
-  `;
+      ${label}
+    </button>`;
+  return moveButton(-1, '↑', 'Monter') + moveButton(1, '↓', 'Descendre');
 }
 
 function moveStep(scenarioId, stepId, dir) {
   const s = getScenario(scenarioId);
-  const i = s.steps.findIndex((st) => st.id === stepId);
-  const j = i + dir;
-  if (j < 0 || j >= s.steps.length) return;
+  const step = getStep(scenarioId, stepId);
+  const neighbour = stepNeighbour(s, step, dir);
+  if (!neighbour) return;
+  const [i, j] = [s.steps.indexOf(step), s.steps.indexOf(neighbour)];
   [s.steps[i], s.steps[j]] = [s.steps[j], s.steps[i]];
   saveNow();
   render();

@@ -40,24 +40,14 @@ function duplicateTransport(id) {
   render();
 }
 
-// La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une.
-// Une copie d'étape ne partage rien avec l'originale : ses options et ses activités sont des
-// lignes à elles, donc elles reprennent des identifiants neufs.
+// La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une. Elle ne
+// partage rien avec elle — ses lignes sont les siennes, donc elles reprennent des identifiants
+// neufs. Sa colonne, en revanche, reste celle de l'originale : on y ajoute une étape.
 function copyStep(step) {
-  const newOptionId = {};
-  const options = stepOptions(step).map((option) => {
-    newOptionId[option.id] = uid();
-    return { ...option, id: newOptionId[option.id] };
-  });
   return {
     ...step,
     id: uid(),
-    options,
-    extras: stepExtras(step).map((line) => ({
-      ...line,
-      id: uid(),
-      optionId: newOptionId[line.optionId] || '',
-    })),
+    extras: holderExtras(step).map((line) => ({ ...line, id: uid() })),
   };
 }
 
@@ -69,12 +59,28 @@ function duplicateStep(scenarioId, stepId) {
   render();
 }
 
+// Groupes et colonnes reprennent aussi des identifiants neufs, et les étapes de la copie désignent
+// les siens : deux scénarios qui partageraient une colonne se choisiraient l'un l'autre.
 function duplicateScenario(id) {
   const s = getScenario(id);
   const copy = JSON.parse(JSON.stringify(s));
   copy.id = uid();
   copy.name = s.name + ' (copie)';
-  copy.steps = copy.steps.map(copyStep);
+  const renamed = {};
+  scenarioGroups(copy).forEach((group) => {
+    renamed[group.id] = uid();
+    group.id = renamed[group.id];
+    group.extras = holderExtras(group).map((line) => ({ ...line, id: uid() }));
+    groupOptions(group).forEach((option) => {
+      renamed[option.id] = uid();
+      option.id = renamed[option.id];
+    });
+  });
+  copy.steps = copy.steps.map((step) => ({
+    ...copyStep(step),
+    groupId: renamed[step.groupId] || '',
+    optionId: renamed[step.optionId] || '',
+  }));
   state.scenarios.push(copy);
   saveNow();
   render();

@@ -40,7 +40,17 @@ COLUMN_SETS.attractions = [
     cell: attractionPriceCell,
     sortValue: (a) => priceNumber(a.amountMin || a.amountMax || a.budget),
   },
-  { key: 'tags', label: 'Tags', cell: (a) => tagsCell(a, getAttraction, allAttractionTags) },
+  {
+    key: 'tags',
+    label: 'Tags',
+    cell: (a) =>
+      tagsCell(a, {
+        field: 'tags',
+        getItem: getAttraction,
+        vocabulary: allAttractionTags,
+        addLabel: '+ tag',
+      }),
+  },
   {
     key: 'description',
     label: 'Description',

@@ -1,16 +1,19 @@
 /*
-  Le champ tags d'une modale : le vocabulaire proposé dépend de l'entité, le reste est commun.
-  La modale rend depuis modal.payload, jamais depuis le DOM, donc un tag édite le payload et
-  repeint son seul bloc — un render complet perdrait les champs saisis et pas encore enregistrés.
-  Une seule modale est ouverte à la fois : le getter du vocabulaire courant tient dans un global.
+  Le champ tags d'une modale : le champ édité, son libellé et le vocabulaire proposé dépendent de
+  l'entité, le reste est commun. La modale rend depuis modal.payload, jamais depuis le DOM, donc un
+  tag édite le payload et repeint son seul bloc — un render complet perdrait les champs saisis et
+  pas encore enregistrés. Une seule modale est ouverte à la fois : ces trois-là tiennent dans des
+  globales.
 */
+let tagsFieldName = null;
 let tagsFieldOptions = null;
 
-function tagsField(p, options) {
+function tagsField(p, { field, label, options }) {
+  tagsFieldName = field;
   tagsFieldOptions = options;
   return /* HTML */ `<div class="field">
-    <label>Tags</label>
-    <div id="tags-field" class="tags-field">${tagsFieldBody(p.tags || [])}</div>
+    <label>${escapeHtml(label)}</label>
+    <div id="tags-field" class="tags-field">${tagsFieldBody(p[field] || [])}</div>
   </div>`;
 }
 
@@ -20,14 +23,14 @@ function tagsFieldBody(used) {
     ${used
       .map(
         (tag, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onclick="removeTagFromField(${i})" title="Retirer ce tag">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onclick="removeTagFromField(${i})" title="Retirer">✕</button></span>`,
       )
       .join('')}
     <input
       id="tags-input"
       type="text"
       list="tags-options"
-      placeholder="Ajouter un tag…"
+      placeholder="Ajouter…"
       onkeydown="tagsInputKeydown(event)"
       onchange="addTagToField()"
     />
@@ -48,17 +51,17 @@ function addTagToField() {
   const value = input.value.trim();
   input.value = '';
   if (!value) return;
-  const tags = modal.payload.tags;
+  const tags = modal.payload[tagsFieldName];
   if (!tags.includes(value)) tags.push(value);
   repaintTagsField();
 }
 
 function removeTagFromField(index) {
-  modal.payload.tags.splice(index, 1);
+  modal.payload[tagsFieldName].splice(index, 1);
   repaintTagsField();
 }
 
 function repaintTagsField() {
-  document.getElementById('tags-field').innerHTML = tagsFieldBody(modal.payload.tags);
+  document.getElementById('tags-field').innerHTML = tagsFieldBody(modal.payload[tagsFieldName]);
   document.getElementById('tags-input').focus();
 }

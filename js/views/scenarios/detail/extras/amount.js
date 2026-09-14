@@ -3,7 +3,7 @@ function extraCount(line) {
 }
 
 /*
-  Le budget saisi sur la ligne remplace le prix de ce qu'elle référence, comme sur une option, et
+  Le budget saisi sur la ligne remplace le prix de ce qu'elle référence, comme sur une étape, et
   vaut pour la ligne entière : c'est une enveloppe, le nombre ne la multiplie pas. Le prix, lui,
   est unitaire.
 */

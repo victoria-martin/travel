@@ -1,5 +1,5 @@
 function emptyFixedCost() {
-  return { id: null, label: '', amount: '', category: '', recurrence: '', notes: '' };
+  return { id: null, label: '', amount: '', categories: [], recurrence: '', notes: '' };
 }
 
 function fixedCostForm(p) {
@@ -12,10 +12,7 @@ function fixedCostForm(p) {
     <div class="field">
       <label>Montant</label><input id="cost-amount" type="text" value="${escapeHtml(p.amount)}" />
     </div>
-    <div class="field">
-      <label>Catégorie</label
-      ><input id="cost-category" type="text" value="${escapeHtml(p.category)}" />
-    </div>
+    ${tagsField(p, { field: 'categories', label: 'Catégories', options: allFixedCostCategories })}
     <div class="field">
       <label>Récurrence</label
       ><input id="cost-recurrence" type="text" value="${escapeHtml(p.recurrence)}" />

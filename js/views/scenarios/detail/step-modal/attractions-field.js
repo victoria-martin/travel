@@ -4,8 +4,8 @@
   pas encore enregistrés.
   Chips et résultats sont deux blocs séparés : la frappe ne repeint que les résultats, sinon le
   champ perdrait sa saisie à chaque lettre.
-  Il ne montre que les activités de l'étape elle-même : celles de ses options et ses dépenses se
-  rattachent sur la carte, où l'on voit à quelle option elles appartiennent.
+  Il ne montre que les activités de l'étape : les dépenses et les lignes communes à un groupe se
+  rattachent sur la carte, où l'on voit à quel porteur elles appartiennent.
   Le résultat retenu est un rang dans la liste affichée et non un identifiant : le survol et les
   flèches le posent au même endroit, `Entrée` clique celui qui est marqué. Il vit dans un global,
   comme `openInlineMenu`, parce que le bloc se reconstruit à chaque frappe.
@@ -22,7 +22,7 @@ function stepAttractionsField(p) {
 }
 
 function stepFormAttractions(extras) {
-  return extras.filter((line) => !line.optionId && !line.costId);
+  return extras.filter((line) => !line.costId);
 }
 
 function stepAttractionName(line) {
@@ -97,7 +97,7 @@ function paintActiveAttractionResult() {
 }
 
 function addStepAttraction(attractionId) {
-  modal.payload.extras.push({ ...emptyExtra(''), attractionId });
+  modal.payload.extras.push({ ...emptyExtra(), attractionId });
   document.getElementById('step-attractions-input').value = '';
   repaintStepAttractionsField();
 }

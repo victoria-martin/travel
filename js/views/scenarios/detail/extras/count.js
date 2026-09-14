@@ -5,13 +5,13 @@ function extraCountLabel(n) {
   return `×${n}`;
 }
 
-function pickExtraCount(scenarioId, stepId, lineId, count) {
+function pickExtraCount(scenarioId, holderId, lineId, count) {
   openInlineMenu = null;
-  setExtraCount(scenarioId, stepId, lineId, count);
+  setExtraCount(scenarioId, holderId, lineId, count);
 }
 
 // Une seule fois ne se dit pas : la pastille ne s'affiche qu'au survol tant que le nombre vaut 1.
-function extraCountDropdown(scenario, step, line) {
+function extraCountDropdown(scenario, holder, line) {
   const current = extraCount(line);
   return inlineDropdown(
     `extra-count:${line.id}`,
@@ -21,7 +21,7 @@ function extraCountDropdown(scenario, step, line) {
         ${EXTRA_COUNTS.map(
           (n) => `<button
             class="inline-menu-item ${n === current ? 'selected' : ''}"
-            onclick="pickExtraCount('${scenario.id}','${step.id}','${line.id}',${n})"
+            onclick="pickExtraCount('${scenario.id}','${holder.id}','${line.id}',${n})"
           >
             ${extraCountLabel(n)}
           </button>`,

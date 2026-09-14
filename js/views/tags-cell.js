@@ -2,16 +2,21 @@
   Le tableau édite les tags sur place : une seule cellule est en édition à la fois, et seul son
   contenu est repeint tant que l'éditeur est ouvert — un render complet réordonnerait la ligne
   sous la souris et arracherait le champ. Le render global attend la fermeture.
-  Le getter de l'entité et son vocabulaire tiennent dans des globales, comme dans tags-field.js :
-  une seule table est à l'écran à la fois, chaque ligne les repose en se rendant.
+  Le champ édité, le getter de l'entité, son vocabulaire et le libellé d'ajout tiennent dans des
+  globales, comme dans tags-field.js : une seule table est à l'écran à la fois, chaque ligne les
+  repose en se rendant.
 */
 let editingTagsId = null;
+let tagsCellField = null;
 let tagsCellGetter = null;
 let tagsCellVocabulary = null;
+let tagsCellAddLabel = null;
 
-function tagsCell(item, getItem, vocabulary) {
+function tagsCell(item, { field, getItem, vocabulary, addLabel }) {
+  tagsCellField = field;
   tagsCellGetter = getItem;
   tagsCellVocabulary = vocabulary;
+  tagsCellAddLabel = addLabel;
   return /* HTML */ `<div id="tags-cell-${item.id}" class="tags-cell">${tagsCellBody(item)}</div>`;
 }
 
@@ -20,32 +25,34 @@ function tagsCellBody(item) {
 }
 
 function tagsCellDisplay(item) {
-  const chips = tagChips(item.tags) || '<span class="tags-cell-add">+ tag</span>';
+  const chips =
+    tagChips(item[tagsCellField]) ||
+    `<span class="tags-cell-add">${escapeHtml(tagsCellAddLabel)}</span>`;
   return /* HTML */ `<button
     type="button"
     class="tags-cell-display"
     onclick="openTagsEditor('${item.id}')"
-    title="Modifier les tags"
+    title="Modifier"
   >
     ${chips}
   </button>`;
 }
 
 function tagsCellEditor(item) {
-  const used = item.tags || [];
+  const used = item[tagsCellField] || [];
   const options = tagsCellVocabulary().filter((tag) => !used.includes(tag));
   return /* HTML */ `<div class="tags-field tags-field-inline">
     ${used
       .map(
         (tag, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onmousedown="event.preventDefault()" onclick="removeTagFromCell('${item.id}', ${i})" title="Retirer ce tag">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onmousedown="event.preventDefault()" onclick="removeTagFromCell('${item.id}', ${i})" title="Retirer">✕</button></span>`,
       )
       .join('')}
     <input
       id="tags-cell-input"
       type="text"
       list="tags-cell-options"
-      placeholder="Ajouter un tag…"
+      placeholder="Ajouter…"
       onkeydown="tagsCellKeydown(event, '${item.id}')"
       onchange="addTagFromCell('${item.id}')"
       onblur="closeTagsEditor()"
@@ -83,15 +90,15 @@ function addTagFromCell(id) {
   input.value = '';
   if (!value) return;
   const item = tagsCellGetter(id);
-  item.tags = item.tags || [];
-  if (!item.tags.includes(value)) item.tags.push(value);
+  item[tagsCellField] = item[tagsCellField] || [];
+  if (!item[tagsCellField].includes(value)) item[tagsCellField].push(value);
   saveNow();
   repaintTagsCell(id);
 }
 
 function removeTagFromCell(id, index) {
   const item = tagsCellGetter(id);
-  item.tags.splice(index, 1);
+  item[tagsCellField].splice(index, 1);
   saveNow();
   repaintTagsCell(id);
 }

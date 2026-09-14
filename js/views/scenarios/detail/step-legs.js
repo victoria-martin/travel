@@ -1,26 +1,34 @@
 /*
   Le tronçon routier entre deux étapes se lit dans la bande qui les sépare. Il vient des `legs` du
   même appel OSRM que le tracé, donc il n'arrive qu'après le rendu : la bande porte un emplacement
-  vide, rempli quand la réponse revient.
+  vide, rempli quand la réponse revient. Une bande le porte pour l'étape qui la suit.
 */
 
-// Position de chaque étape dans les waypoints envoyés à OSRM, `null` si elle n'y est pas.
+// Position de chaque étape retenue dans les waypoints envoyés à OSRM, `null` si elle n'y est pas.
 function stepWaypointRanks(scenario) {
+  const ranks = {};
   let rank = 0;
-  return scenario.steps.map((st) => (!st.hidden && coordsFor(st) ? rank++ : null));
+  visibleSteps(scenario).forEach((st) => {
+    ranks[st.id] = coordsFor(st) ? rank++ : null;
+  });
+  return ranks;
 }
 
-// Un tronçon qui enjamberait une étape masquée ou sans lieu ne dirait pas la distance des deux
-// cartes qu'on lit : seules deux cartes voisines, toutes deux sur le tracé, en portent un.
-function stepLegRank(scenario, index) {
+// Un tronçon qui enjamberait une étape sans lieu ne dirait pas la distance des deux cartes qu'on
+// lit : seules deux étapes voisines sur le tracé en portent un.
+function stepLegRank(scenario, step) {
+  if (!step) return null;
+  const visible = visibleSteps(scenario);
+  const at = visible.indexOf(step);
+  if (at < 1) return null;
   const ranks = stepWaypointRanks(scenario);
-  if (ranks[index - 1] === null || ranks[index] === null) return null;
-  return ranks[index - 1];
+  const before = ranks[visible[at - 1].id];
+  return before === null || ranks[step.id] === null ? null : before;
 }
 
-function stepLegSlot(scenario, index) {
-  if (stepLegRank(scenario, index) === null) return '';
-  return /* HTML */ `<span class="step-leg" id="step-leg-${index}"></span>`;
+function stepLegSlot(scenario, step) {
+  const rank = stepLegRank(scenario, step);
+  return rank === null ? '' : `<span class="step-leg" id="step-leg-${rank}"></span>`;
 }
 
 async function fillStepLegs() {
@@ -31,14 +39,12 @@ async function fillStepLegs() {
 
   try {
     const { legs } = await fetchRoute(points);
-    scenario.steps.forEach((_, i) => {
-      const rank = stepLegRank(scenario, i);
-      const leg = rank === null ? null : legs[rank];
-      if (leg) setStepLeg(i, `🚗 ${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`);
-    });
+    legs.forEach((leg, i) =>
+      setStepLeg(i, `🚗 ${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`),
+    );
   } catch (e) {
     console.warn('Tronçons routiers indisponibles', e);
-    scenario.steps.forEach((_, i) => setStepLeg(i, '⚠️'));
+    document.querySelectorAll('.step-leg').forEach((slot) => (slot.textContent = '⚠️'));
   }
 }
 

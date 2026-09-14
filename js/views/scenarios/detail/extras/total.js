@@ -2,17 +2,25 @@ function extraLinesTotal(lines) {
   return lines.reduce((sum, line) => sum + extraAmount(line), 0);
 }
 
-function extrasTotal(step, optionId) {
-  return extraLinesTotal(holderExtras(step, optionId));
+function extrasTotal(holder) {
+  return extraLinesTotal(holderExtras(holder));
 }
 
-// Les lignes que le scénario compte : celles de l'étape, plus celles de l'option retenue — les
-// autres options sont des comparaisons, elles n'entrent dans aucun total.
+// Les lignes que le scénario compte : celles de ses étapes retenues, plus celles des groupes qu'il
+// traverse — les colonnes écartées sont des comparaisons, elles n'entrent dans aucun total.
 function scenarioExtraLines(scenario) {
-  return visibleSteps(scenario).flatMap((step) => {
-    const chosen = chosenOption(step);
-    return holderExtras(step, '').concat(chosen.id ? holderExtras(step, chosen.id) : []);
-  });
+  const groupIds = new Set(
+    visibleSteps(scenario)
+      .map((step) => step.groupId)
+      .filter(Boolean),
+  );
+  return visibleSteps(scenario)
+    .flatMap(holderExtras)
+    .concat(
+      scenarioGroups(scenario)
+        .filter((g) => groupIds.has(g.id))
+        .flatMap(holderExtras),
+    );
 }
 
 // Une ligne se range selon ce qu'elle référence : une dépense grossit les charges, une activité

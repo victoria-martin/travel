@@ -1,43 +1,43 @@
 /*
   La pastille d'une ligne ouvre ses alternatives du même genre : une activité se remplace par une
   activité, une dépense par une dépense. Celles déjà posées sur le même porteur n'y figurent pas —
-  une étape ne porte jamais deux fois la même.
+  un porteur n'en porte jamais deux fois la même.
 */
 
-function pickExtraAttraction(scenarioId, stepId, lineId, attractionId) {
+function pickExtraAttraction(scenarioId, holderId, lineId, attractionId) {
   openInlineMenu = null;
-  setExtraAttraction(scenarioId, stepId, lineId, attractionId);
+  setExtraAttraction(scenarioId, holderId, lineId, attractionId);
 }
 
-function pickExtraCost(scenarioId, stepId, lineId, costId) {
+function pickExtraCost(scenarioId, holderId, lineId, costId) {
   openInlineMenu = null;
-  setExtraCost(scenarioId, stepId, lineId, costId);
+  setExtraCost(scenarioId, holderId, lineId, costId);
 }
 
-function extraSiblingIds(step, line, field) {
-  return holderExtras(step, line.optionId)
+function extraSiblingIds(holder, line, field) {
+  return holderExtras(holder)
     .filter((other) => other.id !== line.id)
     .map((other) => other[field])
     .filter(Boolean);
 }
 
-function extraAlternatives(scenario, step, line) {
+function extraAlternatives(scenario, holder, line) {
   if (line.costId)
-    return costMatches('', extraSiblingIds(step, line, 'costId'))
+    return costMatches('', extraSiblingIds(holder, line, 'costId'))
       .map(
         (cost) => `<button
           class="inline-menu-item ${cost.id === line.costId ? 'selected' : ''}"
-          onclick="pickExtraCost('${scenario.id}','${step.id}','${line.id}','${cost.id}')"
+          onclick="pickExtraCost('${scenario.id}','${holder.id}','${line.id}','${cost.id}')"
         >
           ${tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)))}
         </button>`,
       )
       .join('');
-  return attractionMatches('', extraSiblingIds(step, line, 'attractionId'))
+  return attractionMatches('', extraSiblingIds(holder, line, 'attractionId'))
     .map(
       (a) => `<button
         class="inline-menu-item ${a.id === line.attractionId ? 'selected' : ''}"
-        onclick="pickExtraAttraction('${scenario.id}','${step.id}','${line.id}','${a.id}')"
+        onclick="pickExtraAttraction('${scenario.id}','${holder.id}','${line.id}','${a.id}')"
       >
         ${tagLabel(attractionType(a.type).emoji, escapeHtml(a.name))}
       </button>`,
@@ -45,7 +45,7 @@ function extraAlternatives(scenario, step, line) {
     .join('');
 }
 
-function extraMenu(scenario, step, line) {
+function extraMenu(scenario, holder, line) {
   return inlineDropdown(
     `extra:${line.id}`,
     'extra-dropdown',
@@ -53,11 +53,11 @@ function extraMenu(scenario, step, line) {
       <div class="inline-menu">
         <button
           class="inline-menu-item"
-          onclick="detachExtra('${scenario.id}','${step.id}','${line.id}')"
+          onclick="detachExtra('${scenario.id}','${holder.id}','${line.id}')"
         >
           Retirer cette ligne
         </button>
-        ${extraAlternatives(scenario, step, line)}
+        ${extraAlternatives(scenario, holder, line)}
       </div>`,
   );
 }

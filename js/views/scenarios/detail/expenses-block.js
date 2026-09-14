@@ -5,11 +5,13 @@ function scenarioExpensesBlock(scenario) {
       <div class="acc-recap-title">Dépenses</div>
       ${expenses.length ? `<strong>${formatEuros(fixedCostsTotal(scenario))}</strong>` : ''}
     </div>
-    ${expenses.length === 0
-      ? /* HTML */ `<div class="scenario-extra-empty">
-          Aucune dépense rattachée — celles du voyage restent sur la page Dépenses.
-        </div>`
-      : expenses.map((cost) => scenarioExpenseRow(scenario, cost)).join('')}
+    ${
+      expenses.length === 0
+        ? /* HTML */ `<div class="scenario-extra-empty">
+            Aucune dépense rattachée — celles du voyage restent sur la page Dépenses.
+          </div>`
+        : expenses.map((cost) => scenarioExpenseRow(scenario, cost)).join('')
+    }
     <div class="scenario-extra-actions">
       ${scenarioExpenseDropdown(scenario)}
       ${toolbarButton({

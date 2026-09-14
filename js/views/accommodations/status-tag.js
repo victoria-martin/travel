@@ -9,8 +9,8 @@ function accommodationStatusTag(a) {
     `status:${a.id}`,
     'status-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
-    <div class="inline-menu">
-      ${Object.entries(ACCOMMODATION_STATUSES)
+      <div class="inline-menu">
+        ${Object.entries(ACCOMMODATION_STATUSES)
         .map(
           ([key, s]) => `<button
             class="inline-menu-item ${s === current ? 'selected' : ''}"
@@ -20,6 +20,6 @@ function accommodationStatusTag(a) {
           </button>`,
         )
         .join('')}
-    </div>`,
+      </div>`,
   );
 }

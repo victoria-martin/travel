@@ -46,8 +46,8 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   celle qu'on géocode. Ces quatre-là valent pour tout ce qui se localise : hébergements, villes,
   activités. C'est l'ordre du fil d'Ariane HomeExchange, et celui qu'on lit : « Italie · Ligurie ·
   Savone · Castelbianco ». Une ville prend son nom comme niveau ville à défaut de géocodage.
-- **Une étape n'a pas de lieu à elle** : elle tient le sien de l'option retenue. Son titre montre la
-  ville et la région de ce lieu, moins ce que son propre nom et la pastille du lieu disent déjà.
+- **Une étape porte son lieu**, et son titre en montre la ville et la région, moins ce que son
+  propre nom et la pastille du lieu disent déjà.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Voitures et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
@@ -64,23 +64,33 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
-- **Le contenu d'une étape vit dans ses options**, jamais sur l'étape : lieu, nuits et budget
-  appartiennent à l'option. Toute étape en porte au moins une, il n'existe donc pas deux formes
-  d'étape à réconcilier — une étape ordinaire est une étape à une option. Tout l'aval (dates,
-  nuits, totaux, carte, récap) lit l'option retenue. Changer l'option retenue d'une étape recalcule
-  ses dates **et décale toutes les étapes suivantes**, puisque l'arrivée d'une étape somme les
-  nuits qui la précèdent.
-- **Une seule option retenue par étape**, tenue comme le scénario choisi : un drapeau par option
-  plutôt qu'un identifiant sur l'étape — la colonne se lit à l'œil dans le Sheet, et un identifiant
-  y renverrait à un autre onglet. Recliquer l'option retenue n'en laisse aucune : l'étape ne compte
-  alors ni nuit, ni lieu, ni coût.
-- **Une étape masquée ne compte nulle part** : ni dates, ni nuits, ni totaux, ni carte, ni récap, ni
-  nombre d'étapes. C'est une variante mise de côté, gardée sous la main plutôt que supprimée. Seule
-  la liste du détail la montre, grisée. Conséquence : partout ailleurs, le rang d'une étape est son
-  rang **parmi les visibles** — masquer la deuxième fait passer C en B, et décale les dates.
+- **Une option est une suite d'étapes, et non un contenu d'étape.** Comparer deux façons de passer
+  les mêmes jours, ce n'est pas comparer deux hôtels pour une nuit : c'est comparer deux bouts
+  d'itinéraire, qui n'ont pas forcément le même nombre d'étapes — deux nuits en Toscane d'un côté,
+  une nuit à Sienne puis une dans le Chianti de l'autre. Une étape reste donc une étape, avec son
+  lieu, ses nuits et son budget ; deux étiquettes disent seulement dans quel **groupe** elle se
+  compare et dans quelle **colonne** elle se range. Une étape sans étiquette est une étape
+  ordinaire : il n'existe pas deux formes d'étape à réconcilier.
+- **Une seule colonne retenue par groupe**, tenue comme le scénario choisi : un drapeau par colonne
+  plutôt qu'un identifiant sur le groupe — la colonne se lit à l'œil dans le Sheet, et un
+  identifiant y renverrait à un autre onglet. Recliquer la colonne retenue n'en laisse aucune : le
+  groupe ne compte alors ni nuit, ni lieu, ni coût.
+- **Un groupe ne se déduit pas de ses colonnes, il les porte** : c'est lui qui tient ses lignes
+  communes, et sans objet à lui elles n'auraient nulle part où vivre. C'est tout ce qui reste de
+  l'étape qui portait les options.
+- **Une étape masquée et l'étape d'une colonne écartée ne comptent nulle part** : ni dates, ni
+  nuits, ni totaux, ni carte, ni récap, ni nombre d'étapes. Ce sont des variantes mises de côté,
+  gardées sous la main plutôt que supprimées. Seule la liste du détail les montre. Conséquence :
+  partout ailleurs, le rang d'une étape est son rang **parmi les visibles** — masquer la deuxième
+  fait passer C en B, et décale les dates. Retenir une autre colonne les décale de même, puisque
+  l'arrivée d'une étape somme les nuits qui la précèdent.
+- **Les étapes d'un groupe se tiennent d'affilée** dans le scénario, l'ordre du fichier étant
+  l'ordre affiché. D'où deux conséquences sur les gestes : les flèches ↑↓ déplacent une étape dans
+  sa seule portée — sa colonne, ou la liste — et un glisser-déposer lui donne la colonne de la carte
+  visée, ce qui la fait entrer dans un groupe ou en sortir.
 - **Une reprise de format ne fabrique jamais d'identifiant neuf.** Elle se rejoue à chaque lecture,
-  des deux côtés de la synchro : l'option reconstituée d'une étape d'avant les options porte donc
-  l'identifiant de son étape. Un identifiant tiré au hasard change l'empreinte de l'état que le
+  des deux côtés de la synchro : l'étape née d'une option porte donc l'identifiant de cette option,
+  et le groupe qui remplace l'étape celui de l'étape suffixé. Un identifiant tiré au hasard change l'empreinte de l'état que le
   Sheet renvoie, et la synchro compare des empreintes — tout envoi se verrait alors refuser en
   conflit, indéfiniment.
 - **Tous les voyages tiennent dans le même Sheet**, chaque entrée portant une colonne `travelId`,
@@ -93,13 +103,12 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   n'invente jamais de voyage pour les accueillir — une réponse du Sheet à laquelle il manque
   l'onglet `travels` ou la colonne `travelId` créait sinon un voyage fantôme qui repartait dans la
   synchro et détournait les entrées des autres.
-- **Une étape porte une seule liste de lignes**, activités et dépenses mêlées, et c'est
-  l'`optionId` de la ligne qui dit à qui elle appartient : vide, elle est à l'étape ; sinon à cette
-  option. Une visite de vignoble vaut pour l'étape quel que soit l'hôtel retenu, un massage n'existe
-  que dans l'un des deux — les deux cas se disent sur la même liste. Une liste portée par chaque
-  option a été écartée : la synchro n'imbrique qu'un niveau sous l'étape, et dans le Sheet une ligne
-  d'option serait de toute façon une ligne à plat portant son `optionId`.
-- **Une ligne référence une activité ou une dépense, jamais les deux**, comme une option référence
+- **Une ligne appartient à une étape ou à un groupe**, activités et dépenses mêlées sur la même
+  liste. Celle d'un groupe vaut quelle que soit la colonne retenue — une visite de vignoble se fait
+  de toute façon — celle d'une étape ne compte que si la sienne est retenue : un massage n'existe
+  que dans l'une des colonnes. Les deux porteurs se lisent pareil, un porteur n'est qu'un objet qui
+  tient ses lignes, d'où un seul identifiant de porteur à passer plutôt qu'un couple.
+- **Une ligne référence une activité ou une dépense, jamais les deux**, comme une étape référence
   une ville ou un hébergement. Rien ne se saisit librement sur une étape : un nom inconnu crée
   l'entrée dans sa table, et elle existe donc aussi sur sa page. Un montant libre posé sur l'étape
   a été écarté — il aurait compté dans le Total général sans apparaître sur la page Dépenses.
@@ -131,7 +140,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Attraction**      | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
 | **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                        | liste simple ; une seule voiture par défaut                     |
-| **Charge fixe**     | libellé, montant, catégorie, récurrence, notes                                                                                                                      | liste simple                                                    |
+| **Charge fixe**     | libellé, montant, catégories, récurrence, notes                                                                                                                     | liste simple                                                    |
 | **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                                   | un itinéraire candidat                                          |
 | **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
 | **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
@@ -420,13 +429,19 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 **Charge fixe**
 
-| Champ      | Détail                     |
-| ---------- | -------------------------- |
-| libellé    |                            |
-| montant    | texte libre, pris tel quel |
-| catégorie  | texte libre                |
-| récurrence | texte libre                |
-| notes      | éditables depuis la ligne  |
+| Champ      | Détail                                             |
+| ---------- | -------------------------------------------------- |
+| libellé    |                                                    |
+| montant    | texte libre, pris tel quel                         |
+| catégories | plusieurs, en pastilles, éditables depuis la ligne |
+| récurrence | texte libre                                        |
+| notes      | éditables depuis la ligne                          |
+
+- **Catégories** : mêmes mots libres que les tags des hébergements — une catégorie existe dès
+  qu'elle est tapée quelque part, et disparaît avec sa dernière porteuse. Aucune liste à
+  administrer, aucun vocabulaire de départ : la cellule s'ouvre en place et propose l'union de ce
+  qui est déjà saisi. La colonne se trie sur ses catégories mises bout à bout, donc sur la première
+  d'abord.
 
 ### Scénarios
 
@@ -442,35 +457,42 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | charges        | des références à la table Charges fixes                                     |
 | transports     | des références à la table Transports                                        |
 | étapes         | ordonnées ; l'ordre est le trajet                                           |
+| groupes        | les endroits où plusieurs suites d'étapes se comparent                      |
 
 **Étape** — appartient à un scénario.
 
-| Champ          | Détail                                                    |
-| -------------- | --------------------------------------------------------- |
-| titre          | éditable en ligne                                         |
-| lieu           | hérité de l'option retenue, affiché à côté du titre       |
-| date d'arrivée | champ libre de la modale, en plus de la date calculée     |
-| notes          |                                                           |
-| masquée        | l'étape reste dans la liste mais sort de tous les calculs |
-| options        | au moins une ; une seule retenue                          |
-| lignes         | ses activités et ses dépenses, et celles de ses options   |
+| Champ           | Détail                                                     |
+| --------------- | ---------------------------------------------------------- |
+| titre           | éditable en ligne                                          |
+| type            | un type d'hébergement, facultatif ; il restreint le lieu   |
+| lieu            | une ville **ou** un hébergement, exclusifs                 |
+| nuits           | 0 à 14                                                     |
+| budget          | remplace le coût calculé de l'hébergement                  |
+| date d'arrivée  | champ libre de la modale, en plus de la date calculée      |
+| notes           |                                                            |
+| masquée         | l'étape reste dans la liste mais sort de tous les calculs  |
+| groupe, colonne | vides pour une étape ordinaire ; sinon, où elle se compare |
+| lignes          | ses activités et ses dépenses                              |
 
-**Option d'étape** — appartient à une étape.
+**Groupe** — appartient à un scénario ; l'endroit où plusieurs suites d'étapes se comparent.
 
-| Champ   | Détail                                                        |
-| ------- | ------------------------------------------------------------- |
-| nom     | éditable en ligne ; vide, la card affiche « Option 1 », « 2 » |
-| type    | un type d'hébergement, facultatif ; il restreint le lieu      |
-| lieu    | une ville **ou** un hébergement, exclusifs                    |
-| nuits   | 0 à 14                                                        |
-| budget  | remplace le coût calculé de l'hébergement                     |
-| retenue | c'est elle qui donne à l'étape ses nuits, son lieu, son coût  |
+| Champ    | Détail                                                   |
+| -------- | -------------------------------------------------------- |
+| colonnes | au moins deux ; une seule retenue                        |
+| lignes   | les activités et dépenses communes à toutes ses colonnes |
 
-**Ligne d'étape** — une activité ou une dépense posée sur une étape ou sur l'une de ses options.
+**Colonne** — appartient à un groupe.
+
+| Champ   | Détail                                                           |
+| ------- | ---------------------------------------------------------------- |
+| nom     | éditable en ligne ; vide, la colonne affiche « Option 1 », « 2 » |
+| retenue | ce sont ses étapes qui comptent dans les dates, totaux et carte  |
+
+**Ligne** — une activité ou une dépense posée sur une étape ou sur un groupe.
 
 | Champ     | Détail                                                           |
 | --------- | ---------------------------------------------------------------- |
-| porteur   | l'`optionId` de la ligne ; vide, elle appartient à l'étape       |
+| porteur   | l'étape ou le groupe dans la liste duquel elle vit               |
 | référence | une attraction **ou** une dépense, exclusives                    |
 | nombre    | 1 à 10 ; multiplie le prix de la référence, jamais le budget     |
 | budget    | enveloppe de la ligne entière ; remplace le prix de la référence |
@@ -511,26 +533,34 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
   même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
   0 nuit), puis en dessous sa date d'arrivée libre si elle est saisie dans la modale, et ses notes.
-  Ensuite ses options. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
+  Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**une ville ou un
+  hébergement**, les deux dans le même select, exclusifs), un select de nuits (0 à 14), et en bout
+  de ligne le coût. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
   ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
   masquable, supprimable.
-- **Les options d'une étape** : à une seule option, elle se lit comme la ligne qu'elle a toujours
-  été — un select de type d'hébergement, un select de lieu (**une ville ou un hébergement**, les
-  deux dans le même select, exclusifs), un select de nuits (0 à 14), et en bout de ligne le coût.
-  À partir de deux, elles se comparent en cards côte à côte : le nom en tête, les mêmes selects, le
-  coût, et une pastille ◉ / ○ qui retient l'option. La card retenue se détache par sa bordure.
-  Le ＋ au bout de la rangée ajoute une option, qui reprend le lieu et les nuits de celle qui est
-  retenue — on n'en change qu'un bout. La dernière option ne se retire pas.
-- **Le type restreint le lieu, il ne le remplace pas** : posé sur une option, il réduit le select
+- **Un groupe** : ses colonnes côte à côte dans la largeur, chacune empilant de vraies cartes
+  d'étape. En tête de colonne, son nom éditable, la pastille ◉ / ○ qui la retient et le ✕ qui la
+  retire avec ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la
+  hauteur de la colonne d'à côté. La colonne retenue se détache par sa bordure. Toutes les colonnes
+  partent du même jour et se datent comme si elles étaient retenues, sinon rien ne les comparerait ;
+  seules les cartes de la colonne retenue portent une lettre, les autres n'étant sur aucun tracé.
+  Le ＋ sous la rangée ajoute une colonne, qui recopie les étapes de celle qui est retenue — on n'en
+  change qu'un bout — et le ＋ dans une colonne y insère une étape de plus.
+- **Comparer commence sur l'étape qu'on a** : le `＋ option` d'une carte d'étape en fait la première
+  colonne d'un groupe neuf et pose sa copie en seconde. Symétriquement, un groupe qui retombe à une
+  seule colonne se défait : ses étapes redeviennent ordinaires et ses lignes communes rejoignent la
+  première d'entre elles, seul endroit où elles peuvent tenir.
+- **Le type restreint le lieu, il ne le remplace pas** : posé sur une étape, il réduit le select
   de lieu aux hébergements de ce type et en retire les villes ; sans type, le select propose tout.
   Changer de type efface un lieu qui n'en relève plus, sinon la pastille montrerait un lieu absent
   de sa propre liste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
   lieu comme ses niveaux — « Toscane » trouve tout ce qui y est.
-- **Créer une étape** : le ＋ entre deux cartes comme le bouton de l'en-tête ouvrent le même choix,
-  « Créer une étape » ou « Créer une étape avec options » — la seconde pose deux options d'emblée.
-- **La modale d'étape** édite les nuits et le budget de l'option retenue : ce sont ceux qui
-  comptent. Le lieu, lui, ne se choisit que sur la card.
+- **Créer une étape** : le ＋ entre deux rangées comme le bouton de l'en-tête ouvrent le même choix,
+  « Créer une étape » ou « Créer une étape avec options » — la seconde pose un groupe de deux
+  colonnes d'emblée. Dans une colonne, le ＋ n'a qu'un geste, donc pas de menu : l'étape y naît.
+- **La modale d'étape** édite les nuits et le budget de l'étape. Le lieu, lui, ne se choisit que
+  sur la carte.
 - **Masquer une étape** (case à cocher en haut à gauche de la carte) : cochée, la carte passe en
   grisé-pointillé, son contenu et ses actions se désaturent, son titre se barre, sa pastille devient
   un point, ses dates disparaissent, et le scénario se lit comme si elle n'existait pas. Sert à
@@ -543,13 +573,15 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **La route entre deux étapes** : la bande qui sépare deux cartes porte son tronçon routier —
   distance et temps de conduite, « 🚗 55 km · 1 h 11 », lus dans le même itinéraire que le tracé de
   la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
-  tronçon qui enjamberait une étape masquée ou sans lieu ne dirait pas la distance des deux cartes
-  qu'on lit. Le `＋` d'insertion sort à droite du libellé au survol.
+  tronçon qui enjamberait une étape masquée, écartée ou sans lieu ne dirait pas la distance des
+  deux cartes qu'on lit. Dans un groupe, il se lit donc entre deux cartes de la colonne retenue. Le `＋` d'insertion sort à droite du libellé au survol.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
   — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
-  passent en tête, précédés d'une ★, le reste est trié par nom.
-- **Les lignes d'une étape** : sous la ligne du lieu, et sous l'hébergement de chaque card
-  d'option, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
+  passent en tête, précédés d'une ★, le reste est trié par nom. Chaque en-tête de groupe le replie
+  et dit alors combien il cache ; une recherche déplie tout, sinon un groupe replié cacherait ce
+  qu'on vient de taper.
+- **Les lignes d'une étape** : sous la ligne du lieu de chaque carte, et sous les colonnes d'un
+  groupe pour celles qui lui sont communes, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
   précédé de l'emoji de son type (💶 pour une dépense) prend la largeur, le nombre et le montant
   s'épinglent à droite. Un nombre de 1 et un montant vide ne s'affichent qu'au survol de leur ligne,
   sans la quitter — sa hauteur ne saute pas sous la souris. La pastille du nom ouvre un menu qui
@@ -561,8 +593,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   de quelle table il vient. `Entrée` prend la première correspondance, l'activité avant la dépense.
   Un nom sans correspondance se crée sur place, dans l'un ou l'autre vocabulaire : l'entrée ne porte
   alors que son nom, le reste se complète depuis sa page. La modale d'étape, elle, ne montre et
-  n'ajoute que les activités de l'étape : celles d'une option se posent sur sa card, là où l'on voit
-  à quelle option elles appartiennent.
+  n'ajoute que les activités de l'étape : les dépenses et les lignes communes à un groupe se posent
+  sur la carte, là où l'on voit à quel porteur elles appartiennent.
 - **Le champ activités de la modale d'étape** : les chips de ce qui est attaché, puis un champ de
   recherche dont la liste s'ouvre **au focus** — sans requête elle propose tout ce qui n'est pas
   déjà attaché, la création n'apparaissant qu'une fois un nom tapé. `↑` et `↓` déplacent le résultat
@@ -572,8 +604,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
   rattachée à une ville — seul un hébergement porte un prix. Ses lignes se comptent à part et se rangent
   par genre dans le Total général — une activité dans la famille Attractions, une dépense avec les
-  Charges : celles de l'étape plus celles de l'option retenue, les autres options étant des
-  comparaisons.
+  Charges : celles des étapes retenues plus celles des groupes qu'elles traversent, les colonnes
+  écartées étant des comparaisons.
 - **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
   / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
   Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
@@ -621,8 +653,8 @@ la collection.
 
 Le panneau porte **une liste de types par collection**, puis trois filtres qui valent pour les
 deux : province, ⭐ favoris, et **scénario**. Choisir un scénario trace son trajet et ne garde que
-les lieux qu'il utilise — l'hébergement de l'option retenue de chaque étape, et les activités
-attachées à l'étape ou à cette option.
+les lieux qu'il utilise — l'hébergement de chacune de ses étapes retenues, et les activités
+attachées à ces étapes ou aux groupes qu'elles traversent.
 
 ### Notes
 

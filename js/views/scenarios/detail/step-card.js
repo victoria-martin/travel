@@ -1,44 +1,43 @@
-// Une étape sans rang ou sans lieu géolocalisé est absente du tracé : la pastille le dit sur place.
-function stepOrderBadge(step, idx) {
-  if (idx === null)
+// Une étape hors du tracé n'a pas de rang : la pastille dit sur place ce qui l'en sort.
+function stepOrderBadge(step, rank) {
+  if (rank === null)
     return /* HTML */ `<div
       class="step-order step-order-hidden"
-      title="Masquée — hors des dates, des totaux et de la carte"
+      title="${step.hidden ? 'Masquée' : 'Colonne écartée'} — hors des dates, des totaux et de la carte"
     >
       •
     </div>`;
-  if (coordsFor(step)) return `<div class="step-order">${stepLetter(idx)}</div>`;
+  if (coordsFor(step)) return `<div class="step-order">${stepLetter(rank)}</div>`;
   return /* HTML */ `<div
     class="step-order step-order-unmapped"
     title="Pas de lieu géolocalisé — absente de la carte"
   >
-    ${stepLetter(idx)}
+    ${stepLetter(rank)}
   </div>`;
 }
 
-function stepCard(scenario, step, idx) {
+function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
       class="step-card${step.hidden ? ' step-card-hidden' : ''}"
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >
-      <div class="step-reorder">
-        ${stepDragHandle(step)} ${stepMoveButtons(scenario, step)}
-      </div>
-      ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, idx)}
+      <div class="step-reorder">${stepDragHandle(step)} ${stepMoveButtons(scenario, step)}</div>
+      ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, rank)}
       <div class="step-body">
         <div class="step-title">
           ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
             key: `step:${step.id}:name`,
             placeholder: 'Nom de l’étape…',
           })}${stepPlaceSuffix(step)}
-          ${idx === null ? '' : `<span class="step-title-dates">${stepDateRange(scenario, idx)}</span>`}
+          <span class="step-title-dates">${dateRangeLabel(arrival, stepNights(step))}</span>
         </div>
-        <div class="test-red">
-          ${stepDetailLine(step)} ${stepOptionsBlock(scenario, step)}
-          ${extrasBlock(scenario, step, '')}
+        ${stepDetailLine(step)}
+        <div class="step-acc">
+          ${stepLine(scenario, step)} ${step.groupId ? '' : makeGroupButton(scenario, step)}
         </div>
+        ${extrasBlock(scenario, step)}
       </div>
       <div class="step-actions">
         ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
@@ -59,6 +58,17 @@ function stepCard(scenario, step, idx) {
       </div>
     </div>
   `;
+}
+
+// Comparer commence sur l'étape qu'on a : elle devient la première colonne, sa copie la seconde.
+function makeGroupButton(scenario, step) {
+  return /* HTML */ `<button
+    class="inline-tag step-add-option"
+    title="Comparer une autre option"
+    onclick="makeStepGroup('${scenario.id}','${step.id}')"
+  >
+    ＋ option
+  </button>`;
 }
 
 function stepHiddenCheckbox(scenario, step) {

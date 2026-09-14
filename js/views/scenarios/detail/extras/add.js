@@ -3,17 +3,13 @@
   champ de recherche qui interroge d'un coup les deux vocabulaires — les activités du voyage et ses
   dépenses — parce qu'on cherche un nom sans se demander de quelle table il vient. La frappe ne
   repeint que la liste, sinon le champ perdrait sa saisie à chaque lettre. Les identifiants portent
-  le porteur : l'étape et chacune de ses options rendent leur propre menu.
+  le porteur : une étape et un groupe rendent chacun le sien.
 */
 
-function extraHolderKey(stepId, optionId) {
-  return `${stepId}-${optionId || 'step'}`;
-}
-
-function extraAddRow(scenario, step, optionId) {
-  const total = extrasTotal(step, optionId);
+function extraAddRow(scenario, holder) {
+  const total = extrasTotal(holder);
   return /* HTML */ `<div class="step-extra-row">
-    ${extraAddDropdown(scenario, step, optionId)}
+    ${extraAddDropdown(scenario, holder)}
     <span></span>
     <span class="step-total"
       ><span class="step-budget">${total ? formatEuros(total) : ''}</span></span
@@ -21,8 +17,8 @@ function extraAddRow(scenario, step, optionId) {
   </div>`;
 }
 
-function extraAddDropdown(scenario, step, optionId) {
-  const key = extraHolderKey(step.id, optionId);
+function extraAddDropdown(scenario, holder) {
+  const key = holder.id;
   return inlineDropdown(
     `extra-add:${key}`,
     'extra-add-dropdown',
@@ -39,10 +35,10 @@ function extraAddDropdown(scenario, step, optionId) {
           id="extra-search-${key}"
           type="text"
           placeholder="Activité ou dépense…"
-          oninput="repaintExtraOptions('${scenario.id}','${step.id}','${optionId}')"
-          onkeydown="extraSearchKeydown(event,'${scenario.id}','${step.id}','${optionId}')"
+          oninput="repaintExtraOptions('${scenario.id}','${holder.id}')"
+          onkeydown="extraSearchKeydown(event,'${scenario.id}','${holder.id}')"
         />
-        <div id="extra-options-${key}">${extraOptions(scenario.id, step.id, optionId)}</div>
+        <div id="extra-options-${key}">${extraOptions(scenario.id, holder.id)}</div>
       </div>`,
   );
 }
@@ -63,26 +59,26 @@ function extraOptionGroup(title, items) {
 
 // Un nom sans correspondance se crée sur place, dans l'un ou l'autre vocabulaire : l'entrée créée
 // ne porte alors que son nom, le reste se complète depuis sa page.
-function extraCreateItems(scenarioId, stepId, optionId, query) {
+function extraCreateItems(scenarioId, holderId, query) {
   if (!query) return '';
   return /* HTML */ `<button
       class="inline-menu-item inline-menu-item-create"
-      onclick="createExtraAttraction('${scenarioId}','${stepId}','${optionId}')"
+      onclick="createExtraAttraction('${scenarioId}','${holderId}')"
     >
       ＋ Créer l'activité « ${escapeHtml(query)} »
     </button>
     <button
       class="inline-menu-item inline-menu-item-create"
-      onclick="createExtraCost('${scenarioId}','${stepId}','${optionId}')"
+      onclick="createExtraCost('${scenarioId}','${holderId}')"
     >
       ＋ Créer la dépense « ${escapeHtml(query)} »
     </button>`;
 }
 
-function extraOptions(scenarioId, stepId, optionId) {
-  const step = getStep(scenarioId, stepId);
-  const lines = holderExtras(step, optionId);
-  const query = extraSearchQuery(extraHolderKey(stepId, optionId));
+function extraOptions(scenarioId, holderId) {
+  const holder = getExtraHolder(scenarioId, holderId);
+  const lines = holderExtras(holder);
+  const query = extraSearchQuery(holderId);
   const attractions = attractionMatches(
     query,
     lines.map((line) => line.attractionId).filter(Boolean),
@@ -94,7 +90,7 @@ function extraOptions(scenarioId, stepId, optionId) {
       attractions.map(
         (a) => `<button
           class="inline-menu-item"
-          onclick="attachExtraAttraction('${scenarioId}','${stepId}','${optionId}','${a.id}')"
+          onclick="attachExtraAttraction('${scenarioId}','${holderId}','${a.id}')"
         >
           ${tagLabel(attractionType(a.type).emoji, escapeHtml(a.name))}
         </button>`,
@@ -105,48 +101,50 @@ function extraOptions(scenarioId, stepId, optionId) {
       costs.map(
         (cost) => `<button
           class="inline-menu-item"
-          onclick="attachExtraCost('${scenarioId}','${stepId}','${optionId}','${cost.id}')"
+          onclick="attachExtraCost('${scenarioId}','${holderId}','${cost.id}')"
         >
           ${tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)))}
         </button>`,
       ),
     );
-  const creates = extraCreateItems(scenarioId, stepId, optionId, query);
+  const creates = extraCreateItems(scenarioId, holderId, query);
   return groups + creates || '<div class="inline-menu-group">Rien à rattacher</div>';
 }
 
-function repaintExtraOptions(scenarioId, stepId, optionId) {
-  document.getElementById(`extra-options-${extraHolderKey(stepId, optionId)}`).innerHTML =
-    extraOptions(scenarioId, stepId, optionId);
+function repaintExtraOptions(scenarioId, holderId) {
+  document.getElementById(`extra-options-${holderId}`).innerHTML = extraOptions(
+    scenarioId,
+    holderId,
+  );
 }
 
 // `Entrée` prend la première correspondance, l'activité avant la dépense ; sans aucune, elle crée
 // l'activité — créer une dépense reste un clic, les deux genres ne peuvent pas partager la touche.
-function extraSearchKeydown(e, scenarioId, stepId, optionId) {
+function extraSearchKeydown(e, scenarioId, holderId) {
   if (e.key !== 'Enter') return;
   e.preventDefault();
-  const step = getStep(scenarioId, stepId);
-  const lines = holderExtras(step, optionId);
-  const query = extraSearchQuery(extraHolderKey(stepId, optionId));
+  const holder = getExtraHolder(scenarioId, holderId);
+  const lines = holderExtras(holder);
+  const query = extraSearchQuery(holderId);
   if (!query) return;
   const attraction = attractionMatches(
     query,
     lines.map((line) => line.attractionId).filter(Boolean),
   )[0];
-  if (attraction) return attachExtraAttraction(scenarioId, stepId, optionId, attraction.id);
+  if (attraction) return attachExtraAttraction(scenarioId, holderId, attraction.id);
   const cost = costMatches(query, lines.map((line) => line.costId).filter(Boolean))[0];
-  if (cost) return attachExtraCost(scenarioId, stepId, optionId, cost.id);
-  createExtraAttraction(scenarioId, stepId, optionId);
+  if (cost) return attachExtraCost(scenarioId, holderId, cost.id);
+  createExtraAttraction(scenarioId, holderId);
 }
 
-function createExtraAttraction(scenarioId, stepId, optionId) {
-  const name = extraSearchQuery(extraHolderKey(stepId, optionId));
+function createExtraAttraction(scenarioId, holderId) {
+  const name = extraSearchQuery(holderId);
   if (!name) return;
-  attachExtraAttraction(scenarioId, stepId, optionId, createAttractionNamed(name).id);
+  attachExtraAttraction(scenarioId, holderId, createAttractionNamed(name).id);
 }
 
-function createExtraCost(scenarioId, stepId, optionId) {
-  const label = extraSearchQuery(extraHolderKey(stepId, optionId));
+function createExtraCost(scenarioId, holderId) {
+  const label = extraSearchQuery(holderId);
   if (!label) return;
-  attachExtraCost(scenarioId, stepId, optionId, createFixedCostNamed(label).id);
+  attachExtraCost(scenarioId, holderId, createFixedCostNamed(label).id);
 }

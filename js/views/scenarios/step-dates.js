@@ -1,12 +1,30 @@
 // Le départ du scénario donne la date de la première étape, les nuits des précédentes décalent les suivantes.
-function stepArrival(scenario, idx) {
+function scenarioStart(scenario) {
   if (!scenario.startDate) return null;
   const [y, m, d] = scenario.startDate.split('-').map(Number);
-  if (!y || !m || !d) return null;
+  return y && m && d ? new Date(y, m - 1, d) : null;
+}
+
+function dateAfter(date, nights) {
+  return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + nights) : null;
+}
+
+function stepArrival(scenario, idx) {
   const nightsBefore = visibleSteps(scenario)
     .slice(0, idx)
     .reduce((sum, st) => sum + stepNights(st), 0);
-  return new Date(y, m - 1, d + nightsBefore);
+  return dateAfter(scenarioStart(scenario), nightsBefore);
+}
+
+// Un groupe commence quand s'achèvent les étapes retenues qui le précèdent : ses colonnes partent
+// donc toutes de la même date, retenues ou non, sinon il n'y aurait rien à comparer.
+function groupArrival(scenario, group) {
+  const first = scenario.steps.findIndex((st) => st.groupId === group.id);
+  const nightsBefore = scenario.steps
+    .slice(0, first)
+    .filter((st) => !st.hidden && isStepRetained(scenario, st))
+    .reduce((sum, st) => sum + stepNights(st), 0);
+  return dateAfter(scenarioStart(scenario), nightsBefore);
 }
 
 function formatStepDate(date) {
@@ -17,13 +35,14 @@ function formatStepDay(date) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 }
 
-function stepDateRange(scenario, idx) {
-  const arrival = stepArrival(scenario, idx);
+function dateRangeLabel(arrival, nights) {
   if (!arrival) return '';
-  const nights = stepNights(visibleSteps(scenario)[idx]);
   if (nights === 0) return escapeHtml(formatStepDate(arrival));
-  const departure = new Date(arrival.getFullYear(), arrival.getMonth(), arrival.getDate() + nights);
-  return escapeHtml(`${formatStepDate(arrival)} → ${formatStepDate(departure)}`);
+  return escapeHtml(`${formatStepDate(arrival)} → ${formatStepDate(dateAfter(arrival, nights))}`);
+}
+
+function stepDateRange(scenario, idx) {
+  return dateRangeLabel(stepArrival(scenario, idx), stepNights(visibleSteps(scenario)[idx]));
 }
 
 function stepArrivalDay(scenario, idx) {

@@ -13,8 +13,12 @@ function scenarioCarDropdown(scenario) {
         ${tagLabel('', current ? escapeHtml(carLabel(current)) : 'Aucune voiture')}
       </summary>
       <div class="inline-menu">
-        <button class="inline-menu-item ${scenario.carId ? '' : 'selected'}"
-          onclick="pickScenarioCar('${scenario.id}','')">Aucune voiture</button>
+        <button
+          class="inline-menu-item ${scenario.carId ? '' : 'selected'}"
+          onclick="pickScenarioCar('${scenario.id}','')"
+        >
+          Aucune voiture
+        </button>
         ${cars
           .map(
             (c) => `<button

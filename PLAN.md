@@ -44,11 +44,11 @@ les types.
 - **stepForm** <!--t:zfop--> — 🧩 ui · 💾 données · 🪟 modal · ⏳ à faire :
   ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
   j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
-- **Retirer les colonnes d'avant les options** <!--t:v4m2--> — 🔄 synchro · ⏳ à faire : `nights`,
-  `cityId`, `accommodationId` et `budget` restent déclarées dans `COLLECTIONS.steps`
-  ([Code.js](apps-script/Code.js)) comme seule source de la reprise, et repartent vides au premier
-  enregistrement. Une fois la conversion passée dans le Sheet, les retirer de la collection avec
-  `adoptLegacyStep`, des deux côtés — l'Apps Script et [storage.js](js/storage.js).
+- **Retirer la reprise d'avant les colonnes** <!--t:v4m2--> — 🔄 synchro · ⏳ à faire : l'onglet
+  `stepOptions` et la colonne `city` de `COLLECTIONS.steps` ([Code.js](apps-script/Code.js)) ne sont
+  plus que la source de la reprise, et repartent vides au premier enregistrement. Une fois la
+  conversion passée dans le Sheet, les retirer de la collection avec `adoptScenarioSteps` et
+  `explodeStepOptions`, des deux côtés — l'Apps Script et [storage.js](js/storage.js).
 
 ## 💻 plan-tool
 
@@ -310,7 +310,7 @@ table et leur modale.
   `accommodation.status === 'booked'`, `scenario.isChosen`, et la troisième reste à nommer.
 - **Une dépense saisie appartient-elle au scénario ?** <!--t:x8dr--> — 🗃️ modèle · 🔍 à étudier :
   elle appartient au voyage, et le rattachement se fait par des listes portées côté scénario — les
-  `costIds` du scénario, les lignes d'une étape ou d'une option. Le `scenarioId` optionnel sur la
+  `costIds` du scénario, les lignes d'une étape ou d'un groupe. Le `scenarioId` optionnel sur la
   dépense est écarté : une dépense ne peut pas porter un champ par niveau de rattachement. Reste à
   décider si une dépense peut n'exister **que** dans un scénario, donc disparaître de la page
   Dépenses.
@@ -440,7 +440,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   [apps-script/](apps-script/), [tools/](tools/) —, donc ne publier que ce que le navigateur
   charge, ce qui met `index.html`, `styles.css` et `js/` sous un dossier. Le code applicatif, lui,
   reste lisible dans l'onglet Sources quoi qu'il arrive : ce qu'on gagne, c'est l'historique git et
-  les fichiers hors app. Fermer le *contenu* du voyage est une autre question — il y faudrait une
+  les fichiers hors app. Fermer le _contenu_ du voyage est une autre question — il y faudrait une
   auth devant le site (Cloudflare Access, gratuit jusqu'à 50 comptes). Deux lignes de la spec
   nomment GitHub Pages comme hôte, le `#` des adresses
   ([spec](docs/spec-voyage-toscane.md#L43)) et la pastille « local » de la favicon

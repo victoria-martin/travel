@@ -126,7 +126,7 @@ function attractionForm(p) {
         />
       </div>
     </div>
-    ${tagsField(p, allAttractionTags)}
+    ${tagsField(p, { field: 'tags', label: 'Tags', options: allAttractionTags })}
     <div class="field">
       <label>Description</label
       ><textarea id="a-description" rows="3">${escapeHtml(p.description)}</textarea>

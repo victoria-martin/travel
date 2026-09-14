@@ -13,10 +13,10 @@ COLUMN_SETS.charges = [
     sortValue: (c) => (c.amount || '').toLowerCase(),
   },
   {
-    key: 'category',
-    label: 'Catégorie',
-    cell: fixedCostCategoryCell,
-    sortValue: (c) => (c.category || '').toLowerCase(),
+    key: 'categories',
+    label: 'Catégories',
+    cell: fixedCostCategoriesCell,
+    sortValue: (c) => (c.categories || []).join(', ').toLowerCase(),
   },
   {
     key: 'recurrence',
@@ -35,8 +35,13 @@ function fixedCostAmountCell(c) {
   return textCell(c.amount);
 }
 
-function fixedCostCategoryCell(c) {
-  return textCell(c.category);
+function fixedCostCategoriesCell(c) {
+  return tagsCell(c, {
+    field: 'categories',
+    getItem: getFixedCost,
+    vocabulary: allFixedCostCategories,
+    addLabel: '+ catégorie',
+  });
 }
 
 function fixedCostRecurrenceCell(c) {

@@ -1,6 +1,9 @@
 /*
   Chaque type de modale déclare comment construire son payload à l'ouverture et comment
   rendre son corps ; les formulaires eux-mêmes vivent dans le dossier de leur vue.
+  Le payload est un clone profond : un spread partagerait les tableaux de l'entité (tags,
+  catégories, lignes d'étape), et les champs à pastilles, qui écrivent dans le payload à la frappe,
+  modifieraient la donnée qu'Annuler est censé laisser intacte.
 */
 
 let modal = null; // {type, payload}
@@ -8,13 +11,13 @@ let modalSnapshot = null; // field values as opened, to tell whether anything wa
 
 const MODAL_TYPES = {
   voyage: {
-    open: (id) => ({ payload: id ? { ...getTravel(id) } : emptyTravel() }),
+    open: (id) => ({ payload: id ? structuredClone(getTravel(id)) : emptyTravel() }),
     body: (m) => travelForm(m.payload),
     after: (m) => paintTravelModal(m.payload.accentColor),
     edits: true,
   },
   accommodation: {
-    open: (id) => ({ payload: id ? { ...getAccommodation(id) } : emptyAccommodation() }),
+    open: (id) => ({ payload: id ? structuredClone(getAccommodation(id)) : emptyAccommodation() }),
     body: (m) => accommodationForm(m.payload),
     edits: true,
   },
@@ -34,37 +37,37 @@ const MODAL_TYPES = {
     edits: true,
   },
   ville: {
-    open: (id) => ({ payload: id ? { ...getCity(id) } : emptyCity() }),
+    open: (id) => ({ payload: id ? structuredClone(getCity(id)) : emptyCity() }),
     body: (m) => cityForm(m.payload),
     edits: true,
   },
   attraction: {
-    open: (id) => ({ payload: id ? { ...getAttraction(id) } : emptyAttraction() }),
+    open: (id) => ({ payload: id ? structuredClone(getAttraction(id)) : emptyAttraction() }),
     body: (m) => attractionForm(m.payload),
     edits: true,
   },
   transport: {
-    open: (id) => ({ payload: id ? { ...getTransport(id) } : emptyTransport() }),
+    open: (id) => ({ payload: id ? structuredClone(getTransport(id)) : emptyTransport() }),
     body: (m) => transportForm(m.payload),
     edits: true,
   },
   voiture: {
-    open: (id) => ({ payload: id ? { ...getCar(id) } : emptyCar() }),
+    open: (id) => ({ payload: id ? structuredClone(getCar(id)) : emptyCar() }),
     body: (m) => carForm(m.payload),
     edits: true,
   },
   charge: {
     open: (id, scenarioId) => ({
       scenarioId,
-      payload: id ? { ...getFixedCost(id) } : emptyFixedCost(),
+      payload: id ? structuredClone(getFixedCost(id)) : emptyFixedCost(),
     }),
     body: (m) => fixedCostForm(m.payload),
     edits: true,
   },
   step: {
-    open: (scenarioId, stepId, optionCount) => ({
+    open: (scenarioId, stepId) => ({
       scenarioId,
-      payload: stepId ? { ...getStep(scenarioId, stepId) } : emptyStep(optionCount),
+      payload: stepId ? structuredClone(getStep(scenarioId, stepId)) : emptyStep(),
     }),
     body: (m) => stepForm(m.payload),
     edits: true,

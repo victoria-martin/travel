@@ -162,24 +162,30 @@ function mergeCollections(remote, local, base, mergeItem) {
   return out;
 }
 
-function withoutSteps(scenario) {
-  const { steps, ...rest } = scenario || {};
+// Un scénario porte deux listes filles : ses étapes et les groupes où leurs colonnes se comparent.
+const SCENARIO_CHILD_LISTS = ['steps', 'groups'];
+
+function withoutChildLists(scenario) {
+  const rest = { ...(scenario || {}) };
+  SCENARIO_CHILD_LISTS.forEach((field) => delete rest[field]);
   return rest;
 }
 
-// Le nom du scénario et ses étapes se fusionnent séparément : toucher une étape
-// ne doit pas écraser un renommage venu du Sheet.
+// Le nom du scénario et ses listes filles se fusionnent séparément : toucher une étape ou une
+// colonne ne doit pas écraser un renommage venu du Sheet.
 function mergeScenario(remoteScenario, localScenario, baseScenario) {
   const ownFieldsChanged =
-    !baseScenario || !sameJson(withoutSteps(localScenario), withoutSteps(baseScenario));
+    !baseScenario || !sameJson(withoutChildLists(localScenario), withoutChildLists(baseScenario));
   const merged = deepClone(
-    ownFieldsChanged ? withoutSteps(localScenario) : withoutSteps(remoteScenario),
+    ownFieldsChanged ? withoutChildLists(localScenario) : withoutChildLists(remoteScenario),
   );
-  merged.steps = mergeCollections(
-    remoteScenario.steps || [],
-    localScenario.steps || [],
-    (baseScenario && baseScenario.steps) || [],
-  );
+  SCENARIO_CHILD_LISTS.forEach((field) => {
+    merged[field] = mergeCollections(
+      remoteScenario[field] || [],
+      localScenario[field] || [],
+      (baseScenario && baseScenario[field]) || [],
+    );
+  });
   return merged;
 }
 

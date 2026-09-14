@@ -31,18 +31,18 @@ function initMap() {
   fitToPoints(leafletMap, bounds);
 }
 
-// The chosen option carries the stay; an extra follows it, or the step itself when it has no option.
+// Only the retained itinerary is drawn: its steps carry the stays, and their lines the attractions.
 function scenarioSelection(scenario) {
-  const accommodationIds = new Set();
-  const attractionIds = new Set();
-  visibleSteps(scenario).forEach((step) => {
-    const option = chosenOption(step);
-    if (option.accommodationId) accommodationIds.add(option.accommodationId);
-    step.extras.forEach((extra) => {
-      if (extra.optionId && extra.optionId !== option.id) return;
-      if (extra.attractionId) attractionIds.add(extra.attractionId);
-    });
-  });
+  const accommodationIds = new Set(
+    visibleSteps(scenario)
+      .map((step) => step.accommodationId)
+      .filter(Boolean),
+  );
+  const attractionIds = new Set(
+    scenarioAttractionLines(scenario)
+      .map((line) => line.attractionId)
+      .filter(Boolean),
+  );
   return { accommodationIds, attractionIds };
 }
 

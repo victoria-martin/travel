@@ -1,4 +1,4 @@
-function emptyStep(optionCount = 1) {
+function emptyStep() {
   return {
     id: null,
     name: '',
@@ -6,16 +6,17 @@ function emptyStep(optionCount = 1) {
     notes: '',
     extras: [],
     hidden: false,
-    options: Array.from({ length: optionCount }, (_, i) => ({
-      ...emptyStepOption(),
-      isSelected: i === 0,
-    })),
+    groupId: '',
+    optionId: '',
+    cityId: null,
+    accommodationId: null,
+    accommodationType: '',
+    nights: 1,
+    budget: '',
   };
 }
 
-// Nuits et budget appartiennent à une option : la modale édite celle qui est retenue.
 function stepForm(p) {
-  const option = editableOption(p);
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
     <div class="field">
@@ -24,15 +25,14 @@ function stepForm(p) {
     </div>
     <div class="field-row">
       <div class="field">
-        <label>Nuits</label
-        ><input id="s-nights" type="number" min="0" value="${option.nights || 0}" />
+        <label>Nuits</label><input id="s-nights" type="number" min="0" value="${stepNights(p)}" />
       </div>
       <div class="field">
         <label>Budget</label
         ><input
           id="s-budget"
           type="text"
-          value="${escapeHtml(option.budget)}"
+          value="${escapeHtml(p.budget)}"
           placeholder="Remplace le prix de l'hébergement"
         />
       </div>

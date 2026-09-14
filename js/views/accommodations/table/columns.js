@@ -43,7 +43,13 @@ const ACCOMMODATION_COLUMNS = [
   {
     key: 'tags',
     label: 'Tags',
-    cell: (a) => tagsCell(a, getAccommodation, allAccommodationTags),
+    cell: (a) =>
+      tagsCell(a, {
+        field: 'tags',
+        getItem: getAccommodation,
+        vocabulary: allAccommodationTags,
+        addLabel: '+ tag',
+      }),
   },
   { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: accommodationAddressCell },
   { key: 'price', label: 'Prix', nowrap: true, cell: accommodationPriceCell },

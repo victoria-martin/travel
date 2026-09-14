@@ -9,8 +9,8 @@ function accommodationTypeDropdown(a) {
     `type:${a.id}`,
     'type-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
-    <div class="inline-menu">
-      ${Object.entries(ACCOMMODATION_TYPES)
+      <div class="inline-menu">
+        ${Object.entries(ACCOMMODATION_TYPES)
         .map(
           ([key, t]) => `<button
             class="inline-menu-item ${t === current ? 'selected' : ''}"
@@ -20,6 +20,6 @@ function accommodationTypeDropdown(a) {
           </button>`,
         )
         .join('')}
-    </div>`,
+      </div>`,
   );
 }

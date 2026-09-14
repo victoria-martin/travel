@@ -1,11 +1,7 @@
-function optionPlace(option) {
-  if (option.cityId) return getCity(option.cityId) || null;
-  if (option.accommodationId) return getAccommodation(option.accommodationId) || null;
-  return null;
-}
-
 function stepPlace(step) {
-  return optionPlace(chosenOption(step));
+  if (step.cityId) return getCity(step.cityId) || null;
+  if (step.accommodationId) return getAccommodation(step.accommodationId) || null;
+  return null;
 }
 
 function coordsFor(step) {

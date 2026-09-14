@@ -1,20 +1,25 @@
 /*
-  Les lignes d'une étape — ses activités et ses dépenses. Elles vivent toutes sur l'étape : celles
-  qui portent un `optionId` appartiennent à cette option, les autres à l'étape elle-même. Une ligne
-  s'adresse par son identifiant et jamais par son rang, puisque chaque porteur n'affiche que les
-  siennes.
+  Les lignes — activités et dépenses. Elles vivent sur leur porteur, qui est une étape ou un
+  groupe : celles d'un groupe valent quelle que soit la colonne retenue, celles d'une étape ne
+  valent que si la sienne l'est. Une ligne s'adresse par son identifiant et jamais par son rang,
+  puisque chaque porteur n'affiche que les siennes.
 */
-function stepExtras(step) {
-  if (!Array.isArray(step.extras)) step.extras = [];
-  return step.extras;
+function holderExtras(holder) {
+  if (!Array.isArray(holder.extras)) holder.extras = [];
+  return holder.extras;
 }
 
-function holderExtras(step, optionId) {
-  return stepExtras(step).filter((line) => (line.optionId || '') === (optionId || ''));
+function getExtraHolder(scenarioId, holderId) {
+  const scenario = getScenario(scenarioId);
+  return (
+    scenario.steps.find((st) => st.id === holderId) ||
+    scenarioGroups(scenario).find((g) => g.id === holderId) ||
+    null
+  );
 }
 
-function findStepExtra(scenarioId, stepId, lineId) {
-  return stepExtras(getStep(scenarioId, stepId)).find((line) => line.id === lineId);
+function findHolderExtra(scenarioId, holderId, lineId) {
+  return holderExtras(getExtraHolder(scenarioId, holderId)).find((line) => line.id === lineId);
 }
 
 // Une ligne référence une activité ou une dépense, jamais les deux.

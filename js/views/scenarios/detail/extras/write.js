@@ -1,58 +1,51 @@
-function emptyExtra(optionId) {
-  return {
-    id: uid(),
-    optionId: optionId || '',
-    attractionId: '',
-    costId: '',
-    count: 1,
-    budget: '',
-  };
+function emptyExtra() {
+  return { id: uid(), attractionId: '', costId: '', count: 1, budget: '' };
 }
 
 // La recherche reste ouverte après un ajout : on rattache souvent plusieurs lignes d'affilée.
-function pushExtra(scenarioId, stepId, optionId, reference) {
-  stepExtras(getStep(scenarioId, stepId)).push({ ...emptyExtra(optionId), ...reference });
+function pushExtra(scenarioId, holderId, reference) {
+  holderExtras(getExtraHolder(scenarioId, holderId)).push({ ...emptyExtra(), ...reference });
   saveNow();
   render();
-  focusExtraSearch(extraHolderKey(stepId, optionId));
+  focusExtraSearch(holderId);
 }
 
-function attachExtraAttraction(scenarioId, stepId, optionId, attractionId) {
-  pushExtra(scenarioId, stepId, optionId, { attractionId });
+function attachExtraAttraction(scenarioId, holderId, attractionId) {
+  pushExtra(scenarioId, holderId, { attractionId });
 }
 
-function attachExtraCost(scenarioId, stepId, optionId, costId) {
-  pushExtra(scenarioId, stepId, optionId, { costId });
+function attachExtraCost(scenarioId, holderId, costId) {
+  pushExtra(scenarioId, holderId, { costId });
 }
 
-function setExtraAttraction(scenarioId, stepId, lineId, attractionId) {
-  findStepExtra(scenarioId, stepId, lineId).attractionId = attractionId;
-  saveNow();
-  render();
-}
-
-function setExtraCost(scenarioId, stepId, lineId, costId) {
-  findStepExtra(scenarioId, stepId, lineId).costId = costId;
+function setExtraAttraction(scenarioId, holderId, lineId, attractionId) {
+  findHolderExtra(scenarioId, holderId, lineId).attractionId = attractionId;
   saveNow();
   render();
 }
 
-function detachExtra(scenarioId, stepId, lineId) {
+function setExtraCost(scenarioId, holderId, lineId, costId) {
+  findHolderExtra(scenarioId, holderId, lineId).costId = costId;
+  saveNow();
+  render();
+}
+
+function detachExtra(scenarioId, holderId, lineId) {
   openInlineMenu = null;
-  const step = getStep(scenarioId, stepId);
-  step.extras = stepExtras(step).filter((line) => line.id !== lineId);
+  const holder = getExtraHolder(scenarioId, holderId);
+  holder.extras = holderExtras(holder).filter((line) => line.id !== lineId);
   saveNow();
   render();
 }
 
-function setExtraCount(scenarioId, stepId, lineId, count) {
-  findStepExtra(scenarioId, stepId, lineId).count = parseInt(count) || 1;
+function setExtraCount(scenarioId, holderId, lineId, count) {
+  findHolderExtra(scenarioId, holderId, lineId).count = parseInt(count) || 1;
   saveNow();
   render();
 }
 
-function setExtraBudget(scenarioId, stepId, lineId, budget) {
-  findStepExtra(scenarioId, stepId, lineId).budget = budget.trim();
+function setExtraBudget(scenarioId, holderId, lineId, budget) {
+  findHolderExtra(scenarioId, holderId, lineId).budget = budget.trim();
   saveNow();
   render();
 }
