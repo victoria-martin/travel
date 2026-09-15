@@ -60,6 +60,22 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-15** — `cars` devient [offers](js/views/rentals/get-offer.js) : la collection ne tenait
+  pas des voitures mais des **prix**, et la voiture, c'est `carModels`. Les deux noms étaient
+  croisés par rapport à l'écran — le code appelait `cars` ce que la page Locations nomme
+  « véhicule », et `carModels` ce que l'onglet nomme « Voitures » —, et la même entité portait deux
+  familles de noms selon le fichier, `car*` ici et `vehicle*` là. Le test qui départage : ce qui
+  change quand un loueur revoit ses tarifs est une offre, ce qui ne bouge jamais est un modèle.
+  Le renommage ne touche pas les clés persistées — `COLUMN_SETS.locations`, les `sortOrder.key`
+  (`carStatus`, `carFuel`, `carGearbox`), `openModal('voiture')` —, sans quoi les colonnes masquées
+  et les ordres de tri déjà enregistrés repartiraient à zéro ; ni les vocabulaires `CAR_STATUSES` /
+  `CAR_FUELS` / `CAR_GEARBOXES`, dont les deux derniers qualifient le modèle. Les textes de l'écran
+  restent « véhicule » : renommer l'entité n'est pas renommer ce qu'on lit. La reprise vit dans
+  `adoptOfferNames` ([storage.js](js/storage.js)), et la **base de synchro** y passe aussi
+  ([sync.js](js/sync.js)) : elle est lue hors de `migrateData`, et son instantané resté au nom
+  d'avant aurait renvoyé chaque offre en ajout. Côté Sheet, l'onglet se renomme au lieu de renaître
+  vide (`LEGACY_SHEETS`), et `carId` rejoint `LEGACY_HEADERS` comme `geoAddress` avant lui.
+
 - **2026-09-15** — le chrome passe des emoji aux icônes Lucide (ISC), recopiées dans
   [js/icons.js](js/icons.js) plutôt que chargées d'un CDN : l'app doit tourner sans réseau, et
   `lucide.createIcons()` demanderait une passe sur le DOM après chacun des douze endroits qui
@@ -88,7 +104,7 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   offres du même loueur ne différant que par une assurance s'y lisent l'une sous l'autre. Le tarif
   indicatif qu'un loueur portait sur son modèle disparaît avec le catalogue par loueur : un prix
   sans dates ne voulait rien dire. La grille d'une location cherche le nom tapé dans le catalogue
-  avant de l'y créer ([vehicle-draft.js](js/views/rentals/vehicle-draft.js)), donc il se remplit en
+  avant de l'y créer ([vehicle-draft.js](js/views/rentals/offer-draft.js)), donc il se remplit en
   saisissant. La page Transports prend un troisième onglet, et son en-tête cesse de trancher par
   `if` : chaque onglet déclare son corps, ses actions et son sous-titre dans `TRANSPORT_TABS`
   ([tab.js](js/views/transports/tab.js)). Les pastilles de motorisation et de boîte ayant deux
@@ -100,12 +116,12 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   [rentals](js/views/rentals/get-rental.js), et le véhicule n'en porte que la référence — lieu, dates
   et loueur cessent d'être recopiés sur chaque ligne, comme le nom du loueur l'a cessé le matin
   même. Le prix saisi est le **total** que le loueur affiche ; le prix par jour devient une
-  dérivation ([vehicle-price.js](js/views/rentals/vehicle-price.js)), ce qui laisse le scénario
+  dérivation ([vehicle-price.js](js/views/rentals/offer-price.js)), ce qui laisse le scénario
   multiplier un prix par jour par ses jours à lui sans rien changer. Les options d'un véhicule sont
   des cases cochées dans le catalogue de son loueur : le prix vit à un seul endroit, et l'option
   tapée depuis la fiche d'un véhicule rejoint ce catalogue
   ([options-field.js](js/views/rentals/modal/options-field.js)). La saisie rapide est une ligne du
-  tableau et non une modale ([vehicle-draft.js](js/views/rentals/vehicle-draft.js)) : `Entrée`
+  tableau et non une modale ([vehicle-draft.js](js/views/rentals/offer-draft.js)) : `Entrée`
   enregistre et rouvre une ligne vide, on recopie l'écran du loueur sans jamais changer de fenêtre.
   La page se nomme donc **Locations** et son dossier aussi ([js/views/rentals/](js/views/rentals/)) :
   « Voitures » nommait la ligne d'avant, pas ce que la page range. La clé de la vue suit — une liste
@@ -245,7 +261,7 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 - **2026-09-13** — `js/views/transports/` créé pour le domaine Transport, sur le découpage
   d'`attractions/`. Le mode est ce qui décide des champs : les quatre modes à compagnie portent
   `carrier` / `reference`, la voiture porte un `carId` qui **référence**
-  [get-car.js](js/views/rentals/get-car.js) au lieu de recopier la location — d'où deux blocs exclusifs
+  [get-car.js](js/views/rentals/get-offer.js) au lieu de recopier la location — d'où deux blocs exclusifs
   dans la modale, repeints au changement de mode, et une lecture du formulaire qui garde la valeur
   du bloc absent plutôt que de l'effacer. Un départ est une ville **plus** une précision libre :
   un aéroport n'est pas une ville, mais il est dans une ville. `price.js` est la première

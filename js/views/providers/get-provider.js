@@ -8,3 +8,11 @@ function providersOfMode(mode) {
     .filter((p) => p.mode === mode)
     .sort((a, b) => a.name.localeCompare(b.name));
 }
+
+// Les options cochées quelque part ne sont que des références au catalogue du loueur : corriger un
+// prix là-bas le corrige partout, et une option retirée du catalogue disparaît des totaux.
+function providerOptions(providerId, ids) {
+  const provider = getProvider(providerId);
+  if (!provider) return [];
+  return (ids || []).map((id) => provider.options.find((o) => o.id === id)).filter(Boolean);
+}

@@ -25,13 +25,13 @@ const DERIVED_EXPENSE_SOURCES = [
     label: 'Voiture par défaut',
     view: 'locations',
     lines: () => {
-      const car = defaultCar();
-      if (!car) return [];
-      const total = vehicleTotal(car);
+      const offer = defaultOffer();
+      if (!offer) return [];
+      const total = offerTotal(offer);
       return [
         {
           icon: '🚗',
-          label: carLabel(car),
+          label: offerLabel(offer),
           unit: '',
           amount: total || null,
           display: total ? formatEuros(total) : '—',

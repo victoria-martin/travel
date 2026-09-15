@@ -18,5 +18,5 @@ function findCarModelNamed(name) {
 
 // Les offres d'un modèle : un véhicule par location où on l'a relevé, loueurs mêlés.
 function carModelOffers(modelId) {
-  return ofCurrentTravel(state.cars).filter((car) => car.modelId === modelId);
+  return ofCurrentTravel(state.offers).filter((offer) => offer.modelId === modelId);
 }

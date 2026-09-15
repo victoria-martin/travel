@@ -212,7 +212,7 @@ voyage ». Tout est à trancher, rien n'est commencé.
   [tags.js:5](js/views/tags.js#L5). Les deux existent déjà dans l'app, il faut choisir lequel.
 - **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 🔍 à étudier : un bouton « Partir d'une liste
   type » qui crée les items d'un coup, versus une liste vide. Si modèle il y a, il vit à côté de la
-  vue, comme [default-car.js](js/views/rentals/default-car.js).
+  vue, comme [default-car.js](js/views/rentals/default-offer.js).
 - **Cocher** <!--t:30rq--> — 🧩 ui · 💡 idée : une case par ligne, écrite directement en base comme
   les inline-edits existants, et un compteur « 12 / 30 » dans l'en-tête.
 
@@ -230,7 +230,7 @@ voyage ». Tout est à trancher, rien n'est commencé.
   étapes, à côté du bloc Charges fixes, une ligne par catégorie avec son compteur et un lien vers la
   page. Lecture seule : on coche depuis la page Valise, pas depuis le scénario.
 - **Ce qui dépend de la voiture** <!--t:u7x0--> — 🗃️ modèle · 💡 idée : le scénario porte déjà une
-  voiture ([car-block.js](js/views/scenarios/detail/car-block.js)). Des items « coffre de toit »,
+  voiture ([car-block.js](js/views/scenarios/detail/offer-block.js)). Des items « coffre de toit »,
   « siège enfant » n'ont de sens que s'il y a une voiture — à voir si la valise s'en sert ou si
   c'est une complication inutile.
 
@@ -319,7 +319,7 @@ table et leur modale.
 Les trajets d'un voyage — avion, train, bus, ferry, voiture. La page existe : modèle, modes,
 statuts, départ / arrivée, prix et tableau sont décrits dans
 [la spec](docs/spec-voyage-toscane.md). La voiture garde sa propre entrée de barre latérale :
-`cars` reste la table de location, et un transport de mode voiture la **référence** plutôt que de
+`offers` reste la table des offres de location, et un transport de mode voiture la **référence** plutôt que de
 la recopier.
 
 - **Prix dans le total d'un scénario** <!--t:8suc--> — 🧮 calcul · ⏳ à faire : les transports
@@ -332,6 +332,13 @@ la recopier.
 - **Rattacher un transport à un scénario** <!--t:u2p3--> — 🧩 ui · ⏳ à faire : `transportIds` est
   au modèle et au Sheet, avec `getScenarioTransports`. Reste l'écran : où on rattache, et ce que le
   détail en montre.
+- **Retirer l'`offerId` d'un transport** <!--t:kq3v--> — 🗃️ modèle · ⏳ à faire : un scénario porte
+  déjà sa voiture et ses options ([car-block.js](js/views/scenarios/detail/offer-block.js)) ; un
+  trajet de mode voiture qui en désigne une autre dit le contraire du scénario qui le porte. Le
+  champ ne peut disparaître qu'une fois `u2p3` fait : hors d'un scénario, un trajet voiture n'a
+  alors plus aucun loueur à montrer — `transportProviderId` et `transportProviderCell`
+  ([provider.js](js/views/transports/provider.js)) passent par lui, et `transportCarLabel` meurt
+  avec.
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
   ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
   et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
@@ -401,7 +408,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Nommer les vues en anglais** <!--t:omun--> — 🧹 refacto · 🌙 plus tard : deux espaces de noms
   cohabitent, les vues en français (`hebergements`, `locations`, `depenses`, `villes` — clés de
   `view`, `listViewMode`, `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`,
-  `cars`, `fixedCosts`, `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes
+  `offers`, `fixedCosts`, `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
   repartent à zéro une fois. La page Dépenses ajoute un troisième nom : sa clé de `view` est
   `depenses`, ses clés de `listViewMode`, `COLUMN_SETS` et `prefs.sort` sont restées `charges`.

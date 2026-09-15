@@ -1,9 +1,9 @@
 // Le modèle choisi remplace le nom repris d'avant le catalogue : deux noms diraient la même chose.
-function saveCar(id) {
-  const existing = id ? getCar(id) : null;
+function saveOffer(id) {
+  const existing = id ? getOffer(id) : null;
   const modelId = document.getElementById('car-model').value;
-  const car = {
-    ...emptyCar(),
+  const offer = {
+    ...emptyOffer(),
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
@@ -19,10 +19,10 @@ function saveCar(id) {
   };
 
   if (id) {
-    const idx = state.cars.findIndex((c) => c.id === id);
-    state.cars[idx] = car;
+    const idx = state.offers.findIndex((c) => c.id === id);
+    state.offers[idx] = offer;
   } else {
-    state.cars.push(car);
+    state.offers.push(offer);
   }
   saveNow();
   closeModal();

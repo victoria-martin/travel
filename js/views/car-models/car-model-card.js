@@ -11,7 +11,7 @@ function carModelCard(model) {
     </div>
     ${
       offers.length
-        ? `<div class="rental-vehicles">${offers.map(carModelOfferRow).join('')}</div>`
+        ? `<div class="rental-offers">${offers.map(carModelOfferRow).join('')}</div>`
         : ''
     }
   </div>`;

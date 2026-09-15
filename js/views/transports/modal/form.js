@@ -13,7 +13,7 @@ function emptyTransport() {
     arriveTime: '',
     providerId: '',
     reference: '',
-    carId: '',
+    offerId: '',
     budget: '',
     amountMin: '',
     amountMax: '',
@@ -69,17 +69,17 @@ function transportScheduleFields(side, label, date, time) {
 // repeints quand le mode change.
 function transportProviderFields(p) {
   if (p.mode === 'car') {
-    const cars = ofCurrentTravel(state.cars).sort((a, b) =>
-      transportCarLabel(a).localeCompare(transportCarLabel(b)),
+    const offers = ofCurrentTravel(state.offers).sort((a, b) =>
+      transportOfferLabel(a).localeCompare(transportOfferLabel(b)),
     );
     return /* HTML */ `<div class="field">
       <label>Location</label>
       <select id="t-car">
-        <option value="" ${p.carId ? '' : 'selected'}>Aucune voiture</option>
-        ${cars
+        <option value="" ${p.offerId ? '' : 'selected'}>Aucune voiture</option>
+        ${offers
           .map(
             (c) =>
-              `<option value="${c.id}" ${p.carId === c.id ? 'selected' : ''}>${escapeHtml(transportCarLabel(c))}</option>`,
+              `<option value="${c.id}" ${p.offerId === c.id ? 'selected' : ''}>${escapeHtml(transportOfferLabel(c))}</option>`,
           )
           .join('')}
       </select>

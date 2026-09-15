@@ -58,6 +58,10 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   d'un hébergement. Croiser les deux sur une même carte se lit donc sans ambiguïté.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Locations et Charges fixes — jamais des copies.
+- **Une offre dit ce que le loueur propose, un scénario ce qu'on y prend.** Les options cochées sur
+  un véhicule sont le catalogue retenu chez ce loueur ; celles d'un scénario sont son choix à lui,
+  et deux scénarios comparent deux assurances sur la même voiture sans la dupliquer. Le montant, lui,
+  ne vit qu'à un endroit : le catalogue du loueur.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
   euros. Ils ont leur propre ligne de total.
 - Un prix se saisit en texte libre (`120`, `1 200,50 €`) : seul le nombre est extrait pour les
@@ -153,9 +157,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Ville**           | nom, adresse, pays, région, province, ville, coordonnées, notes                                                                                                     | une étape de passage sans nuit, ou un repère                    |
 | **Attraction**      | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
-| **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                        | liste simple ; une seule voiture par défaut                     |
+| **Offre**           | la location qui la porte, le modèle, statut, prix total, options cochées chez le loueur, lien, notes, **par défaut**                                                | ce qu'un loueur demande pour un modèle ; une seule par défaut   |
 | **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                    |
-| **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                                   | un itinéraire candidat                                          |
+| **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                          |
 | **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
 | **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
 | **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                              |
@@ -421,8 +425,9 @@ défaut par date de départ, puis par mode.
 
 **Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte trois onglets : les
 trajets, « Loueurs & compagnies », et « Voitures » — les modèles qu'on compare d'un loueur à
-l'autre. C'est son **mode** qui dit comment on nomme un prestataire — loueur pour la voiture,
-compagnie pour l'avion, le train, le bus et le ferry.
+l'autre. Le titre de l'en-tête reste « Transports » ; c'est le sous-titre qui nomme l'onglet
+ouvert, suivi de ce qu'il compte. C'est son **mode** qui dit comment on nomme un prestataire —
+loueur pour la voiture, compagnie pour l'avion, le train, le bus et le ferry.
 
 | Champ       | Détail                                                                   |
 | ----------- | ------------------------------------------------------------------------ |
@@ -807,11 +812,17 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   par genre dans le Total général — une activité dans la famille Attractions, une dépense avec les
   Charges : celles des étapes retenues plus celles des groupes qu'elles traversent, les colonnes
   écartées étant des comparaisons.
-- **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
-  / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
-  Locations : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
-  rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
-  tient, et les scénarios existants ne bougent pas.
+- **Voiture** : un menu rangé par location — un loueur, ses dates, et dessous les véhicules qu'on y
+  a relevés, chacun avec ce qu'il coûtera sur les jours de ce scénario. Son coût est le prix / jour
+  de la voiture × jours du scénario : le prix total saisi porte sur les dates de la location, pas
+  sur celles d'un scénario. Un scénario créé naît avec la **voiture par défaut** rattachée : c'est
+  une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui tient, et les
+  scénarios existants ne bougent pas.
+- **Les options de cette voiture**, sous le menu : une ligne à cocher par option du catalogue de son
+  loueur, avec ce qu'elle coûte ici — un forfait reste entier, un prix par jour se répète sur les
+  jours du scénario, un prix par personne sur les voyageurs. Choisir un véhicule coche ce qui l'est
+  chez le loueur : c'est le point de départ, que le scénario reste libre de défaire. Le total du
+  bloc, et la ligne Voiture du Total général, comptent les options.
 - **Dépenses**, sous le bloc Voiture, dans sa propre teinte pour ne pas se lire comme une étape :
   une ligne par dépense rattachée (libellé, montant, ✕), le total en tête. Deux gestes en pied —
   « Rattacher une dépense » liste celles du voyage qui ne le sont pas encore, « Ajouter une

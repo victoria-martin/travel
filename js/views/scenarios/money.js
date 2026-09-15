@@ -93,10 +93,16 @@ function scenarioSpan(scenario) {
   };
 }
 
-// Une location se prend le jour de l'arrivée et se rend celui du départ : elle se compte en jours.
-function carTotal(scenario) {
-  const car = getScenarioCar(scenario);
-  return car ? vehicleDayPrice(car) * totalDays(scenario) : 0;
+/*
+  Une location se prend le jour de l'arrivée et se rend celui du départ : elle se compte en jours.
+  Le prix du loueur se ramène au jour pour que le scénario le compte sur ses dates à lui, et ses
+  options suivent la même durée — un forfait reste entier, un prix par jour se répète.
+*/
+function scenarioOfferTotal(scenario) {
+  const offer = getScenarioOffer(scenario);
+  if (!offer) return 0;
+  const days = totalDays(scenario);
+  return offerDayPrice(offer) * days + optionsTotal(scenarioOfferOptions(scenario), days);
 }
 
 function fixedCostsTotal(scenario) {
@@ -113,7 +119,7 @@ function scenarioExpensesTotal(scenario) {
 }
 
 function scenarioChargesTotal(scenario) {
-  return carTotal(scenario) + scenarioExpensesTotal(scenario);
+  return scenarioOfferTotal(scenario) + scenarioExpensesTotal(scenario);
 }
 
 function scenarioTotal(scenario) {

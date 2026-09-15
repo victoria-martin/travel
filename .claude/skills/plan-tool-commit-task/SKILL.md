@@ -39,8 +39,9 @@ reste, statut inchangé, et le dire.
 
 ## 4. Commiter et pousser
 
-Invoquer `commit`. Il fait suivre le reste des docs — les skills `update-plan-*` du dépôt, qu'il
-liste lui-même —, rédige le message, stage, commit et pousse.
+Invoquer `plan-commit`. Il fait suivre le reste des docs — les skills du dépôt dont le nom porte
+`update-plan`, qu'il liste lui-même — puis passe la main à `commit`, qui rédige le message, stage,
+commit et pousse.
 
 Le périmètre est **le travail de cette tâche**, nommé fichier par fichier — jamais « tout ». Le
 board ouvre une session par tâche dans le même dossier : ce que le worktree porte en plus appartient

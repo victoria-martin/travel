@@ -32,7 +32,7 @@ function loadSyncConfig() {
   sync.lastUrl = readStoreString(SYNC_LAST_URL_KEY);
   const stored = readStore(SYNC_BASE_KEY);
   if (stored) {
-    sync.base = stored.data || null;
+    sync.base = stored.data ? adoptOfferNames(stored.data) : null;
     sync.rev = stored.rev || null;
   }
 }
@@ -202,7 +202,7 @@ function mergeStates(remote, local, base) {
     providers: mergeCollections(remote.providers, local.providers, base.providers),
     carModels: mergeCollections(remote.carModels, local.carModels, base.carModels),
     rentals: mergeCollections(remote.rentals, local.rentals, base.rentals),
-    cars: mergeCollections(remote.cars, local.cars, base.cars),
+    offers: mergeCollections(remote.offers, local.offers, base.offers),
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
     cities: mergeCollections(remote.cities, local.cities, base.cities),
     attractions: mergeCollections(remote.attractions, local.attractions, base.attractions),

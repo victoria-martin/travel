@@ -12,6 +12,13 @@ function getScenarioTransports(scenario) {
     .filter(Boolean);
 }
 
-function getScenarioCar(scenario) {
-  return scenario.carId ? state.cars.find((c) => c.id === scenario.carId) || null : null;
+function getScenarioOffer(scenario) {
+  return scenario.offerId ? state.offers.find((c) => c.id === scenario.offerId) || null : null;
+}
+
+// Les options retenues pour ce scénario, et non celles de l'offre : deux scénarios comparent deux
+// assurances sur la même voiture. Elles se lisent dans le catalogue du loueur qui la loue.
+function scenarioOfferOptions(scenario) {
+  const offer = getScenarioOffer(scenario);
+  return offer ? providerOptions(offerRental(offer).providerId, scenario.offerOptionIds) : [];
 }

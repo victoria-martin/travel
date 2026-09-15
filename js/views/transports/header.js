@@ -3,7 +3,7 @@ function transportsHeader() {
   return /* HTML */ `<div class="view-header">
     <div>
       <h2 class="view-title">Transports</h2>
-      <p class="view-sub">${tab.sub()}</p>
+      <p class="view-sub">${tab.label} — ${tab.sub()}</p>
     </div>
     <div class="view-header-actions">
       ${transportsTabToggle()} ${tab.actions()} ${toolbarMenu()}
@@ -13,10 +13,7 @@ function transportsHeader() {
 
 function transportsHeaderSub() {
   const items = ofCurrentTravel(state.transports);
-  return /* HTML */ `${Object.values(TRANSPORT_MODES)
-    .map((m) => m.label)
-    .join(' · ')}
-  — ${items.length} trajet${items.length > 1 ? 's' : ''}`;
+  return `${items.length} enregistré${items.length > 1 ? 's' : ''}`;
 }
 
 function transportsHeaderActions() {

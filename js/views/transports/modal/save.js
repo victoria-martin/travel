@@ -24,7 +24,7 @@ function readTransportForm(id) {
     arriveTime: transportFieldValue('t-arrive-time'),
     providerId: transportFieldValue('t-provider', p.providerId),
     reference: transportFieldValue('t-reference', p.reference),
-    carId: transportFieldValue('t-car', p.carId),
+    offerId: transportFieldValue('t-car', p.offerId),
     budget: transportFieldValue('t-budget'),
     amountMin: transportFieldValue('t-amount-min'),
     amountMax: transportFieldValue('t-amount-max'),

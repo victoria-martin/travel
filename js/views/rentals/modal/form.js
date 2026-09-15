@@ -1,4 +1,4 @@
-function emptyCar() {
+function emptyOffer() {
   return {
     id: null,
     rentalId: '',
@@ -22,14 +22,14 @@ function rentalOptions(selected) {
     .join('');
 }
 
-function carForm(p) {
-  const days = rentalDays(vehicleRental(p));
+function offerForm(p) {
+  const days = rentalDays(offerRental(p));
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un véhicule</h3>
     <div class="field-row">
       <div class="field">
         <label>Location</label>
-        <select id="car-rental" onchange="repaintVehicleRental()">
+        <select id="car-rental" onchange="repaintOfferRental()">
           ${rentalOptions(p.rentalId)}
         </select>
       </div>
@@ -57,7 +57,7 @@ function carForm(p) {
           .join('')}
       </select>
     </div>
-    ${vehicleOptionsField(p)}
+    ${offerOptionsField(p)}
     <div class="field">
       <label>Prix total ${days ? `pour ${days} jours` : ''}</label
       ><input
@@ -75,14 +75,14 @@ function carForm(p) {
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="saveCar('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveOffer('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
 }
 
 // Les options sont celles du loueur de la location : en changer change le catalogue proposé.
-function repaintVehicleRental() {
+function repaintOfferRental() {
   modal.payload.rentalId = document.getElementById('car-rental').value;
   modal.payload.optionIds = [];
-  repaintVehicleOptions();
+  repaintOfferOptions();
 }

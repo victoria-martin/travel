@@ -58,7 +58,7 @@ const COLLECTIONS = {
     'link',
     'notes',
   ],
-  cars: [
+  offers: [
     'travelId',
     'id',
     'rentalId',
@@ -134,7 +134,7 @@ const COLLECTIONS = {
     'arriveTime',
     'providerId',
     'reference',
-    'carId',
+    'offerId',
     'budget',
     'amountMin',
     'amountMax',
@@ -150,7 +150,8 @@ const COLLECTIONS = {
     'id',
     'name',
     'startDate',
-    'carId',
+    'offerId',
+    'offerOptionIds',
     'costIds',
     'transportIds',
     'favorite',
@@ -225,11 +226,21 @@ const GROUP_CHILDREN = { options: 'groupOptions', extras: 'groupAttractions' };
 const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
-const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories', 'filterValues', 'optionIds'];
+const LIST_FIELDS = [
+  'costIds',
+  'transportIds',
+  'tags',
+  'categories',
+  'filterValues',
+  'optionIds',
+  'offerOptionIds',
+];
 // Une liste d'objets ne tient pas dans une cellule séparée par des virgules : elle s'y écrit en JSON.
 const JSON_FIELDS = ['options'];
 // Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
-const LEGACY_HEADERS = { address: 'geoAddress', categories: 'category' };
+const LEGACY_HEADERS = { address: 'geoAddress', categories: 'category', offerId: 'carId' };
+// Ancien nom d'un onglet renommé : la feuille se reprend telle quelle plutôt que de repartir vide.
+const LEGACY_SHEETS = { offers: 'cars' };
 
 function doGet(e) {
   var params = (e && e.parameter) || {};
@@ -296,7 +307,7 @@ function readState() {
     providers: rows.providers,
     carModels: rows.carModels,
     rentals: rows.rentals,
-    cars: rows.cars,
+    offers: rows.offers,
     fixedCosts: rows.fixedCosts,
     cities: rows.cities,
     attractions: rows.attractions,
@@ -509,7 +520,7 @@ function normalizeState(data) {
     providers: normalizeCollection('providers', data.providers),
     carModels: normalizeCollection('carModels', data.carModels),
     rentals: normalizeCollection('rentals', data.rentals),
-    cars: normalizeCollection('cars', data.cars),
+    offers: normalizeCollection('offers', data.offers),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
     attractions: normalizeCollection('attractions', data.attractions),
@@ -572,7 +583,7 @@ function decodeCell(column, raw) {
         return part !== '';
       });
   }
-  if (column === 'accommodationId' || column === 'cityId' || column === 'carId') {
+  if (column === 'accommodationId' || column === 'cityId' || column === 'offerId') {
     return value || null;
   }
   return value;
@@ -621,7 +632,7 @@ function writeState(data) {
   writeSheet('providers', data.providers || []);
   writeSheet('carModels', data.carModels || []);
   writeSheet('rentals', data.rentals || []);
-  writeSheet('cars', data.cars || []);
+  writeSheet('offers', data.offers || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);
   writeSheet('attractions', data.attractions || []);
@@ -666,6 +677,10 @@ function writeSheet(name, items) {
 function ensureSheet(name) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName(name);
+  if (!sheet && LEGACY_SHEETS[name]) {
+    sheet = spreadsheet.getSheetByName(LEGACY_SHEETS[name]);
+    if (sheet) sheet.setName(name);
+  }
   if (!sheet) {
     sheet = spreadsheet.insertSheet(name);
     var columns = COLLECTIONS[name];

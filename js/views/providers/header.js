@@ -5,5 +5,5 @@ function providersHeaderActions() {
 
 function providersHeaderSub() {
   const items = ofCurrentTravel(state.providers);
-  return `Chez qui on prend les trajets — ${items.length} prestataire${items.length > 1 ? 's' : ''}`;
+  return `${items.length} prestataire${items.length > 1 ? 's' : ''}`;
 }

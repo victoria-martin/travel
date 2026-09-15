@@ -5,16 +5,16 @@
   Sans quoi les deux diraient chacun le sien et finiraient par diverger.
 */
 function transportProviderId(t) {
-  return isCarTransport(t) ? vehicleRental(getCar(t.carId) || {}).providerId : t.providerId;
+  return isCarTransport(t) ? offerRental(getOffer(t.offerId) || {}).providerId : t.providerId;
 }
 
-function transportCarLabel(car) {
-  return [providerName(vehicleRental(car).providerId), car.model].filter(Boolean).join(' — ');
+function transportOfferLabel(offer) {
+  return [providerName(offerRental(offer).providerId), offer.model].filter(Boolean).join(' — ');
 }
 
 function transportProviderCell(t) {
   const lead = providerName(transportProviderId(t));
-  const sub = isCarTransport(t) ? (getCar(t.carId) || {}).model : t.reference;
+  const sub = isCarTransport(t) ? (getOffer(t.offerId) || {}).model : t.reference;
   if (!lead) return textCell(sub);
   return `${escapeHtml(lead)}${sub ? `<div class="row-notes">${escapeHtml(sub)}</div>` : ''}`;
 }

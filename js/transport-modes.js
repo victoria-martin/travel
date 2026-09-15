@@ -1,6 +1,6 @@
 const UNSET_TRANSPORT_MODE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
 
-// Le mode décide des champs utiles : un vol a une compagnie et un numéro, une voiture un carId.
+// Le mode décide des champs utiles : un vol a une compagnie et un numéro, une voiture un offerId.
 const TRANSPORT_MODES = {
   plane: { label: 'Avion', emoji: '✈️', color: '#4E7A9B', carrier: true },
   train: { label: 'Train', emoji: '🚆', color: '#3E6259', carrier: true },

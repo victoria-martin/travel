@@ -29,12 +29,14 @@ function toggleScenarioFavorite(id) {
 }
 
 function createScenario() {
+  const offer = defaultOffer();
   const s = {
     id: uid(),
     travelId: currentTravelId(),
     name: 'Nouveau scénario',
     startDate: currentTravel()?.startDate || '',
-    carId: defaultCar()?.id || null,
+    offerId: offer?.id || null,
+    offerOptionIds: [...(offer?.optionIds || [])],
     costIds: [],
     transportIds: [],
     favorite: false,

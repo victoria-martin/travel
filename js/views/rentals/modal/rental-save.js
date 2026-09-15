@@ -27,5 +27,5 @@ function saveRental(id) {
   openRental(rental.id);
   if (!id) draftRentalId = rental.id;
   closeModal();
-  focusVehicleDraft();
+  focusOfferDraft();
 }

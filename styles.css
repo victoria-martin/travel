@@ -1908,6 +1908,13 @@ tr:hover td {
   font-size: 13px;
   color: var(--ink-soft);
 }
+/* Une option se coche sur la ligne qui porte son prix : la ligne entière est le geste. */
+.offer-option-line {
+  cursor: pointer;
+}
+.offer-option-line input {
+  accent-color: var(--stone);
+}
 .scenario-extra select {
   font-size: 12.5px;
   padding: 5px 8px;
@@ -2980,41 +2987,41 @@ tr:hover td {
   display: flex;
   gap: 2px;
 }
-.rental-vehicles {
+.rental-offers {
   border-top: 1px solid var(--line);
   padding: 8px 14px 12px;
 }
-.vehicle-row {
+.rental-offer {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 0;
 }
-.vehicle-row + .vehicle-row {
+.rental-offer + .rental-offer {
   border-top: 1px solid var(--line);
 }
-.vehicle-model {
+.rental-offer-model {
   display: block;
   font-weight: 600;
   min-width: 160px;
 }
-.vehicle-model .row-notes {
+.rental-offer-model .row-notes {
   font-weight: 400;
 }
-.vehicle-price {
+.rental-offer-price {
   margin-left: auto;
   white-space: nowrap;
 }
-.vehicle-options {
+.rental-offer-options {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
-.vehicle-actions {
+.rental-offer-actions {
   display: flex;
   gap: 2px;
 }
-.vehicle-add {
+.rental-offer-add {
   margin-top: 6px;
   font-family: inherit;
   font-size: 13px;
@@ -3024,11 +3031,11 @@ tr:hover td {
   padding: 4px 0;
   cursor: pointer;
 }
-.vehicle-add:hover {
+.rental-offer-add:hover {
   color: var(--ink);
 }
-.vehicle-draft input,
-.vehicle-draft select {
+.rental-offer-draft input,
+.rental-offer-draft select {
   font-family: inherit;
   font-size: 13px;
   padding: 6px 8px;
@@ -3036,7 +3043,7 @@ tr:hover td {
   border-radius: 7px;
   background: var(--paper);
 }
-.vehicle-draft input:first-child {
+.rental-offer-draft input:first-child {
   flex: 1;
 }
 /* Un modèle et ses offres : le loueur, les dates et les options distinguent deux lignes voisines. */

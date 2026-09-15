@@ -1,18 +1,18 @@
-function setCarStatus(id, status) {
-  getCar(id).status = status;
+function setOfferStatus(id, status) {
+  getOffer(id).status = status;
   saveNow();
   render();
 }
 
-function pickCarStatus(id, status) {
+function pickOfferStatus(id, status) {
   openInlineMenu = null;
-  setCarStatus(id, status);
+  setOfferStatus(id, status);
 }
 
-function carStatusTag(c) {
+function offerStatusTag(c) {
   const current = carStatus(c.status);
   return inlineDropdown(
-    `car-status:${c.id}`,
+    `offer-status:${c.id}`,
     'status-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
@@ -20,7 +20,7 @@ function carStatusTag(c) {
           .map(
             ([key, s]) => `<button
             class="inline-menu-item ${s === current ? 'selected' : ''}"
-            onclick="pickCarStatus('${c.id}', '${key}')"
+            onclick="pickOfferStatus('${c.id}', '${key}')"
           >
             ${tagLabel(s.emoji, s.label)}
           </button>`,

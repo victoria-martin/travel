@@ -9,10 +9,10 @@ function renderCarModelsTab() {
 }
 
 function carModelsHeaderActions() {
-  return toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('modele')" });
+  return toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('modele')" });
 }
 
 function carModelsHeaderSub() {
   const models = travelCarModels();
-  return `Les voitures relevées chez les loueurs — ${models.length} modèle${models.length > 1 ? 's' : ''}`;
+  return `${models.length} modèle${models.length > 1 ? 's' : ''}`;
 }

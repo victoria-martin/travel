@@ -3,7 +3,7 @@
 function chargeDetailRows(scenario) {
   const span = scenarioSpan(scenario);
   return (
-    recapSubRow('Voiture', formatEuros(carTotal(scenario))) +
+    recapSubRow('Voiture', formatEuros(scenarioOfferTotal(scenario))) +
     getScenarioExpenses(scenario)
       .map((cost) => expenseDetailRow(cost, span))
       .join('') +

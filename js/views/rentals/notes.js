@@ -1,13 +1,13 @@
-function carNotesEditable(car) {
-  return editableText(car.notes, `setCarNotes('${car.id}', this.innerText)`, {
-    key: `car:${car.id}:notes`,
+function offerNotesEditable(offer) {
+  return editableText(offer.notes, `setOfferNotes('${offer.id}', this.innerText)`, {
+    key: `offer:${offer.id}:notes`,
     placeholder: 'Notes…',
   });
 }
 
-function setCarNotes(id, notes) {
+function setOfferNotes(id, notes) {
   const value = notes.trim();
-  getCar(id).notes = value;
+  getOffer(id).notes = value;
   saveNow();
-  syncEditable(`car:${id}:notes`, value);
+  syncEditable(`offer:${id}:notes`, value);
 }

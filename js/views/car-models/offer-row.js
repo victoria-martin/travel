@@ -3,15 +3,15 @@
   distinguent de l'offre d'à côté — deux offres du même loueur ne diffèrent parfois que par une
   assurance, et c'est exactement ce qu'on vient comparer.
 */
-function carModelOfferRow(car) {
-  const rental = vehicleRental(car);
+function carModelOfferRow(offer) {
+  const rental = offerRental(offer);
   return /* HTML */ `<div class="offer-row">
-    ${defaultCarCell(car)}
+    ${defaultOfferCell(offer)}
     <span class="offer-provider">${escapeHtml(providerName(rental.providerId)) || '—'}</span>
     <span class="offer-dates">${escapeHtml(rentalDatesLabel(rental).join(' · '))}</span>
-    ${carStatusTag(car)}
-    <span class="offer-options">${vehicleOptionLabels(car)}</span>
-    <span class="offer-price">${carPriceLabels(car).join(' · ')}</span>
-    <span class="vehicle-actions">${editButton('voiture', car.id)}</span>
+    ${offerStatusTag(offer)}
+    <span class="offer-options">${offerOptionLabels(offer)}</span>
+    <span class="offer-price">${offerPriceLabels(offer).join(' · ')}</span>
+    <span class="rental-offer-actions">${editButton('voiture', offer.id)}</span>
   </div>`;
 }

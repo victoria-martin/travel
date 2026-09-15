@@ -4,38 +4,38 @@
   location, que la page Voitures n'aurait pas à répéter sur chaque ligne.
 */
 COLUMN_SETS.locations = [
-  { key: 'default', label: '', locked: true, cell: defaultCarCell },
+  { key: 'default', label: '', locked: true, cell: defaultOfferCell },
   {
     key: 'model',
     label: 'Modèle',
     locked: true,
-    cell: carModelCell,
-    sortValue: (c) => vehicleModelName(c).toLowerCase(),
+    cell: offerModelCell,
+    sortValue: (c) => offerModelName(c).toLowerCase(),
   },
   {
     key: 'rental',
     label: 'Location',
-    cell: carRentalCell,
-    sortValue: (c) => rentalLabel(vehicleRental(c)).toLowerCase(),
+    cell: offerRentalCell,
+    sortValue: (c) => rentalLabel(offerRental(c)).toLowerCase(),
   },
   {
     key: 'fuel',
     label: 'Motorisation',
-    cell: carFuelCell,
-    sortValue: (c) => carFuelKey(vehicleWords(c).fuel),
+    cell: offerFuelCell,
+    sortValue: (c) => carFuelKey(offerWords(c).fuel),
     sortOrder: { key: 'carFuel', dict: CAR_FUELS, label: 'Ordre des motorisations' },
   },
   {
     key: 'gearbox',
     label: 'Boîte',
-    cell: carGearboxCell,
-    sortValue: (c) => carGearboxKey(vehicleWords(c).gearbox),
+    cell: offerGearboxCell,
+    sortValue: (c) => carGearboxKey(offerWords(c).gearbox),
     sortOrder: { key: 'carGearbox', dict: CAR_GEARBOXES, label: 'Ordre des boîtes' },
   },
   {
     key: 'status',
     label: 'Statut',
-    cell: carStatusCell,
+    cell: offerStatusCell,
     sortValue: (c) => carStatusKey(c.status),
     sortOrder: { key: 'carStatus', dict: CAR_STATUSES, label: 'Ordre des statuts' },
   },
@@ -43,12 +43,12 @@ COLUMN_SETS.locations = [
     key: 'price',
     label: 'Prix',
     nowrap: true,
-    cell: carPriceCell,
-    sortValue: (c) => vehicleTotal(c),
+    cell: offerPriceCell,
+    sortValue: (c) => offerTotal(c),
   },
-  { key: 'options', label: 'Options', cell: carOptionsCell },
+  { key: 'options', label: 'Options', cell: offerOptionsCell },
   { key: 'link', label: 'Lien', cell: linkCell },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: carActionsCell },
+  { key: 'actions', label: '', locked: true, nowrap: true, cell: offerActionsCell },
 ];
 
 SORT_DEFAULTS.locations = [
@@ -56,41 +56,41 @@ SORT_DEFAULTS.locations = [
   { key: 'model', dir: 'asc' },
 ];
 
-function carModelCell(c) {
-  return `${textCell(vehicleModelName(c))}<div class="row-notes">${carNotesEditable(c)}</div>`;
+function offerModelCell(c) {
+  return `${textCell(offerModelName(c))}<div class="row-notes">${offerNotesEditable(c)}</div>`;
 }
 
-function carRentalCell(c) {
-  const rental = vehicleRental(c);
+function offerRentalCell(c) {
+  const rental = offerRental(c);
   const dates = rentalDatesLabel(rental).join(' · ');
   return `${escapeHtml(rentalLabel(rental))}${dates ? `<div class="row-notes">${escapeHtml(dates)}</div>` : ''}`;
 }
 
-function carFuelCell(c) {
-  return vehicleFuelTag(c);
+function offerFuelCell(c) {
+  return offerFuelTag(c);
 }
 
-function carGearboxCell(c) {
-  return vehicleGearboxTag(c);
+function offerGearboxCell(c) {
+  return offerGearboxTag(c);
 }
 
-function carStatusCell(c) {
-  return carStatusTag(c);
+function offerStatusCell(c) {
+  return offerStatusTag(c);
 }
 
-function carPriceCell(c) {
-  return carPriceLabels(c).join('<br/>');
+function offerPriceCell(c) {
+  return offerPriceLabels(c).join('<br/>');
 }
 
-function carOptionsCell(c) {
-  const options = vehicleOptions(c);
+function offerOptionsCell(c) {
+  const options = offerOptions(c);
   if (!options.length) return '—';
   return options
     .map((option) => `<div class="provider-option">${escapeHtml(option.label)}</div>`)
     .join('');
 }
 
-function carActionsCell(c) {
-  const duplicate = duplicateButton(`duplicateCar('${c.id}')`);
-  return `${editButton('voiture', c.id)}${duplicate}${deleteButton('cars', c.id)}`;
+function offerActionsCell(c) {
+  const duplicate = duplicateButton(`duplicateOffer('${c.id}')`);
+  return `${editButton('voiture', c.id)}${duplicate}${deleteButton('offers', c.id)}`;
 }

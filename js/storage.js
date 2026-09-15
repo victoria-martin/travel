@@ -10,7 +10,7 @@ const TRAVEL_COLLECTIONS = [
   'providers',
   'carModels',
   'rentals',
-  'cars',
+  'offers',
   'fixedCosts',
   'cities',
   'attractions',
@@ -27,7 +27,7 @@ function emptyData() {
     providers: [],
     carModels: [],
     rentals: [],
-    cars: [],
+    offers: [],
     fixedCosts: [],
     cities: [],
     attractions: [],
@@ -51,6 +51,7 @@ function loadData() {
   "Florence") — the same granularity the map filter now reads from `county`.
 */
 function migrateData(data) {
+  adoptOfferNames(data);
   if (!data.travels) data.travels = [];
   if (!data.providers) data.providers = [];
   if (!data.rentals) data.rentals = [];
@@ -82,7 +83,7 @@ function migrateData(data) {
     delete c.category;
   });
   adoptProviders(data);
-  (data.cars || []).forEach((c) => {
+  (data.offers || []).forEach((c) => {
     if (c.pricePerDay === undefined) c.pricePerDay = c.price || '';
     if (c.priceTotal === undefined) c.priceTotal = '';
     if (!Array.isArray(c.optionIds)) c.optionIds = [];
@@ -96,7 +97,12 @@ function migrateData(data) {
   });
   (data.scenarios || []).forEach((s) => {
     if (s.startDate === undefined) s.startDate = '';
-    if (s.carId === undefined) s.carId = null;
+    if (s.offerId === undefined) s.offerId = null;
+    // Les options d'une voiture se choisissent par scénario ; celles de l'offre en sont le départ.
+    if (!Array.isArray(s.offerOptionIds))
+      s.offerOptionIds = [
+        ...((data.offers || []).find((c) => c.id === s.offerId)?.optionIds || []),
+      ];
     if (!Array.isArray(s.costIds)) s.costIds = [];
     if (!Array.isArray(s.transportIds)) s.transportIds = [];
     if (s.favorite === undefined) s.favorite = false;
@@ -136,9 +142,9 @@ function adoptProviders(data) {
     }
     item.providerId = id;
   };
-  (data.cars || []).forEach((car) => {
-    adopt(car, car.name, 'car');
-    delete car.name;
+  (data.offers || []).forEach((offer) => {
+    adopt(offer, offer.name, 'car');
+    delete offer.name;
   });
   (data.transports || []).forEach((t) => {
     if (t.mode !== 'car') adopt(t, t.carrier, t.mode);
@@ -157,42 +163,43 @@ function adoptProviders(data) {
   réelle ne peut reprendre : elles rejoignent les notes de la location, et le prix par jour reste
   sur le véhicule comme seul chiffre connu tant qu'aucun total n'est saisi.
 */
-function rentalIdFromCar(car) {
-  const slug = [car.providerId, car.location, car.dates]
+function rentalIdFromOffer(offer) {
+  const slug = [offer.providerId, offer.location, offer.dates]
     .filter(Boolean)
     .join('-')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
-  return `rental-${car.travelId}-${slug}`;
+  return `rental-${offer.travelId}-${slug}`;
 }
 
 function adoptRentals(data) {
   const known = new Set(data.rentals.map((r) => r.id));
-  (data.cars || []).forEach((car) => {
-    if (car.rentalId === undefined) car.rentalId = '';
-    if (car.rentalId || (!car.providerId && !car.location && !car.dates)) return cleanCar(car);
-    const id = rentalIdFromCar(car);
+  (data.offers || []).forEach((offer) => {
+    if (offer.rentalId === undefined) offer.rentalId = '';
+    if (offer.rentalId || (!offer.providerId && !offer.location && !offer.dates))
+      return cleanOffer(offer);
+    const id = rentalIdFromOffer(offer);
     if (!known.has(id)) {
       known.add(id);
       data.rentals.push({
         ...emptyRental(),
         id,
-        travelId: car.travelId,
-        providerId: car.providerId || '',
-        location: car.location || '',
-        notes: car.dates || '',
+        travelId: offer.travelId,
+        providerId: offer.providerId || '',
+        location: offer.location || '',
+        notes: offer.dates || '',
       });
     }
-    car.rentalId = id;
-    cleanCar(car);
+    offer.rentalId = id;
+    cleanOffer(offer);
   });
 }
 
-function cleanCar(car) {
-  delete car.providerId;
-  delete car.location;
-  delete car.dates;
+function cleanOffer(offer) {
+  delete offer.providerId;
+  delete offer.location;
+  delete offer.dates;
 }
 
 /*
@@ -236,19 +243,38 @@ function adoptCarModels(data) {
     });
     delete provider.models;
   });
-  (data.cars || []).forEach((car) => {
-    if (car.modelId === undefined) car.modelId = '';
-    if (fromProviders[car.modelId]) car.modelId = fromProviders[car.modelId];
-    else if (!car.modelId && car.model)
-      car.modelId = adoptCarModel(data, car.travelId, car.model, car.fuel, car.gearbox);
-    car.model = '';
-    cleanVehicleWords(car);
+  (data.offers || []).forEach((offer) => {
+    if (offer.modelId === undefined) offer.modelId = '';
+    if (fromProviders[offer.modelId]) offer.modelId = fromProviders[offer.modelId];
+    else if (!offer.modelId && offer.model)
+      offer.modelId = adoptCarModel(data, offer.travelId, offer.model, offer.fuel, offer.gearbox);
+    offer.model = '';
+    cleanOfferWords(offer);
   });
 }
 
-function cleanVehicleWords(car) {
-  delete car.fuel;
-  delete car.gearbox;
+/*
+  `cars` nommait un prix proposé par un loueur et non une voiture — la voiture, c'est `carModels`.
+  La collection, les deux champs qui la référencent et l'onglet du Sheet deviennent donc `offers`.
+  La base de synchro passe par ici aussi : sans quoi son instantané resterait au nom d'avant et
+  chaque offre repartirait en ajout.
+*/
+function adoptOfferNames(data) {
+  if (data.cars && !data.offers) data.offers = data.cars;
+  delete data.cars;
+  [...(data.scenarios || []), ...(data.transports || [])].forEach((item) => {
+    if (item.carId !== undefined && item.offerId === undefined) item.offerId = item.carId;
+    if (item.carOptionIds !== undefined && item.offerOptionIds === undefined)
+      item.offerOptionIds = item.carOptionIds;
+    delete item.carId;
+    delete item.carOptionIds;
+  });
+  return data;
+}
+
+function cleanOfferWords(offer) {
+  delete offer.fuel;
+  delete offer.gearbox;
 }
 
 /*

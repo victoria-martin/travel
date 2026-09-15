@@ -67,8 +67,8 @@ const MODAL_TYPES = {
     edits: true,
   },
   voiture: {
-    open: (id) => ({ payload: id ? structuredClone(getCar(id)) : emptyCar() }),
-    body: (m) => carForm(m.payload),
+    open: (id) => ({ payload: id ? structuredClone(getOffer(id)) : emptyOffer() }),
+    body: (m) => offerForm(m.payload),
     edits: true,
   },
   charge: {

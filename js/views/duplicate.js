@@ -5,13 +5,13 @@ function duplicateAccommodation(id) {
   render();
 }
 
-function duplicateCar(id) {
-  const car = getCar(id);
-  state.cars.push({
-    ...car,
+function duplicateOffer(id) {
+  const offer = getOffer(id);
+  state.offers.push({
+    ...offer,
     id: uid(),
-    model: `${car.model} (copie)`,
-    optionIds: [...(car.optionIds || [])],
+    model: `${offer.model} (copie)`,
+    optionIds: [...(offer.optionIds || [])],
     isDefault: false,
   });
   saveNow();

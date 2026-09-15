@@ -7,28 +7,31 @@
 */
 let draftRentalId = null;
 
-function startVehicleDraft(rentalId) {
+function startOfferDraft(rentalId) {
   draftRentalId = rentalId;
   render();
-  focusVehicleDraft();
+  focusOfferDraft();
 }
 
-function closeVehicleDraft() {
+function closeOfferDraft() {
   draftRentalId = null;
   render();
 }
 
-function focusVehicleDraft() {
+function focusOfferDraft() {
   const field = document.getElementById('draft-model');
   if (field) field.focus();
 }
 
-function vehicleDraftRow(rentalId) {
+function offerDraftRow(rentalId) {
   if (draftRentalId !== rentalId)
-    return /* HTML */ `<button class="vehicle-add" onclick="startVehicleDraft('${rentalId}')">
+    return /* HTML */ `<button class="rental-offer-add" onclick="startOfferDraft('${rentalId}')">
       ${svgIcon('plus')} Ajouter un véhicule
     </button>`;
-  return /* HTML */ `<div class="vehicle-row vehicle-draft" onkeydown="vehicleDraftKeydown(event)">
+  return /* HTML */ `<div
+    class="rental-offer rental-offer-draft"
+    onkeydown="offerDraftKeydown(event)"
+  >
     <input id="draft-model" type="text" placeholder="Golf" list="draft-models" />
     <datalist id="draft-models">
       ${travelCarModels()
@@ -44,29 +47,29 @@ function vehicleDraftRow(rentalId) {
       ${wordOptions(CAR_GEARBOXES)}
     </select>
     <input id="draft-price" type="text" placeholder="420 € au total" />
-    <button class="btn btn-small" onclick="saveVehicleDraft()">${svgIcon('check')}</button>
-    <button class="icon-btn" onclick="closeVehicleDraft()" title="Fermer">${svgIcon('x')}</button>
+    <button class="btn btn-small" onclick="saveOfferDraft()">${svgIcon('check')}</button>
+    <button class="icon-btn" onclick="closeOfferDraft()" title="Fermer">${svgIcon('x')}</button>
   </div>`;
 }
 
-function vehicleDraftKeydown(event) {
+function offerDraftKeydown(event) {
   if (event.key !== 'Enter' && event.key !== 'Escape') return;
   event.preventDefault();
-  if (event.key === 'Escape') return closeVehicleDraft();
-  saveVehicleDraft();
+  if (event.key === 'Escape') return closeOfferDraft();
+  saveOfferDraft();
 }
 
 // Une ligne sans modèle n'est pas un véhicule : elle ferme la saisie plutôt que d'enregistrer.
-function saveVehicleDraft() {
+function saveOfferDraft() {
   const name = document.getElementById('draft-model').value.trim();
-  if (!name) return closeVehicleDraft();
+  if (!name) return closeOfferDraft();
   const model = createCarModelNamed(
     name,
     document.getElementById('draft-fuel').value,
     document.getElementById('draft-gearbox').value,
   );
-  state.cars.push({
-    ...emptyCar(),
+  state.offers.push({
+    ...emptyOffer(),
     id: uid(),
     travelId: currentTravelId(),
     rentalId: draftRentalId,
@@ -75,5 +78,5 @@ function saveVehicleDraft() {
   });
   saveNow();
   render();
-  focusVehicleDraft();
+  focusOfferDraft();
 }

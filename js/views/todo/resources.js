@@ -21,7 +21,7 @@ const TODO_RESOURCES = [
     icon: svgIcon('plane'),
     items: () => state.transports,
   },
-  { kind: 'locations', label: 'Locations', icon: svgIcon('car'), items: () => state.cars },
+  { kind: 'locations', label: 'Locations', icon: svgIcon('car'), items: () => state.offers },
   { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
   { kind: 'villes', label: 'Villes', icon: svgIcon('map-pin'), items: () => state.cities },
 ];

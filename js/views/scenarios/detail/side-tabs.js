@@ -15,7 +15,7 @@ const SCENARIO_SIDE_TABS = [
     key: 'money',
     icon: svgIcon('euro'),
     label: 'Argent',
-    body: (s) => scenarioCarBlock(s) + scenarioExpensesBlock(s) + scenarioTotalBlock(s),
+    body: (s) => scenarioOfferBlock(s) + scenarioExpensesBlock(s) + scenarioTotalBlock(s),
   },
 ];
 
