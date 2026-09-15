@@ -1435,6 +1435,13 @@ tr:hover td {
   font-weight: 600;
   color: var(--ink);
 }
+/* Le groupe se monte et se descend comme une étape, mais son en-tête est une ligne : ses flèches
+   sont couchées. */
+.step-group-move {
+  display: flex;
+  align-self: center;
+  gap: 2px;
+}
 .step-group-fork {
   color: var(--stone);
   font-size: 13px;

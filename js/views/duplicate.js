@@ -66,6 +66,7 @@ function duplicateScenario(id) {
   const copy = JSON.parse(JSON.stringify(s));
   copy.id = uid();
   copy.name = s.name + ' (copie)';
+  copy.isChosen = false;
   const renamed = {};
   scenarioGroups(copy).forEach((group) => {
     renamed[group.id] = uid();

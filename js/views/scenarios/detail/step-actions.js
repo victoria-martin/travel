@@ -25,17 +25,15 @@ function setStepPlace(scenarioId, stepId, value) {
 }
 
 /*
-  Le type restreint la liste des lieux aux hébergements qui en relèvent : un lieu qui n'y figure
-  plus s'efface, sinon la pastille montrerait un lieu absent de sa propre liste.
+  Le type ne restreint que les hébergements : celui qui n'en relève plus s'efface, sinon la
+  pastille montrerait un lieu absent de sa propre liste. Une ville, elle, reste — la liste la
+  propose quel que soit le type.
 */
 function setStepAccommodationType(scenarioId, stepId, type) {
   const step = getStep(scenarioId, stepId);
   step.accommodationType = type;
   const acc = getAccommodation(step.accommodationId);
-  if (type && (!acc || accTypeKey(acc.type) !== type)) {
-    step.cityId = null;
-    step.accommodationId = null;
-  }
+  if (type && (!acc || accTypeKey(acc.type) !== type)) step.accommodationId = null;
   saveNow();
   render();
 }

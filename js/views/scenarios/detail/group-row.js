@@ -8,6 +8,7 @@ function groupRow(scenario, group, ranks) {
   return /* HTML */ `<div class="step-group">
     <div class="step-group-head">
       <div class="step-group-title">
+        <span class="step-group-move">${groupMoveButtons(scenario, group)}</span>
         <span class="step-group-fork" title="Étape à options">⑂</span>
         ${editableText(
           group.name,

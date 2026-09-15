@@ -1,9 +1,11 @@
 /*
   Le second des deux selects d'une étape : le lieu. Les hébergements viennent en premier, un
-  groupe par type et les favoris en tête de chacun ; les villes ferment la liste, et ne sont là que
-  lorsqu'aucun type n'est retenu. Chaque groupe se replie, et dit alors ce qu'il cache. Le menu
-  s'ouvre sur un champ de recherche qui interroge le nom et les niveaux du lieu ; la frappe ne
-  repeint que la liste, sinon le champ perdrait sa saisie à chaque lettre.
+  groupe par type et les favoris en tête de chacun ; les villes ferment la liste, et y sont quel
+  que soit le type retenu — il ne restreint que les hébergements, une étape se posant dans une
+  ville sans qu'on sache encore où l'on dort. Chaque groupe se replie, et dit alors ce qu'il cache.
+  Le menu s'ouvre sur un champ de recherche qui interroge le nom et les niveaux du lieu ; la frappe
+  ne repeint que la liste, sinon le champ perdrait sa saisie à chaque lettre. Une ville qui manque
+  se crée sur place, sous le nom tapé, comme une activité depuis le ＋ d'une carte.
 */
 function placeOptionLabel(place) {
   const location = placeLevelsLabel(place);
@@ -55,12 +57,12 @@ function focusPlaceSearch(stepId) {
 
 function placeSearchQuery(stepId) {
   const input = document.getElementById(`place-search-${stepId}`);
-  return input ? input.value.trim().toLowerCase() : '';
+  return input ? input.value.trim() : '';
 }
 
 // On cherche un lieu par son nom comme par sa province : le libellé de la liste est la matière.
 function placeMatches(place, needle) {
-  return `${place.name} ${placeLevelsLabel(place)}`.toLowerCase().includes(needle);
+  return `${place.name} ${placeLevelsLabel(place)}`.toLowerCase().includes(needle.toLowerCase());
 }
 
 // Un seul menu de lieu est ouvert à la fois : le repli de ses groupes tient dans une globale, et
@@ -100,11 +102,9 @@ function placeOptions(scenarioId, stepId) {
   const needle = placeSearchQuery(stepId);
   const type = accTypeKey(step.accommodationType);
   const pick = (value) => `pickStepPlace('${scenarioId}','${stepId}','${value}')`;
-  const cities = type
-    ? []
-    : ofCurrentTravel(state.cities)
-        .filter((c) => placeMatches(c, needle))
-        .sort((a, b) => a.name.localeCompare(b.name));
+  const cities = ofCurrentTravel(state.cities)
+    .filter((c) => placeMatches(c, needle))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const accommodations = ofCurrentTravel(state.accommodations)
     .filter((a) => (!type || accTypeKey(a.type) === type) && placeMatches(a, needle))
     .sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0) || a.name.localeCompare(b.name));
@@ -142,7 +142,30 @@ function placeOptions(scenarioId, stepId) {
         </button>`,
       ),
     );
-  return none + (groups || '<div class="inline-menu-group">Aucun lieu trouvé</div>');
+  const create = placeCreateItem(scenarioId, stepId, needle);
+  return none + (groups + create || '<div class="inline-menu-group">Aucun lieu trouvé</div>');
+}
+
+// Une ville qui n'est pas encore dans la liste se crée sous le nom tapé : elle ne porte que ce
+// nom, le reste se complète depuis la page Villes.
+function placeCreateItem(scenarioId, stepId, query) {
+  if (!query) return '';
+  return /* HTML */ `<button
+    class="inline-menu-item inline-menu-item-create"
+    onclick="createStepCity('${scenarioId}','${stepId}')"
+  >
+    ＋ Créer la ville « ${escapeHtml(query)} »
+  </button>`;
+}
+
+// Le nom est aussi le niveau `city` du lieu, comme le fait la modale : sans lui, la ville ne se
+// lirait ni dans un libellé de lieu ni dans un filtre de niveau.
+function createStepCity(scenarioId, stepId) {
+  const name = placeSearchQuery(stepId);
+  if (!name) return;
+  const city = { ...emptyCity(), id: uid(), travelId: currentTravelId(), name, city: name };
+  upsertCity(city);
+  pickStepPlace(scenarioId, stepId, `ville:${city.id}`);
 }
 
 function repaintPlaceOptions(scenarioId, stepId) {

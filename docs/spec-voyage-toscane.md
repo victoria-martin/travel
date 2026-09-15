@@ -90,7 +90,8 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   visée, ce qui la fait entrer dans un groupe ou en sortir. Le rang que ces flèches font gagner à
   une étape ordinaire est celui des **rangées** de la liste, un groupe entier comptant pour une :
   l'étape se pose juste avant ou juste après le groupe voisin, et ne l'enjambe pas pour atterrir de
-  l'autre côté.
+  l'autre côté. Le groupe porte les mêmes flèches dans son en-tête et se déplace de même — sans
+  quoi il ne pourrait changer de place que si une étape voisine le contournait.
 - **Une reprise de format ne fabrique jamais d'identifiant neuf.** Elle se rejoue à chaque lecture,
   des deux côtés de la synchro : l'étape née d'une option porte donc l'identifiant de cette option,
   et le groupe qui remplace l'étape celui de l'étape suffixé. Un identifiant tiré au hasard change l'empreinte de l'état que le
@@ -464,18 +465,18 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 **Étape** — appartient à un scénario.
 
-| Champ           | Détail                                                     |
-| --------------- | ---------------------------------------------------------- |
-| titre           | éditable en ligne                                          |
-| type            | un type d'hébergement, facultatif ; il restreint le lieu   |
-| lieu            | une ville **ou** un hébergement, exclusifs                 |
-| nuits           | 0 à 14                                                     |
-| budget          | remplace le coût calculé de l'hébergement                  |
-| date d'arrivée  | champ libre de la modale, en plus de la date calculée      |
-| notes           |                                                            |
-| masquée         | l'étape reste dans la liste mais sort de tous les calculs  |
-| groupe, colonne | vides pour une étape ordinaire ; sinon, où elle se compare |
-| lignes          | ses activités et ses dépenses                              |
+| Champ           | Détail                                                                    |
+| --------------- | ------------------------------------------------------------------------- |
+| titre           | éditable en ligne                                                         |
+| type            | un type d'hébergement, facultatif ; il restreint les hébergements du lieu |
+| lieu            | une ville **ou** un hébergement, exclusifs                                |
+| nuits           | 0 à 14                                                                    |
+| budget          | remplace le coût calculé de l'hébergement                                 |
+| date d'arrivée  | champ libre de la modale, en plus de la date calculée                     |
+| notes           |                                                                           |
+| masquée         | l'étape reste dans la liste mais sort de tous les calculs                 |
+| groupe, colonne | vides pour une étape ordinaire ; sinon, où elle se compare                |
+| lignes          | ses activités et ses dépenses                                             |
 
 **Groupe** — appartient à un scénario ; l'endroit où plusieurs suites d'étapes se comparent.
 
@@ -548,8 +549,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   d'un scénario dans la liste : le montant qui compte en gros, et sous lui celui qu'un budget
   remplace ou l'invite à le saisir. Ses trois actions se posent **en bas à droite** et n'apparaissent
   qu'au survol, la seule zone libre — en haut elles couvriraient le prix.
-- **Un groupe** : son nom en tête — celui de l'étape qui s'est ouverte en options, éditable en
-  ligne comme un titre d'étape, puisque les colonnes comparent des façons de faire _cette_ étape-là
+- **Un groupe** : ses flèches ↑↓ et son nom en tête — celui de l'étape qui s'est ouverte en
+  options, éditable en ligne comme un titre d'étape, puisque les colonnes comparent des façons de faire _cette_ étape-là
   et que chacune de leurs cartes garde son propre nom —, la date à laquelle il commence, et le
   compte de ses colonnes. Elles se posent côte à côte dans la largeur, chacune empilant de vraies
   cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, son nom
@@ -565,11 +566,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   colonne d'un groupe neuf et pose sa copie en seconde. Symétriquement, un groupe qui retombe à une
   seule colonne se défait : ses étapes redeviennent ordinaires et ses lignes communes rejoignent la
   première d'entre elles, seul endroit où elles peuvent tenir.
-- **Le type restreint le lieu, il ne le remplace pas** : posé sur une étape, il réduit le select
-  de lieu aux hébergements de ce type et en retire les villes ; sans type, le select propose tout.
-  Changer de type efface un lieu qui n'en relève plus, sinon la pastille montrerait un lieu absent
-  de sa propre liste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
-  lieu comme ses niveaux — « Toscane » trouve tout ce qui y est.
+- **Le type restreint les hébergements, jamais les villes** : posé sur une étape, il réduit le
+  select de lieu aux hébergements de ce type ; les villes ferment la liste quel qu'il soit, une
+  étape se posant dans une ville avant qu'on sache où l'on y dort. Changer de type efface un
+  hébergement qui n'en relève plus, sinon la pastille montrerait un lieu absent de sa propre liste ;
+  la ville, elle, reste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
+  lieu comme ses niveaux — « Toscane » trouve tout ce qui y est — et une **ville qui manque s'y crée
+  sous le nom tapé**, comme une activité depuis le ＋ d'une carte : elle entre dans les villes du
+  voyage, l'étape la prend pour lieu, et le reste se complète depuis la page Villes.
 - **Le fil du trajet** : sous l'en-tête du détail, une bande de maillons, un par étape retenue,
   dans l'ordre du trajet. Chacun porte un trait de la couleur du type de son hébergement, sa lettre,
   son nom et ses nuits, et il est large comme ses nuits — la même lecture que la bande de la liste,
