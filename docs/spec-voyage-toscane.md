@@ -87,7 +87,10 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 - **Les étapes d'un groupe se tiennent d'affilée** dans le scénario, l'ordre du fichier étant
   l'ordre affiché. D'où deux conséquences sur les gestes : les flèches ↑↓ déplacent une étape dans
   sa seule portée — sa colonne, ou la liste — et un glisser-déposer lui donne la colonne de la carte
-  visée, ce qui la fait entrer dans un groupe ou en sortir.
+  visée, ce qui la fait entrer dans un groupe ou en sortir. Le rang que ces flèches font gagner à
+  une étape ordinaire est celui des **rangées** de la liste, un groupe entier comptant pour une :
+  l'étape se pose juste avant ou juste après le groupe voisin, et ne l'enjambe pas pour atterrir de
+  l'autre côté.
 - **Une reprise de format ne fabrique jamais d'identifiant neuf.** Elle se rejoue à chaque lecture,
   des deux côtés de la synchro : l'étape née d'une option porte donc l'identifiant de cette option,
   et le groupe qui remplace l'étape celui de l'étape suffixé. Un identifiant tiré au hasard change l'empreinte de l'état que le
