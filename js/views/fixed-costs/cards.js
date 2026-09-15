@@ -17,7 +17,7 @@ function fixedCostCard(cost) {
           ? `<span>Récurrence : ${expenseRecurrence(cost.recurrence).label}</span>`
           : ''
       }
-      <span>📝 ${fixedCostNotesEditable(cost)}</span>
+      <span>${svgIcon('file-text')} ${fixedCostNotesEditable(cost)}</span>
     </div>
     <div class="card-actions">
       ${cardEditButton('charge', cost.id)} ${cardDeleteButton('fixedCosts', cost.id)}

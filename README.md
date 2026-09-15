@@ -45,6 +45,7 @@ js/views/accommodations.js       vue Hébergements — assemblage, filtres, favo
 js/views/accommodations/         son en-tête, ses colonnes, ses cartes, sa modale, l'import collé
 js/views/cities/                 vue Villes
 js/views/providers/              loueurs et compagnies, onglet de la vue Transports
+js/views/car-models/             les modèles de voiture et leurs offres, onglet de la vue Transports
 js/views/rentals/                vue Locations — une location, ses véhicules, ses options
 js/views/fixed-costs/            vue Charges fixes
 js/views/scenarios/              vue Scénarios — liste (list/), détail (detail/), et les briques

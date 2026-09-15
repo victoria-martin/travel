@@ -8,6 +8,7 @@ const LOCAL_KEY = 'voyage-toscane-local-data';
 const TRAVEL_COLLECTIONS = [
   'accommodations',
   'providers',
+  'carModels',
   'rentals',
   'cars',
   'fixedCosts',
@@ -24,6 +25,7 @@ function emptyData() {
     travels: [],
     accommodations: [],
     providers: [],
+    carModels: [],
     rentals: [],
     cars: [],
     fixedCosts: [],
@@ -52,6 +54,7 @@ function migrateData(data) {
   if (!data.travels) data.travels = [];
   if (!data.providers) data.providers = [];
   if (!data.rentals) data.rentals = [];
+  if (!data.carModels) data.carModels = [];
   if (!data.cities) data.cities = [];
   if (!data.attractions) data.attractions = [];
   if (!data.transports) data.transports = [];
@@ -86,6 +89,7 @@ function migrateData(data) {
     delete c.price;
   });
   adoptRentals(data);
+  adoptCarModels(data);
   // La page Voitures est devenue Locations : une liste enregistrée la désigne par sa clé.
   (data.todoLists || []).forEach((list) => {
     if (list.kind === 'voitures') list.kind = 'locations';
@@ -189,6 +193,62 @@ function cleanCar(car) {
   delete car.providerId;
   delete car.location;
   delete car.dates;
+}
+
+/*
+  Le modèle d'un véhicule était un texte tapé sur sa ligne, puis une entrée du catalogue de son
+  loueur : il devient une entrée du voyage, pour que la même Golf relevée chez deux loueurs soit
+  une seule voiture qu'on compare. L'identifiant se dérive du nom — les deux côtés de la synchro
+  doivent en trouver le même — ce qui fusionne du même coup les modèles homonymes des catalogues
+  de loueurs.
+*/
+function carModelIdFromName(travelId, name) {
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `model-${travelId}-${slug}`;
+}
+
+function adoptCarModel(data, travelId, name, fuel, gearbox) {
+  const id = carModelIdFromName(travelId, name);
+  const known = data.carModels.find((m) => m.id === id);
+  if (known) {
+    known.fuel = known.fuel || fuel || '';
+    known.gearbox = known.gearbox || gearbox || '';
+    return id;
+  }
+  data.carModels.push({ id, travelId, name, fuel: fuel || '', gearbox: gearbox || '' });
+  return id;
+}
+
+function adoptCarModels(data) {
+  const fromProviders = {};
+  data.providers.forEach((provider) => {
+    (provider.models || []).forEach((model) => {
+      fromProviders[model.id] = adoptCarModel(
+        data,
+        provider.travelId,
+        model.name,
+        model.fuel,
+        model.gearbox,
+      );
+    });
+    delete provider.models;
+  });
+  (data.cars || []).forEach((car) => {
+    if (car.modelId === undefined) car.modelId = '';
+    if (fromProviders[car.modelId]) car.modelId = fromProviders[car.modelId];
+    else if (!car.modelId && car.model)
+      car.modelId = adoptCarModel(data, car.travelId, car.model, car.fuel, car.gearbox);
+    car.model = '';
+    cleanVehicleWords(car);
+  });
+}
+
+function cleanVehicleWords(car) {
+  delete car.fuel;
+  delete car.gearbox;
 }
 
 /*

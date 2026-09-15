@@ -11,7 +11,7 @@ function attractionsHeader(items) {
     </div>
     <div class="view-header-actions">
       ${sortPanel('attractions')} ${columnPicker('attractions')}
-      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('attraction')" })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('attraction')" })}
       ${toolbarMenu()}
     </div>
   </div>`;

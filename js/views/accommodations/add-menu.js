@@ -6,21 +6,21 @@
 function accommodationAddMenu() {
   return toolbarPanel({
     key: 'add-accommodation',
-    icon: '+',
+    icon: svgIcon('plus'),
     label: 'Ajouter',
     body: /* HTML */ `<div class="filter-block">
       <p class="filter-title">Ajouter un hébergement</p>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation-booking')">
-        🏨 Depuis un lien Booking
+        ${svgIcon('hotel')} Depuis un lien Booking
       </button>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation-home-exchange')">
-        🏡 Depuis un lien HomeExchange
+        ${svgIcon('house')} Depuis un lien HomeExchange
       </button>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation-airbnb')">
-        🛏️ Depuis un lien Airbnb
+        ${svgIcon('bed')} Depuis un lien Airbnb
       </button>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation')">
-        ✍️ À la main
+        ${svgIcon('pencil-line')} À la main
       </button>
     </div>`,
   });

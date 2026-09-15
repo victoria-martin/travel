@@ -18,6 +18,6 @@ function chosenScenarioPill(s) {
     onclick="event.stopPropagation(); setChosenScenario('${s.id}')"
     title="${s.isChosen ? 'Ne plus être le scénario choisi' : 'Scénario choisi'}"
   >
-    ${s.isChosen ? '● choisi' : 'choisir'}
+    ${s.isChosen ? `${svgIcon('circle-check')} choisi` : 'choisir'}
   </button>`;
 }

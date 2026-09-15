@@ -8,7 +8,7 @@ function citiesHeader(items) {
     </div>
     <div class="view-header-actions">
       ${sortPanel('villes')} ${columnPicker('villes')}
-      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('ville')" })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('ville')" })}
       ${toolbarMenu()}
     </div>
   </div>`;

@@ -16,6 +16,6 @@ function accommodationSheetButton(id) {
     title="Ouvrir la fiche"
     onclick="openAccommodationSheet('${id}')"
   >
-    ↗
+    ${svgIcon('arrow-up-right')}
   </button>`;
 }

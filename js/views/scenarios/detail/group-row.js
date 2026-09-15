@@ -49,6 +49,6 @@ function addOptionButton(scenario, group) {
     title="Comparer une colonne de plus"
     onclick="addGroupOption('${scenario.id}','${group.id}')"
   >
-    ＋ option
+    ${svgIcon('plus')} option
   </button>`;
 }

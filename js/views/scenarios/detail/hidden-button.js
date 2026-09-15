@@ -13,14 +13,6 @@ function hiddenButton(hidden, onclick) {
         : 'Masquer — hors des dates, des totaux et de la carte'
     }"
   >
-    ${eyeIcon(hidden)}
+    ${svgIcon(hidden ? 'eye-off' : 'eye')}
   </button>`;
-}
-
-function eyeIcon(crossed) {
-  return /* HTML */ `<svg class="eye-icon" viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M1 8s2.6-4.3 7-4.3 7 4.3 7 4.3-2.6 4.3-7 4.3S1 8 1 8Z" />
-    <circle cx="8" cy="8" r="1.9" />
-    ${crossed ? '<line x1="2.6" y1="13.4" x2="13.4" y2="2.6" />' : ''}
-  </svg>`;
 }

@@ -15,7 +15,7 @@ function accommodationsHeader(items) {
       ${filterPanel(accommodationFilterBlocks())}
       ${mode === 'table' ? columnPicker('hebergements') : ''}
       ${toolbarButton({
-        icon: '⭐',
+        icon: svgIcon('star', { fill: true }),
         label: 'Favoris',
         onclick: 'toggleFavOnly()',
         active: !!listFilters.favOnly,
@@ -25,7 +25,7 @@ function accommodationsHeader(items) {
         syncActive()
           ? ''
           : toolbarButton({
-              icon: '📋',
+              icon: svgIcon('clipboard-list'),
               label: 'Importer',
               onclick: "openModal('paste-import')",
             })

@@ -2,7 +2,8 @@
   La grille de saisie : on recopie la liste du loueur véhicule par véhicule, Entrée enregistre la
   ligne et en rouvre une vide. Elle ne demande que ce que la liste affiche — modèle, motorisation,
   boîte, prix total ; le statut, les options et le reste se posent ensuite depuis la fiche.
-  Une seule location a sa ligne ouverte à la fois : c'est celle où l'on tape.
+  Le modèle tapé rejoint le catalogue du voyage, celui de l'onglet Voitures. Une seule location a
+  sa ligne ouverte à la fois : c'est celle où l'on tape.
 */
 let draftRentalId = null;
 
@@ -25,21 +26,26 @@ function focusVehicleDraft() {
 function vehicleDraftRow(rentalId) {
   if (draftRentalId !== rentalId)
     return /* HTML */ `<button class="vehicle-add" onclick="startVehicleDraft('${rentalId}')">
-      ＋ Ajouter un véhicule
+      ${svgIcon('plus')} Ajouter un véhicule
     </button>`;
   return /* HTML */ `<div class="vehicle-row vehicle-draft" onkeydown="vehicleDraftKeydown(event)">
-    <input id="draft-model" type="text" placeholder="Fiat 500" />
+    <input id="draft-model" type="text" placeholder="Golf" list="draft-models" />
+    <datalist id="draft-models">
+      ${travelCarModels()
+        .map((model) => `<option value="${escapeHtml(model.name)}"></option>`)
+        .join('')}
+    </datalist>
     <select id="draft-fuel">
-      <option value="">⛽ Motorisation</option>
+      <option value="">${UNSET_CAR_FUEL.emoji} Motorisation</option>
       ${wordOptions(CAR_FUELS)}
     </select>
     <select id="draft-gearbox">
-      <option value="">⚙️ Boîte</option>
+      <option value="">${UNSET_CAR_GEARBOX.emoji} Boîte</option>
       ${wordOptions(CAR_GEARBOXES)}
     </select>
     <input id="draft-price" type="text" placeholder="420 € au total" />
-    <button class="btn btn-small" onclick="saveVehicleDraft()">✓</button>
-    <button class="icon-btn" onclick="closeVehicleDraft()" title="Fermer">✕</button>
+    <button class="btn btn-small" onclick="saveVehicleDraft()">${svgIcon('check')}</button>
+    <button class="icon-btn" onclick="closeVehicleDraft()" title="Fermer">${svgIcon('x')}</button>
   </div>`;
 }
 
@@ -52,16 +58,19 @@ function vehicleDraftKeydown(event) {
 
 // Une ligne sans modèle n'est pas un véhicule : elle ferme la saisie plutôt que d'enregistrer.
 function saveVehicleDraft() {
-  const model = document.getElementById('draft-model').value.trim();
-  if (!model) return closeVehicleDraft();
+  const name = document.getElementById('draft-model').value.trim();
+  if (!name) return closeVehicleDraft();
+  const model = createCarModelNamed(
+    name,
+    document.getElementById('draft-fuel').value,
+    document.getElementById('draft-gearbox').value,
+  );
   state.cars.push({
     ...emptyCar(),
     id: uid(),
     travelId: currentTravelId(),
     rentalId: draftRentalId,
-    model,
-    fuel: document.getElementById('draft-fuel').value,
-    gearbox: document.getElementById('draft-gearbox').value,
+    modelId: model.id,
     priceTotal: document.getElementById('draft-price').value.trim(),
   });
   saveNow();

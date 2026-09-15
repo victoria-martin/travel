@@ -163,8 +163,8 @@ function transportForm(p) {
       <label>Notes</label><textarea id="t-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     <label class="filter-option" style="padding:0 0 6px 0;"
-      ><input type="checkbox" id="t-favorite" ${p.favorite ? 'checked' : ''} /> ⭐ Coup de
-      cœur</label
+      ><input type="checkbox" id="t-favorite" ${p.favorite ? 'checked' : ''} />
+      ${svgIcon('star', { fill: true })} Coup de cœur</label
     >
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>

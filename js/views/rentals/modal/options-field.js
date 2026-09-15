@@ -36,7 +36,9 @@ function vehicleOptionsBody(p) {
       <select id="vehicle-option-unit">
         ${wordUnitOptions()}
       </select>
-      <button type="button" class="btn btn-small" onclick="addVehicleOption()">＋</button>
+      <button type="button" class="btn btn-small" onclick="addVehicleOption()">
+        ${svgIcon('plus')}
+      </button>
     </div>
   `;
 }

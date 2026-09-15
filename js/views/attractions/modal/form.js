@@ -132,8 +132,8 @@ function attractionForm(p) {
       ><textarea id="a-description" rows="3">${escapeHtml(p.description)}</textarea>
     </div>
     <label class="filter-option" style="padding:0 0 6px 0;"
-      ><input type="checkbox" id="a-favorite" ${p.favorite ? 'checked' : ''} /> ⭐ Coup de
-      cœur</label
+      ><input type="checkbox" id="a-favorite" ${p.favorite ? 'checked' : ''} />
+      ${svgIcon('star', { fill: true })} Coup de cœur</label
     >
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>

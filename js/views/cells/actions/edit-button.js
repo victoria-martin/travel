@@ -4,6 +4,6 @@ function editButton(modalKind, id) {
     onclick="openModal('${modalKind}','${id}')"
     title="Modifier"
   >
-    ✎
+    ${svgIcon('pencil')}
   </button>`;
 }

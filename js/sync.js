@@ -62,22 +62,23 @@ function setSyncStatus(status, message) {
 }
 
 function syncStatusHtml() {
-  const labels = {
-    off: ['⚪', 'Sheet non connecté'],
-    pulling: ['🔄', 'Lecture du Sheet…'],
-    pushing: ['🔄', 'Envoi au Sheet…'],
-    ok: ['🟢', 'Sheet synchronisé'],
-    choice: ['🟠', 'Choix à faire'],
-    error: ['🔴', sync.message || 'Sheet injoignable'],
+  const states = {
+    off: { icon: 'circle', tone: 'sync-off', label: 'Sheet non connecté' },
+    pulling: { icon: 'refresh-cw', tone: 'sync-busy', label: 'Lecture du Sheet…' },
+    pushing: { icon: 'refresh-cw', tone: 'sync-busy', label: 'Envoi au Sheet…' },
+    ok: { icon: 'circle-check', tone: 'sync-ok', label: 'Sheet synchronisé' },
+    choice: { icon: 'circle-alert', tone: 'sync-choice', label: 'Choix à faire' },
+    error: { icon: 'circle-x', tone: 'sync-error', label: sync.message || 'Sheet injoignable' },
   };
-  const [icon, label] = labels[sync.status] || labels.off;
+  const current = states[sync.status] || states.off;
   return /* HTML */ `<button
     class="nav-btn"
     id="sync-status"
     onclick="openSyncModal()"
     title="${escapeHtml(sync.message)}"
   >
-    <span class="nav-icon">${icon}</span><span class="nav-label">${escapeHtml(label)}</span>
+    <span class="nav-icon">${svgIcon(current.icon, { className: current.tone })}</span
+    ><span class="nav-label">${escapeHtml(current.label)}</span>
   </button>`;
 }
 
@@ -199,6 +200,7 @@ function mergeStates(remote, local, base) {
       base.accommodations,
     ),
     providers: mergeCollections(remote.providers, local.providers, base.providers),
+    carModels: mergeCollections(remote.carModels, local.carModels, base.carModels),
     rentals: mergeCollections(remote.rentals, local.rentals, base.rentals),
     cars: mergeCollections(remote.cars, local.cars, base.cars),
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),

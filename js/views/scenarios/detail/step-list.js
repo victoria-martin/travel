@@ -23,7 +23,9 @@ function stepInsertGap(scenario, row) {
     ${inlineDropdown(
       `insert-step:${row.index}`,
       'insert-step-dropdown',
-      /* HTML */ `<summary class="icon-btn" title="Insérer une étape ici">＋</summary>
+      /* HTML */ `<summary class="icon-btn" title="Insérer une étape ici">
+          ${svgIcon('plus')}
+        </summary>
         <div class="inline-menu">${stepInsertItems(scenario, row.index)}</div>`,
     )}
   </div>`;
@@ -38,7 +40,9 @@ function stepAppendRow(scenario) {
     ${inlineDropdown(
       'append-step',
       'insert-step-dropdown',
-      /* HTML */ `<summary class="btn btn-ghost btn-small">＋ Ajouter une étape</summary>
+      /* HTML */ `<summary class="btn btn-ghost btn-small">
+          ${svgIcon('plus')} Ajouter une étape
+        </summary>
         <div class="inline-menu">${stepInsertItems(scenario, scenario.steps.length)}</div>`,
     )}
   </div>`;

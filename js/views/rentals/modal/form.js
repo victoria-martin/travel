@@ -2,10 +2,9 @@ function emptyCar() {
   return {
     id: null,
     rentalId: '',
+    modelId: '',
     status: '',
     model: '',
-    fuel: '',
-    gearbox: '',
     priceTotal: '',
     pricePerDay: '',
     optionIds: [],
@@ -24,19 +23,15 @@ function rentalOptions(selected) {
 }
 
 function carForm(p) {
-  const rental = vehicleRental(p);
+  const days = rentalDays(vehicleRental(p));
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un véhicule</h3>
-    <div class="field">
-      <label>Location</label>
-      <select id="car-rental" onchange="repaintVehicleRental()">
-        ${rentalOptions(p.rentalId)}
-      </select>
-    </div>
     <div class="field-row">
       <div class="field">
-        <label>Modèle</label
-        ><input id="car-model" type="text" value="${escapeHtml(p.model)}" placeholder="Fiat 500" />
+        <label>Location</label>
+        <select id="car-rental" onchange="repaintVehicleRental()">
+          ${rentalOptions(p.rentalId)}
+        </select>
       </div>
       <div class="field">
         <label>Statut</label>
@@ -48,28 +43,23 @@ function carForm(p) {
         </select>
       </div>
     </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Motorisation</label>
-        <select id="car-fuel">
-          <option value="" ${p.fuel ? '' : 'selected'}>
-            ${UNSET_CAR_FUEL.emoji} ${UNSET_CAR_FUEL.label}
-          </option>
-          ${wordOptions(CAR_FUELS, p.fuel)}
-        </select>
-      </div>
-      <div class="field">
-        <label>Boîte</label>
-        <select id="car-gearbox">
-          <option value="" ${p.gearbox ? '' : 'selected'}>
-            ${UNSET_CAR_GEARBOX.emoji} ${UNSET_CAR_GEARBOX.label}
-          </option>
-          ${wordOptions(CAR_GEARBOXES, p.gearbox)}
-        </select>
-      </div>
-    </div>
     <div class="field">
-      <label>Prix total ${rentalDays(rental) ? `pour ${rentalDays(rental)} jours` : ''}</label
+      <label>Modèle</label>
+      <select id="car-model">
+        <option value="" ${p.modelId ? '' : 'selected'}>
+          ${escapeHtml(p.model) || 'Aucun modèle'}
+        </option>
+        ${travelCarModels()
+          .map(
+            (m) =>
+              `<option value="${m.id}" ${p.modelId === m.id ? 'selected' : ''}>${escapeHtml(m.name)}</option>`,
+          )
+          .join('')}
+      </select>
+    </div>
+    ${vehicleOptionsField(p)}
+    <div class="field">
+      <label>Prix total ${days ? `pour ${days} jours` : ''}</label
       ><input
         id="car-price-total"
         type="text"
@@ -77,7 +67,6 @@ function carForm(p) {
         placeholder="420"
       />
     </div>
-    ${vehicleOptionsField(p)}
     <div class="field">
       <label>Lien</label><input id="car-link" type="text" value="${escapeHtml(p.link)}" />
     </div>
@@ -91,7 +80,7 @@ function carForm(p) {
   `;
 }
 
-// Changer de location change de loueur, donc de catalogue d'options : le bloc se repeint.
+// Les options sont celles du loueur de la location : en changer change le catalogue proposé.
 function repaintVehicleRental() {
   modal.payload.rentalId = document.getElementById('car-rental').value;
   modal.payload.optionIds = [];

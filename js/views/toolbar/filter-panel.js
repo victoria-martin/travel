@@ -7,7 +7,7 @@ function filterPanel(blocks) {
   if (!own.length) return '';
   return toolbarPanel({
     key: 'filter',
-    icon: '▽',
+    icon: svgIcon('funnel'),
     label: 'Filtrer',
     count: own.reduce((total, block) => total + block.count, 0),
     body: `<div class="filter-panel">${own.map((block) => block.html).join('')}</div>`,

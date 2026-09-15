@@ -5,6 +5,6 @@ function extraLabel(line) {
   if (attraction)
     return tagLabel(attractionType(attraction.type).emoji, escapeHtml(attraction.name));
   const cost = extraCost(line);
-  if (cost) return tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)));
+  if (cost) return tagLabel(EXPENSE_ICON, escapeHtml(costLabel(cost)));
   return tagLabel('❔', line.costId ? 'Dépense supprimée' : 'Activité supprimée');
 }

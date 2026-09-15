@@ -10,7 +10,7 @@ COLUMN_SETS.locations = [
     label: 'Modèle',
     locked: true,
     cell: carModelCell,
-    sortValue: (c) => (c.model || '').toLowerCase(),
+    sortValue: (c) => vehicleModelName(c).toLowerCase(),
   },
   {
     key: 'rental',
@@ -22,14 +22,14 @@ COLUMN_SETS.locations = [
     key: 'fuel',
     label: 'Motorisation',
     cell: carFuelCell,
-    sortValue: (c) => carFuelKey(c.fuel),
+    sortValue: (c) => carFuelKey(vehicleWords(c).fuel),
     sortOrder: { key: 'carFuel', dict: CAR_FUELS, label: 'Ordre des motorisations' },
   },
   {
     key: 'gearbox',
     label: 'Boîte',
     cell: carGearboxCell,
-    sortValue: (c) => carGearboxKey(c.gearbox),
+    sortValue: (c) => carGearboxKey(vehicleWords(c).gearbox),
     sortOrder: { key: 'carGearbox', dict: CAR_GEARBOXES, label: 'Ordre des boîtes' },
   },
   {
@@ -57,7 +57,7 @@ SORT_DEFAULTS.locations = [
 ];
 
 function carModelCell(c) {
-  return `${textCell(c.model)}<div class="row-notes">${carNotesEditable(c)}</div>`;
+  return `${textCell(vehicleModelName(c))}<div class="row-notes">${carNotesEditable(c)}</div>`;
 }
 
 function carRentalCell(c) {
@@ -67,11 +67,11 @@ function carRentalCell(c) {
 }
 
 function carFuelCell(c) {
-  return carFuelTag(c);
+  return vehicleFuelTag(c);
 }
 
 function carGearboxCell(c) {
-  return carGearboxTag(c);
+  return vehicleGearboxTag(c);
 }
 
 function carStatusCell(c) {

@@ -7,12 +7,12 @@ function accommodationCard(a) {
     <div class="card-selects">${accommodationTypeDropdown(a)}${accommodationStatusTag(a)}</div>
     <div class="card-meta">
       <span
-        >📍
+        >${svgIcon('map-pin')}
         ${[a.city, a.county].filter(Boolean).map(escapeHtml).join(' · ') || 'non localisé'}</span
       >
-      <span>💶 ${priceEditable(a)}</span>
-      ${a.dates ? `<span>📅 ${escapeHtml(a.dates)}</span>` : ''}
-      <span>📝 ${notesEditable(a)}</span>
+      <span>${svgIcon('euro')} ${priceEditable(a)}</span>
+      ${a.dates ? `<span>${svgIcon('calendar')} ${escapeHtml(a.dates)}</span>` : ''}
+      <span>${svgIcon('file-text')} ${notesEditable(a)}</span>
     </div>
     ${tagChips(a.tags)}
     <div class="card-actions">

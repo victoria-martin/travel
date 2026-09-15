@@ -31,6 +31,6 @@ function archiveButton(s) {
     onclick="toggleScenarioArchived('${s.id}')"
     title="${s.archived ? 'Désarchiver' : 'Archiver'}"
   >
-    ${s.archived ? '↩' : '📦'}
+    ${s.archived ? svgIcon('archive-restore') : svgIcon('archive')}
   </button>`;
 }

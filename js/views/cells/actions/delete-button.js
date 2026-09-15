@@ -4,6 +4,6 @@ function deleteButton(collection, id) {
     onclick="deleteItem('${collection}','${id}')"
     title="Supprimer"
   >
-    🗑
+    ${svgIcon('trash-2')}
   </button>`;
 }

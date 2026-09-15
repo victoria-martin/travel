@@ -24,7 +24,7 @@ function stepPlaceLabel(step) {
   if (city) return tagLabel('📍', escapeHtml(city.name));
   const acc = getAccommodation(step.accommodationId);
   if (acc) return tagLabel('', escapeHtml(acc.name));
-  return tagLabel('', '＋ lieu');
+  return tagLabel('', `${svgIcon('plus')} lieu`);
 }
 
 function stepPlaceDropdown(scenario, step) {
@@ -129,7 +129,7 @@ function placeOptions(scenarioId, stepId) {
         class="inline-menu-item ${step.accommodationId === a.id ? 'selected' : ''}"
         onclick="${pick(`heb:${a.id}`)}"
       >
-        ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
+        ${tagLabel(accType(a.type).emoji, `${a.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${placeOptionLabel(a)}`)}
       </button>
       ${accommodationSheetButton(a.id)}
     </div>`;
@@ -159,7 +159,7 @@ function placeCreateItem(scenarioId, stepId, query) {
     class="inline-menu-item inline-menu-item-create"
     onclick="createStepCity('${scenarioId}','${stepId}')"
   >
-    ＋ Créer la ville « ${escapeHtml(query)} »
+    ${svgIcon('plus')} Créer la ville « ${escapeHtml(query)} »
   </button>`;
 }
 

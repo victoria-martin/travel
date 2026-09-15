@@ -269,11 +269,6 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   ([header.js:41](js/views/accommodations/header.js#L41)), et `openPasteImport()` reste commentée
   dans [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions
   ouvertes sur le flux d'import de fichier. Garder, généraliser ou supprimer.
-- **Dropdown custom pour les selects inline** <!--t:kig5--> — 🧩 ui · ✅ fait : `accommodationTypeSelect`
-  et `accommodationStatusSelect` ([inline-selects.js](js/views/accommodations/inline-selects.js))
-  sont des `<select>` natifs, dont les `<option>` n'affichent que du texte — impossible d'espacer
-  l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
-  leurs `onchange`.
 
 ## 🚗 Locations
 
@@ -414,8 +409,9 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   que `js/views/accommodations/` existe. Les filtres en sont sortis dans
   [filters.js](js/views/accommodations/filters.js) et
   [filter-panel.js](js/views/accommodations/filter-panel.js) ; restent le render et les setters
-  (`setAccommodationType`/`Status` →
-  [inline-selects.js](js/views/accommodations/inline-selects.js), `setAccommodationNotes` →
+  (`setAccommodationType` → [type-dropdown.js](js/views/accommodations/type-dropdown.js),
+  `setAccommodationStatus` → [status-tag.js](js/views/accommodations/status-tag.js),
+  `setAccommodationNotes` →
   [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
   columns).
 - **gérer correctement les liens entre les prix entre les differentes entités** <!--t:8tln--> — 💾 données · 🏛️ archi · ⏳ à faire : faire

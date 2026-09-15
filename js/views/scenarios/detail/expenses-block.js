@@ -16,7 +16,7 @@ function scenarioExpensesBlock(scenario) {
     <div class="scenario-extra-actions">
       ${scenarioExpenseDropdown(scenario)}
       ${toolbarButton({
-        icon: '+',
+        icon: svgIcon('plus'),
         label: 'Ajouter une dépense',
         onclick: `openModal('charge', '', '${scenario.id}')`,
       })}
@@ -38,7 +38,7 @@ function scenarioExpenseRow(scenario, cost, span) {
       onclick="detachScenarioExpense('${scenario.id}','${cost.id}')"
       title="Retirer du scénario"
     >
-      ✕
+      ${svgIcon('x')}
     </button>
   </div>`;
 }

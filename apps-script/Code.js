@@ -43,6 +43,8 @@ const COLLECTIONS = {
   ],
   // Un prestataire porte ses options dans une seule cellule : elles ne se lisent qu'avec lui.
   providers: ['travelId', 'id', 'mode', 'name', 'logo', 'site', 'bookingUrl', 'notes', 'options'],
+  // Un modèle est du voyage et non d'un loueur : la même Golf se compare chez deux loueurs.
+  carModels: ['travelId', 'id', 'name', 'fuel', 'gearbox'],
   // Le lieu, les dates et le loueur sont à la location ; le véhicule n'en porte que la référence.
   rentals: [
     'travelId',
@@ -60,22 +62,23 @@ const COLLECTIONS = {
     'travelId',
     'id',
     'rentalId',
+    'modelId',
     'status',
-    'model',
-    'fuel',
-    'gearbox',
     'priceTotal',
     'pricePerDay',
     'optionIds',
     'link',
     'notes',
     'isDefault',
-    // Le loueur, le lieu et les dates étaient recopiés à chaque ligne : ces colonnes ne sont plus
-    // que la source de la reprise, et repartent vides au premier enregistrement.
+    // Le loueur, le lieu, les dates et le modèle étaient écrits sur chaque ligne : ces colonnes ne
+    // sont plus que la source de la reprise, et repartent vides au premier enregistrement.
     'name',
     'providerId',
     'location',
     'dates',
+    'model',
+    'fuel',
+    'gearbox',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'categories', 'recurrence', 'notes'],
   cities: [
@@ -291,6 +294,7 @@ function readState() {
     travels: rows.travels,
     accommodations: rows.accommodations,
     providers: rows.providers,
+    carModels: rows.carModels,
     rentals: rows.rentals,
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
@@ -503,6 +507,7 @@ function normalizeState(data) {
     travels: normalizeCollection('travels', data.travels),
     accommodations: normalizeCollection('accommodations', data.accommodations),
     providers: normalizeCollection('providers', data.providers),
+    carModels: normalizeCollection('carModels', data.carModels),
     rentals: normalizeCollection('rentals', data.rentals),
     cars: normalizeCollection('cars', data.cars),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
@@ -614,6 +619,7 @@ function writeState(data) {
   writeSheet('travels', data.travels || []);
   writeSheet('accommodations', data.accommodations || []);
   writeSheet('providers', data.providers || []);
+  writeSheet('carModels', data.carModels || []);
   writeSheet('rentals', data.rentals || []);
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);

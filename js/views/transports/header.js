@@ -1,13 +1,12 @@
 function transportsHeader() {
-  const providers = transportsTab === 'prestataires';
+  const tab = currentTransportsTab();
   return /* HTML */ `<div class="view-header">
     <div>
       <h2 class="view-title">Transports</h2>
-      <p class="view-sub">${providers ? providersHeaderSub() : transportsHeaderSub()}</p>
+      <p class="view-sub">${tab.sub()}</p>
     </div>
     <div class="view-header-actions">
-      ${transportsTabToggle()} ${providers ? providersHeaderActions() : transportsHeaderActions()}
-      ${toolbarMenu()}
+      ${transportsTabToggle()} ${tab.actions()} ${toolbarMenu()}
     </div>
   </div>`;
 }
@@ -22,5 +21,5 @@ function transportsHeaderSub() {
 
 function transportsHeaderActions() {
   return /* HTML */ `${sortPanel('transports')} ${columnPicker('transports')}
-  ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('transport')" })}`;
+  ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('transport')" })}`;
 }

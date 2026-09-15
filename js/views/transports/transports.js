@@ -1,8 +1,5 @@
 function renderTransportsView() {
-  return /* HTML */ `
-    ${transportsHeader()}
-    ${transportsTab === 'prestataires' ? renderProvidersTab() : renderTransportsList()}
-  `;
+  return /* HTML */ ` ${transportsHeader()} ${currentTransportsTab().body()} `;
 }
 
 function renderTransportsList() {

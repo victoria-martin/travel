@@ -29,7 +29,10 @@ function moveButtons(units, unit, call) {
     >
       ${label}
     </button>`;
-  return moveButton(-1, '↑', 'Monter') + moveButton(1, '↓', 'Descendre');
+  return (
+    moveButton(-1, svgIcon('arrow-up'), 'Monter') +
+    moveButton(1, svgIcon('arrow-down'), 'Descendre')
+  );
 }
 
 function stepMoveButtons(scenario, step) {

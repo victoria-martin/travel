@@ -8,12 +8,12 @@ function todoBuilder() {
     <div class="todo-builder-row">
       <select class="inline-select" onchange="setTodoDraftKind(this.value)">
         ${TODO_RESOURCES.map((r) =>
-          todoOption(r.kind, `${r.emoji} ${r.label}`, r.kind === todoDraft.kind),
+          todoOption(r.kind, `${r.icon} ${r.label}`, r.kind === todoDraft.kind),
         ).join('')}
       </select>
       ${column ? todoColumnSelect(column) : ''}
       <button class="btn" onclick="addTodoList()" ${todoDraft.values.length ? '' : 'disabled'}>
-        ＋ Ajouter la liste
+        ${svgIcon('plus')} Ajouter la liste
       </button>
     </div>
     ${

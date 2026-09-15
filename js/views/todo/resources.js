@@ -3,12 +3,27 @@
   declares. The key is that page's, so listTable and its columns apply here unchanged.
 */
 const TODO_RESOURCES = [
-  { kind: 'hebergements', label: 'Hébergements', emoji: '🏠', items: () => state.accommodations },
-  { kind: 'attractions', label: 'Activités', emoji: '🏛️', items: () => state.attractions },
-  { kind: 'transports', label: 'Transports', emoji: '✈️', items: () => state.transports },
-  { kind: 'locations', label: 'Locations', emoji: '🚗', items: () => state.cars },
-  { kind: 'charges', label: 'Dépenses', emoji: EXPENSE_EMOJI, items: () => state.fixedCosts },
-  { kind: 'villes', label: 'Villes', emoji: '📍', items: () => state.cities },
+  {
+    kind: 'hebergements',
+    label: 'Hébergements',
+    icon: svgIcon('house'),
+    items: () => state.accommodations,
+  },
+  {
+    kind: 'attractions',
+    label: 'Activités',
+    icon: svgIcon('landmark'),
+    items: () => state.attractions,
+  },
+  {
+    kind: 'transports',
+    label: 'Transports',
+    icon: svgIcon('plane'),
+    items: () => state.transports,
+  },
+  { kind: 'locations', label: 'Locations', icon: svgIcon('car'), items: () => state.cars },
+  { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
+  { kind: 'villes', label: 'Villes', icon: svgIcon('map-pin'), items: () => state.cities },
 ];
 
 function todoResource(kind) {

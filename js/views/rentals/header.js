@@ -10,7 +10,7 @@ function rentalsHeader(rentals) {
     </div>
     <div class="view-header-actions">
       ${toolbarButton({
-        icon: '+',
+        icon: svgIcon('plus'),
         label: 'Nouvelle recherche',
         onclick: "openModal('location')",
       })}

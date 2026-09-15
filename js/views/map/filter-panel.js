@@ -24,7 +24,7 @@ function mapFilterPanel() {
           type="checkbox"
           ${mapFilters.favOnly ? 'checked' : ''}
           onchange="toggleMapFavOnly()"
-        />⭐ Favoris uniquement</label
+        />${svgIcon('star', { fill: true })} Favoris uniquement</label
       >
     </div>
     <div class="filter-block">

@@ -37,7 +37,7 @@ function optionColumnHead(scenario, group, option) {
             onclick="removeGroupOption('${scenario.id}','${group.id}','${option.id}')"
             title="Retirer cette colonne et ses étapes"
           >
-            ✕
+            ${svgIcon('x')}
           </button>`
         : ''
     }
@@ -86,7 +86,7 @@ function optionChosenButton(scenario, group, option) {
     onclick="chooseGroupOption('${scenario.id}','${group.id}','${option.id}')"
     title="${option.isSelected ? 'Ne plus retenir cette colonne' : 'Retenir cette colonne'}"
   >
-    ${option.isSelected ? '◉' : '○'}
+    ${svgIcon(option.isSelected ? 'circle-dot' : 'circle')}
   </button>`;
 }
 
@@ -103,6 +103,6 @@ function addStepButton(scenario, index, option) {
     title="Insérer une étape ici"
     onclick="insertOptionStep('${scenario.id}',${index},'${option.id}')"
   >
-    ＋
+    ${svgIcon('plus')}
   </button>`;
 }

@@ -84,7 +84,7 @@ function stepCard(scenario, step, rank, arrival) {
           onclick="openModal('step','${scenario.id}','${step.id}')"
           title="Modifier"
         >
-          ✎
+          ${svgIcon('pencil')}
         </button>
         ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
         ${hiddenButton(step.hidden, `toggleStepHidden('${scenario.id}','${step.id}')`)}
@@ -93,7 +93,7 @@ function stepCard(scenario, step, rank, arrival) {
           onclick="deleteStep('${scenario.id}','${step.id}')"
           title="Supprimer"
         >
-          🗑
+          ${svgIcon('trash-2')}
         </button>
       </div>
       ${step.groupId ? '' : makeGroupButton(scenario, step)}
@@ -131,7 +131,7 @@ function makeGroupButton(scenario, step) {
     title="Comparer une autre option"
     onclick="makeStepGroup('${scenario.id}','${step.id}')"
   >
-    ＋
+    ${svgIcon('plus')}
   </button>`;
 }
 

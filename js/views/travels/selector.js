@@ -44,7 +44,7 @@ function travelMenu(current) {
     ${others.length ? '<div class="travel-menu-sep"></div>' : ''}
     ${
       current
-        ? `<button class="travel-menu-item" onclick="openTravelModal('${current.id}')">✎ Modifier ce voyage</button>`
+        ? `<button class="travel-menu-item" onclick="openTravelModal('${current.id}')">${svgIcon('pencil')} Modifier ce voyage</button>`
         : ''
     }
     <button class="travel-menu-item" onclick="openTravelModal()">+ Nouveau voyage</button>

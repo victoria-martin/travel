@@ -5,15 +5,15 @@ function scenariosHeader() {
       <p class="view-sub">Compare différentes versions de ton itinéraire</p>
     </div>
     <div class="view-header-actions">
-      ${toolbarButton({ icon: '+', label: 'Nouveau scénario', onclick: 'createScenario()' })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Nouveau scénario', onclick: 'createScenario()' })}
       ${toolbarButton({
-        icon: '⚖',
+        icon: svgIcon('scale'),
         label: 'Comparer',
         onclick: 'toggleCompareMode()',
         active: compareMode,
       })}
       ${toolbarButton({
-        icon: '📦',
+        icon: svgIcon('archive'),
         label: 'Archivés',
         onclick: 'toggleArchivedScenarios()',
         active: showArchivedScenarios,

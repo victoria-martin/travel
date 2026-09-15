@@ -33,7 +33,7 @@ function providerOptionsField(p) {
 function providerOptionsRows(options) {
   return /* HTML */ `${options.map(providerOptionRow).join('')}
     <button type="button" class="btn btn-ghost btn-small" onclick="addProviderOption()">
-      ＋ Ajouter une option
+      ${svgIcon('plus')} Ajouter une option
     </button>`;
 }
 
@@ -67,7 +67,7 @@ function providerOptionRow(option, index) {
       onclick="removeProviderOption(${index})"
       title="Retirer cette option"
     >
-      ✕
+      ${svgIcon('x')}
     </button>
   </div>`;
 }

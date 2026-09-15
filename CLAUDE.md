@@ -60,8 +60,43 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
-- **2026-09-15** — la page Voitures devient **Locations** et suit le site du loueur : on cherche une fois (loueur, lieu,
-  dates) et on lit une liste de véhicules. Le contexte devient donc une entité,
+- **2026-09-15** — le chrome passe des emoji aux icônes Lucide (ISC), recopiées dans
+  [js/icons.js](js/icons.js) plutôt que chargées d'un CDN : l'app doit tourner sans réseau, et
+  `lucide.createIcons()` demanderait une passe sur le DOM après chacun des douze endroits qui
+  écrivent en `innerHTML`, popups Leaflet et menus posés à la main compris. `svgIcon(name)` rend
+  la balise, `icon` restant le nom que l'appelant — bouton de barre d'outils, onglet, entrée de
+  navigation — donne au balisage qu'il reçoit ; une globale nommée `icon` serait masquée dans
+  chacun d'eux. Le tracé est en `currentColor` sur une grille de 24, donc la taille se règle en
+  `em` et les `font-size` déjà posés (`.nav-icon`, `.icon-btn`, `.step-move-btn`) valent telles
+  quelles. Trois frontières : les **vocabulaires** restent en emoji — ce sont des données — et
+  une rangée où les deux se côtoient reste entièrement en emoji ; ce qui s'écrit dans un
+  `<option>` ou passe par `escapeHtml` (les `pickerLabel`, les sens de tri) ne peut pas porter de
+  balise ; et le canal `geocode-status` écrit en `textContent`, donc ses ⚠️ y restent. L'œil de
+  [hidden-button.js](js/views/scenarios/detail/hidden-button.js), seul SVG dessiné à la main,
+  rejoint la table et emporte sa classe `.eye-icon`. `expense-emoji.js` devient
+  [expense-icon.js](js/expense-icon.js) : la globale ne porte plus un emoji. La flèche de cap
+  d'un traçé, elle, perd son halo en `text-shadow` pour un `filter: drop-shadow` : une ombre de
+  texte ne peint pas un SVG.
+
+- **2026-09-15** — un modèle de voiture est du **voyage** et non d'un loueur
+  ([js/views/car-models/](js/views/car-models/)) : le ranger sous son loueur faisait deux Golf qui
+  ne savent pas qu'elles parlent de la même voiture, alors que comparer deux loueurs est
+  précisément ce qu'on vient faire. Le modèle ne porte donc que ce que la voiture _est_ — nom,
+  motorisation, boîte ; ce qu'elle coûte dépend du loueur et des dates, donc ça vit sur l'offre,
+  c'est-à-dire sur le véhicule d'une location. L'onglet Voitures devient l'écran de comparaison :
+  un modèle, ses offres dessous, chacune avec son loueur, ses dates, ses options et son prix — deux
+  offres du même loueur ne différant que par une assurance s'y lisent l'une sous l'autre. Le tarif
+  indicatif qu'un loueur portait sur son modèle disparaît avec le catalogue par loueur : un prix
+  sans dates ne voulait rien dire. La grille d'une location cherche le nom tapé dans le catalogue
+  avant de l'y créer ([vehicle-draft.js](js/views/rentals/vehicle-draft.js)), donc il se remplit en
+  saisissant. La page Transports prend un troisième onglet, et son en-tête cesse de trancher par
+  `if` : chaque onglet déclare son corps, ses actions et son sous-titre dans `TRANSPORT_TABS`
+  ([tab.js](js/views/transports/tab.js)). Les pastilles de motorisation et de boîte ayant deux
+  domaines lecteurs, elles remontent à plat dans [fuel-tag.js](js/views/fuel-tag.js) et
+  [gearbox-tag.js](js/views/gearbox-tag.js), avec [word-options.js](js/views/word-options.js).
+
+- **2026-09-15** — la page Voitures devient **Locations** et suit le site du loueur : on cherche
+  une fois (loueur, lieu, dates) et on lit une liste de véhicules. Le contexte devient donc une entité,
   [rentals](js/views/rentals/get-rental.js), et le véhicule n'en porte que la référence — lieu, dates
   et loueur cessent d'être recopiés sur chaque ligne, comme le nom du loueur l'a cessé le matin
   même. Le prix saisi est le **total** que le loueur affiche ; le prix par jour devient une

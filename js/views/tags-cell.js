@@ -45,7 +45,7 @@ function tagsCellEditor(item) {
     ${used
       .map(
         (tag, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onmousedown="event.preventDefault()" onclick="removeTagFromCell('${item.id}', ${i})" title="Retirer">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onmousedown="event.preventDefault()" onclick="removeTagFromCell('${item.id}', ${i})" title="Retirer">${svgIcon('x')}</button></span>`,
       )
       .join('')}
     <input

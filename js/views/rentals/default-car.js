@@ -19,6 +19,6 @@ function defaultCarCell(car) {
     onclick="setDefaultCar('${car.id}')"
     title="${car.isDefault ? 'Ne plus être la voiture par défaut' : 'Voiture par défaut'}"
   >
-    ${car.isDefault ? '◉' : '○'}
+    ${svgIcon(car.isDefault ? 'circle-dot' : 'circle')}
   </button>`;
 }

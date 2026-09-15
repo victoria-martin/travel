@@ -16,7 +16,7 @@ function expenseDetailRow(cost, span) {
   const unit = expenseRecurrence(cost.recurrence).unit;
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub acc-recap-expense">
     <span
-      >${tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)))}
+      >${tagLabel(EXPENSE_ICON, escapeHtml(costLabel(cost)))}
       ${unit ? `<span class="expense-unit">${escapeHtml(expenseAmountLabel(cost))}</span>` : ''}</span
     >
     <span></span>

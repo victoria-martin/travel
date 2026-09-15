@@ -1,6 +1,6 @@
 function providersHeaderActions() {
   return /* HTML */ `${sortPanel('prestataires')} ${columnPicker('prestataires')}
-  ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('prestataire')" })}`;
+  ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('prestataire')" })}`;
 }
 
 function providersHeaderSub() {

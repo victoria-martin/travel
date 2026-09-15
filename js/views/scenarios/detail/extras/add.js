@@ -27,7 +27,7 @@ function extraAddDropdown(scenario, holder) {
         title="Rattacher une activité ou une dépense"
         onclick="setTimeout(() => focusExtraSearch('${key}'))"
       >
-        ＋ ajouter
+        ${svgIcon('plus')} ajouter
       </summary>
       <div class="inline-menu">
         <input
@@ -65,13 +65,13 @@ function extraCreateItems(scenarioId, holderId, query) {
       class="inline-menu-item inline-menu-item-create"
       onclick="createExtraAttraction('${scenarioId}','${holderId}')"
     >
-      ＋ Créer l'activité « ${escapeHtml(query)} »
+      ${svgIcon('plus')} Créer l'activité « ${escapeHtml(query)} »
     </button>
     <button
       class="inline-menu-item inline-menu-item-create"
       onclick="createExtraCost('${scenarioId}','${holderId}')"
     >
-      ＋ Créer la dépense « ${escapeHtml(query)} »
+      ${svgIcon('plus')} Créer la dépense « ${escapeHtml(query)} »
     </button>`;
 }
 
@@ -103,7 +103,7 @@ function extraOptions(scenarioId, holderId) {
           class="inline-menu-item"
           onclick="attachExtraCost('${scenarioId}','${holderId}','${cost.id}')"
         >
-          ${tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)))}
+          ${tagLabel(EXPENSE_ICON, escapeHtml(costLabel(cost)))}
         </button>`,
       ),
     );

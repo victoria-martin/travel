@@ -8,13 +8,13 @@ function setListMode(kind, mode) {
 function listModeToggle(kind, mode) {
   return toolbarToggleGroup([
     {
-      icon: '▤',
+      icon: svgIcon('rows-3'),
       label: 'Tableau',
       onclick: `setListMode('${kind}','table')`,
       active: mode === 'table',
     },
     {
-      icon: '▦',
+      icon: svgIcon('layout-grid'),
       label: 'Cartes',
       onclick: `setListMode('${kind}','card')`,
       active: mode === 'card',

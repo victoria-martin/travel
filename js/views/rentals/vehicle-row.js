@@ -2,10 +2,10 @@ function vehicleRow(car) {
   return /* HTML */ `<div class="vehicle-row">
     ${defaultCarCell(car)}
     <span class="vehicle-model">
-      ${escapeHtml(car.model) || 'Sans modèle'}
+      ${escapeHtml(vehicleModelName(car)) || 'Sans modèle'}
       <span class="row-notes">${carNotesEditable(car)}</span>
     </span>
-    ${carFuelTag(car)} ${carGearboxTag(car)} ${carStatusTag(car)}
+    ${vehicleFuelTag(car)} ${vehicleGearboxTag(car)} ${carStatusTag(car)}
     <span class="vehicle-price">${carPriceLabels(car).join(' · ')}</span>
     <span class="vehicle-options">${vehicleOptionLabels(car)}</span>
     <span class="vehicle-actions">

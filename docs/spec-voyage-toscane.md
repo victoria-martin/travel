@@ -419,10 +419,10 @@ défaut par date de départ, puis par mode.
   coûts distincts — le prix de la location vit sur la voiture, celui du trajet (péages, essence, un
   aller ponctuel) sur le transport. Le transport ne lit jamais le prix de la location.
 
-**Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte cette table dans un
-second onglet, « Loueurs & compagnies » : c'est la même entité des deux côtés, et c'est son **mode**
-qui dit comment on la nomme — loueur pour la voiture, compagnie pour l'avion, le train, le bus et le
-ferry.
+**Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte trois onglets : les
+trajets, « Loueurs & compagnies », et « Voitures » — les modèles qu'on compare d'un loueur à
+l'autre. C'est son **mode** qui dit comment on nomme un prestataire — loueur pour la voiture,
+compagnie pour l'avion, le train, le bus et le ferry.
 
 | Champ       | Détail                                                                   |
 | ----------- | ------------------------------------------------------------------------ |
@@ -450,6 +450,20 @@ cours : il ne vit ni dans l'adresse ni dans les préférences, revenir sur la pa
   prestataire créé s'y sélectionne. Il ne porte alors que son nom et son mode ; le reste se complète
   dans l'onglet.
 
+**Modèle de voiture** — une voiture du voyage : un nom, une motorisation, une boîte. C'est ce que
+l'onglet « Voitures » liste, et rien d'autre.
+
+- **Un modèle est du voyage, pas d'un loueur** : une seule Golf, que Hertz et Sixt proposent tous
+  les deux. C'est ce qui permet de les comparer — rangée sous son loueur, elle ferait deux entrées
+  homonymes qui ne savent pas qu'elles parlent de la même voiture.
+- **Chaque modèle porte ses offres** : une par véhicule relevé dans une location, avec son loueur,
+  ses dates, son statut, ses options et son prix. Deux offres du même loueur qui ne diffèrent que
+  par une assurance se lisent l'une sous l'autre — c'est précisément ce qu'on vient y comparer.
+- **Le prix n'est jamais sur le modèle** : il dépend du loueur et des dates, il vit sur l'offre. Un
+  modèle du catalogue qu'aucune location n'a relevé s'affiche sans offre.
+- **Le catalogue se remplit en saisissant** : un modèle tapé dans une location le rejoint. On peut
+  aussi l'ajouter depuis l'onglet, avant d'avoir cherché quoi que ce soit.
+
 ### Locations
 
 **Location** — une recherche chez un loueur : ce qu'on tape une fois pour toute une liste de
@@ -465,16 +479,14 @@ véhicules.
 
 **Véhicule** — une offre de cette location.
 
-| Champ        | Détail                                                                      |
-| ------------ | --------------------------------------------------------------------------- |
-| modèle       | « Fiat 500 »                                                                |
-| motorisation | essence · diesel · hybride · électrique                                     |
-| boîte        | automatique · manuelle                                                      |
-| prix total   | ce que le loueur affiche pour toute la location ; le prix / jour en découle |
-| options      | celles cochées dans le catalogue du loueur                                  |
-| statut       | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                  |
-| lien, notes  | notes éditables depuis la ligne                                             |
-| par défaut   | un seul véhicule à la fois, pour tout le voyage                             |
+| Champ       | Détail                                                                      |
+| ----------- | --------------------------------------------------------------------------- |
+| modèle      | référence un modèle du voyage, qui porte sa motorisation et sa boîte        |
+| prix total  | ce que le loueur affiche pour toute la location ; le prix / jour en découle |
+| options     | celles cochées dans le catalogue du loueur                                  |
+| statut      | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                  |
+| lien, notes | notes éditables depuis la ligne                                             |
+| par défaut  | un seul véhicule à la fois, pour tout le voyage                             |
 
 La page est la liste des locations. Chacune se déplie sur ses véhicules, et le dépli est le geste
 en cours : revenir sur la page les retrouve tous fermés.
@@ -482,7 +494,9 @@ en cours : revenir sur la page les retrouve tous fermés.
 - **La saisie suit le site du loueur** : « Nouvelle recherche » demande le loueur, le lieu et les
   deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte, prix
   total. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
-  rouvrir de modale. Le reste (statut, options, lien) se pose ensuite depuis la fiche du véhicule.
+  rouvrir de modale. Le modèle tapé est celui du voyage s'il existe déjà — la frappe le propose —
+  sinon il rejoint le catalogue avec la motorisation et la boîte qu'on vient de taper. Le reste
+  (statut, options, lien) se pose ensuite depuis la fiche du véhicule.
 - **Le prix se saisit en total, jamais par jour** : c'est le chiffre que le loueur affiche. Le prix
   par jour est une dérivation du total et des jours de la location, et c'est lui que le scénario
   multiplie par ses jours à lui. Une voiture reprise d'avant les locations n'a parfois que son prix
@@ -933,6 +947,13 @@ appareil.
 - **Libellés des boutons** : une option unique pour toute l'app, qui affiche ou masque le texte à
   côté des icônes. Elle se change dans les Réglages de la barre latérale ou depuis le menu ⋮ de
   n'importe quelle liste. Icône seule, le libellé reste lisible au survol.
+- **Icônes** : le chrome de l'app — barre latérale, barres d'outils, onglets, boutons d'action,
+  état de la synchro — est dessiné en trait, jamais en emoji. Une icône prend la couleur et la
+  taille du texte qui la porte. Les **vocabulaires** gardent leurs emoji : types et statuts
+  d'hébergement, d'activité, de transport et de voiture, motorisation, boîte, récurrence, statut
+  d'étape, et l'emoji que porte un voyage — ce sont des données qu'on choisit, pas du décor.
+  Là où les deux se côtoient dans une même liste (le menu de lieu d'une étape, les lignes du
+  récap, les dépenses dérivées), l'emoji l'emporte : une rangée ne mélange pas les deux.
 - **Fermeture d'une modale de saisie** (création comme modification) : confirmée dès qu'un champ a
   été touché, que la fermeture vienne du clic sur le fond ou du bouton « Annuler ». Une modale
   restée telle qu'ouverte se ferme sans rien demander.

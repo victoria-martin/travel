@@ -9,12 +9,12 @@ function todoListCard(list) {
   return /* HTML */ `<section class="todo-list">
     <div class="todo-list-head">
       <h3 class="todo-list-title">
-        ${resource.emoji} ${resource.label}
+        ${resource.icon} ${resource.label}
         ${column ? `<span class="todo-list-on">${escapeHtml(columnLabel(column))}</span>` : ''}
         <span class="todo-list-count">${items.length}</span>
       </h3>
       <button class="icon-btn" onclick="deleteTodoList('${list.id}')" title="Retirer cette liste">
-        ✕
+        ${svgIcon('x')}
       </button>
     </div>
     ${

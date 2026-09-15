@@ -102,6 +102,6 @@ function attractionPopup(a) {
 }
 
 function popupName(item, url) {
-  const name = `${item.favorite ? '★ ' : ''}${escapeHtml(item.name)}`;
+  const name = `${item.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${escapeHtml(item.name)}`;
   return url ? externalLink(url, name) : name;
 }

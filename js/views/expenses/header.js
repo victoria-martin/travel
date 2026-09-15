@@ -8,7 +8,7 @@ function expensesHeader() {
     <div class="view-header-actions">
       ${mode === 'table' ? sortPanel('charges') : ''}
       ${mode === 'table' ? columnPicker('charges') : ''} ${listModeToggle('charges', mode)}
-      ${toolbarButton({ icon: '+', label: 'Ajouter', onclick: "openModal('charge')" })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('charge')" })}
       ${toolbarMenu()}
     </div>
   </div>`;

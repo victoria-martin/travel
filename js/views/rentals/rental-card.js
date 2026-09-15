@@ -3,10 +3,11 @@ function rentalCard(rental) {
   const open = isRentalOpen(rental.id);
   return /* HTML */ `<div class="rental-card">
     <button class="rental-head" onclick="toggleRental('${rental.id}')">
-      <span class="rental-title">🚗 ${escapeHtml(rentalLabel(rental))}</span>
+      <span class="rental-title">${svgIcon('car')} ${escapeHtml(rentalLabel(rental))}</span>
       <span class="rental-dates">${escapeHtml(rentalDatesLabel(rental).join(' · '))}</span>
       <span class="rental-count">
-        ${vehicles.length} véhicule${vehicles.length > 1 ? 's' : ''} ${open ? '▾' : '▸'}
+        ${vehicles.length} véhicule${vehicles.length > 1 ? 's' : ''}
+        ${svgIcon(open ? 'chevron-down' : 'chevron-right')}
       </span>
     </button>
     <div class="rental-actions">

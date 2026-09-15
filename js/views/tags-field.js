@@ -23,7 +23,7 @@ function tagsFieldBody(used) {
     ${used
       .map(
         (tag, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onclick="removeTagFromField(${i})" title="Retirer">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onclick="removeTagFromField(${i})" title="Retirer">${svgIcon('x')}</button></span>`,
       )
       .join('')}
     <input

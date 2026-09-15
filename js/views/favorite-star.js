@@ -5,6 +5,6 @@ function favoriteStar(isFavorite, onclick) {
     onclick="${onclick}"
     title="${isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
   >
-    ${isFavorite ? '★' : '☆'}
+    ${svgIcon('star', { fill: isFavorite })}
   </button>`;
 }

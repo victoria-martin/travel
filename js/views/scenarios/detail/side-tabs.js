@@ -5,10 +5,15 @@
   session à l'autre, `null` quand rien n'est ouvert.
 */
 const SCENARIO_SIDE_TABS = [
-  { key: 'map', icon: '🗺', label: 'Carte', body: (s) => scenarioMapBlock(s, 'scenario-side-map') },
+  {
+    key: 'map',
+    icon: svgIcon('map'),
+    label: 'Carte',
+    body: (s) => scenarioMapBlock(s, 'scenario-side-map'),
+  },
   {
     key: 'money',
-    icon: '💶',
+    icon: svgIcon('euro'),
     label: 'Argent',
     body: (s) => scenarioCarBlock(s) + scenarioExpensesBlock(s) + scenarioTotalBlock(s),
   },

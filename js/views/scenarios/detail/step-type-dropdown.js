@@ -9,7 +9,7 @@ function pickStepAccommodationType(scenarioId, stepId, type) {
 }
 
 function stepTypeLabel(type) {
-  if (!type) return tagLabel('', '＋ type');
+  if (!type) return tagLabel('', `${svgIcon('plus')} type`);
   const t = accType(type);
   return tagLabel(t.emoji, t.label);
 }

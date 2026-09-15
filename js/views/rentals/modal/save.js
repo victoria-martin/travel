@@ -1,16 +1,17 @@
+// Le modèle choisi remplace le nom repris d'avant le catalogue : deux noms diraient la même chose.
 function saveCar(id) {
   const existing = id ? getCar(id) : null;
+  const modelId = document.getElementById('car-model').value;
   const car = {
     ...emptyCar(),
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
     pricePerDay: existing ? existing.pricePerDay : '',
+    model: modelId ? '' : (existing || {}).model || '',
     rentalId: document.getElementById('car-rental').value,
+    modelId,
     status: carStatusKey(document.getElementById('car-status').value),
-    model: document.getElementById('car-model').value.trim(),
-    fuel: carFuelKey(document.getElementById('car-fuel').value),
-    gearbox: carGearboxKey(document.getElementById('car-gearbox').value),
     priceTotal: document.getElementById('car-price-total').value.trim(),
     optionIds: modal.payload.optionIds,
     link: document.getElementById('car-link').value.trim(),

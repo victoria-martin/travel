@@ -41,7 +41,7 @@ function columnPicker(kind) {
   const options = columnsFor(kind).filter((c) => !c.locked);
   return toolbarPanel({
     key: 'columns',
-    icon: '▥',
+    icon: svgIcon('columns-3'),
     label: 'Colonnes',
     count: options.filter((c) => hidden.includes(c.key)).length,
     body: options

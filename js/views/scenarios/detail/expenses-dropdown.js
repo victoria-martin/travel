@@ -8,7 +8,7 @@ function scenarioExpenseDropdown(scenario) {
   return inlineDropdown(
     `expense:${scenario.id}`,
     'expense-dropdown',
-    /* HTML */ `<summary class="inline-tag">${tagLabel(EXPENSE_EMOJI, 'Rattacher une dépense')}</summary>
+    /* HTML */ `<summary class="inline-tag">${tagLabel(EXPENSE_ICON, 'Rattacher une dépense')}</summary>
       <div class="inline-menu">
         ${
           attachable.length === 0

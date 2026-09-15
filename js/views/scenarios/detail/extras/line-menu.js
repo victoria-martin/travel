@@ -29,7 +29,7 @@ function extraAlternatives(scenario, holder, line) {
           class="inline-menu-item ${cost.id === line.costId ? 'selected' : ''}"
           onclick="pickExtraCost('${scenario.id}','${holder.id}','${line.id}','${cost.id}')"
         >
-          ${tagLabel(EXPENSE_EMOJI, escapeHtml(costLabel(cost)))}
+          ${tagLabel(EXPENSE_ICON, escapeHtml(costLabel(cost)))}
         </button>`,
       )
       .join('');

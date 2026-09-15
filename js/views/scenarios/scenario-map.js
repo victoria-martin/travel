@@ -123,7 +123,7 @@ function drawRouteArrows(map, route) {
       interactive: false,
       icon: L.divIcon({
         className: 'route-arrow',
-        html: `<span style="transform:rotate(${screenBearing(route[i - 1], route[i])}deg)">➤</span>`,
+        html: `<span style="transform:rotate(${screenBearing(route[i - 1], route[i])}deg)">${svgIcon('play', { fill: true })}</span>`,
         iconSize: [18, 18],
       }),
     }).addTo(map);
@@ -140,7 +140,7 @@ function segmentLength(a, b) {
   return Math.hypot(...screenVector(a, b));
 }
 
-// ➤ pointe vers l'est, et rotate() tourne dans le sens horaire de l'écran.
+// La flèche pointe vers l'est, et rotate() tourne dans le sens horaire de l'écran.
 function screenBearing(a, b) {
   const [dx, dy] = screenVector(a, b);
   return (Math.atan2(dy, dx) * 180) / Math.PI;

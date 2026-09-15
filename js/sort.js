@@ -106,7 +106,9 @@ function columnHeader(kind, column) {
   if (!column.sortValue) return `<th>${column.label}</th>`;
   const criteria = sortCriteria(kind);
   const index = criteria.findIndex((c) => c.key === column.key);
-  const arrow = index < 0 ? '↕' : criteria[index].dir === 'asc' ? '↑' : '↓';
+  const arrow = svgIcon(
+    index < 0 ? 'arrow-up-down' : criteria[index].dir === 'asc' ? 'arrow-up' : 'arrow-down',
+  );
   const rank = index >= 0 && criteria.length > 1 ? index + 1 : '';
   return /* HTML */ `<th>
     <button
@@ -124,7 +126,7 @@ function sortPanel(kind) {
   const canAdd = criteria.length < sortableColumns(kind).length;
   return toolbarPanel({
     key: 'sort',
-    icon: '⇅',
+    icon: svgIcon('arrow-up-down'),
     label: 'Trier',
     count: criteria.length,
     body: /* HTML */ `<div class="sort-panel">
@@ -168,7 +170,7 @@ function sortLevelRow(kind, criterion, index, total) {
       title="Monter ce niveau"
       ${index === 0 ? 'disabled' : ''}
     >
-      ↑
+      ${svgIcon('arrow-up')}
     </button>
     <button
       class="icon-btn"
@@ -176,10 +178,10 @@ function sortLevelRow(kind, criterion, index, total) {
       title="Descendre ce niveau"
       ${index === total - 1 ? 'disabled' : ''}
     >
-      ↓
+      ${svgIcon('arrow-down')}
     </button>
     <button class="icon-btn" onclick="removeSortLevel('${kind}',${index})" title="Retirer">
-      ✕
+      ${svgIcon('x')}
     </button>
   </div>`;
 }

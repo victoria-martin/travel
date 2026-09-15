@@ -24,12 +24,16 @@ function render() {
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
-      ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
-      ${navBtn('locations', '🚗', 'Locations')} ${navBtn('depenses', EXPENSE_EMOJI, 'Dépenses')}
-      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Activités')}
-      ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
-      ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
-      ${navBtn('a-faire', '✅', 'À faire')}
+      ${travelSelector()} ${navBtn('hebergements', svgIcon('house'), 'Hébergements')}
+      ${navBtn('locations', svgIcon('car'), 'Locations')}
+      ${navBtn('depenses', EXPENSE_ICON, 'Dépenses')}
+      ${navBtn('villes', svgIcon('map-pin'), 'Villes')}
+      ${navBtn('attractions', svgIcon('landmark'), 'Activités')}
+      ${navBtn('transports', svgIcon('plane'), 'Transports')}
+      ${navBtn('scenarios', svgIcon('compass'), 'Scénarios')}
+      ${navBtn('carte', svgIcon('map'), 'Carte')}
+      ${navBtn('notes', svgIcon('notebook-pen'), 'Notes')}
+      ${navBtn('a-faire', svgIcon('list-checks'), 'À faire')}
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
     <div class="main" id="main"></div>

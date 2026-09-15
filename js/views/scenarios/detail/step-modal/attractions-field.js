@@ -35,7 +35,7 @@ function stepAttractionsChips(extras) {
     ${stepFormAttractions(extras)
       .map(
         (line) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(stepAttractionName(line))}<button type="button" class="tag-chip-remove" onclick="removeStepAttraction('${line.id}')" title="Retirer cette activité">✕</button></span>`,
+          `<span class="tag-chip tag-chip-editable">${escapeHtml(stepAttractionName(line))}<button type="button" class="tag-chip-remove" onclick="removeStepAttraction('${line.id}')" title="Retirer cette activité">${svgIcon('x')}</button></span>`,
       )
       .join('')}
     <input
@@ -144,7 +144,7 @@ function attractionResults(query, usedIds) {
         onmouseenter="setActiveAttractionResult(${items.length})"
         onclick="createStepAttraction()"
       >
-        ＋ Créer « ${escapeHtml(query)} »
+        ${svgIcon('plus')} Créer « ${escapeHtml(query)} »
       </button>`,
     );
   return items.join('');
