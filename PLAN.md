@@ -26,11 +26,6 @@ les types.
 
   existe déjà avec le picker attendons deja le rework
 
-- **Ouvrir le scénario TEST après le premier pull** <!--t:k3vq--> — 🐛 fix · ⏳ à faire :
-  `selectTestScenario()` ([scenarios.js](js/views/scenarios/scenarios.js)) est appelé au chargement
-  du cache local ([storage.js](js/storage.js#L36)) ; sur un navigateur vierge, les scénarios
-  n'arrivent qu'au premier pull du Sheet et on reste sur la liste. En faire un one-shot consommé à
-  la première arrivée de données, sans déranger la vue courante lors des pulls suivants.
 - **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
   [route-trail.js](js/views/scenarios/detail/route-trail.js) existe, son appel reste en commentaire
   dans [detail.js](js/views/scenarios/detail/detail.js). La bande de maillons sous l'en-tête prend
@@ -311,10 +306,6 @@ La page existe : les deux blocs Calculé / Saisi, les sources dérivées et le r
 [la spec](docs/spec-voyage-toscane.md). Les charges fixes sont le bloc Saisi ; elles gardent leur
 table et leur modale.
 
-- **Sources dérivées à montant ouvert** <!--t:3kq7--> — 🧮 calcul · ⏳ à faire : un hébergement à
-  prix par nuit et une voiture à prix par jour s'affichent avec leur unité et restent hors du total
-  ([derived.js](js/views/expenses/derived.js)). Décider sur combien de nuits / de jours les
-  multiplier — le nombre ne vit nulle part hors d'un scénario.
 - **Budget et prix** <!--t:w4qe--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type`
   `budget total` / `cost` envisagé ici n'a plus lieu d'être : une charge sans prix saisi **est** une
@@ -339,12 +330,14 @@ table et leur modale.
   du texte avant de devenir un vocabulaire ; une valeur inconnue retombe sur « une fois »
   silencieusement, donc une dépense qui disait « par jour » compte désormais une seule fois. Relire
   la colonne du Sheet et rattacher chaque texte à sa clé.
-- **Une dépense saisie appartient-elle au scénario ?** <!--t:x8dr--> — 🗃️ modèle · 🔍 à étudier :
-  elle appartient au voyage, et le rattachement se fait par des listes portées côté scénario — les
-  `costIds` du scénario, les lignes d'une étape ou d'un groupe. Le `scenarioId` optionnel sur la
-  dépense est écarté : une dépense ne peut pas porter un champ par niveau de rattachement. Reste à
-  décider si une dépense peut n'exister **que** dans un scénario, donc disparaître de la page
-  Dépenses.
+- **Une dépense qui n'existe que dans un scénario** <!--t:x8dr--> — 🗃️ modèle · ⏳ à faire : une
+  dépense peut n'appartenir qu'à un scénario, et disparaît alors de la page Dépenses. Le
+  rattachement reste porté côté scénario — les `costIds`, les lignes d'une étape ou d'un groupe —
+  le `scenarioId` optionnel sur la dépense restant écarté : elle ne peut pas porter un champ par
+  niveau de rattachement. Aujourd'hui une dépense ajoutée depuis le détail
+  ([expenses-block.js](js/views/scenarios/detail/expenses-block.js)) reste sur la page Dépenses
+  ([manual.js](js/views/expenses/manual.js)), et le ✕ la détache sans la supprimer. À trancher : ce
+  qui marque une dépense comme propre au scénario, et ce que devient le ✕ sur elle.
 
 ## ✈️ Transports
 

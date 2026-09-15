@@ -26,24 +26,7 @@ function scenarioDetailHeader(s) {
       </div>
     </div>
     <div class="view-header-actions">
-      ${count > 0 ? scenarioSideTabsToggle() : ''}
-      ${toolbarPanel({
-        key: 'add-step',
-        icon: '+',
-        label: 'Ajouter une étape',
-        body: /* HTML */ ` <button
-            class="inline-menu-item"
-            onclick="openToolbarPanel = null; openModal('step','${s.id}',null,1)"
-          >
-            Créer une étape
-          </button>
-          <button
-            class="inline-menu-item"
-            onclick="openToolbarPanel = null; openModal('step','${s.id}',null,2)"
-          >
-            Créer une étape avec options
-          </button>`,
-      })}
+      ${count > 0 ? scenarioSideTabsToggle() : ''} ${scenarioExpensesSheetBtn(s)}
       ${toolbarMenu(trailColorOption())}
     </div>
     ${scenarioHeaderMoney(s)}

@@ -31,6 +31,10 @@ body {
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
+select {
+  max-width: min(100%, 320px);
+  text-overflow: ellipsis;
+}
 #app {
   display: flex;
   height: 100dvh;
@@ -360,6 +364,45 @@ body {
   font-size: 12px;
 }
 
+/* ---------- Réglages de la barre latérale ---------- */
+.sidebar-footer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settings-menu > summary {
+  list-style: none;
+}
+.settings-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.settings-panel {
+  padding: 10px 12px 4px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.settings-scope {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #b9c7c0;
+  margin: 10px 0 6px;
+}
+.settings-scope:first-child {
+  margin-top: 0;
+}
+.settings-panel .filter-block {
+  margin-bottom: 0;
+}
+.settings-panel .filter-title {
+  color: rgba(255, 255, 255, 0.7);
+}
+.settings-panel .filter-option {
+  font-size: 12.5px;
+}
+
 /* ---------- Toolbar ---------- */
 .toolbar-panel {
   position: relative;
@@ -424,14 +467,6 @@ a.btn {
 }
 .back-link {
   margin-bottom: 10px;
-}
-.sidebar-option {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
 }
 .sort-row {
   display: flex;
@@ -1214,7 +1249,8 @@ tr:hover td {
   flex-direction: column;
   gap: 0;
   margin: 18px 0;
-  padding-left: 34px;
+  padding-left: 32px;
+  padding-right: 16px;
 }
 /* Le trait court d'un centre de point à l'autre : 25px, la hauteur où la pastille de rang tombe. */
 .step-list::before {
@@ -1297,6 +1333,16 @@ tr:hover td {
 .step-gap:hover > .inline-dropdown,
 .step-gap > .inline-dropdown[open] {
   opacity: 1;
+}
+/* Le ＋ du pied n'est pas un fantôme comme celui d'entre deux cartes : il se voit toujours. */
+.step-append {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.step-append summary {
+  list-style: none;
+  cursor: pointer;
 }
 .step-card {
   position: relative;
@@ -1932,13 +1978,17 @@ tr:hover td {
 .scenario-detail-cols {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
-  gap: 20px;
+  gap: 16px;
   align-items: stretch;
   flex: 1;
   min-height: 0;
 }
 .scenario-detail-cols:not(:has(.scenario-detail-side)) {
   grid-template-columns: minmax(0, 1fr);
+}
+/* La carte se lit d'autant mieux qu'elle est large : elle prend la moitié de l'écran. */
+.scenario-detail-cols:has(.side-map) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .scenario-detail-main {
   min-width: 0;
@@ -1997,32 +2047,12 @@ tr:hover td {
   }
 }
 /* Sous les étapes, l'argent et la carte se partagent la largeur de la colonne. */
-.scenario-detail-foot {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-  margin-top: 16px;
-}
 .scenario-detail-money {
   display: flex;
   flex-direction: column;
   gap: 12px;
   min-width: 0;
-}
-.scenario-detail-foot .scenario-map-block {
-  flex: none;
-  position: sticky;
-  top: 0;
-}
-.scenario-detail-foot .scenario-map-canvas {
-  flex: none;
-  height: min(420px, 60vh);
-}
-@media (max-width: 900px) {
-  .scenario-detail-foot {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  margin-top: 16px;
 }
 /* Dans son onglet, la carte prend la hauteur du panneau ; en une colonne, la sienne. */
 .scenario-map-block {
@@ -2137,6 +2167,11 @@ tr:hover td {
 }
 .acc-recap-sub strong {
   font-weight: 600;
+  color: var(--ink);
+}
+/* La ligne est soft comme tout le détail : le nom de la dépense reprend l'encre pleine, sans quoi
+   son montant unitaire ne s'en détache pas. */
+.acc-recap-expense > span:first-child {
   color: var(--ink);
 }
 .acc-recap-subtotal {
@@ -2554,7 +2589,7 @@ tr:hover td {
 }
 .expense-unit {
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 11px;
 }
 .expense-amount-open {
   color: var(--ink-soft);

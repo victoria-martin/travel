@@ -212,6 +212,14 @@ saisies, sinon la destination) ouvre le menu des voyages : les autres voyages, �
 voyage » et « Nouveau voyage ». Les deux derniers ouvrent la même modale. En barre latérale
 réduite, il ne reste que l'emoji.
 
+Au pied de la barre, sous l'état du Sheet, un bouton **⚙️ Réglages** déplie les préférences
+d'affichage — dans le flux de la barre, qui défile, et non en panneau flottant qu'elle rognerait.
+Elles s'y rangent en deux temps : **Partout** ce qui vaut pour toute l'app (les libellés des
+boutons), **Sur cette page** ce qui ne concerne que l'écran ouvert (la peinture de la bande
+d'itinéraire sur la liste des scénarios, la couleur du fil sur le détail). Un écran sans réglage
+propre n'affiche que le premier bloc. Le menu ⋮ des listes garde les mêmes options : la
+préférence se change indifféremment ici ou là.
+
 La **couleur d'accent** du voyage ouvert remplace les deux verts structurants du thème — barre
 latérale, boutons, états actifs. Sans couleur choisie, l'app garde les siens.
 
@@ -551,9 +559,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   à l'étude, beige en recherche ou sans hébergement, rouille à revoir ; les deux statuts qui
   attendent un geste — à réserver, à revoir — se rayent en diagonale. C'est l'avancement du
   voyage qui se lit d'un coup d'œil sur la liste, et non le type d'hébergement, qui reste la
-  couleur de la carte. L'infobulle d'un segment nomme le lieu, ses nuits et son statut. Le ⋮ de
-  l'en-tête offre quatre peintures de cette échelle, le temps de choisir celle qui se lit le
-  mieux. Elle
+  couleur de la carte. L'infobulle d'un segment nomme le lieu, ses nuits et son statut. Les Réglages
+  comme le ⋮ de l'en-tête offrent quatre peintures de cette échelle, le temps de choisir celle qui
+  se lit le mieux. Elle
   porte ses dates à ses deux bouts, chacune sous un tiret : le départ à gauche, le retour là où
   elle s'arrête — donc plus tôt que celui d'un scénario plus long. Son échelle est celle de la
   liste entière — le scénario le plus long tient toute la largeur, les autres se mesurent contre
@@ -568,11 +576,19 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   attractions, et le total général avec les nuits. Charges et attractions ne montrent que leur
   total : leur détail se lit dans le scénario. La sélection ne dure que la session, comme le
   scénario ouvert.
-- **En-tête du détail** : sa barre d'outils ne porte que des gestes sur la vue — les deux onglets
-  du panneau, « Ajouter une étape », le menu ⋮ — et le lien « ← Tous les scénarios ». Les données
-  du scénario tiennent le bloc d'identité : l'étoile de favori, le nom éditable, et sous eux la
-  date de départ suivie du nombre d'étapes et des nuits. Le total en euros, avec les GuestPoints
-  sous lui, se lit à droite.
+- **En-tête du détail** : sa barre d'outils ne porte que des gestes sur la vue — les onglets du
+  panneau latéral, le bouton Dépenses — et le lien « ← Tous les scénarios ». Les données du
+  scénario tiennent le bloc d'identité : l'étoile de favori, le nom éditable, et sous eux la date
+  de départ suivie du nombre d'étapes et des nuits. Le total ferme cette même ligne : les
+  GuestPoints, puis les euros en grand au bout.
+- **Ajouter une étape** ne se fait plus depuis la barre mais depuis la liste : un ＋ fantôme entre
+  deux cartes, révélé au survol, qui insère à cet endroit ; et une ligne « ＋ Ajouter une étape »
+  posée au pied de la liste, toujours visible, qui ajoute à la fin — c'est aussi le seul geste d'un
+  scénario sans étape. Les deux offrent « Créer une étape » et « Créer une étape avec options ».
+- **Les dépenses du scénario** s'ouvrent en panneau de droite depuis le bouton 🧾 de la barre :
+  celui des fiches (`openSheet`), qui glisse par-dessus la liste sans la rétrécir et se ferme au
+  clic sur le fond ou par Échap. Le panneau n'édite rien de lui-même — chaque ligne écrit en
+  place, et l'ajout d'une dépense garde la modale.
 - **Date de départ** : un champ de la ligne de sous-titre, à côté du nom. Il date la première
   étape, et les nuits de chaque étape décalent les suivantes. Sans date de départ, aucune date ne
   s'affiche.
@@ -641,8 +657,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   hébergement de la liste porte un ↗ en bout de ligne, qui ouvre sa fiche en panneau sans quitter le
   scénario : un prix ou une adresse se vérifie là où l'on choisit.
 - **Le fil du trajet** : sous l'en-tête du détail, une bande de maillons, un par étape retenue,
-  dans l'ordre du trajet. Chacun porte un trait de la couleur du type de son hébergement, sa lettre,
-  son nom et ses nuits, et il est large comme ses nuits — la même lecture que la bande de la liste,
+  dans l'ordre du trajet. Chacun porte un trait de la couleur de son avancement — la même échelle
+  que la bande de la liste —, qu'une préférence bascule sur la couleur du type
+  d'hébergement — depuis les Réglages comme depuis le ⋮. Il porte aussi sa lettre, son nom et ses nuits, et il est large comme ses nuits,
   en cliquable : le maillon mène à sa carte. Il reste collé sous l'en-tête quand la liste défile,
   puisque c'est là qu'il sert. Il ne s'affiche qu'à partir de deux étapes retenues.
 - **Créer une étape** : le ＋ entre deux rangées comme le bouton de l'en-tête ouvrent le même choix,
@@ -840,8 +857,8 @@ appareil.
   s'ouvre sous son déclencheur, au-dessus quand la place est de ce côté, et se referme dès qu'on
   fait défiler.
 - **Libellés des boutons** : une option unique pour toute l'app, qui affiche ou masque le texte à
-  côté des icônes. Elle se change depuis la barre latérale ou depuis le menu ⋮ de n'importe quelle
-  liste. Icône seule, le libellé reste lisible au survol.
+  côté des icônes. Elle se change dans les Réglages de la barre latérale ou depuis le menu ⋮ de
+  n'importe quelle liste. Icône seule, le libellé reste lisible au survol.
 - **Fermeture d'une modale de saisie** (création comme modification) : confirmée dès qu'un champ a
   été touché, que la fermeture vienne du clic sur le fond ou du bouton « Annuler ». Une modale
   restée telle qu'ouverte se ferme sans rien demander.

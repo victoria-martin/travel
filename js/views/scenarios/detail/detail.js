@@ -7,7 +7,8 @@ function renderScenarioDetailView() {
   if (s.steps.length === 0) {
     return (
       scenarioDetailHeader(s) +
-      emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
+      emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.') +
+      stepAppendRow(s)
     );
   }
   // laisser ce comm TEST
@@ -19,11 +20,8 @@ function renderScenarioDetailView() {
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main view-scroller">
         ${stepList(s)}
-        <div class="scenario-detail-foot">
-          <div class="scenario-detail-money">
-            ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
-          </div>
-          ${scenarioMapBlock(s, 'scenario-foot-map')}
+        <div class="scenario-detail-money">
+          ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
         </div>
       </div>
       ${prefs.scenarioSidePanel ? scenarioSidePanel(s) : ''}

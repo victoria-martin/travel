@@ -1,6 +1,6 @@
 /*
   Toolbar buttons show their icon alone or icon + label. The choice is one preference for the whole
-  app, switched from the sidebar and from the ⋮ menu of any list.
+  app, switched from the settings panel of the sidebar and from the ⋮ menu of any list.
 */
 
 function showButtonLabels() {
@@ -19,3 +19,5 @@ function buttonLabelsOption() {
     Textes des boutons
   </label>`;
 }
+
+// faire un test avec des switch a la place des checkbox
