@@ -1,6 +1,6 @@
 /*
   Le premier des deux selects d'une étape : il dit quel type d'hébergement on cherche, et les
-  hébergements du select de lieu s'y restreignent — les villes, elles, y sont toujours. Sans type,
+  hébergements du select de lieu s'y restreignent — les lieux, eux, y sont toujours. Sans type,
   le ＋ reste discret comme celui d'une colonne en plus.
 */
 function pickStepAccommodationType(scenarioId, stepId, type) {

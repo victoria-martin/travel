@@ -44,7 +44,10 @@ const LOCATED_FORMS = {
     read: (id) => readAccommodationForm(id),
     upsert: (item) => upsertAccommodation(item),
   },
-  ville: { read: (id) => readCityForm(id), upsert: (item) => upsertCity(item) },
+  attraction: {
+    read: (id) => readAttractionForm(id),
+    upsert: (item) => upsertAttraction(item),
+  },
 };
 
 /* A found position is worth keeping right away: the record is written, the modal stays on it. */

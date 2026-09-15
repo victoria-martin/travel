@@ -8,7 +8,7 @@ function emptyStep() {
     hidden: false,
     groupId: '',
     optionId: '',
-    cityId: null,
+    attractionId: null,
     accommodationId: null,
     accommodationType: '',
     nights: 1,

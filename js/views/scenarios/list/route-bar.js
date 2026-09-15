@@ -47,8 +47,8 @@ function routeLabel(p, nights) {
   return /* HTML */ `<span class="scenario-route-name" style="flex:${p.nights};">${label}</span>`;
 }
 
-// Le lieu d'un séjour est sa ville ; un hébergement sans ville se dit par son nom.
+// Le lieu d'un séjour porte son nom ; un hébergement se dit par sa ville, ou par son nom.
 function routePlaceName(p) {
-  if (p.city) return p.city.name;
+  if (p.place) return p.place.name;
   return p.acc ? p.acc.city || p.acc.name : 'Sans lieu';
 }

@@ -1,11 +1,11 @@
 /*
   Le second des deux selects d'une étape : le lieu. Les hébergements viennent en premier, un
-  groupe par type et les favoris en tête de chacun ; les villes ferment la liste, et y sont quel
-  que soit le type retenu — il ne restreint que les hébergements, une étape se posant dans une
-  ville sans qu'on sache encore où l'on dort. Chaque groupe se replie, et dit alors ce qu'il cache.
-  Le menu s'ouvre sur un champ de recherche qui interroge le nom et les niveaux du lieu ; la frappe
-  ne repeint que la liste, sinon le champ perdrait sa saisie à chaque lettre. Une ville qui manque
-  se crée sur place, sous le nom tapé, comme une activité depuis le ＋ d'une carte.
+  groupe par type et les favoris en tête de chacun ; les lieux ferment la liste, groupés par type
+  eux aussi, et y sont quel que soit le type retenu — il ne restreint que les hébergements, une
+  étape se posant quelque part sans qu'on sache encore où l'on dort. Chaque groupe se replie, et
+  dit alors ce qu'il cache. Le menu s'ouvre sur un champ de recherche qui interroge le nom et les
+  niveaux du lieu ; la frappe ne repeint que la liste, sinon le champ perdrait sa saisie à chaque
+  lettre. Une ville qui manque se crée sur place, sous le nom tapé.
 */
 function placeOptionLabel(place) {
   const location = placeLevelsLabel(place);
@@ -20,8 +20,8 @@ function pickStepPlace(scenarioId, stepId, value) {
 // La pastille de type, juste avant, dit déjà de quel hébergement il s'agit : le lieu n'affiche
 // que son nom, qui a besoin de toute la place.
 function stepPlaceLabel(step) {
-  const city = getCity(step.cityId);
-  if (city) return tagLabel('📍', escapeHtml(city.name));
+  const place = getAttraction(step.attractionId);
+  if (place) return tagLabel(attractionType(place.type).emoji, escapeHtml(place.name));
   const acc = getAccommodation(step.accommodationId);
   if (acc) return tagLabel('', escapeHtml(acc.name));
   return tagLabel('', `${svgIcon('plus')} lieu`);
@@ -84,32 +84,50 @@ function placeGroup(title, items, toggle, folded) {
   return head + (folded ? '' : items.join(''));
 }
 
-// Un groupe par type d'hébergement, dans l'ordre du vocabulaire, ceux sans type connu à la fin.
-function accommodationTypeGroups(accommodations, item, group) {
-  return [...Object.keys(ACCOMMODATION_TYPES), '']
+/*
+  Un groupe par type, dans l'ordre du vocabulaire, ceux sans type connu à la fin. Les deux familles
+  du menu s'y rangent pareil, et le préfixe de la clé leur garde des replis distincts — un type
+  « autre » vaut de chaque côté.
+*/
+function placeTypeGroups(items, { types, unset, keyOf, prefix }, item, group) {
+  return [...Object.keys(types), '']
     .map((key) =>
       group(
-        key || 'autre',
-        key ? accType(key).label : UNSET_ACCOMMODATION_TYPE.label,
-        accommodations.filter((a) => accTypeKey(a.type) === key).map(item),
+        `${prefix}-${key || 'autre'}`,
+        key ? types[key].label : unset.label,
+        items.filter((it) => keyOf(it.type) === key).map(item),
       ),
     )
     .join('');
 }
+
+const ACCOMMODATION_PLACE_TYPES = {
+  types: ACCOMMODATION_TYPES,
+  unset: UNSET_ACCOMMODATION_TYPE,
+  keyOf: accTypeKey,
+  prefix: 'heb',
+};
+
+const ATTRACTION_PLACE_TYPES = {
+  types: ATTRACTION_TYPES,
+  unset: UNSET_ATTRACTION_TYPE,
+  keyOf: attractionTypeKey,
+  prefix: 'lieu',
+};
 
 function placeOptions(scenarioId, stepId) {
   const step = getStep(scenarioId, stepId);
   const needle = placeSearchQuery(stepId);
   const type = accTypeKey(step.accommodationType);
   const pick = (value) => `pickStepPlace('${scenarioId}','${stepId}','${value}')`;
-  const cities = ofCurrentTravel(state.cities)
-    .filter((c) => placeMatches(c, needle))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const places = ofCurrentTravel(state.attractions)
+    .filter((a) => placeMatches(a, needle))
+    .sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0) || a.name.localeCompare(b.name));
   const accommodations = ofCurrentTravel(state.accommodations)
     .filter((a) => (!type || accTypeKey(a.type) === type) && placeMatches(a, needle))
     .sort((a, b) => (b.favorite ? 1 : 0) - (a.favorite ? 1 : 0) || a.name.localeCompare(b.name));
   const none = /* HTML */ `<button
-    class="inline-menu-item ${!step.cityId && !step.accommodationId ? 'selected' : ''}"
+    class="inline-menu-item ${!step.attractionId && !step.accommodationId ? 'selected' : ''}"
     onclick="${pick('')}"
   >
     Aucun lieu choisi
@@ -133,26 +151,21 @@ function placeOptions(scenarioId, stepId) {
       </button>
       ${accommodationSheetButton(a.id)}
     </div>`;
+  const placeItem = (p) => `<button
+      class="inline-menu-item ${step.attractionId === p.id ? 'selected' : ''}"
+      onclick="${pick(`lieu:${p.id}`)}"
+    >
+      ${tagLabel(attractionType(p.type).emoji, `${p.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${placeOptionLabel(p)}`)}
+    </button>`;
   const groups =
-    accommodationTypeGroups(accommodations, accommodationItem, group) +
-    group(
-      'villes',
-      'Villes',
-      cities.map(
-        (c) => `<button
-          class="inline-menu-item ${step.cityId === c.id ? 'selected' : ''}"
-          onclick="${pick(`ville:${c.id}`)}"
-        >
-          ${tagLabel('📍', placeOptionLabel(c))}
-        </button>`,
-      ),
-    );
+    placeTypeGroups(accommodations, ACCOMMODATION_PLACE_TYPES, accommodationItem, group) +
+    placeTypeGroups(places, ATTRACTION_PLACE_TYPES, placeItem, group);
   const create = placeCreateItem(scenarioId, stepId, needle);
   return none + (groups + create || '<div class="inline-menu-group">Aucun lieu trouvé</div>');
 }
 
-// Une ville qui n'est pas encore dans la liste se crée sous le nom tapé : elle ne porte que ce
-// nom, le reste se complète depuis la page Villes.
+// Un lieu qui n'est pas encore dans la liste se crée sous le nom tapé, en ville : c'est l'étape
+// dont on ignore encore le logement. Le reste se complète depuis la page Lieux & activités.
 function placeCreateItem(scenarioId, stepId, query) {
   if (!query) return '';
   return /* HTML */ `<button
@@ -168,9 +181,16 @@ function placeCreateItem(scenarioId, stepId, query) {
 function createStepCity(scenarioId, stepId) {
   const name = placeSearchQuery(stepId);
   if (!name) return;
-  const city = { ...emptyCity(), id: uid(), travelId: currentTravelId(), name, city: name };
-  upsertCity(city);
-  pickStepPlace(scenarioId, stepId, `ville:${city.id}`);
+  const place = {
+    ...emptyAttraction(),
+    id: uid(),
+    travelId: currentTravelId(),
+    name,
+    type: 'city',
+    city: name,
+  };
+  upsertAttraction(place);
+  pickStepPlace(scenarioId, stepId, `lieu:${place.id}`);
 }
 
 function repaintPlaceOptions(scenarioId, stepId) {

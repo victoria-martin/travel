@@ -1,5 +1,5 @@
 function stepPlace(step) {
-  if (step.cityId) return getCity(step.cityId) || null;
+  if (step.attractionId) return getAttraction(step.attractionId) || null;
   if (step.accommodationId) return getAccommodation(step.accommodationId) || null;
   return null;
 }

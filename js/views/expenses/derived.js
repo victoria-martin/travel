@@ -48,7 +48,7 @@ const DERIVED_EXPENSE_SOURCES = [
         .filter((t) => t.status === 'booked')
         .map((t) => ({
           icon: transportMode(t.mode).emoji,
-          label: `${transportEndpointLabel(t.fromCityId, t.fromPrecision)} → ${transportEndpointLabel(t.toCityId, t.toPrecision)}`,
+          label: `${transportEndpointLabel(t.fromAttractionId, t.fromPrecision)} → ${transportEndpointLabel(t.toAttractionId, t.toPrecision)}`,
           unit: '',
           amount: firmPrice(t),
           display: priceLabel(t),

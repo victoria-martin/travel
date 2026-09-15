@@ -76,11 +76,7 @@ function locateOptions(id, key) {
 }
 
 function locatedPlaces() {
-  return [
-    ...ofCurrentTravel(state.accommodations),
-    ...ofCurrentTravel(state.cities),
-    ...ofCurrentTravel(state.attractions),
-  ];
+  return [...ofCurrentTravel(state.accommodations), ...ofCurrentTravel(state.attractions)];
 }
 
 function locateSummary(p) {

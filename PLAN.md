@@ -273,15 +273,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 ## 🚗 Locations
 
 La page existe : les locations, leurs véhicules, la grille de saisie, les options et la voiture par
-défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md).
-
-- **Le tarif par jour ne se saisit plus** <!--t:m8vd--> — 🐛 fix · ⏳ à faire : ni la fiche
-  ([modal/form.js](js/views/rentals/modal/form.js)) ni la grille de saisie rapide n'ont de champ
-  `pricePerDay` — seul le prix total y est. `offerDayPrice`
-  ([offer-price.js](js/views/rentals/offer-price.js)) le divise alors par les jours de la location,
-  et une offre sans dates retombe sur un `pricePerDay` que plus rien ne remplit : elle coûte donc
-  **zéro** dans un scénario. Remettre le champ aux deux endroits ; l'arbitrage total / par jour est
-  déjà écrit.
+défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md). Rien en attente.
 
 ## 💰 Dépenses
 
@@ -354,40 +346,34 @@ la recopier.
   retour encadrent le voyage entier, pas une étape. Soit deux transports sans étape rattachée, soit
   des étapes fictives de départ et de retour dans le scénario.
 
-## 🎡 Attractions
+## 🎡 Lieux & activités
 
 La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
-- **Une attraction peut-elle être une ville ?** <!--t:4heo--> — 🗃️ modèle · 🔍 à étudier : Montefioralle
-  est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
-  l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville
-  existante, comme une étape de scénario référence un hébergement.
-- **Renommer l'entité en « activité »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale
-  et le titre disent « Activités », mais les libellés d'item disent encore « une attraction »
-  (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
-  à décider si les clés suivent — c'est la même migration que <!--t:omun-->.
+- **Rattacher les villes saisies au modèle existant** <!--t:p334--> — 🗃️ modèle · 🐛 fix · ⏳ à faire :
+  le niveau `city` d'un hébergement ou d'un lieu reste un texte libre, alimenté par un `datalist` de
+  ce qui est déjà saisi ; deux orthographes font deux villes. Reste à trancher s'il **référence** un
+  lieu du voyage, comme une étape le fait.
+- **Aligner les libellés sur l'entité** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la page dit
+  « Lieux & activités » depuis la fusion des villes, mais les libellés d'item disent encore « une
+  attraction » (recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`.
+  Reste à décider si les clés suivent — c'est la même migration que <!--t:omun-->.
 - **Les horaires depuis un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : le nom,
   l'adresse et les coordonnées se remplissent déjà
   ([GoogleMaps.js](apps-script/GoogleMaps.js)), lus dans l'URL finale et dans les métadonnées de
   partage. Les horaires, eux, ne vivent que dans le blob d'initialisation de la page : il faut
   d'abord regarder ce qu'une vraie fiche renvoie, `testGoogleMaps()` depuis l'éditeur Apps Script.
-- **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🔍 à étudier : le type étant porté par
-  l'attraction, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
-  Attractions. À décider quand il y aura assez de contenu pour que la liste mixte devienne
+- **Une page Restaurants ?** <!--t:eymt--> — 🖼️ écran · 🔍 à étudier : le type étant porté par le
+  lieu, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
+  Lieux & activités. À décider quand il y aura assez de contenu pour que la liste mixte devienne
   illisible.
 
 ## 🔎 Browse
 
 - **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · 🌙 plus tard : des propositions
-  d'hôtels dans la page, et des intégrations qui partent des villes déjà choisies — par exemple les
-  villes des étapes d'un scénario. Sources et point d'entrée à préciser.
-
-## 🏙️ Villes
-
-- **Rattacher les villes saisies au modèle existant** <!--t:p334--> — 🗃️ modèle · 🐛 fix · ⏳ à faire : les
-  villes ajoutées depuis les autres écrans doivent pointer sur une entrée de `cities`, pas créer un
-  doublon de texte.
+  d'hôtels dans la page, et des intégrations qui partent des lieux déjà choisis — par exemple les
+  lieux des étapes d'un scénario. Sources et point d'entrée à préciser.
 
 ## 🧩 Transverse
 
@@ -398,10 +384,9 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   champ de prix unique.
 
 - **Filtrer sur les quatre niveaux de lieu** <!--t:w8q2--> — 🧩 ui · 🔌 intégration · ⏳ à faire : le
-  panneau de la carte ne propose que la province, et `distinctCounties()`
-  ([map/filters.js](js/views/map/filters.js#L14)) ignore `state.cities`. Le remplacer par une
-  cascade Pays → Région → Province → Ville lue sur `PLACE_LEVELS`, alimentée par les trois
-  collections localisées, puis poser la même brique dans les en-têtes Hébergements et Activités.
+  panneau de la carte ne propose que la province. Le remplacer par une cascade
+  Pays → Région → Province → Ville lue sur `PLACE_LEVELS`, alimentée par les deux collections
+  localisées, puis poser la même brique dans les en-têtes Hébergements et Lieux & activités.
 - **Renommer `notes` en `userNotes`** <!--t:f4k6--> — 🗃️ modèle · 🧹 refacto · ⏳ à faire : sur
   toutes les entités, Sheet compris — donc une colonne renommée dans chaque liste de `COLLECTIONS`
   ([Code.js:8](apps-script/Code.js#L8)) et une migration dans `migrateData()`
@@ -414,7 +399,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voyage en cours. Reste à décider s'il est toujours affiché ou repliable comme la carte d'un
   scénario. Remplace la page **Browse**, à renommer.
 - **Nommer les vues en anglais** <!--t:omun--> — 🧹 refacto · 🌙 plus tard : deux espaces de noms
-  cohabitent, les vues en français (`hebergements`, `locations`, `depenses`, `villes` — clés de
+  cohabitent, les vues en français (`hebergements`, `locations`, `depenses` — clés de
   `view`, `listViewMode`, `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`,
   `offers`, `fixedCosts`, `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
@@ -440,7 +425,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Ouvrir une ligne dans un panneau de détail : les autres listes** <!--t:n3vd--> — 🧩 ui ·
   🖼️ écran · 💡 idée : les hébergements ouvrent leur fiche en panneau, d'une ligne du tableau
   comme du ↗ du menu de lieu d'une étape, les loueurs & compagnies d'une ligne de leur onglet. Reste
-  à déclarer `ROW_CLICKS` pour villes, activités, transports et voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
+  à déclarer `ROW_CLICKS` pour les lieux, les transports et les voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
   trancher ce que devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un

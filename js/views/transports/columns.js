@@ -20,13 +20,13 @@ COLUMN_SETS.transports = [
     key: 'from',
     label: 'Départ',
     cell: transportFromCell,
-    sortValue: (t) => transportEndpointLabel(t.fromCityId, t.fromPrecision).toLowerCase(),
+    sortValue: (t) => transportEndpointLabel(t.fromAttractionId, t.fromPrecision).toLowerCase(),
   },
   {
     key: 'to',
     label: 'Arrivée',
     cell: transportToCell,
-    sortValue: (t) => transportEndpointLabel(t.toCityId, t.toPrecision).toLowerCase(),
+    sortValue: (t) => transportEndpointLabel(t.toAttractionId, t.toPrecision).toLowerCase(),
   },
   {
     key: 'departure',
@@ -86,11 +86,11 @@ function transportModeCell(t) {
 }
 
 function transportFromCell(t) {
-  return transportEndpointCell(t.fromCityId, t.fromPrecision);
+  return transportEndpointCell(t.fromAttractionId, t.fromPrecision);
 }
 
 function transportToCell(t) {
-  return transportEndpointCell(t.toCityId, t.toPrecision);
+  return transportEndpointCell(t.toAttractionId, t.toPrecision);
 }
 
 function transportDepartureCell(t) {

@@ -1,4 +1,8 @@
-// Le modèle choisi remplace le nom repris d'avant le catalogue : deux noms diraient la même chose.
+/*
+  Le modèle choisi remplace le nom repris d'avant le catalogue : deux noms diraient la même chose.
+  Les deux prix se saisissent : le loueur affiche un total pour ses dates, mais une offre relevée
+  sans dates n'a que son tarif journalier — et c'est lui qu'un scénario multiplie par ses jours.
+*/
 function saveOffer(id) {
   const existing = id ? getOffer(id) : null;
   const modelId = document.getElementById('car-model').value;
@@ -7,7 +11,7 @@ function saveOffer(id) {
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
-    pricePerDay: existing ? existing.pricePerDay : '',
+    pricePerDay: document.getElementById('car-price-day').value.trim(),
     model: modelId ? '' : (existing || {}).model || '',
     rentalId: document.getElementById('car-rental').value,
     modelId,

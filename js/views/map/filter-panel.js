@@ -5,7 +5,7 @@ function mapFilterPanel() {
       ...Object.entries(ACCOMMODATION_TYPES),
       ['', UNSET_ACCOMMODATION_TYPE],
     ])}
-    ${mapTypeBlock('Activités', 'attractionTypes', [
+    ${mapTypeBlock('Lieux &amp; activités', 'attractionTypes', [
       ...Object.entries(ATTRACTION_TYPES),
       ['', UNSET_ATTRACTION_TYPE],
     ])}

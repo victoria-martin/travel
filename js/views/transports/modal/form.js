@@ -3,9 +3,9 @@ function emptyTransport() {
     id: null,
     mode: '',
     status: '',
-    fromCityId: '',
+    fromAttractionId: '',
     fromPrecision: '',
-    toCityId: '',
+    toAttractionId: '',
     toPrecision: '',
     departDate: '',
     departTime: '',
@@ -23,23 +23,33 @@ function emptyTransport() {
   };
 }
 
-function transportCityOptions(selected) {
-  const cities = ofCurrentTravel(state.cities).sort((a, b) => a.name.localeCompare(b.name));
-  return /* HTML */ `<option value="" ${selected ? '' : 'selected'}>Aucune ville</option>
-    ${cities
-      .map(
-        (c) =>
-          `<option value="${c.id}" ${selected === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`,
-      )
-      .join('')}`;
+// Villes et villages ouvrent la liste : c'est d'eux qu'on part. Les autres lieux suivent, un
+// trajet pouvant viser une plage ou un site aussi bien qu'un bourg.
+const ENDPOINT_TYPES = ['city', 'village'];
+
+function transportPlaceOptions(selected) {
+  const places = ofCurrentTravel(state.attractions).sort((a, b) => a.name.localeCompare(b.name));
+  const option = (p) =>
+    `<option value="${p.id}" ${selected === p.id ? 'selected' : ''}>${escapeHtml(p.name)}</option>`;
+  const optgroup = (label, items) =>
+    items.length ? `<optgroup label="${label}">${items.map(option).join('')}</optgroup>` : '';
+  return /* HTML */ `<option value="" ${selected ? '' : 'selected'}>Aucun lieu</option>
+    ${optgroup(
+      'Villes et villages',
+      places.filter((p) => ENDPOINT_TYPES.includes(p.type)),
+    )}
+    ${optgroup(
+      'Autres lieux',
+      places.filter((p) => !ENDPOINT_TYPES.includes(p.type)),
+    )}`;
 }
 
-function transportEndpointFields(side, label, cityId, precision) {
+function transportEndpointFields(side, label, placeId, precision) {
   return /* HTML */ `<div class="field-row">
     <div class="field">
       <label>${label}</label>
       <select id="t-${side}-city">
-        ${transportCityOptions(cityId)}
+        ${transportPlaceOptions(placeId)}
       </select>
     </div>
     <div class="field">
@@ -149,8 +159,8 @@ function transportForm(p) {
         </select>
       </div>
     </div>
-    ${transportEndpointFields('from', 'Départ', p.fromCityId, p.fromPrecision)}
-    ${transportEndpointFields('to', 'Arrivée', p.toCityId, p.toPrecision)}
+    ${transportEndpointFields('from', 'Départ', p.fromAttractionId, p.fromPrecision)}
+    ${transportEndpointFields('to', 'Arrivée', p.toAttractionId, p.toPrecision)}
     ${transportScheduleFields('depart', 'Part le', p.departDate, p.departTime)}
     ${transportScheduleFields('arrive', 'Arrive le', p.arriveDate, p.arriveTime)}
     <div id="t-provider-block">${transportProviderFields(p)}</div>

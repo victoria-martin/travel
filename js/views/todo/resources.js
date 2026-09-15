@@ -11,7 +11,7 @@ const TODO_RESOURCES = [
   },
   {
     kind: 'attractions',
-    label: 'Activités',
+    label: 'Lieux & activités',
     icon: svgIcon('landmark'),
     items: () => state.attractions,
   },
@@ -23,7 +23,6 @@ const TODO_RESOURCES = [
   },
   { kind: 'locations', label: 'Locations', icon: svgIcon('car'), items: () => state.offers },
   { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
-  { kind: 'villes', label: 'Villes', icon: svgIcon('map-pin'), items: () => state.cities },
 ];
 
 function todoResource(kind) {

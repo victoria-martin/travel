@@ -1,7 +1,8 @@
 /*
   La grille de saisie : on recopie la liste du loueur véhicule par véhicule, Entrée enregistre la
   ligne et en rouvre une vide. Elle ne demande que ce que la liste affiche — modèle, motorisation,
-  boîte, prix total ; le statut, les options et le reste se posent ensuite depuis la fiche.
+  boîte, et les deux prix que le loueur annonce ; le statut, les options et le reste se posent
+  ensuite depuis la fiche.
   Le modèle tapé rejoint le catalogue du voyage, celui de l'onglet Voitures, et le loueur de la
   location : on le retrouve au menu de la prochaine offre prise chez lui. Une seule location a sa
   ligne ouverte à la fois : c'est celle où l'on tape.
@@ -48,6 +49,7 @@ function offerDraftRow(rentalId) {
       ${wordOptions(CAR_GEARBOXES)}
     </select>
     <input id="draft-price" type="text" placeholder="420 € au total" />
+    <input id="draft-price-day" type="text" placeholder="42 € / jour" />
     <button class="btn btn-small" onclick="saveOfferDraft()">${svgIcon('check')}</button>
     <button class="icon-btn" onclick="closeOfferDraft()" title="Fermer">${svgIcon('x')}</button>
   </div>`;
@@ -77,6 +79,7 @@ function saveOfferDraft() {
     rentalId: draftRentalId,
     modelId: model.id,
     priceTotal: document.getElementById('draft-price').value.trim(),
+    pricePerDay: document.getElementById('draft-price-day').value.trim(),
   });
   saveNow();
   render();

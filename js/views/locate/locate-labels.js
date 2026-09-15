@@ -1,4 +1,4 @@
-/* Read-only labels for anything located through locateFields: accommodations, cities, attractions. */
+/* Read-only labels for anything located through locateFields: accommodations and places. */
 
 function coordsLabel(p) {
   if (!p.lat || !p.lng) return '—';

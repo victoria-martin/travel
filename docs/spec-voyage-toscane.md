@@ -43,14 +43,18 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   pages — le redemander ligne à ligne ferait une seconde vérité à tenir à jour. Une liste affiche
   donc le tableau de sa page d'origine, mêmes cellules et mêmes éditions en place : rien n'y est
   réécrit, rien ne peut y diverger.
-- **Une page a une adresse, et c'est un `#`.** `index.html#villes`, `index.html#scenario/<id>` :
-  l'adresse se recharge, se met en favori et s'envoie. Un vrai chemin (`/villes`) demanderait un
+- **Une page a une adresse, et c'est un `#`.** `index.html#attractions`, `index.html#scenario/<id>` :
+  l'adresse se recharge, se met en favori et s'envoie. Un vrai chemin (`/attractions`) demanderait un
   serveur qui réécrit tout vers `index.html` — ni `file://` ni GitHub Pages ne le font, et le
   rechargement tomberait sur un 404.
 - **Un lieu se situe sur quatre niveaux** — pays, région, province, ville — et une seule adresse,
-  celle qu'on géocode. Ces quatre-là valent pour tout ce qui se localise : hébergements, villes,
-  activités. C'est l'ordre du fil d'Ariane HomeExchange, et celui qu'on lit : « Italie · Ligurie ·
+  celle qu'on géocode. Ces quatre-là valent pour tout ce qui se localise, hébergements et lieux. C'est l'ordre du fil d'Ariane HomeExchange, et celui qu'on lit : « Italie · Ligurie ·
   Savone · Castelbianco ». Une ville prend son nom comme niveau ville à défaut de géocodage.
+- **Une ville et une activité sont le même objet.** Un endroit du voyage tient dans une seule
+  table ; son type dit ce qu'il est — Ville, Village, Musée, Plage… — et son rôle vient de ce qui le
+  référence : une étape s'y pose, une ligne d'étape en fait une visite, un trajet en part. Deux
+  tables obligeaient à saisir Montefioralle deux fois pour la voir dans les deux rôles, et à
+  corriger son adresse aux deux endroits.
 - **Une étape porte son lieu**, et son titre en montre la ville et la région, moins ce que son
   propre nom et la pastille du lieu disent déjà.
 - **L'ocre dit « choisi », le vert dit « réservé ».** Deux axes, deux couleurs : l'ocre marque ce
@@ -130,7 +134,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   que dans l'une des colonnes. Les deux porteurs se lisent pareil, un porteur n'est qu'un objet qui
   tient ses lignes, d'où un seul identifiant de porteur à passer plutôt qu'un couple.
 - **Une ligne référence une activité ou une dépense, jamais les deux**, comme une étape référence
-  une ville ou un hébergement. Rien ne se saisit librement sur une étape : un nom inconnu crée
+  un lieu ou un hébergement. Rien ne se saisit librement sur une étape : un nom inconnu crée
   l'entrée dans sa table, et elle existe donc aussi sur sa page. Un montant libre posé sur l'étape
   a été écarté — il aurait compté dans le Total général sans apparaître sur la page Dépenses.
 - **Le budget d'une ligne est une enveloppe pour la ligne entière** : le nombre ne le multiplie pas,
@@ -157,14 +161,13 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                          | possède tout le reste ; un seul est ouvert à la fois            |
 | **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix            |
-| **Ville**           | nom, adresse, pays, région, province, ville, coordonnées, notes                                                                                                     | une étape de passage sans nuit, ou un repère                    |
-| **Attraction**      | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
-| **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
+| **Lieu**            | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
+| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
 | **Offre**           | la location qui la porte, le modèle, statut, prix total, options cochées chez le loueur, lien, notes, **par défaut**                                                | ce qu'un loueur demande pour un modèle ; une seule par défaut   |
 | **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                    |
 | **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                          |
 | **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
-| **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
+| **Option d'étape**  | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
 | **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                              |
 | **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »    |
 
@@ -181,8 +184,9 @@ réservation, la voiture référence une entrée de la table des locations.
 **Statuts d'un transport**, dans l'ordre du workflow et du tri : Réservé 🔒 · À réserver 💳 ·
 Go ✅ · À voir 👀 · Écarté 👎.
 
-**Type d'attraction** — Nature 🌿 · Patrimoine 🏛️ · Musée 🖼️ · Village 🏘️ · Plage 🏖️ ·
-Activité 🎟️ · Restaurant 🍝.
+**Type d'attraction** — Nature 🌿 · Patrimoine 🏛️ · Musée 🖼️ · Ville 🏙️ · Village 🏘️ ·
+Plage 🏖️ · Activité 🎟️ · Restaurant 🍝. C'est lui qui dit ce qu'on a devant soi : une ville et un
+musée sont la même entité, rangés dans la même table.
 **Statuts d'une attraction**, dans l'ordre du workflow et du tri : À trier 📥 · À voir 👀 ·
 Go ✅ · Vu ☑️ · Écarté 👎. Les statuts d'hébergement ne s'appliquent pas : on ne réserve pas un
 point de vue. C'est le seul statut qui soit posé d'office : une attraction naît « À trier », qu'elle
@@ -205,7 +209,7 @@ cours. C'est une échelle, du plus avancé au moins avancé : Réservé 🔒 · 
 colonne retenue et réservée est réservée, même si les autres options sont encore à l'écran —
 « À l'étude » dit un groupe dont la colonne n'est pas tranchée, et « À revoir » ferme l'échelle :
 l'étape montre encore un hébergement écarté ou pas dispo, c'est elle qui appelle le geste. Un lieu
-qui regroupe plusieurs étapes prend le moins avancé des leurs : une ville n'est pas réservée tant
+qui regroupe plusieurs étapes prend le moins avancé des leurs : un lieu n'est pas réservé tant
 qu'il lui reste une nuit à trouver.
 
 ---
@@ -328,25 +332,11 @@ La vue principale, en **tableau ou en cartes**.
   « Importer » n'apparaît que **tant qu'aucun Sheet n'est connecté** — la synchro est ensuite la voie
   d'entrée des lignes.
 
-### Villes
+### Lieux & activités
 
-**Ville** — une étape de passage sans nuit, ou un repère.
-
-| Champ                         | Détail                                                                            |
-| ----------------------------- | --------------------------------------------------------------------------------- |
-| nom                           |                                                                                   |
-| adresse                       | c'est elle qu'on géocode                                                          |
-| coordonnées                   | latitude, longitude                                                               |
-| pays, région, province, ville | proposés par le géocodage, modifiables à la main ; la ville prend le nom à défaut |
-| notes                         |                                                                                   |
-
-Liste triée par nom : nom, adresse (ou les niveaux renseignés), coordonnées, notes. Même
-bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
-
-### Activités
-
-**Attraction** — un lieu à visiter. L'écran s'appelle « Activités » : la table réunit tout ce qui
-occupe un créneau sur place, restaurants compris.
+**Lieu** — un endroit du voyage. La table réunit ce qu'on visite et ce où l'on se pose : un musée,
+une plage, un restaurant, et la ville d'une étape dont on ne connaît pas encore le logement. C'est
+le **type** qui le dit, pas la table où il serait rangé.
 
 | Champ                         | Détail                                                    |
 | ----------------------------- | --------------------------------------------------------- |
@@ -367,10 +357,15 @@ occupe un créneau sur place, restaurants compris.
 | tags                          | texte libre, amorcés par un vocabulaire par défaut        |
 | favori                        | étoile en tête de ligne                                   |
 
+Un même lieu tient les deux rôles qu'une étape lui donne : elle s'y **pose** — le select de lieu le
+propose à côté des hébergements — et une autre étape l'ajoute en **activité** dans ses lignes. Une
+seule fiche, donc une seule adresse à corriger. Un trajet y désigne aussi son départ et son
+arrivée.
+
 Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
 lieu (adresse, ou les niveaux renseignés), coordonnées, hébergement, horaires et téléphone
 (masqués par défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
-localisation que les villes et les hébergements.
+localisation que les hébergements.
 
 - **Un lien Google Maps collé remplit la fiche** : nom, adresse et coordonnées, lus par l'Apps
   Script — le navigateur ne peut pas lire google.com lui-même. Le nom et les coordonnées viennent
@@ -397,7 +392,7 @@ localisation que les villes et les hébergements.
 | -------------------- | --------------------------------------------------------------------------------------------------------------- |
 | mode                 | liste figée ; décide des champs utiles                                                                          |
 | statut               | liste propre, courte                                                                                            |
-| départ, arrivée      | une ville de la table Villes, plus une précision libre à côté                                                   |
+| départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté                                         |
 | dates et heures      | date et heure de départ, date et heure d'arrivée                                                                |
 | compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre      |
 | voiture              | en mode voiture seulement : référence un véhicule de la page Locations, dont le loueur et le modèle s'affichent |
@@ -411,9 +406,10 @@ Tableau seul, pas de vue en cartes. Colonnes : favori, mode, départ, arrivée, 
 défaut par date de départ, puis par mode.
 
 - **Mode et statut s'éditent depuis la ligne**, par le même dropdown inline que les hébergements.
-- **Un aéroport n'est pas une ville** : le départ et l'arrivée pointent sur une ville de la table
-  Villes, et la précision (« Aéroport de Pise », « Santa Maria Novella ») se saisit dans un champ
-  libre à côté. Le tableau affiche la ville, la précision en dessous.
+- **Un aéroport n'est pas une ville** : le départ et l'arrivée pointent sur un lieu du voyage — le
+  select ouvre sur les villes et les villages, les autres lieux suivent — et la précision
+  (« Aéroport de Pise », « Santa Maria Novella ») se saisit dans un champ libre à côté. Le tableau
+  affiche le lieu, la précision en dessous.
 - **La voiture se référence, jamais ne se recopie** : un transport de mode voiture pointe sur une
   entrée de la table des locations. Le loueur y tient la place de la compagnie et le modèle celle de
   la référence — la colonne affiche « Hertz » avec « Fiat 500 » en dessous, comme elle affiche
@@ -498,6 +494,7 @@ véhicules.
 | ----------- | --------------------------------------------------------------------------- |
 | modèle      | référence un modèle du voyage, qui porte sa motorisation et sa boîte        |
 | prix total  | ce que le loueur affiche pour toute la location ; le prix / jour en découle |
+| prix / jour | le tarif journalier, quand c'est lui que le loueur annonce                  |
 | options     | celles cochées dans le catalogue du loueur                                  |
 | statut      | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                  |
 | lien, notes | notes éditables depuis la ligne                                             |
@@ -507,15 +504,17 @@ La page est la liste des locations. Chacune se déplie sur ses véhicules, et le
 en cours : revenir sur la page les retrouve tous fermés.
 
 - **La saisie suit le site du loueur** : « Nouvelle recherche » demande le loueur, le lieu et les
-  deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte, prix
-  total. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
+  deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte, et les
+  deux prix. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
   rouvrir de modale. Le modèle tapé est celui du voyage s'il existe déjà — la frappe le propose —
   sinon il rejoint le catalogue avec la motorisation et la boîte qu'on vient de taper. Le reste
   (statut, options, lien) se pose ensuite depuis la fiche du véhicule.
-- **Le prix se saisit en total, jamais par jour** : c'est le chiffre que le loueur affiche. Le prix
-  par jour est une dérivation du total et des jours de la location, et c'est lui que le scénario
-  multiplie par ses jours à lui. Une voiture reprise d'avant les locations n'a parfois que son prix
-  par jour : il répond alors tant qu'aucun total n'est saisi.
+- **Les deux prix se saisissent, le total l'emporte** : un loueur annonce tantôt un total pour ses
+  dates, tantôt un tarif journalier, et on recopie ce qu'on a sous les yeux. Le prix par jour se
+  déduit du total et des jours de la location quand les deux sont là ; sinon c'est le tarif saisi
+  qui répond. C'est ce prix par jour que le scénario multiplie par **ses** jours à lui — d'où
+  l'importance de pouvoir le taper : une offre relevée sans dates de location n'en aurait aucun, et
+  ne coûterait rien dans un scénario.
 - **Les options viennent du loueur, la case vient du véhicule** : le catalogue et les prix vivent
   chez le prestataire, le véhicule ne porte que ce qu'il a coché. Une option tapée depuis la fiche
   d'un véhicule rejoint le catalogue du loueur — corriger son prix le corrige pour tous les
@@ -597,7 +596,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | --------------- | ------------------------------------------------------------------------- |
 | titre           | éditable en ligne                                                         |
 | type            | un type d'hébergement, facultatif ; il restreint les hébergements du lieu |
-| lieu            | une ville **ou** un hébergement, exclusifs                                |
+| lieu            | un lieu **ou** un hébergement, exclusifs                                  |
 | nuits           | 0 à 14                                                                    |
 | budget          | remplace le coût calculé de l'hébergement                                 |
 | date d'arrivée  | champ libre de la modale, en plus de la date calculée                     |
@@ -698,7 +697,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
   même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
   0 nuit), puis en dessous sa date d'arrivée libre si elle est saisie dans la modale, et ses notes.
-  Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**une ville ou un
+  Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**un lieu ou un
   hébergement**, les deux dans le même select, exclusifs), la pastille de statut de l'hébergement
   quand le lieu en est un — la même que celle de la page Hébergements, et modifiable ici, où l'on
   voit le trajet entier —, un select de nuits (0 à 14), et en bout de ligne le coût. Le bord gauche de la
@@ -743,14 +742,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   son tour. Un groupe qui retombe à une seule colonne autrement — dernière étape supprimée, étape
   sortie au glisser — se défait de même : ses étapes redeviennent ordinaires et ses lignes communes
   rejoignent la première d'entre elles, seul endroit où elles peuvent tenir.
-- **Le type restreint les hébergements, jamais les villes** : posé sur une étape, il réduit le
-  select de lieu aux hébergements de ce type ; les villes ferment la liste quel qu'il soit, une
-  étape se posant dans une ville avant qu'on sache où l'on y dort. Changer de type efface un
+- **Le type restreint les hébergements, jamais les lieux** : posé sur une étape, il réduit le
+  select de lieu aux hébergements de ce type ; les lieux ferment la liste quel qu'il soit, une
+  étape se posant quelque part avant qu'on sache où l'on y dort. Changer de type efface un
   hébergement qui n'en relève plus, sinon la pastille montrerait un lieu absent de sa propre liste ;
-  la ville, elle, reste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
+  le lieu, lui, reste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
   lieu comme ses niveaux — « Toscane » trouve tout ce qui y est — et une **ville qui manque s'y crée
-  sous le nom tapé**, comme une activité depuis le ＋ d'une carte : elle entre dans les villes du
-  voyage, l'étape la prend pour lieu, et le reste se complète depuis la page Villes. Chaque
+  sous le nom tapé** : elle entre dans les lieux du voyage avec le type Ville, l'étape la prend pour
+  lieu, et le reste se complète depuis la page Lieux & activités. Chaque
   hébergement de la liste porte un ↗ en bout de ligne, qui ouvre sa fiche en panneau sans quitter le
   scénario : un prix ou une adresse se vérifie là où l'on choisit.
 - **Le fil du trajet** : sous l'en-tête du détail, une bande de maillons, un par étape retenue,
@@ -792,7 +791,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   ne s'y montre qu'au survol, et la bande ne descend jamais sous sa hauteur, sinon il déborderait sur
   les cartes.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
-  — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
+  — ceux sans type connu fermant la marche —, puis les lieux, groupés par type de la même façon.
+  Dans chaque groupe, les favoris
   passent en tête, précédés d'une ★, le reste est trié par nom. Chaque en-tête de groupe le replie
   et dit alors combien il cache ; une recherche déplie tout, sinon un groupe replié cacherait ce
   qu'on vient de taper.
@@ -818,7 +818,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   flèches : il n'y en a jamais deux en avant.
 - **Coût d'une étape** : prix/nuit de l'hébergement × nuits. Un budget saisi à la main le remplace ;
   tant qu'il est vide, le total calculé reste affiché en gris. Rien ne s'affiche sur une étape
-  rattachée à une ville — seul un hébergement porte un prix. Ses lignes se comptent à part et se rangent
+  rattachée à un lieu — seul un hébergement porte un prix. Ses lignes se comptent à part et se rangent
   par genre dans le Total général — une activité dans la famille Attractions, une dépense avec les
   Charges : celles des étapes retenues plus celles des groupes qu'elles traversent, les colonnes
   écartées étant des comparaisons.
@@ -852,8 +852,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   qui part du premier ou mène au dernier n'aurait pas d'origine lisible. Un lieu revisité tient sur
   une seule ligne, ses nuits additionnées et ses dates listées, placée à sa première date. Les
   nuits en home exchange y figurent avec leur montant en GuestPoints.
-  Toutes les lignes s'ouvrent sur la même gouttière d'icône — le type de l'hébergement, 📍 pour une
-  ville, rien pour une étape de passage — d'une largeur fixe : les noms s'alignent, qu'une ligne
+  Toutes les lignes s'ouvrent sur la même gouttière d'icône — le type de l'hébergement, celui du
+  lieu quand l'étape s'y pose, rien pour une étape de passage — d'une largeur fixe : les noms s'alignent, qu'une ligne
   porte une icône ou non. Chaque arrêt est précédé du temps de conduite pour y arriver — « 🚗 1 h
   11 », sur sa propre ligne, l'icône dans la même gouttière et le chiffre aligné sur les noms, sans
   la distance : le récap dit combien de route il y a d'un lieu au suivant, les
@@ -918,7 +918,7 @@ réserver, les voitures encore en attente.
 
 | Champ     | Détail                                                                               |
 | --------- | ------------------------------------------------------------------------------------ |
-| ressource | la collection lue : Hébergements, Activités, Transports, Locations, Dépenses, Villes |
+| ressource | la collection lue : Hébergements, Lieux & activités, Transports, Locations, Dépenses |
 | colonne   | la colonne sur laquelle la liste filtre                                              |
 | valeurs   | les mots gardés sur cette colonne — OU entre eux                                     |
 
@@ -978,7 +978,7 @@ appareil.
 - **Fermeture d'une modale de saisie** (création comme modification) : confirmée dès qu'un champ a
   été touché, que la fermeture vienne du clic sur le fond ou du bouton « Annuler ». Une modale
   restée telle qu'ouverte se ferme sans rien demander.
-- **Duplication** : hébergements, villes, attractions, voitures, charges, transports et scénarios se
+- **Duplication** : hébergements, lieux, voitures, charges, transports et scénarios se
   dupliquent depuis leur ligne. La copie reprend tous les champs, prend un nouvel identifiant et son
   nom est suffixé « (copie) » — une voiture dupliquée ne reprend pas le statut « par défaut », et un
   transport, qui n'a pas de nom, se copie tel quel.

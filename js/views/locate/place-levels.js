@@ -1,6 +1,6 @@
 /*
   Les quatre niveaux administratifs d'un lieu, du plus large au plus fin. Toute chose localisée les
-  porte — hébergements, villes, activités — et tout ce qui les affiche, les saisit ou les filtre
+  porte — hébergements, lieux et activités — et tout ce qui les affiche, les saisit ou les filtre
   parcourt cette liste : ajouter un niveau ne touche qu'elle.
   L'ordre est celui du fil d'Ariane HomeExchange (`country` / `admin1` / `admin2` / `admin3`) et
   celui de la lecture : « Italie · Ligurie · Savone · Castelbianco ».

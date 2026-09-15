@@ -27,8 +27,7 @@ function render() {
       ${travelSelector()} ${navBtn('hebergements', svgIcon('house'), 'Hébergements')}
       ${navBtn('locations', svgIcon('car'), 'Locations')}
       ${navBtn('depenses', EXPENSE_ICON, 'Dépenses')}
-      ${navBtn('villes', svgIcon('map-pin'), 'Villes')}
-      ${navBtn('attractions', svgIcon('landmark'), 'Activités')}
+      ${navBtn('attractions', svgIcon('landmark'), 'Lieux & activités')}
       ${navBtn('transports', svgIcon('plane'), 'Transports')}
       ${navBtn('scenarios', svgIcon('compass'), 'Scénarios')}
       ${navBtn('carte', svgIcon('map'), 'Carte')}
@@ -86,7 +85,6 @@ function renderMain() {
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'locations') main.innerHTML = renderRentalsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();
-  else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
   else if (view === 'transports') main.innerHTML = renderTransportsView();
   else if (view === 'scenarios') {

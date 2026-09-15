@@ -1,14 +1,13 @@
 /*
-  The hash IS the view: `#villes`, `#scenario/<id>`. A real path would need a server rewriting
+  The hash IS the view: `#attractions`, `#scenario/<id>`. A real path would need a server rewriting
   every URL to index.html — neither file:// nor GitHub Pages can, so a reload would 404.
 */
 
-// The ten pages of the sidebar. `scenario-detail` is the eleventh view, routed as `#scenario/<id>`.
+// The nine pages of the sidebar. `scenario-detail` is the tenth view, routed as `#scenario/<id>`.
 const VIEWS = [
   'hebergements',
   'locations',
   'depenses',
-  'villes',
   'attractions',
   'transports',
   'scenarios',

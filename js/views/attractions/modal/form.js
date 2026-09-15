@@ -24,7 +24,7 @@ function emptyAttraction() {
 
 function attractionForm(p) {
   return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Ajouter'} une activité</h3>
+    <h3>${p.id ? 'Modifier' : 'Ajouter'} un lieu</h3>
     <div class="field-row">
       <div class="field">
         <label>Type</label>

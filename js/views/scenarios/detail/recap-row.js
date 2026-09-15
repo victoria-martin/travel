@@ -24,7 +24,7 @@ function scenarioRecapRow(r) {
 }
 
 function recapPlaceLabel(r) {
-  if (r.city) return recapIconLabel('📍', escapeHtml(r.city.name));
+  if (r.place) return recapIconLabel(attractionType(r.place.type).emoji, escapeHtml(r.place.name));
   if (r.acc)
     return recapIconLabel(
       accType(r.acc.type).emoji,

@@ -12,7 +12,6 @@ const TRAVEL_COLLECTIONS = [
   'rentals',
   'offers',
   'fixedCosts',
-  'cities',
   'attractions',
   'transports',
   'scenarios',
@@ -29,7 +28,6 @@ function emptyData() {
     rentals: [],
     offers: [],
     fixedCosts: [],
-    cities: [],
     attractions: [],
     transports: [],
     scenarios: [],
@@ -52,11 +50,11 @@ function loadData() {
 */
 function migrateData(data) {
   adoptOfferNames(data);
+  absorbCities(data);
   if (!data.travels) data.travels = [];
   if (!data.providers) data.providers = [];
   if (!data.rentals) data.rentals = [];
   if (!data.carModels) data.carModels = [];
-  if (!data.cities) data.cities = [];
   if (!data.attractions) data.attractions = [];
   if (!data.transports) data.transports = [];
   if (!data.tripNotes) data.tripNotes = [];
@@ -109,11 +107,58 @@ function migrateData(data) {
     if (s.favorite === undefined) s.favorite = false;
     adoptScenarioSteps(s);
   });
-  data.cities.forEach((c) => {
-    adoptPlace(c);
-    if (!c.city) c.city = c.name || '';
+  return data;
+}
+
+/*
+  Une ville et une activité sont le même objet — un endroit localisé du voyage —, et l'étape qui
+  s'y pose comme la ligne qui l'y ajoute ne diffèrent que par le rôle qu'elles lui donnent. Les
+  deux collections n'en font donc plus qu'une, et le type dit ce qu'on a devant soi. La ville garde
+  son identifiant : ce qui la référençait le trouve toujours, seul le nom du champ suit. La base de
+  synchro passe par ici aussi, sans quoi son instantané resterait à deux collections et chaque
+  ville repartirait en ajout.
+*/
+function absorbCities(data) {
+  if (!Array.isArray(data.attractions)) data.attractions = [];
+  const known = new Set(data.attractions.map((a) => a.id));
+  (data.cities || []).forEach((city) => {
+    if (!known.has(city.id)) data.attractions.push(attractionFromCity(city));
+  });
+  delete data.cities;
+  (data.scenarios || []).forEach((s) =>
+    (s.steps || []).forEach((step) => renameKey(step, 'cityId', 'attractionId')),
+  );
+  (data.transports || []).forEach((t) => {
+    renameKey(t, 'fromCityId', 'fromAttractionId');
+    renameKey(t, 'toCityId', 'toAttractionId');
+  });
+  // Une liste enregistrée désignait la page par sa clé ; ses valeurs gardées valent sur l'autre.
+  (data.todoLists || []).forEach((list) => {
+    if (list.kind === 'villes') list.kind = 'attractions';
   });
   return data;
+}
+
+/*
+  Le statut reste vide plutôt qu'« à trier » : une ville déjà notée n'attend le tri de personne.
+  Ses notes deviennent la description, seul champ de texte libre d'une activité.
+*/
+function attractionFromCity(city) {
+  const { notes, ...place } = city;
+  return {
+    ...emptyAttraction(),
+    ...place,
+    type: 'city',
+    status: '',
+    description: notes || '',
+    tags: [],
+    favorite: false,
+  };
+}
+
+function renameKey(item, from, to) {
+  if (item[from] !== undefined && item[to] === undefined) item[to] = item[from];
+  delete item[from];
 }
 
 /*
@@ -349,7 +394,7 @@ function explodeStepOptions(scenario, step) {
 
 function optionFields(option) {
   return {
-    cityId: option.cityId || null,
+    attractionId: option.attractionId || option.cityId || null,
     accommodationId: option.accommodationId || null,
     accommodationType: option.accommodationType || '',
     nights: parseInt(option.nights) || 0,
@@ -378,7 +423,7 @@ function adoptStep(step) {
   if (step.groupId === undefined) step.groupId = '';
   if (step.optionId === undefined) step.optionId = '';
   if (step.accommodationType === undefined) step.accommodationType = '';
-  if (step.cityId === undefined) step.cityId = null;
+  if (step.attractionId === undefined) step.attractionId = null;
   if (step.accommodationId === undefined) step.accommodationId = null;
   if (step.nights === undefined) step.nights = 0;
   if (step.budget === undefined) step.budget = '';

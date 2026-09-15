@@ -14,11 +14,11 @@ function setStepBudget(scenarioId, stepId, budget) {
   render();
 }
 
-// Une étape se rattache soit à une ville, soit à un hébergement : le même select porte les deux.
+// Une étape se rattache soit à un lieu, soit à un hébergement : le même select porte les deux.
 function setStepPlace(scenarioId, stepId, value) {
   const step = getStep(scenarioId, stepId);
   const [kind, placeId] = value.split(':');
-  step.cityId = kind === 'ville' ? placeId : null;
+  step.attractionId = kind === 'lieu' ? placeId : null;
   step.accommodationId = kind === 'heb' ? placeId : null;
   saveNow();
   render();
@@ -26,7 +26,7 @@ function setStepPlace(scenarioId, stepId, value) {
 
 /*
   Le type ne restreint que les hébergements : celui qui n'en relève plus s'efface, sinon la
-  pastille montrerait un lieu absent de sa propre liste. Une ville, elle, reste — la liste la
+  pastille montrerait un lieu absent de sa propre liste. Un lieu, lui, reste — la liste le
   propose quel que soit le type.
 */
 function setStepAccommodationType(scenarioId, stepId, type) {

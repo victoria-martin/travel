@@ -93,6 +93,8 @@ const COLLECTIONS = {
     'gearbox',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'categories', 'recurrence', 'notes'],
+  // Une ville et une activité sont le même endroit : cet onglet n'est plus que la source de la
+  // reprise, et repart vide au premier enregistrement.
   cities: [
     'travelId',
     'id',
@@ -136,9 +138,9 @@ const COLLECTIONS = {
     'id',
     'mode',
     'status',
-    'fromCityId',
+    'fromAttractionId',
     'fromPrecision',
-    'toCityId',
+    'toAttractionId',
     'toPrecision',
     'departDate',
     'departTime',
@@ -184,7 +186,7 @@ const COLLECTIONS = {
     'groupId',
     'optionId',
     'nights',
-    'cityId',
+    'attractionId',
     'accommodationId',
     'accommodationType',
     'budget',
@@ -251,7 +253,14 @@ const LIST_FIELDS = [
 // Une liste d'objets ne tient pas dans une cellule séparée par des virgules : elle s'y écrit en JSON.
 const JSON_FIELDS = ['options'];
 // Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
-const LEGACY_HEADERS = { address: 'geoAddress', categories: 'category', offerId: 'carId' };
+const LEGACY_HEADERS = {
+  address: 'geoAddress',
+  categories: 'category',
+  offerId: 'carId',
+  attractionId: 'cityId',
+  fromAttractionId: 'fromCityId',
+  toAttractionId: 'toCityId',
+};
 // Ancien nom d'un onglet renommé : la feuille se reprend telle quelle plutôt que de repartir vide.
 const LEGACY_SHEETS = { offers: 'cars' };
 
@@ -423,7 +432,7 @@ function stepFromOption(step, option, lines) {
   Object.keys(step).forEach(function (key) {
     made[key] = step[key];
   });
-  made.cityId = option.cityId || null;
+  made.attractionId = option.cityId || null;
   made.accommodationId = option.accommodationId || null;
   made.accommodationType = option.accommodationType || '';
   made.nights = parseInt(option.nights, 10) || 0;
@@ -596,7 +605,7 @@ function decodeCell(column, raw) {
         return part !== '';
       });
   }
-  if (column === 'accommodationId' || column === 'cityId' || column === 'offerId') {
+  if (column === 'accommodationId' || column === 'attractionId' || column === 'offerId') {
     return value || null;
   }
   return value;
@@ -647,7 +656,8 @@ function writeState(data) {
   writeSheet('rentals', data.rentals || []);
   writeSheet('offers', data.offers || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
-  writeSheet('cities', data.cities || []);
+  // L'onglet des villes repart vide : leurs lignes sont devenues des activités.
+  writeSheet('cities', []);
   writeSheet('attractions', data.attractions || []);
   writeSheet('transports', data.transports || []);
   writeSheet('tripNotes', data.tripNotes || []);

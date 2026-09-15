@@ -25,13 +25,6 @@ function duplicateFixedCost(id) {
   render();
 }
 
-function duplicateCity(id) {
-  const city = getCity(id);
-  state.cities.push({ ...city, id: uid(), name: `${city.name} (copie)` });
-  saveNow();
-  render();
-}
-
 function duplicateAttraction(id) {
   const a = getAttraction(id);
   state.attractions.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });

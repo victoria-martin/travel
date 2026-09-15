@@ -4,8 +4,8 @@ function nightsByPlace(scenario) {
   visibleSteps(scenario).forEach((st, idx) => {
     const nights = stepNights(st);
     if (nights === 0) return;
-    const key = st.cityId
-      ? `ville:${st.cityId}`
+    const key = st.attractionId
+      ? `lieu:${st.attractionId}`
       : st.accommodationId
         ? `heb:${st.accommodationId}`
         : '';
@@ -18,7 +18,7 @@ function nightsByPlace(scenario) {
   return Array.from(rows, ([key, { nights, stays, steps }]) => {
     const [kind, id] = key.split(':');
     return {
-      city: kind === 'ville' ? getCity(id) : null,
+      place: kind === 'lieu' ? getAttraction(id) : null,
       acc: kind === 'heb' ? getAccommodation(id) : null,
       nights,
       steps,

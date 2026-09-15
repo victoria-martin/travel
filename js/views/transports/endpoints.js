@@ -1,19 +1,19 @@
 /*
-  Un trajet part d'une ville et y arrive, mais un aéroport ou une gare n'est pas une ville :
-  la précision libre se saisit à côté du cityId, et s'affiche sous le nom de la ville.
+  Un trajet part d'un lieu et y arrive, mais un aéroport ou une gare n'est pas un lieu du voyage :
+  la précision libre se saisit à côté du lieu, et s'affiche sous son nom.
 */
 
-function transportCityName(cityId) {
-  const city = getCity(cityId);
-  return city ? city.name : '';
+function transportPlaceName(placeId) {
+  const place = getAttraction(placeId);
+  return place ? place.name : '';
 }
 
-function transportEndpointLabel(cityId, precision) {
-  return [transportCityName(cityId), precision].filter(Boolean).join(' · ') || '—';
+function transportEndpointLabel(placeId, precision) {
+  return [transportPlaceName(placeId), precision].filter(Boolean).join(' · ') || '—';
 }
 
-function transportEndpointCell(cityId, precision) {
-  const city = transportCityName(cityId);
-  if (!city) return textCell(precision);
-  return `${escapeHtml(city)}${precision ? `<div class="row-notes">${escapeHtml(precision)}</div>` : ''}`;
+function transportEndpointCell(placeId, precision) {
+  const place = transportPlaceName(placeId);
+  if (!place) return textCell(precision);
+  return `${escapeHtml(place)}${precision ? `<div class="row-notes">${escapeHtml(precision)}</div>` : ''}`;
 }

@@ -36,11 +36,6 @@ const MODAL_TYPES = {
     body: (m) => airbnbAccommodationForm(m.payload),
     edits: true,
   },
-  ville: {
-    open: (id) => ({ payload: id ? structuredClone(getCity(id)) : emptyCity() }),
-    body: (m) => cityForm(m.payload),
-    edits: true,
-  },
   attraction: {
     open: (id) => ({ payload: id ? structuredClone(getAttraction(id)) : emptyAttraction() }),
     body: (m) => attractionForm(m.payload),
