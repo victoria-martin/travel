@@ -7,7 +7,7 @@ function duplicateAccommodation(id) {
 
 function duplicateCar(id) {
   const car = getCar(id);
-  state.cars.push({ ...car, id: uid(), name: `${car.name} (copie)`, isDefault: false });
+  state.cars.push({ ...car, id: uid(), model: `${car.model} (copie)`, isDefault: false });
   saveNow();
   render();
 }

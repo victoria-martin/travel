@@ -11,7 +11,7 @@ function emptyTransport() {
     departTime: '',
     arriveDate: '',
     arriveTime: '',
-    carrier: '',
+    providerId: '',
     reference: '',
     carId: '',
     budget: '',
@@ -65,13 +65,15 @@ function transportScheduleFields(side, label, date, time) {
   </div>`;
 }
 
-// Une voiture référence une location, les autres modes portent leur compagnie : deux blocs
-// exclusifs, repeints quand le mode change.
-function transportCarrierFields(p) {
+// Une voiture référence une location, les autres modes leur compagnie : deux blocs exclusifs,
+// repeints quand le mode change.
+function transportProviderFields(p) {
   if (p.mode === 'car') {
-    const cars = ofCurrentTravel(state.cars).sort((a, b) => a.name.localeCompare(b.name));
+    const cars = ofCurrentTravel(state.cars).sort((a, b) =>
+      transportCarLabel(a).localeCompare(transportCarLabel(b)),
+    );
     return /* HTML */ `<div class="field">
-      <label>Loueur</label>
+      <label>Location</label>
       <select id="t-car">
         <option value="" ${p.carId ? '' : 'selected'}>Aucune voiture</option>
         ${cars
@@ -84,15 +86,7 @@ function transportCarrierFields(p) {
     </div>`;
   }
   return /* HTML */ `<div class="field-row">
-    <div class="field">
-      <label>Compagnie</label
-      ><input
-        id="t-carrier"
-        type="text"
-        value="${escapeHtml(p.carrier)}"
-        placeholder="Trenitalia"
-      />
-    </div>
+    ${providerSelectField('t-provider', p.mode, p.providerId)}
     <div class="field">
       <label>Numéro / référence</label
       ><input id="t-reference" type="text" value="${escapeHtml(p.reference)}" />
@@ -100,9 +94,9 @@ function transportCarrierFields(p) {
   </div>`;
 }
 
-function repaintTransportCarrierFields() {
+function repaintTransportProviderFields() {
   modal.payload.mode = document.getElementById('t-mode').value;
-  document.getElementById('t-carrier-block').innerHTML = transportCarrierFields(modal.payload);
+  document.getElementById('t-provider-block').innerHTML = transportProviderFields(modal.payload);
 }
 
 function transportPriceFields(p) {
@@ -128,7 +122,7 @@ function transportForm(p) {
     <div class="field-row">
       <div class="field">
         <label>Mode</label>
-        <select id="t-mode" onchange="repaintTransportCarrierFields()">
+        <select id="t-mode" onchange="repaintTransportProviderFields()">
           <option value="" ${p.mode ? '' : 'selected'}>
             ${UNSET_TRANSPORT_MODE.emoji} ${UNSET_TRANSPORT_MODE.label}
           </option>
@@ -159,7 +153,7 @@ function transportForm(p) {
     ${transportEndpointFields('to', 'Arrivée', p.toCityId, p.toPrecision)}
     ${transportScheduleFields('depart', 'Part le', p.departDate, p.departTime)}
     ${transportScheduleFields('arrive', 'Arrive le', p.arriveDate, p.arriveTime)}
-    <div id="t-carrier-block">${transportCarrierFields(p)}</div>
+    <div id="t-provider-block">${transportProviderFields(p)}</div>
     ${transportPriceFields(p)}
     <div class="field">
       <label>Lien</label

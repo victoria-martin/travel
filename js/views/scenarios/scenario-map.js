@@ -38,16 +38,56 @@ function stepPin(letters) {
   });
 }
 
+/*
+  La pastille rend ce que l'étape sait déjà : ses dates, où l'on dort et pour combien, où en est la
+  réservation. Les deux gestes qu'on veut faire depuis la carte y sont aussi — ouvrir le site de
+  l'hébergement, ouvrir sa fiche — plutôt que de retourner au détail du scénario pour les trouver.
+*/
 function stepPinPopup(scenario, stops) {
   return stops
-    .map(({ step, idx }) => {
-      const nights = stepNights(step);
-      const lines = [stepDateRange(scenario, idx), nights ? nightsLabel(nights) : '']
-        .filter(Boolean)
-        .join(' · ');
-      return `<strong>${stepLetter(idx)} · ${escapeHtml(step.name)}</strong>${lines ? `<br/>${lines}` : ''}`;
-    })
+    .map(({ step, idx }) => stepPinStop(scenario, step, idx))
     .join('<div class="step-pin-sep"></div>');
+}
+
+function stepPinStop(scenario, step, idx) {
+  const nights = stepNights(step);
+  const status = stepStatusInfo(stepStatus(scenario, step));
+  const lines = [
+    [stepDateRange(scenario, idx), nights ? nightsLabel(nights) : ''].filter(Boolean).join(' · '),
+    `${status.emoji} ${status.label}`,
+    stepPinAccommodation(step),
+    step.notes ? escapeHtml(step.notes) : '',
+  ].filter(Boolean);
+  return `<div class="step-pin-popup">
+      <strong>${stepLetter(idx)} · ${escapeHtml(step.name)}</strong>
+      ${lines.map((line) => `<div>${line}</div>`).join('')}
+      ${stepPinLinks(step)}
+    </div>`;
+}
+
+// Le prix est celui que le détail affiche : la nuitée de l'hébergement fois les nuits de l'étape.
+function stepPinAccommodation(step) {
+  const acc = getAccommodation(step.accommodationId);
+  if (!acc) return '';
+  const cost = stepAccommodationCost(step);
+  return [
+    `${accType(acc.type).emoji} ${escapeHtml(acc.name)}`,
+    cost ? formatAccommodationCost(acc, cost) : '',
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
+// La fiche s'ouvre en panneau par-dessus la carte, d'où un libellé et non le ↗ des tableaux.
+function stepPinLinks(step) {
+  const acc = getAccommodation(step.accommodationId);
+  if (!acc) return '';
+  const links = [
+    acc.link ? externalLink(acc.link, 'Site') : '',
+    acc.bookingLink ? externalLink(acc.bookingLink, 'Booking') : '',
+    `<button class="link-btn" onclick="openAccommodationSheet('${acc.id}')">Fiche</button>`,
+  ].filter(Boolean);
+  return `<div class="step-pin-links">${links.join('')}</div>`;
 }
 
 // Le fetch OSRM peut revenir après un re-render : la carte détachée du DOM ne se dessine plus.

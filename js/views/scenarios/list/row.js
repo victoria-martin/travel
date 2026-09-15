@@ -22,7 +22,8 @@ function scenarioRow(s, maxNights) {
       ${scenarioNightRate(s) ? `<span>${scenarioNightRate(s)}</span>` : ''}
     </div>
     <div class="scenario-card-actions" onclick="event.stopPropagation();">
-      ${duplicateButton(`duplicateScenario('${s.id}')`)} ${deleteButton('scenarios', s.id)}
+      ${duplicateButton(`duplicateScenario('${s.id}')`)} ${archiveButton(s)}
+      ${deleteButton('scenarios', s.id)}
     </div>
   </div>`;
 }

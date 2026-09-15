@@ -198,6 +198,7 @@ function mergeStates(remote, local, base) {
       local.accommodations,
       base.accommodations,
     ),
+    providers: mergeCollections(remote.providers, local.providers, base.providers),
     cars: mergeCollections(remote.cars, local.cars, base.cars),
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
     cities: mergeCollections(remote.cities, local.cities, base.cities),

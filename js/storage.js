@@ -7,6 +7,7 @@ const LOCAL_KEY = 'voyage-toscane-local-data';
 
 const TRAVEL_COLLECTIONS = [
   'accommodations',
+  'providers',
   'cars',
   'fixedCosts',
   'cities',
@@ -21,6 +22,7 @@ function emptyData() {
   return {
     travels: [],
     accommodations: [],
+    providers: [],
     cars: [],
     fixedCosts: [],
     cities: [],
@@ -46,6 +48,7 @@ function loadData() {
 */
 function migrateData(data) {
   if (!data.travels) data.travels = [];
+  if (!data.providers) data.providers = [];
   if (!data.cities) data.cities = [];
   if (!data.attractions) data.attractions = [];
   if (!data.transports) data.transports = [];
@@ -72,6 +75,7 @@ function migrateData(data) {
     if (!Array.isArray(c.categories)) c.categories = c.category ? [c.category] : [];
     delete c.category;
   });
+  adoptProviders(data);
   (data.cars || []).forEach((c) => {
     if (c.pricePerDay === undefined) c.pricePerDay = c.price || '';
     if (c.priceTotal === undefined) c.priceTotal = '';
@@ -90,6 +94,46 @@ function migrateData(data) {
     if (!c.city) c.city = c.name || '';
   });
   return data;
+}
+
+/*
+  Le loueur d'une voiture et la compagnie d'un trajet étaient deux textes libres, recopiés d'une
+  ligne à l'autre ; ils deviennent une entrée de `providers` que les deux référencent. L'identifiant
+  se dérive du voyage, du mode et du nom : un `uid()` neuf donnerait deux résultats différents des
+  deux côtés de la synchro, donc un conflit à chaque envoi. La voiture d'un trajet porte déjà son
+  loueur, le texte du trajet ne fait alors que disparaître.
+*/
+function providerIdFromName(travelId, mode, name) {
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `provider-${travelId}-${mode}-${slug}`;
+}
+
+function adoptProviders(data) {
+  const known = new Set(data.providers.map((p) => p.id));
+  const adopt = (item, typed, mode) => {
+    const name = (typed || '').trim();
+    if (item.providerId || !name) return;
+    const id = providerIdFromName(item.travelId, mode, name);
+    if (!known.has(id)) {
+      known.add(id);
+      data.providers.push({ ...emptyProvider(), id, travelId: item.travelId, mode, name });
+    }
+    item.providerId = id;
+  };
+  (data.cars || []).forEach((car) => {
+    adopt(car, car.name, 'car');
+    delete car.name;
+  });
+  (data.transports || []).forEach((t) => {
+    if (t.mode !== 'car') adopt(t, t.carrier, t.mode);
+    delete t.carrier;
+  });
+  data.providers.forEach((p) => {
+    if (!Array.isArray(p.options)) p.options = [];
+  });
 }
 
 /*

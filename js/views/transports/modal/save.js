@@ -22,7 +22,7 @@ function readTransportForm(id) {
     departTime: transportFieldValue('t-depart-time'),
     arriveDate: transportFieldValue('t-arrive-date'),
     arriveTime: transportFieldValue('t-arrive-time'),
-    carrier: transportFieldValue('t-carrier', p.carrier),
+    providerId: transportFieldValue('t-provider', p.providerId),
     reference: transportFieldValue('t-reference', p.reference),
     carId: transportFieldValue('t-car', p.carId),
     budget: transportFieldValue('t-budget'),

@@ -2,7 +2,7 @@ function emptyCar() {
   return {
     id: null,
     status: '',
-    name: '',
+    providerId: '',
     model: '',
     pricePerDay: '',
     priceTotal: '',
@@ -16,10 +16,7 @@ function emptyCar() {
 function carForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une voiture</h3>
-    <div class="field">
-      <label>Loueur</label
-      ><input id="car-name" type="text" value="${escapeHtml(p.name)}" placeholder="Hertz" />
-    </div>
+    ${providerSelectField('car-provider', 'car', p.providerId)}
     <div class="field">
       <label>Modèle</label><input id="car-model" type="text" value="${escapeHtml(p.model)}" />
     </div>

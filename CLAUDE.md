@@ -60,6 +60,24 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-15** — le loueur d'une voiture et la compagnie d'un trajet étaient deux textes libres,
+  recopiés à chaque ligne : ils deviennent une seule entité, [js/views/providers/](js/views/providers/),
+  dont le **mode** dit le mot — loueur pour la voiture, compagnie pour les quatre autres. Le domaine
+  ne se range pas sous l'écran qui l'affiche : la table vit dans un second onglet de la page
+  Transports ([tab.js](js/views/transports/tab.js), une globale comme `compareMode`, hors du hash et
+  des prefs), mais Voitures la lit aussi, donc le dossier reste à plat. Une voiture référence son
+  loueur et un trajet de mode voiture n'en porte pas : il passe par sa voiture, sinon les deux
+  chemins diraient chacun le sien. Les options d'un prestataire sont propres à lui — un vocabulaire
+  global n'aurait partagé que le mot et coûté un second écran — et un `datalist` des libellés déjà
+  posés les propose sans rien administrer. Celui qui manque au milieu d'une saisie se crée par-dessus
+  la modale ouverte sans la re-rendre ([quick-create.js](js/views/providers/quick-create.js)), sur le
+  modèle du `dismissAsk` de [modal.js](js/modals/modal.js) : `modal` est une globale unique, et
+  rouvrir une modale perdrait les champs déjà tapés. La reprise dérive l'identifiant du voyage, du
+  mode et du nom plutôt qu'un `uid()` neuf : les deux côtés de la synchro doivent en trouver le même,
+  sans quoi chaque envoi partirait en conflit. `cars/price-label.js` remonte à plat en
+  [price-label.js](js/views/price-label.js) — les options l'utilisent — et `typedPriceLabel` y perd
+  le nom de la voiture.
+
 - **2026-09-14** — comparer est un **mode de la liste** des scénarios et non une vue à elle : les
   lignes restent, elles gagnent une case, et les scénarios cochés se posent sous la liste dans
   [js/views/scenarios/compare/](js/views/scenarios/compare/) — `mode.js` pour la sélection,

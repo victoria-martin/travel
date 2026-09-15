@@ -41,11 +41,13 @@ const COLLECTIONS = {
     'tags',
     'favorite',
   ],
+  // Un prestataire porte ses options dans une seule cellule : elles ne se lisent qu'avec lui.
+  providers: ['travelId', 'id', 'mode', 'name', 'logo', 'site', 'bookingUrl', 'notes', 'options'],
   cars: [
     'travelId',
     'id',
     'status',
-    'name',
+    'providerId',
     'model',
     'pricePerDay',
     'priceTotal',
@@ -54,6 +56,9 @@ const COLLECTIONS = {
     'link',
     'notes',
     'isDefault',
+    // Le loueur était un texte recopié à chaque ligne : cette colonne n'est plus que la source de
+    // la reprise, et repart vide au premier enregistrement.
+    'name',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'categories', 'recurrence', 'notes'],
   cities: [
@@ -107,7 +112,7 @@ const COLLECTIONS = {
     'departTime',
     'arriveDate',
     'arriveTime',
-    'carrier',
+    'providerId',
     'reference',
     'carId',
     'budget',
@@ -116,6 +121,9 @@ const COLLECTIONS = {
     'link',
     'notes',
     'favorite',
+    // La compagnie était un texte recopié à chaque ligne : cette colonne n'est plus que la source
+    // de la reprise, et repart vide au premier enregistrement.
+    'carrier',
   ],
   scenarios: [
     'travelId',
@@ -198,6 +206,8 @@ const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories', 'filterValues'];
+// Une liste d'objets ne tient pas dans une cellule séparée par des virgules : elle s'y écrit en JSON.
+const JSON_FIELDS = ['options'];
 // Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
 const LEGACY_HEADERS = { address: 'geoAddress', categories: 'category' };
 
@@ -263,6 +273,7 @@ function readState() {
   var data = {
     travels: rows.travels,
     accommodations: rows.accommodations,
+    providers: rows.providers,
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
     cities: rows.cities,
@@ -473,6 +484,7 @@ function normalizeState(data) {
   return {
     travels: normalizeCollection('travels', data.travels),
     accommodations: normalizeCollection('accommodations', data.accommodations),
+    providers: normalizeCollection('providers', data.providers),
     cars: normalizeCollection('cars', data.cars),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
@@ -496,7 +508,7 @@ function normalizeCollection(name, items) {
 function normalizeItem(name, item) {
   var columns = COLLECTIONS[name];
   var cells = columns.map(function (column) {
-    return encodeCell(item ? item[column] : '');
+    return encodeCell(column, item ? item[column] : '');
   });
   if (cells.join('').trim() === '') return null; // ligne vide : ignorée à la relecture
   var out = {};
@@ -507,8 +519,9 @@ function normalizeItem(name, item) {
   return out;
 }
 
-function encodeCell(value) {
+function encodeCell(column, value) {
   if (value === undefined || value === null) return '';
+  if (JSON_FIELDS.indexOf(column) >= 0) return value.length ? JSON.stringify(value) : '';
   if (typeof value === 'boolean') return value ? 'true' : 'false';
   if (Array.isArray(value)) return value.join(',');
   return String(value);
@@ -516,6 +529,13 @@ function encodeCell(value) {
 
 function decodeCell(column, raw) {
   var value = String(raw == null ? '' : raw).trim();
+  if (JSON_FIELDS.indexOf(column) >= 0) {
+    try {
+      return JSON.parse(value || '[]');
+    } catch (err) {
+      return [];
+    }
+  }
   if (BOOL_FIELDS.indexOf(column) >= 0) return /^(true|vrai|oui|1|x)$/i.test(value);
   if (NUM_FIELDS.indexOf(column) >= 0) return parseInt(value, 10) || 0;
   if (LIST_FIELDS.indexOf(column) >= 0) {
@@ -574,6 +594,7 @@ function writeState(data) {
 
   writeSheet('travels', data.travels || []);
   writeSheet('accommodations', data.accommodations || []);
+  writeSheet('providers', data.providers || []);
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);
@@ -606,7 +627,7 @@ function writeSheet(name, items) {
 
   var rows = items.map(function (item) {
     return columns.map(function (column) {
-      return encodeCell(item[column]);
+      return encodeCell(column, item[column]);
     });
   });
   var range = sheet.getRange(2, 1, rows.length, columns.length);

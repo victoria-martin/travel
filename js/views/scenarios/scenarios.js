@@ -1,12 +1,16 @@
 let activeScenarioId = null;
 
 function renderScenariosView() {
-  const items = ofCurrentTravel(state.scenarios).sort((a, b) => scenarioRank(a) - scenarioRank(b));
+  const items = archivedScenarios(ofCurrentTravel(state.scenarios)).sort(
+    (a, b) => scenarioRank(a) - scenarioRank(b),
+  );
   return /* HTML */ `
     ${scenariosHeader()}
     ${
       items.length === 0
-        ? emptyState('Aucun scénario', 'Crée un premier scénario pour poser tes étapes.')
+        ? showArchivedScenarios
+          ? emptyState('Aucun scénario archivé', 'Archive un scénario pour le sortir de la liste.')
+          : emptyState('Aucun scénario', 'Crée un premier scénario pour poser tes étapes.')
         : scenarioList(items) + (compareMode ? scenarioCompare(items) : '')
     }
   `;
@@ -34,6 +38,7 @@ function createScenario() {
     costIds: [],
     transportIds: [],
     favorite: false,
+    archived: false,
     steps: [],
   };
   state.scenarios.push(s);

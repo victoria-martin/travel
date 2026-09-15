@@ -5,7 +5,7 @@ COLUMN_SETS.voitures = [
     label: 'Loueur',
     locked: true,
     cell: carNameCell,
-    sortValue: (c) => (c.name || '').toLowerCase(),
+    sortValue: (c) => providerName(c.providerId).toLowerCase(),
   },
   {
     key: 'model',
@@ -51,7 +51,7 @@ COLUMN_SETS.voitures = [
 ];
 
 function carNameCell(c) {
-  return `${textCell(c.name)}<div class="row-notes">${carNotesEditable(c)}</div>`;
+  return `${textCell(providerName(c.providerId))}<div class="row-notes">${carNotesEditable(c)}</div>`;
 }
 
 function carModelCell(c) {
@@ -63,11 +63,11 @@ function carStatusCell(c) {
 }
 
 function carPricePerDayCell(c) {
-  return textCell(carPriceLabel(c.pricePerDay, '/ jour'));
+  return textCell(typedPriceLabel(c.pricePerDay, '/ jour'));
 }
 
 function carPriceTotalCell(c) {
-  return textCell(carPriceLabel(c.priceTotal));
+  return textCell(typedPriceLabel(c.priceTotal));
 }
 
 function carDatesCell(c) {

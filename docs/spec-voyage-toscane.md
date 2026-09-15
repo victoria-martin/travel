@@ -392,7 +392,7 @@ localisation que les villes et les hébergements.
 | statut               | liste propre, courte                                                                                           |
 | départ, arrivée      | une ville de la table Villes, plus une précision libre à côté                                                  |
 | dates et heures      | date et heure de départ, date et heure d'arrivée                                                               |
-| compagnie, référence | pour l'avion, le train, le bus et le ferry                                                                     |
+| compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre     |
 | voiture              | en mode voiture seulement : référence une entrée de la table Voitures, dont le loueur et le modèle s'affichent |
 | budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                                 |
 | lien                 |                                                                                                                |
@@ -412,25 +412,57 @@ défaut par date de départ, puis par mode.
   la référence — la colonne affiche « Hertz » avec « Fiat 500 » en dessous, comme elle affiche
   « Trenitalia » avec son numéro de billet. Changer de mode dans la modale échange le bloc compagnie
   et le bloc loueur ; la valeur de l'autre mode reste enregistrée et n'est pas effacée.
+- **Le loueur d'une voiture ne se saisit qu'une fois** : un transport de mode voiture ne porte pas
+  de prestataire à lui — il référence une voiture, qui référence son loueur. Deux chemins vers le
+  même nom finiraient par diverger.
 - **Un transport de mode voiture porte quand même son prix** : la location et le trajet sont deux
   coûts distincts — le prix de la location vit sur la voiture, celui du trajet (péages, essence, un
   aller ponctuel) sur le transport. Le transport ne lit jamais le prix de la location.
+
+**Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte cette table dans un
+second onglet, « Loueurs & compagnies » : c'est la même entité des deux côtés, et c'est son **mode**
+qui dit comment on la nomme — loueur pour la voiture, compagnie pour l'avion, le train, le bus et le
+ferry.
+
+| Champ       | Détail                                                                   |
+| ----------- | ------------------------------------------------------------------------ |
+| mode        | le mode de transport, qui dit le mot et filtre les selects               |
+| nom         | « Hertz », « Ryanair »                                                   |
+| logo        | une url d'image ; à défaut, la pastille porte l'initiale du nom          |
+| site        |                                                                          |
+| réservation | la page de l'offre, à côté du site officiel                              |
+| options     | autant de lignes qu'on veut : un libellé, un montant, et ce qu'il compte |
+| notes       |                                                                          |
+
+Tableau seul, tri et colonnes configurables comme les trajets. L'onglet ouvert est le geste en
+cours : il ne vit ni dans l'adresse ni dans les préférences, revenir sur la page rouvre les trajets.
+
+- **Une option est propre à son prestataire** : deuxième conducteur, bagage supplémentaire,
+  assistance. Son montant se compte en forfait, par jour, par bagage, par personne ou par trajet —
+  liste figée. Le libellé reste libre, et les options déjà posées ailleurs le proposent en
+  autocomplétion : les mots se partagent sans qu'un vocabulaire soit à administrer.
+- **Un select ne propose que les prestataires de son mode** : un vol ne se prend pas chez un loueur.
+- **Celui qui manque se crée sans quitter sa saisie** : le dernier item du select — « ＋ Ajouter une
+  compagnie » — pose un petit formulaire par-dessus la modale ouverte, sans la re-rendre, et le
+  prestataire créé s'y sélectionne. Il ne porte alors que son nom et son mode ; le reste se complète
+  dans l'onglet.
 
 ### Voitures
 
 **Voiture**
 
-| Champ                   | Détail                                                          |
-| ----------------------- | --------------------------------------------------------------- |
-| loueur, modèle          | les deux forment le libellé « loueur · modèle »                 |
-| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les jours |
-| prix total              | texte libre ; saisi à la main, jamais calculé                   |
-| statut                  | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté      |
-| dates                   | texte libre                                                     |
-| lieu de prise en charge |                                                                 |
-| lien                    |                                                                 |
-| notes                   | éditables depuis la ligne                                       |
-| par défaut              | une seule voiture à la fois                                     |
+| Champ                   | Détail                                                                    |
+| ----------------------- | ------------------------------------------------------------------------- |
+| loueur                  | référence un prestataire ; avec le modèle, le libellé « loueur · modèle » |
+| modèle                  | texte libre                                                               |
+| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les jours           |
+| prix total              | texte libre ; saisi à la main, jamais calculé                             |
+| statut                  | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                |
+| dates                   | texte libre                                                               |
+| lieu de prise en charge |                                                                           |
+| lien                    |                                                                           |
+| notes                   | éditables depuis la ligne                                                 |
+| par défaut              | une seule voiture à la fois                                               |
 
 Liste simple : tableau ou cartes, ajout/modification en modale, suppression confirmée. Aucune
 colonne masquable, aucun tri configurable — le besoin ne s'est pas présenté.
@@ -496,6 +528,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | -------------- | --------------------------------------------------------------------------- |
 | nom            | éditable en ligne dans le détail                                            |
 | favori         | ⭐, remonte en tête de liste                                                |
+| archivé        | sort de la liste sans être supprimé ; un archivé n'est plus le choisi        |
 | choisi         | ◉ un seul par voyage ; c'est lui que lisent les écrans transverses          |
 | date de départ | par défaut celle du voyage ; date les étapes, vide aucune date ne s'affiche |
 | voiture        | une référence à la table Voitures                                           |
@@ -554,7 +587,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   le total en GuestPoints s'il y en a et le prix par nuit — qui ne compte que les euros, les
   GuestPoints ne se ramenant pas à une nuit. L'ordre de la liste est le choisi, puis les favoris,
   puis les autres. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
-  « (copie) »), supprimer — les deux dernières n'apparaissent qu'au survol de la carte.
+  « (copie) »), archiver 📦, supprimer — les trois dernières n'apparaissent qu'au survol de la
+  carte.
 - **La bande d'itinéraire** ferme chaque carte : un segment par lieu du trajet, dans l'ordre, large
   comme ses nuits et peint de la couleur de son statut d'étape — vert réservé, or à réserver, ocre
   à l'étude, beige en recherche ou sans hébergement, rouille à revoir ; les deux statuts qui
@@ -567,6 +601,12 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   lui — de sorte qu'une durée se compare sans lire un chiffre. Le nom du lieu s'écrit sous son
   segment, sauf sous 8 % de la barre où il ne tiendrait pas : il reste alors dans l'infobulle. Un
   scénario sans étape affiche « Aucune étape ».
+- **Archiver** : un scénario qu'on ne veut plus voir sans le perdre. Le 📦 de sa carte le sort de
+  la liste, et le bouton 📦 « Archivés » de l'en-tête montre les archivés **à la place** des autres
+  — deux collections, pas un filtre : leur carte y porte un ↩ qui les remet. Archiver un scénario
+  lui retire d'être le choisi, et un archivé ne se propose plus dans le sélecteur de la Carte.
+  L'archivage est un état du scénario, donc il se garde ; les regarder est un geste en cours,
+  comme comparer, et repart fermé à chaque session.
 - **Comparer** : le bouton ⚖ de l'en-tête bascule la liste en mode compare. Chaque ligne gagne alors
   une case à cocher et la cliquer coche au lieu d'ouvrir le scénario ; les scénarios cochés se
   posent sous la liste, côte à côte dans la largeur, une carte chacun. La carte porte le nom, le
@@ -789,6 +829,11 @@ Le panneau porte **une liste de types par collection**, puis trois filtres qui v
 deux : province, ⭐ favoris, et **scénario**. Choisir un scénario trace son trajet et ne garde que
 les lieux qu'il utilise — l'hébergement de chacune de ses étapes retenues, et les activités
 attachées à ces étapes ou aux groupes qu'elles traversent.
+
+La pastille d'une étape ouvre ce que l'étape sait : ses dates et ses nuits, son statut de
+réservation, l'hébergement retenu avec son coût, ses notes. Trois liens ferment le popup — le site
+de l'hébergement, sa page Booking, et sa fiche, qui s'ouvre en panneau par-dessus la carte. Un
+lieu où le trajet repasse empile ses étapes dans le même popup.
 
 ### Notes
 

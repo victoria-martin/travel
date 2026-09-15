@@ -12,6 +12,12 @@ function scenariosHeader() {
         onclick: 'toggleCompareMode()',
         active: compareMode,
       })}
+      ${toolbarButton({
+        icon: '📦',
+        label: 'Archivés',
+        onclick: 'toggleArchivedScenarios()',
+        active: showArchivedScenarios,
+      })}
     </div>
   </div>`;
 }

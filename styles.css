@@ -1218,7 +1218,6 @@ tr:hover td {
   gap: 0;
   margin: 18px 0;
   padding-left: 32px;
-  padding-right: 16px;
 }
 /* Le trait court d'un centre de point à l'autre : 25px, la hauteur où la pastille de rang tombe. */
 .step-list::before {
@@ -1321,8 +1320,8 @@ tr:hover td {
   /* Le statut est la couleur de la bordure, épaisse à gauche : elle tient sa place sur toutes les
      cartes, comme celle d'un scénario, sans quoi peindre une étape la décalerait de deux pixels. */
   --step-color: var(--line);
-  /* border: 1px solid var(--step-color); */
-  border-left: 3px solid var(--step-color);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--step-color);
   border-radius: 12px;
   padding: 12px 12px 12px 8px;
   box-shadow: 0 1px 2px rgba(36, 49, 43, 0.05);
@@ -1330,6 +1329,7 @@ tr:hover td {
 /* Dans une colonne d'option, la carte se détache du fond de la colonne et non de celui de la page. */
 .option-column .step-card {
   background: var(--white);
+  background: var(--paper-raised);
 }
 
 /* La colonne tient toute la hauteur de la carte : les flèches en haut contre le rang, la poignée
@@ -1634,6 +1634,7 @@ tr:hover td {
 .option-column-chosen {
   border-color: var(--gold);
   background: color-mix(in srgb, var(--gold) 9%, var(--white));
+  background: color-mix(in srgb, var(--gold) 9%, var(--paper-raised));
   box-shadow: 0 2px 10px color-mix(in srgb, var(--gold) 28%, transparent);
 }
 /* La tête porte les gestes de la colonne — la retenir, la retirer — et rien d'autre. */
@@ -2055,6 +2056,7 @@ tr:hover td {
   min-width: 0;
   overflow-y: auto;
   padding-bottom: var(--main-pad-y);
+  padding-right: 16px;
 }
 .scenario-detail-side {
   display: flex;
@@ -2447,6 +2449,25 @@ tr:hover td {
   border-top: 1px solid var(--line);
   margin: 6px 0;
 }
+.step-pin-popup strong {
+  display: block;
+  margin-bottom: 2px;
+}
+.step-pin-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+.step-pin-links > * {
+  font: inherit;
+  color: var(--stone-dark);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
 .route-arrow {
   display: flex;
   align-items: center;
@@ -2808,4 +2829,41 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 1px 8px;
+}
+/* Le logo d'un prestataire, et l'initiale de son nom tant qu'aucune image n'est donnée. */
+.provider-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.provider-logo-empty {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+}
+.provider-option + .provider-option {
+  margin-top: 2px;
+}
+/* Une option se saisit sur une ligne : ce qu'elle est, ce qu'elle coûte, ce qu'elle compte. */
+.provider-option-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.provider-option-row input,
+.provider-option-row select {
+  flex: 1;
+}
+.provider-option-row .provider-option-amount {
+  flex: 0 0 80px;
+}
+.provider-ask h3 {
+  margin-bottom: 14px;
 }

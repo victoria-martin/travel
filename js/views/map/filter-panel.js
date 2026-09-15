@@ -31,7 +31,7 @@ function mapFilterPanel() {
       <div class="filter-title">Scénario</div>
       <select class="map-scenario-select" onchange="setMapScenario(this.value)">
         <option value="">Tous les lieux</option>
-        ${ofCurrentTravel(state.scenarios)
+        ${activeScenarios(ofCurrentTravel(state.scenarios))
           .map(
             (s) =>
               `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
