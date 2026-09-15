@@ -22,8 +22,25 @@ function scenarioOfferDropdown(scenario) {
       <div class="inline-menu">
         ${scenarioOfferNoneItem(scenario)}
         ${rentals.map((rental) => scenarioOfferRentalGroup(scenario, rental)).join('')}
+        ${scenarioOfferCreateItem(scenario)}
       </div>`,
   );
+}
+
+// La voiture qui manque se relève sans quitter le scénario : la modale garde le scénario, qui
+// adopte l'offre à l'enregistrement.
+function scenarioOfferCreateItem(scenario) {
+  return /* HTML */ `<button
+    class="inline-menu-item inline-menu-item-create"
+    onclick="addScenarioOffer('${scenario.id}')"
+  >
+    ${svgIcon('plus')} Ajouter une voiture
+  </button>`;
+}
+
+function addScenarioOffer(scenarioId) {
+  openInlineMenu = null;
+  openModal('voiture', '', scenarioId);
 }
 
 function scenarioOfferNoneItem(scenario) {

@@ -48,25 +48,14 @@ function offerForm(p) {
       <div id="offer-model-field">${offerModelSelect(p)}</div>
     </div>
     ${offerOptionsField(p)}
-    <div class="field-row">
-      <div class="field">
-        <label>Prix total ${days ? `pour ${days} jours` : ''}</label
-        ><input
-          id="car-price-total"
-          type="text"
-          value="${escapeHtml(p.priceTotal)}"
-          placeholder="420"
-        />
-      </div>
-      <div class="field">
-        <label>Prix / jour</label
-        ><input
-          id="car-price-day"
-          type="text"
-          value="${escapeHtml(p.pricePerDay)}"
-          placeholder="42"
-        />
-      </div>
+    <div class="field">
+      <label>Prix total ${days ? `pour ${days} jours` : ''}</label
+      ><input
+        id="car-price-total"
+        type="text"
+        value="${escapeHtml(p.priceTotal)}"
+        placeholder="420"
+      />
     </div>
     <div class="field">
       <label>Lien</label><input id="car-link" type="text" value="${escapeHtml(p.link)}" />

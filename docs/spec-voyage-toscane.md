@@ -160,6 +160,52 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 ## 3. Modèle
 
+### D'où vient la donnée
+
+| Nature                                          | Collections                                                                           | Ce qui la caractérise                                                                          |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Racine**                                      | `travels`                                                                             | possède tout le reste et le filtre ; un seul voyage est ouvert                                 |
+| **Base** — porte sa propre donnée               | `accommodations`, `attractions`, `carModels`, `providers`, `fixedCosts`, `transports` | se saisit sans rien d'autre à l'écran ; ce qu'elle référence l'enrichit sans la définir        |
+| **Contexte** — n'existe que par un croisement   | `rentals` (loueur × lieu × dates), `offers` (location × modèle)                       | supprimer un parent les vide de sens                                                           |
+| **Arbitrage** — ne porte presque rien en propre | `scenarios`, leurs `steps` et leurs `groups`                                          | des références (offre, options, charges, transports, hébergement) et un ordre                  |
+| **Question enregistrée**                        | `todoLists`                                                                           | ressource + colonne + valeurs gardées : la seule entité qui référence l'écran et non la donnée |
+| **Texte libre**                                 | `tripNotes`                                                                           | une entrée par voyage                                                                          |
+| **Dérivée, zéro stockage**                      | la Carte, le bloc « Calculé » de Dépenses, les totaux d'un scénario                   | relisent les collections à chaque rendu, n'écrivent jamais                                     |
+
+Deux familles vivent hors de l'état. Les **vocabulaires figés en code** — statuts, types, modes,
+motorisations, boîtes, unités d'option, récurrences — ne s'éditent pas dans l'app ; seul leur ordre
+l'est, depuis le panneau « Trier ». Les **vocabulaires ouverts par l'usage** — tags d'un
+hébergement ou d'une activité, catégories d'une dépense — sont l'union de ce qui est déjà saisi : un
+mot existe dès qu'il est tapé quelque part. Les options d'un prestataire sont l'exception qui les
+sépare : elles portent un prix et une unité, donc ce sont des données, et elles n'appartiennent
+qu'au loueur qui les propose.
+
+Les **préférences locales** — colonnes masquées, tri et ordre des mots, voyage ouvert, largeur du
+panneau — vivent dans leur propre clé du navigateur et ne partent jamais au Sheet.
+
+### Comment ça s'édite
+
+| Ressource      | Modale | Fiche latérale | En place dans la ligne                  | Autre porte                                                              |
+| -------------- | ------ | -------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| Hébergements   | ✅     | ✅             | type, statut, prix, notes, tags, favori | trois formulaires d'import collé — Booking, HomeExchange, Airbnb         |
+| Activités      | ✅     | ✗              | type, statut, tags, favori              | créée en tapant son nom depuis une étape                                 |
+| Transports     | ✅     | ✗              | mode, statut, favori                    | —                                                                        |
+| Locations      | ✅     | ✗              | —                                       | —                                                                        |
+| Offres         | ✅     | ✗              | statut, notes                           | ligne de saisie rapide sous la location, `Entrée` enchaîne               |
+| Prestataires   | ✅     | ✅             | —                                       | créé par-dessus la modale qui le réclame                                 |
+| Modèles        | ✅     | ✗              | —                                       | créé en tapant un nom de véhicule sur une offre, ou coché chez un loueur |
+| Dépenses       | ✅     | ✗              | notes, catégories                       | créée depuis le bloc Dépenses d'un scénario                              |
+| Scénarios      | ✗      | ✗              | nom, favori                             | un bouton crée, le glisser ordonne                                       |
+| Étapes         | ✅     | ✗              | titre, budget, lieu, nuits, type        | le glisser ordonne                                                       |
+| Notes          | ✗      | ✗              | le texte lui-même                       | —                                                                        |
+| Listes À faire | ✗      | ✗              | les pastilles de valeurs                | trois champs en tête de page                                             |
+
+Trois asymétries, dont aucune n'a été décidée et que le backlog porte toutes les trois : la fiche
+latérale n'existe que pour deux ressources sur onze, la saisie en ligne que pour les offres, et
+l'édition en place n'est offerte que là où on l'a posée au coup par coup.
+
+### Les entités
+
 | Entité              | Porte                                                                                                                                                               | Notes                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                          | possède tout le reste ; un seul est ouvert à la fois                   |
@@ -361,8 +407,10 @@ seule fiche, donc une seule adresse à corriger. Un trajet y désigne aussi son 
 arrivée.
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
-lieu (adresse, ou les niveaux renseignés), coordonnées, hébergement, horaires et téléphone
-(masqués par défaut), lien. Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
+ville, province, région, pays, adresse, coordonnées, hébergement, horaires et téléphone, lien —
+région, pays, adresse, coordonnées, hébergement, horaires et téléphone masqués par défaut. Les
+quatre niveaux sont des colonnes à part, comme chez les hébergements : c'est ce qui les rend
+filtrables un à un — « les lieux de Toscane ». Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
 localisation que les hébergements.
 
 - **Un lien Google Maps collé remplit la fiche** : nom, adresse et coordonnées, lus par l'Apps
@@ -464,9 +512,15 @@ l'onglet « Voitures » liste, et rien d'autre.
 - **Un modèle est du voyage, pas d'un loueur** : une seule Golf, que Hertz et Sixt proposent tous
   les deux. C'est ce qui permet de les comparer — rangée sous son loueur, elle ferait deux entrées
   homonymes qui ne savent pas qu'elles parlent de la même voiture.
-- **Chaque modèle porte ses offres** : une par véhicule relevé dans une location, avec son loueur,
-  ses dates, son statut, ses options et son prix. Deux offres du même loueur qui ne diffèrent que
-  par une assurance se lisent l'une sous l'autre — c'est précisément ce qu'on vient y comparer.
+- **Ses offres se rangent sous leur loueur** : une rangée par loueur chez qui on a relevé ce
+  modèle, ses offres dessous avec leurs dates, leur statut, leurs options et leur prix. Deux offres
+  du même loueur qui ne diffèrent que par une assurance se lisent l'une sous l'autre — c'est
+  précisément ce qu'on vient y comparer. Les loueurs se lisent du moins cher au plus cher.
+- **Le tarif d'un loueur est dérivé, jamais saisi** : chaque offre donne un prix par jour, et la
+  rangée du loueur en porte l'étendue — un chiffre quand on n'a relevé qu'une offre, une fourchette
+  sinon. Un loueur étant dégressif, deux relevés de durées différentes ne donnent pas le même
+  tarif, et une moyenne effacerait justement l'écart qu'on vient regarder ; les dates restent donc
+  sur chaque offre, ce sont elles qui l'expliquent.
 - **Le prix n'est jamais sur le modèle** : il dépend du loueur et des dates, il vit sur l'offre. Un
   modèle du catalogue qu'aucune location n'a relevé s'affiche sans offre.
 - **Le catalogue se remplit en saisissant** : un modèle tapé dans une location rejoint le voyage
@@ -491,8 +545,7 @@ véhicules.
 | Champ       | Détail                                                                      |
 | ----------- | --------------------------------------------------------------------------- |
 | modèle      | référence un modèle du voyage, qui porte sa motorisation et sa boîte        |
-| prix total  | ce que le loueur affiche pour toute la location ; le prix / jour en découle |
-| prix / jour | le tarif journalier, quand c'est lui que le loueur annonce                  |
+| prix total  | ce que le loueur affiche pour toute la location ; le seul prix qui se saisit |
 | options     | celles cochées dans le catalogue du loueur                                  |
 | statut      | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                  |
 | lien, notes | notes éditables depuis la ligne                                             |
@@ -502,17 +555,17 @@ La page est la liste des locations. Chacune se déplie sur ses véhicules, et le
 en cours : revenir sur la page les retrouve tous fermés.
 
 - **La saisie suit le site du loueur** : « Nouvelle recherche » demande le loueur, le lieu et les
-  deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte, et les
-  deux prix. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
+  deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte et prix
+  total. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
   rouvrir de modale. Le modèle tapé est celui du voyage s'il existe déjà — la frappe le propose —
   sinon il rejoint le catalogue avec la motorisation et la boîte qu'on vient de taper. Le reste
   (statut, options, lien) se pose ensuite depuis la fiche du véhicule.
-- **Les deux prix se saisissent, le total l'emporte** : un loueur annonce tantôt un total pour ses
-  dates, tantôt un tarif journalier, et on recopie ce qu'on a sous les yeux. Le prix par jour se
-  déduit du total et des jours de la location quand les deux sont là ; sinon c'est le tarif saisi
-  qui répond. C'est ce prix par jour que le scénario multiplie par **ses** jours à lui — d'où
-  l'importance de pouvoir le taper : une offre relevée sans dates de location n'en aurait aucun, et
-  ne coûterait rien dans un scénario.
+- **Un seul prix se saisit, le total** : c'est ce que le loueur affiche pour ses dates, donc c'est
+  ce qu'on recopie. Le prix par jour s'en déduit, des jours de la location, et ne se tape jamais —
+  deux chiffres saisis pour la même chose finissaient par se contredire, et le total l'emportait de
+  toute façon. C'est ce prix par jour que le scénario multiplie par **ses** jours à lui. Une offre
+  relevée avant les locations n'a parfois qu'un tarif journalier et aucune date : elle le garde tel
+  quel, rien ne peut le recalculer.
 - **Les options viennent du loueur, la case vient du véhicule** : le catalogue et les prix vivent
   chez le prestataire, le véhicule ne porte que ce qu'il a coché. Une option tapée depuis la fiche
   d'un véhicule rejoint le catalogue du loueur — corriger son prix le corrige pour tous les
@@ -825,12 +878,21 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   de la voiture × jours du scénario : le prix total saisi porte sur les dates de la location, pas
   sur celles d'un scénario. Un scénario créé naît avec la **voiture par défaut** rattachée : c'est
   une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui tient, et les
-  scénarios existants ne bougent pas.
+  scénarios existants ne bougent pas. Le menu se ferme sur **Ajouter une voiture**, qui ouvre la
+  fiche d'un véhicule : celui qu'on y enregistre est rattaché au scénario, on relève une offre
+  manquante sans passer par la page Locations.
 - **Les options de cette voiture**, sous le menu : une ligne à cocher par option du catalogue de son
   loueur, avec ce qu'elle coûte ici — un forfait reste entier, un prix par jour se répète sur les
   jours du scénario, un prix par personne sur les voyageurs. Choisir un véhicule coche ce qui l'est
   chez le loueur : c'est le point de départ, que le scénario reste libre de défaire. Le total du
   bloc, et la ligne Voiture du Total général, comptent les options.
+- **Transports** : une ligne par trajet retenu — le mode, le départ vers l'arrivée, l'horaire et le
+  prix — puis deux gestes en pied, « Rattacher un trajet » qui liste ceux du voyage encore libres,
+  et « Ajouter un trajet » qui ouvre la modale Transports et rattache le nouveau au retour. Le ✕
+  retire du scénario sans supprimer le trajet, qui reste sur la page Transports. Un même vol se
+  rattache donc à plusieurs scénarios : c'est ce qui permet de les comparer. Le bloc n'additionne
+  rien — un prix de trajet est souvent une fourchette, et le Total général ne compte que des
+  montants fermes.
 - **Dépenses**, sous le bloc Voiture, dans sa propre teinte pour ne pas se lire comme une étape :
   une ligne par dépense rattachée (libellé, montant, ✕), le total en tête. Deux gestes en pied —
   « Rattacher une dépense » liste celles du voyage qui ne le sont pas encore, « Ajouter une
@@ -878,18 +940,25 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 Aucune entité propre — l'écran lit :
 
-| Entité          | Champs lus                          | Notes                               |
-| --------------- | ----------------------------------- | ----------------------------------- |
-| **Hébergement** | coordonnées, type, province, favori | sans coordonnées, pas de marqueur   |
-| **Attraction**  | coordonnées, type, province, favori | sans coordonnées, pas de marqueur   |
-| **Scénario**    | étapes                              | choisi en filtre, il donne le tracé |
+| Entité          | Champs lus                        | Notes                               |
+| --------------- | --------------------------------- | ----------------------------------- |
+| **Hébergement** | coordonnées, favori, ses colonnes | sans coordonnées, pas de marqueur   |
+| **Lieu**        | coordonnées, favori, ses colonnes | sans coordonnées, pas de marqueur   |
+| **Scénario**    | étapes                            | choisi en filtre, il donne le tracé |
 
 Les deux collections géolocalisées, chacune en couleur par type : un hébergement est un disque,
 une attraction une pastille portant l'emoji de son type — la couleur dit la famille, la forme dit
 la collection.
 
-Le panneau porte **une liste de types par collection**, puis trois filtres qui valent pour les
-deux : province, ⭐ favoris, et **scénario**. Choisir un scénario trace son trajet et ne garde que
+Le bouton « Filtrer » est celui des listes, et son panneau porte **un bloc par collection** : une
+case qui la met à l'écran, et sous elle sa propre pile de niveaux. Les deux jeux sont indépendants —
+on règle celle qu'on déplie, l'autre reste tracée avec les siens — et décocher une collection donne
+« seulement les Airbnb de Toscane » sans décocher le reste type par type. ⭐ Favoris ferme le
+panneau ; son badge compte les niveaux actifs, les favoris et les collections retirées.
+
+Le **scénario** reste dans l'en-tête, hors du panneau : il trace le trajet plus qu'il ne filtre, et
+c'est lui qui porte le message d'état de l'itinéraire — enfermé dans un panneau fermé, on ne le
+lirait plus. La carte prend donc toute la largeur, sans colonne de filtres à sa gauche. Choisir un scénario trace son trajet et ne garde que
 les lieux qu'il utilise — l'hébergement de chacune de ses étapes retenues, et les activités
 attachées à ces étapes ou aux groupes qu'elles traversent.
 

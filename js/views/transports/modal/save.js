@@ -41,7 +41,14 @@ function upsertTransport(item) {
   saveNow();
 }
 
+// Ouverte depuis un scénario, la modale y rattache le trajet créé : on ne le rattache pas ensuite.
 function saveTransport(id) {
-  upsertTransport(readTransportForm(id));
+  const { scenarioId } = modal;
+  const transport = readTransportForm(id);
+  upsertTransport(transport);
+  const scenario = scenarioId ? getScenario(scenarioId) : null;
+  if (scenario && !scenario.transportIds.includes(transport.id))
+    scenario.transportIds.push(transport.id);
+  saveNow();
   closeModal();
 }

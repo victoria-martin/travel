@@ -42,7 +42,10 @@ const MODAL_TYPES = {
     edits: true,
   },
   transport: {
-    open: (id) => ({ payload: id ? structuredClone(getTransport(id)) : emptyTransport() }),
+    open: (id, scenarioId) => ({
+      scenarioId,
+      payload: id ? structuredClone(getTransport(id)) : emptyTransport(),
+    }),
     body: (m) => transportForm(m.payload),
     edits: true,
   },
@@ -62,7 +65,10 @@ const MODAL_TYPES = {
     edits: true,
   },
   voiture: {
-    open: (id) => ({ payload: id ? structuredClone(getOffer(id)) : emptyOffer() }),
+    open: (id, scenarioId) => ({
+      scenarioId,
+      payload: id ? structuredClone(getOffer(id)) : emptyOffer(),
+    }),
     body: (m) => offerForm(m.payload),
     edits: true,
   },

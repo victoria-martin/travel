@@ -1,29 +1,36 @@
 /*
   Le panneau de filtre d'une liste : une ligne par niveau, sur la forme du panneau Trier — un
   libellé de rang, la colonne, ce qu'on y garde. Rien à filtrer, pas de bouton.
+  La pile se rend aussi seule, pour un écran qui en compose plusieurs dans le même bouton — la
+  carte en a une par collection tracée.
 */
 function filterPanel(scope) {
-  const kind = filterKind(scope);
-  const levels = filterLevels(scope);
-  if (!filterableColumns(kind).length) return '';
+  if (!filterableColumns(filterKind(scope)).length) return '';
   return toolbarPanel({
     key: 'filter',
     icon: svgIcon('funnel'),
     label: 'Filtrer',
     count: activeFilterCount(scope),
-    body: /* HTML */ `<div class="filter-panel">
-      ${
-        levels.length
-          ? levels.map((level, i) => filterLevelRow(scope, level, i)).join('')
-          : `<p class="filter-empty">Aucun filtre — la liste montre tout.</p>`
-      }
-      ${
-        levels.length < filterableColumns(kind).length
-          ? `<button class="btn btn-ghost filter-add" onclick="addFilterLevel('${scope}')">+ Ajouter un niveau</button>`
-          : ''
-      }
-    </div>`,
+    body: `<div class="filter-panel">${filterLevelsBlock(scope)}</div>`,
   });
+}
+
+function filterLevelsBlock(scope) {
+  const kind = filterKind(scope);
+  const levels = filterLevels(scope);
+  if (!filterableColumns(kind).length) {
+    return `<p class="filter-empty">Rien à filtrer sur cette liste.</p>`;
+  }
+  return /* HTML */ `${
+    levels.length
+      ? levels.map((level, i) => filterLevelRow(scope, level, i)).join('')
+      : `<p class="filter-empty">Aucun filtre — la liste montre tout.</p>`
+  }
+  ${
+    levels.length < filterableColumns(kind).length
+      ? `<button class="btn btn-ghost filter-add" onclick="addFilterLevel('${scope}')">+ Ajouter un niveau</button>`
+      : ''
+  }`;
 }
 
 function filterLevelRow(scope, level, index) {

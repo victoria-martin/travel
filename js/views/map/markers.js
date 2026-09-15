@@ -17,13 +17,13 @@ function initMap() {
   const bounds = [];
 
   ofCurrentTravel(state.accommodations).forEach((a) => {
-    if (!mapFilters.accommodationTypes.has(accTypeKey(a.type))) return;
+    if (!keptOnMap('hebergements', a)) return;
     if (chosen && !chosen.accommodationIds.has(a.id)) return;
     addAccommodationMarker(a, bounds);
   });
 
   ofCurrentTravel(state.attractions).forEach((a) => {
-    if (!mapFilters.attractionTypes.has(attractionTypeKey(a.type))) return;
+    if (!keptOnMap('attractions', a)) return;
     if (chosen && !chosen.attractionIds.has(a.id)) return;
     addAttractionMarker(a, bounds);
   });
@@ -47,7 +47,7 @@ function scenarioSelection(scenario) {
 }
 
 function markerPoint(item, bounds) {
-  if (!item.lat || !item.lng || !keptByCommonFilters(item)) return null;
+  if (!item.lat || !item.lng) return null;
   const point = [parseFloat(item.lat), parseFloat(item.lng)];
   bounds.push(point);
   return point;

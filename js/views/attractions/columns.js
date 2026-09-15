@@ -58,10 +58,41 @@ COLUMN_SETS.attractions = [
     cell: attractionDescriptionCell,
   },
   {
-    key: 'place',
+    key: 'city',
+    label: 'Ville',
+    cell: attractionCityCell,
+    filterValues: (a) => [a.city],
+    sortValue: (a) => (a.city || '').toLowerCase(),
+  },
+  {
+    key: 'county',
+    label: 'Province',
+    cell: attractionCountyCell,
+    filterValues: (a) => [a.county],
+    sortValue: (a) => (a.county || '').toLowerCase(),
+  },
+  {
+    key: 'region',
+    label: 'Région',
+    hiddenByDefault: true,
+    cell: attractionRegionCell,
+    filterValues: (a) => [a.region],
+    sortValue: (a) => (a.region || '').toLowerCase(),
+  },
+  {
+    key: 'country',
+    label: 'Pays',
+    hiddenByDefault: true,
+    cell: attractionCountryCell,
+    filterValues: (a) => [a.country],
+    sortValue: (a) => (a.country || '').toLowerCase(),
+  },
+  {
+    key: 'address',
     label: 'Adresse',
-    cell: attractionPlaceCell,
-    sortValue: (a) => placeLabel(a).toLowerCase(),
+    hiddenByDefault: true,
+    cell: attractionAddressCell,
+    sortValue: (a) => (a.address || '').toLowerCase(),
   },
   {
     key: 'coords',
@@ -119,8 +150,24 @@ function attractionDescriptionCell(a) {
   return textCell(a.description);
 }
 
-function attractionPlaceCell(a) {
-  return escapeHtml(placeLabel(a));
+function attractionCityCell(a) {
+  return textCell(a.city);
+}
+
+function attractionCountyCell(a) {
+  return textCell(a.county);
+}
+
+function attractionRegionCell(a) {
+  return textCell(a.region);
+}
+
+function attractionCountryCell(a) {
+  return textCell(a.country);
+}
+
+function attractionAddressCell(a) {
+  return textCell(a.address);
 }
 
 function attractionCoordsCell(a) {

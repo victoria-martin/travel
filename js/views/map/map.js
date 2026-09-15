@@ -5,12 +5,12 @@ function renderMapView() {
     <div class="view-header">
       <div>
         <h2 class="view-title">Carte</h2>
-        <p class="view-sub">Filtre par type, région ou scénario</p>
+        <p class="view-sub" id="route-notice">${ROUTE_HELP}</p>
+      </div>
+      <div class="view-header-actions">
+        ${mapScenarioSelect()} ${mapFilterButton()} ${toolbarMenu()}
       </div>
     </div>
-    <div class="map-layout">
-      <div class="map-filters">${mapFilterPanel()}</div>
-      <div id="map"></div>
-    </div>
+    <div id="map"></div>
   `;
 }

@@ -1,41 +1,27 @@
 /*
-  Deux collections sur la même carte, donc deux listes de types : une case cochée dit qu'un type
-  se trace. Province, favoris et scénario, eux, valent pour les deux — ce sont des questions sur
-  le voyage, pas sur la collection.
+  Deux collections sur la même carte, donc un jeu de niveaux par collection : on règle celle qu'on
+  déplie, l'autre reste tracée avec les siens. Une case dit si elle est à l'écran — c'est elle qui
+  donne « que les Airbnb en Toscane », sans avoir à décocher le reste type par type.
+  Favoris et scénario, eux, valent pour les deux : ce sont des questions sur le voyage et non sur
+  une colonne.
 */
+const MAP_KINDS = ['hebergements', 'attractions'];
+
+function mapScope(kind) {
+  return `carte:${kind}`;
+}
+
+// Chaque collection tracée a son écran de filtre, posé sur ses propres colonnes.
+MAP_KINDS.forEach((kind) => (filters[mapScope(kind)] = { kind, levels: [] }));
+
 let mapFilters = {
-  accommodationTypes: new Set([...Object.keys(ACCOMMODATION_TYPES), '']),
-  attractionTypes: new Set([...Object.keys(ATTRACTION_TYPES), '']),
-  counties: new Set(),
+  shown: { hebergements: true, attractions: true },
   scenarioId: null,
   favOnly: false,
 };
 
-function distinctCounties() {
-  const set = new Set();
-  [...ofCurrentTravel(state.accommodations), ...ofCurrentTravel(state.attractions)].forEach(
-    (item) => {
-      if (item.county) set.add(item.county);
-    },
-  );
-  return Array.from(set).sort();
-}
-
-function toggleMapType(collection, key) {
-  const types = mapFilters[collection];
-  if (types.has(key)) types.delete(key);
-  else types.add(key);
-  refreshMap();
-}
-
-function toggleMapCounty(county) {
-  if (mapFilters.counties.has(county)) mapFilters.counties.delete(county);
-  else {
-    // if nothing was excluded yet (size 0 = "all"), start explicit set with everything except it
-    if (mapFilters.counties.size === 0)
-      distinctCounties().forEach((c) => mapFilters.counties.add(c));
-    mapFilters.counties.delete(county);
-  }
+function toggleMapKind(kind) {
+  mapFilters.shown[kind] = !mapFilters.shown[kind];
   refreshMap();
 }
 
@@ -49,14 +35,13 @@ function setMapScenario(id) {
   refreshMap();
 }
 
+// renderMain redessine déjà la carte après chaque rendu de la vue : un seul render suffit.
 function refreshMap() {
   render();
-  setTimeout(initMap, 30);
 }
 
-function keptByCommonFilters(item) {
-  const countyFilterActive = mapFilters.counties.size > 0;
-  if (countyFilterActive && item.county && mapFilters.counties.has(item.county) === false)
-    return false;
-  return !(mapFilters.favOnly && !item.favorite);
+function keptOnMap(kind, item) {
+  if (!mapFilters.shown[kind]) return false;
+  if (mapFilters.favOnly && !item.favorite) return false;
+  return keptByFilters(mapScope(kind), item);
 }

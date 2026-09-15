@@ -1,72 +1,59 @@
-function mapFilterPanel() {
-  const counties = distinctCounties();
-  return /* HTML */ `
-    ${mapTypeBlock('Hébergements', 'accommodationTypes', [
-      ...Object.entries(ACCOMMODATION_TYPES),
-      ['', UNSET_ACCOMMODATION_TYPE],
-    ])}
-    ${mapTypeBlock('Lieux &amp; activités', 'attractionTypes', [
-      ...Object.entries(ATTRACTION_TYPES),
-      ['', UNSET_ATTRACTION_TYPE],
-    ])}
-    <div class="filter-block">
-      <div class="filter-title">Province</div>
-      ${
-        counties.length === 0
-          ? `<div class="filter-hint">Renseigne l'adresse de tes lieux pour filtrer ici.</div>`
-          : counties.map(mapCountyOption).join('')
-      }
-    </div>
-    <div class="filter-block">
-      <div class="filter-title">Favoris</div>
-      <label class="filter-option"
-        ><input
-          type="checkbox"
-          ${mapFilters.favOnly ? 'checked' : ''}
-          onchange="toggleMapFavOnly()"
-        />${svgIcon('star', { fill: true })} Favoris uniquement</label
-      >
-    </div>
-    <div class="filter-block">
-      <div class="filter-title">Scénario</div>
-      <select class="map-scenario-select" onchange="setMapScenario(this.value)">
-        <option value="">Tous les lieux</option>
-        ${activeScenarios(ofCurrentTravel(state.scenarios))
-          .map(
-            (s) =>
-              `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
-          )
-          .join('')}
-      </select>
-      <div id="route-notice" class="filter-hint">${ROUTE_HELP}</div>
-    </div>
-  `;
+/*
+  Le même bouton « Filtrer » que les listes, avec un bloc par collection tracée : la case qui la met
+  à l'écran, et sous elle sa propre pile de niveaux. Décocher la collection cache aussi ses
+  niveaux — ils ne filtrent plus rien.
+  Le scénario, lui, reste dans l'en-tête : il trace le trajet et porte son message d'état, qu'un
+  panneau fermé rendrait invisible.
+*/
+function mapFilterButton() {
+  return toolbarPanel({
+    key: 'filter',
+    icon: svgIcon('funnel'),
+    label: 'Filtrer',
+    count: mapFilterCount(),
+    body: /* HTML */ `<div class="filter-panel">
+      ${MAP_KINDS.map(mapResourceBlock).join('')}
+      <div class="filter-block">
+        <label class="filter-option"
+          ><input
+            type="checkbox"
+            ${mapFilters.favOnly ? 'checked' : ''}
+            onchange="toggleMapFavOnly()"
+          />${svgIcon('star', { fill: true })} Favoris uniquement</label
+        >
+      </div>
+    </div>`,
+  });
 }
 
-function mapTypeBlock(title, collection, entries) {
+// Une collection retirée de la carte compte autant qu'un niveau : c'est ce qui n'est plus montré.
+function mapFilterCount() {
+  const levels = MAP_KINDS.reduce((total, kind) => total + activeFilterCount(mapScope(kind)), 0);
+  const hidden = MAP_KINDS.filter((kind) => !mapFilters.shown[kind]).length;
+  return levels + hidden + (mapFilters.favOnly ? 1 : 0);
+}
+
+function mapResourceBlock(kind) {
+  const resource = listResource(kind);
+  const shown = mapFilters.shown[kind];
   return /* HTML */ `<div class="filter-block">
-    <div class="filter-title">${title}</div>
-    ${entries.map(([key, type]) => mapTypeOption(collection, key, type)).join('')}
+    <label class="filter-option map-resource">
+      <input type="checkbox" ${shown ? 'checked' : ''} onchange="toggleMapKind('${kind}')" />
+      <span class="map-resource-icon">${resource.icon}</span>
+      <span class="map-resource-label">${escapeHtml(resource.label)}</span>
+    </label>
+    ${shown ? filterLevelsBlock(mapScope(kind)) : ''}
   </div>`;
 }
 
-function mapTypeOption(collection, key, type) {
-  return /* HTML */ `<label class="filter-option"
-    ><input
-      type="checkbox"
-      ${mapFilters[collection].has(key) ? 'checked' : ''}
-      onchange="toggleMapType('${collection}', '${key}')"
-    /><span class="legend-dot" style="background:${type.color};"></span>${type.label}</label
-  >`;
-}
-
-function mapCountyOption(county) {
-  const checked = mapFilters.counties.has(county) || mapFilters.counties.size === 0;
-  return /* HTML */ `<label class="filter-option"
-    ><input
-      type="checkbox"
-      ${checked ? 'checked' : ''}
-      onchange="toggleMapCounty('${escapeHtml(county)}')"
-    />${escapeHtml(county)}</label
-  >`;
+function mapScenarioSelect() {
+  return /* HTML */ `<select class="map-scenario-select" onchange="setMapScenario(this.value)">
+    <option value="">Tous les lieux</option>
+    ${activeScenarios(ofCurrentTravel(state.scenarios))
+      .map(
+        (s) =>
+          `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
+      )
+      .join('')}
+  </select>`;
 }

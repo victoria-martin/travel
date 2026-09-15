@@ -1,7 +1,8 @@
 /*
   Le modèle choisi remplace le nom repris d'avant le catalogue : deux noms diraient la même chose.
-  Les deux prix se saisissent : le loueur affiche un total pour ses dates, mais une offre relevée
-  sans dates n'a que son tarif journalier — et c'est lui qu'un scénario multiplie par ses jours.
+  Le seul prix qui se saisit est le total, celui que le loueur affiche pour ses dates. Le tarif
+  journalier d'une offre relevée avant les locations se garde tel quel — il n'a pas de dates d'où
+  se recalculer — mais rien n'en écrit de nouveau.
 */
 function saveOffer(id) {
   const existing = id ? getOffer(id) : null;
@@ -11,7 +12,7 @@ function saveOffer(id) {
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
-    pricePerDay: document.getElementById('car-price-day').value.trim(),
+    pricePerDay: (existing || {}).pricePerDay || '',
     model: modelId ? '' : (existing || {}).model || '',
     rentalId: document.getElementById('car-rental').value,
     modelId,
@@ -28,6 +29,7 @@ function saveOffer(id) {
   } else {
     state.offers.push(offer);
   }
+  if (modal.scenarioId) applyScenarioOffer(getScenario(modal.scenarioId), offer.id);
   saveNow();
   closeModal();
 }

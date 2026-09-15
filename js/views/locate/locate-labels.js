@@ -12,7 +12,3 @@ function placeLevelsLabel(p) {
     .reverse()
     .join(' · ');
 }
-
-function placeLabel(p) {
-  return p.address || placeLevelsLabel(p) || '—';
-}

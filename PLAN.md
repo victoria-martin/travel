@@ -21,11 +21,6 @@ les types.
   calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
   le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
   ([step-card.js:73](js/views/scenarios/detail/step-card.js#L73)). Le retirer ou lui donner un rôle.
-- **Bouton « + Ajouter une voiture »** <!--t:tzp2--> — 🧩 ui · 🔍 à étudier : ouvre la modale
-  Locations et rattache le nouveau véhicule au scénario.
-
-  existe déjà avec le picker attendons deja le rework
-
 - **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
   [route-trail.js](js/views/scenarios/detail/route-trail.js) s'affiche de nouveau sous l'en-tête,
   derrière la bascule « Afficher le fil » des Réglages
@@ -329,15 +324,13 @@ la recopier.
 
 ### Intégration aux scénarios
 
-- **Rattacher un transport à un scénario** <!--t:u2p3--> — 🧩 ui · ⏳ à faire : `transportIds` est
-  au modèle et au Sheet, avec `getScenarioTransports`. Reste l'écran : où on rattache, et ce que le
-  détail en montre.
 - **Retirer l'`offerId` d'un transport** <!--t:kq3v--> — 🗃️ modèle · ⏳ à faire : un scénario porte
-  déjà sa voiture et ses options ([car-block.js](js/views/scenarios/detail/offer-block.js)) ; un
+  déjà sa voiture et ses options ([offer-block.js](js/views/scenarios/detail/offer-block.js)) ; un
   trajet de mode voiture qui en désigne une autre dit le contraire du scénario qui le porte. Le
-  champ ne peut disparaître qu'une fois `u2p3` fait : hors d'un scénario, un trajet voiture n'a
-  alors plus aucun loueur à montrer — `transportProviderId` et `transportProviderCell`
-  ([provider.js](js/views/transports/provider.js)) passent par lui, et `transportCarLabel` meurt
+  champ peut disparaître maintenant qu'un trajet se rattache à un scénario : reste à décider ce que
+  montre un trajet voiture **hors** d'un scénario, où il n'aura plus aucun loueur —
+  `transportProviderId` et `transportProviderCell`
+  ([provider.js](js/views/transports/provider.js)) passent par lui, et `transportOfferLabel` meurt
   avec.
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
   ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
@@ -377,21 +370,37 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 
 ## 🧩 Transverse
 
+- **Regrouper la barre latérale par nature** <!--t:s7qk--> — 🖼️ écran · ⏳ à faire : ses neuf
+  entrées ([render.js](js/render.js#L27)) mélangent trois natures sans le dire — on y collecte
+  (Hébergements, Lieux & activités, Transports, Locations, Dépenses), on y décide (Scénarios), on y
+  lit (Carte, À faire). **Le critère** : la barre latérale liste ce qui se collecte et ce qui se
+  décide ; une lecture dérivée est un mode de la page qu'elle lit, un référentiel est un onglet de
+  son consommateur. Trois blocs titrés COLLECTER / DÉCIDER / LIRE, sans rien déplacer d'autre —
+  DÉCIDER ne tient alors qu'une entrée, et c'est ce qu'il dit : il n'y a qu'un écran où l'on
+  tranche. Deux points restent ouverts : **Notes** n'est pas une lecture, on y écrit — soit elle
+  remonte dans COLLECTER, soit le troisième bloc se nomme autrement ; et **Dépenses** est de la
+  collecte (des charges saisies) dont le bloc Calculé est une lecture logée dans sa propre page.
+- **Transports devient « Se déplacer », Locations devient son onglet** <!--t:w2dn--> — 🖼️ écran ·
+  ⏳ à faire : loueur → location → offre → modèle est **une** chaîne, coupée sur deux niveaux — deux
+  de ses maillons sont des onglets de Transports, les deux autres une entrée de barre latérale.
+  Comparer deux loueurs demande donc de changer de page. La page prend les quatre onglets — Trajets
+  · Locations · Loueurs · Voitures ([tab.js](js/views/transports/tab.js)) — et `locations` sort de
+  `VIEWS` ([router.js](js/router.js)). `rentals` reste ce qu'il est : on pose le loueur, le lieu et
+  les dates une fois, puis on liste. Suppose **Un onglet dans l'adresse** fait, sinon la page perd
+  une adresse qu'elle avait ; et le bloc Calculé de Dépenses, qui renvoie vers `view: 'locations'`
+  ([derived.js](js/views/expenses/derived.js)), doit viser la page **et** son onglet.
+- **Un onglet dans l'adresse** <!--t:f1rq--> — 🧩 ui · ⏳ à faire : l'onglet ouvert d'une page vit
+  dans une globale, hors du hash et des préférences ([tab.js](js/views/transports/tab.js)) — c'est
+  le geste en cours, pas un état qu'on retrouve. Mais dès qu'un écran qui avait son adresse devient
+  un onglet, il perd le lien direct et le retour arrière. Le hash porterait alors la page et son
+  onglet, sur le modèle de `#scenario/<id>` ([router.js](js/router.js)). Préalable à **Transports
+  devient « Se déplacer »**.
 - **Budget et prix : étendre la règle** <!--t:u6zh--> — 🗃️ modèle · ⏳ à faire : la règle est actée
   dans [la spec](docs/spec-voyage-toscane.md) et implémentée sur les transports, les briques
   communes vivant dans [price.js](js/views/price.js). Restent les hébergements (`price`), les
-  voitures (`pricePerDay` / `priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur
-  champ de prix unique.
+  voitures (`priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur champ de prix
+  unique.
 
-- **Le panneau de filtre sur la carte** <!--t:w8q2--> — 🧩 ui · ⏳ à faire : la carte garde ses
-  filtres écrits à la main (types par collection, province, favoris, scénario). Y poser le panneau
-  de [filters/](js/views/filters/), avec le menu de ressource en tête — Hébergements ou
-  Lieux & activités, seuls traçables — et garder à part le favori et le scénario, qui ne sont pas
-  des colonnes. L'état est déjà prévu par écran (`filters['carte']`).
-- **Les niveaux de lieu comme axes de filtre** <!--t:m2vc--> — 🧩 ui · ⏳ à faire : seule la colonne
-  Ville des hébergements se filtre ; Province, Région et Pays n'ont pas de `sortValue`, et les
-  lieux n'ont qu'une colonne Adresse au lieu des quatre niveaux. Les déclarer rendrait
-  « les Airbnb en Toscane » possible des deux côtés.
 - **Le panneau de filtre sur les autres listes** <!--t:qz4r--> — 🧩 ui · ⏳ à faire : seuls les
   hébergements le portent. Reste Lieux & activités, Transports, Locations et Dépenses — un appel à
   `filterPanel('<liste>')` dans l'en-tête et le filtre dans le render de la vue.

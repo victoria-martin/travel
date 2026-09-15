@@ -24,7 +24,8 @@ function renderScenarioDetailView() {
       <div class="scenario-detail-main view-scroller">
         ${stepList(s)}
         <div class="scenario-detail-money">
-          ${scenarioOfferBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
+          ${scenarioOfferBlock(s)} ${scenarioTransportsBlock(s)} ${scenarioExpensesBlock(s)}
+          ${scenarioTotalBlock(s)}
         </div>
       </div>
       ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''}
