@@ -3,11 +3,11 @@
   lives in a module global. Changing the resource or the column drops the words: they were read on
   the column left behind.
 */
-let todoDraft = { kind: TODO_RESOURCES[0].kind, columnKey: '', values: [] };
+let todoDraft = { kind: LIST_RESOURCES[0].kind, columnKey: '', values: [] };
 
 // The column a draft filters on: the one it names, or the first its resource offers.
 function todoDraftColumn() {
-  const columns = todoFilterColumns(todoDraft.kind);
+  const columns = filterableColumns(todoDraft.kind);
   return columns.find((c) => c.key === todoDraft.columnKey) || columns[0] || null;
 }
 
@@ -22,7 +22,7 @@ function setTodoDraftColumn(key) {
 }
 
 function toggleTodoDraftValue(index) {
-  const value = todoFilterValues(todoDraft.kind, todoDraftColumn())[index];
+  const value = filterValues(todoDraft.kind, todoDraftColumn())[index];
   todoDraft.values = todoDraft.values.includes(value)
     ? todoDraft.values.filter((v) => v !== value)
     : [...todoDraft.values, value];

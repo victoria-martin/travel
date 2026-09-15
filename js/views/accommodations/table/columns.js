@@ -43,6 +43,7 @@ const ACCOMMODATION_COLUMNS = [
   {
     key: 'tags',
     label: 'Tags',
+    filterValues: (a) => a.tags || [],
     cell: (a) =>
       tagsCell(a, {
         field: 'tags',

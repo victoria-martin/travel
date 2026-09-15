@@ -1749,11 +1749,20 @@ tr:hover td {
   box-shadow: 0 2px 10px color-mix(in srgb, var(--gold) 28%, transparent);
 }
 /* La tête porte les gestes de la colonne — la retenir, la retirer — et rien d'autre. */
+/* Sa marge auto et celle du pied se partagent le vide : les cartes d'une colonne plus courte se
+   centrent en hauteur au lieu de rester pendues en haut. */
 .option-head {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
+  margin-bottom: auto;
+}
+/* La tête ne fait que la hauteur de la pastille : le ✕ s'y range sans la creuser. */
+.option-head .icon-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
 }
 .option-remove,
 .step-add-option {
@@ -2534,6 +2543,70 @@ tr:hover td {
 }
 .filter-panel {
   width: 320px;
+}
+
+/* Le panneau de filtre a la forme de celui du tri : une ligne par niveau, empilée. */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+}
+.filter-row .inline-select {
+  flex: 1;
+  min-width: 0;
+}
+.filter-row .filter-values-menu {
+  flex: 1;
+  min-width: 0;
+}
+.filter-rank {
+  flex: 0 0 62px;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+.filter-empty {
+  margin: 2px 0 8px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.filter-add {
+  width: 100%;
+  margin-top: 6px;
+}
+.filter-values-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  list-style: none;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+.filter-values-summary::-webkit-details-marker {
+  display: none;
+}
+.filter-values-caret {
+  color: var(--ink-soft);
+  line-height: 1;
+}
+.filter-values-all {
+  color: var(--ink-soft);
+}
+.inline-menu-item.filter-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-value[hidden] {
+  display: none;
+}
+/* La coche garde sa place cochée ou non : les libellés s'alignent tous sur la même gouttière. */
+.filter-value-check {
+  display: inline-flex;
+  flex: 0 0 14px;
+  color: var(--stone);
 }
 .panel-action {
   display: block;

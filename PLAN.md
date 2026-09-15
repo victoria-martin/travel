@@ -383,10 +383,18 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voitures (`pricePerDay` / `priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur
   champ de prix unique.
 
-- **Filtrer sur les quatre niveaux de lieu** <!--t:w8q2--> — 🧩 ui · 🔌 intégration · ⏳ à faire : le
-  panneau de la carte ne propose que la province. Le remplacer par une cascade
-  Pays → Région → Province → Ville lue sur `PLACE_LEVELS`, alimentée par les deux collections
-  localisées, puis poser la même brique dans les en-têtes Hébergements et Lieux & activités.
+- **Le panneau de filtre sur la carte** <!--t:w8q2--> — 🧩 ui · ⏳ à faire : la carte garde ses
+  filtres écrits à la main (types par collection, province, favoris, scénario). Y poser le panneau
+  de [filters/](js/views/filters/), avec le menu de ressource en tête — Hébergements ou
+  Lieux & activités, seuls traçables — et garder à part le favori et le scénario, qui ne sont pas
+  des colonnes. L'état est déjà prévu par écran (`filters['carte']`).
+- **Les niveaux de lieu comme axes de filtre** <!--t:m2vc--> — 🧩 ui · ⏳ à faire : seule la colonne
+  Ville des hébergements se filtre ; Province, Région et Pays n'ont pas de `sortValue`, et les
+  lieux n'ont qu'une colonne Adresse au lieu des quatre niveaux. Les déclarer rendrait
+  « les Airbnb en Toscane » possible des deux côtés.
+- **Le panneau de filtre sur les autres listes** <!--t:qz4r--> — 🧩 ui · ⏳ à faire : seuls les
+  hébergements le portent. Reste Lieux & activités, Transports, Locations et Dépenses — un appel à
+  `filterPanel('<liste>')` dans l'en-tête et le filtre dans le render de la vue.
 - **Renommer `notes` en `userNotes`** <!--t:f4k6--> — 🗃️ modèle · 🧹 refacto · ⏳ à faire : sur
   toutes les entités, Sheet compris — donc une colonne renommée dans chaque liste de `COLLECTIONS`
   ([Code.js:8](apps-script/Code.js#L8)) et une migration dans `migrateData()`
@@ -425,9 +433,22 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Ouvrir une ligne dans un panneau de détail : les autres listes** <!--t:n3vd--> — 🧩 ui ·
   🖼️ écran · 💡 idée : les hébergements ouvrent leur fiche en panneau, d'une ligne du tableau
   comme du ↗ du menu de lieu d'une étape, les loueurs & compagnies d'une ligne de leur onglet. Reste
-  à déclarer `ROW_CLICKS` pour les lieux, les transports et les voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
-  trancher ce que devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
+  à déclarer `ROW_CLICKS` pour les lieux, les transports, les locations, les offres, les modèles et
+  les dépenses, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à trancher ce que
+  devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
+- **La saisie en ligne sur les autres listes** <!--t:d9ce--> — 🧩 ui · 📥 à trier : seules les
+  offres se tapent dans le tableau ([offer-draft.js](js/views/rentals/offer-draft.js)), `Entrée`
+  enregistrant la ligne et en rouvrant une vide — on recopie l'écran du loueur sans changer de
+  fenêtre. Partout ailleurs, ajouter une entrée ouvre la modale. Reste à trancher où le geste a du
+  sens : il vaut pour ce qu'on relève en série — les lieux, les dépenses — et beaucoup moins pour
+  un hébergement, qui porte vingt champs.
+- **Ce qui s'édite en place : une règle plutôt qu'un coup par coup** <!--t:v2ar--> — 🧩 ui ·
+  📥 à trier : chaque liste édite en place ce que quelqu'un y a posé au fil de l'eau — hébergements
+  type, statut, prix, notes, tags et favori ; lieux type, statut, tags et favori ; transports mode,
+  statut et favori ; offres statut et notes ; dépenses notes et catégories ; locations,
+  prestataires et modèles rien du tout. Reste à dire ce qui s'édite en place partout — le mot d'une
+  pastille de vocabulaire, le favori, les notes — et ce qui n'appartient qu'à la fiche.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un
   service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
   puisque tout est déjà dans `localStorage`, et l'URL reste partageable. React Native est écarté :

@@ -43,6 +43,7 @@ COLUMN_SETS.attractions = [
   {
     key: 'tags',
     label: 'Tags',
+    filterValues: (a) => a.tags || [],
     cell: (a) =>
       tagsCell(a, {
         field: 'tags',

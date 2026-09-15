@@ -55,6 +55,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   référence : une étape s'y pose, une ligne d'étape en fait une visite, un trajet en part. Deux
   tables obligeaient à saisir Montefioralle deux fois pour la voir dans les deux rôles, et à
   corriger son adresse aux deux endroits.
+- **Un seul filtre dans l'app.** Le panneau ne connaît aucune page : il lit les colonnes que la
+  liste déclare, donc la même brique filtre les hébergements, les lieux, la carte et les listes
+  enregistrées. Une colonne ajoutée quelque part devient filtrable sans que le panneau le sache.
 - **Une étape porte son lieu**, et son titre en montre la ville et la région, moins ce que son
   propre nom et la pastille du lieu disent déjà.
 - **L'ocre dit « choisi », le vert dit « réservé ».** Deux axes, deux couleurs : l'ocre marque ce
@@ -157,19 +160,19 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 ## 3. Modèle
 
-| Entité              | Porte                                                                                                                                                               | Notes                                                           |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                          | possède tout le reste ; un seul est ouvert à la fois            |
-| **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix            |
+| Entité              | Porte                                                                                                                                                               | Notes                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs                                          | possède tout le reste ; un seul est ouvert à la fois                   |
+| **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix                   |
 | **Lieu**            | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
-| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
-| **Offre**           | la location qui la porte, le modèle, statut, prix total, options cochées chez le loueur, lien, notes, **par défaut**                                                | ce qu'un loueur demande pour un modèle ; une seule par défaut   |
-| **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                    |
-| **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                          |
-| **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
-| **Option d'étape**  | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
-| **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                              |
-| **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »    |
+| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori             | un trajet du voyage ; en mode voiture il référence une location        |
+| **Offre**           | la location qui la porte, le modèle, statut, prix total, options cochées chez le loueur, lien, notes, **par défaut**                                                | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
+| **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                           |
+| **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                                 |
+| **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                               |
+| **Option d'étape**  | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                        | appartient à une étape ; une seule est retenue                         |
+| **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                                     |
+| **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »           |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -286,13 +289,8 @@ La vue principale, en **tableau ou en cartes**.
   du niveau ouvre donc la liste des mots, qu'on glisse l'un au-dessus de l'autre ; l'ordre obtenu
   vaut pour toute l'app et se garde d'une session à l'autre, à côté des colonnes masquées. Ces
   colonnes n'ont pas de sens inverse : l'en-tête y cycle croissant → aucun.
-- **Filtres** : ⭐ favoris uniquement — un bouton à part, toujours visible — et quatre axes dans le
-  panneau « Filtrer » : type, statut, ville, tags. Chaque axe est une rangée des pastilles qu'on lit
-  déjà dans la liste, et on filtre en cliquant celle qu'on voit. Un axe ne propose que les valeurs
-  qu'un hébergement porte vraiment, et disparaît s'il n'en reste qu'une : un statut que personne n'a
-  ne filtrerait rien. Au sein d'un axe les valeurs s'additionnent — un hébergement sort dès qu'il
-  porte **une** des pastilles allumées — et les axes se croisent. Au-delà de huit villes, un champ
-  de recherche réduit la liste sans masquer les pastilles déjà allumées.
+- **Filtres** : ⭐ favoris uniquement — un bouton à part, toujours visible — et le panneau
+  « Filtrer », décrit dans les règles transverses.
 - **Édition en ligne** : type, statut, prix et notes se changent directement dans la ligne comme
   dans la carte, sans ouvrir la fiche. Le prix garde sa monnaie (€ ou GP) affichée à côté du champ.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
@@ -392,7 +390,7 @@ localisation que les hébergements.
 | -------------------- | --------------------------------------------------------------------------------------------------------------- |
 | mode                 | liste figée ; décide des champs utiles                                                                          |
 | statut               | liste propre, courte                                                                                            |
-| départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté                                         |
+| départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté                                          |
 | dates et heures      | date et heure de départ, date et heure d'arrivée                                                                |
 | compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre      |
 | voiture              | en mode voiture seulement : référence un véhicule de la page Locations, dont le loueur et le modèle s'affichent |
@@ -939,6 +937,35 @@ appareil.
 ---
 
 ## 5. Règles transverses
+
+### Filtrer
+
+Le même panneau sur toutes les listes, sur la forme de « Trier » : une **pile de niveaux**, un
+niveau étant une colonne et les mots qu'on y garde.
+
+```
+Filtrer par [ Type   ▾ ] [ Airbnb, Hôtel ▾ ] ✕
+et          [ Région ▾ ] [ Toscane       ▾ ] ✕
+＋ Ajouter un niveau
+```
+
+- **OU dans un niveau, ET entre niveaux** — « les Airbnb et les hôtels, en Toscane ». L'ordre des
+  niveaux ne change rien au résultat : ils se cumulent tous, et il n'y a donc rien à y ranger.
+- **Une colonne se propose dès qu'elle porte des mots** : son vocabulaire (statut, type, mode), ou
+  ceux que ses lignes tiennent (ville, tag, catégorie). Un prix, une date, un favori n'en portent
+  pas. Une colonne qui tient une **liste** — les tags, les catégories d'une dépense — donne ses
+  mots un à un : on filtre sur un tag, pas sur la suite de tags d'une ligne.
+- **Seules les valeurs qu'une ligne porte vraiment** sont proposées, et une colonne qui n'en a
+  qu'une disparaît : un statut que personne n'a ne filtrerait rien. Une valeur cochée puis retirée
+  de sa dernière ligne sort du filtre toute seule.
+- **Les mots se cochent dans un menu déroulant**, pas dans une rangée à plat : un `<select>` ne sait
+  ni en garder plusieurs ni porter une pastille. Le menu ne fait que cocher — ranger l'ordre des
+  mots reste au panneau « Trier », qui est le seul endroit d'où cet ordre se règle. Au-delà de huit
+  valeurs, un champ de recherche réduit la liste sans masquer ce qui est déjà coché.
+- **Le filtre est le geste en cours**, pas une préférence : il ne survit pas au rechargement,
+  contrairement au tri et aux colonnes masquées. Il vit par **écran** — filtrer la carte ne filtre
+  pas la page —, et là où l'écran ne désigne pas une seule liste (la carte, « À faire »), un
+  premier menu dit laquelle.
 
 - **Adresse d'une page** : le `#` de l'URL dit où on est — `#carte`, `#hebergements`,
   `#scenario/<id>` pour le détail d'un scénario. Recharger revient au même endroit, et les flèches

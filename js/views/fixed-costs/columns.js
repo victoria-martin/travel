@@ -15,6 +15,7 @@ COLUMN_SETS.charges = [
   {
     key: 'categories',
     label: 'Catégories',
+    filterValues: (c) => c.categories || [],
     cell: fixedCostCategoriesCell,
     sortValue: (c) => (c.categories || []).join(', ').toLowerCase(),
   },

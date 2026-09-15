@@ -11,14 +11,13 @@ function accommodationsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${mode === 'table' ? sortPanel('hebergements') : ''}
-      ${filterPanel(accommodationFilterBlocks())}
+      ${mode === 'table' ? sortPanel('hebergements') : ''} ${filterPanel('hebergements')}
       ${mode === 'table' ? columnPicker('hebergements') : ''}
       ${toolbarButton({
         icon: svgIcon('star', { fill: true }),
         label: 'Favoris',
         onclick: 'toggleFavOnly()',
-        active: !!listFilters.favOnly,
+        active: favOnly,
       })}
       ${listModeToggle('hebergements', mode)}
       ${

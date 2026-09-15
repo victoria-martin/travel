@@ -1,8 +1,9 @@
 /*
-  A dynamic list draws from a resource: the collection it reads, and the column set its own page
-  declares. The key is that page's, so listTable and its columns apply here unchanged.
+  Une ressource : la collection qu'on lit, et la clé de colonnes que sa page déclare. La clé étant
+  celle de la page, `listTable` et ses colonnes valent partout où on la filtre — la page elle-même,
+  la carte, une liste enregistrée.
 */
-const TODO_RESOURCES = [
+const LIST_RESOURCES = [
   {
     kind: 'hebergements',
     label: 'Hébergements',
@@ -25,10 +26,10 @@ const TODO_RESOURCES = [
   { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
 ];
 
-function todoResource(kind) {
-  return TODO_RESOURCES.find((r) => r.kind === kind) || TODO_RESOURCES[0];
+function listResource(kind) {
+  return LIST_RESOURCES.find((r) => r.kind === kind) || LIST_RESOURCES[0];
 }
 
-function todoResourceItems(kind) {
-  return sortItems(kind, ofCurrentTravel(todoResource(kind).items()));
+function resourceItems(kind) {
+  return sortItems(kind, ofCurrentTravel(listResource(kind).items()));
 }

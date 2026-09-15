@@ -3,8 +3,8 @@
   the ones the builder offered, so the words kept are changed where they are read.
 */
 function todoListCard(list) {
-  const resource = todoResource(list.kind);
-  const column = todoColumn(list.kind, list.columnKey);
+  const resource = listResource(list.kind);
+  const column = filterColumn(list.kind, list.columnKey);
   const items = todoListItems(list);
   return /* HTML */ `<section class="todo-list">
     <div class="todo-list-head">

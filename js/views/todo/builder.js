@@ -7,9 +7,9 @@ function todoBuilder() {
   return /* HTML */ `<section class="todo-builder">
     <div class="todo-builder-row">
       <select class="inline-select" onchange="setTodoDraftKind(this.value)">
-        ${TODO_RESOURCES.map((r) =>
-          todoOption(r.kind, `${r.icon} ${r.label}`, r.kind === todoDraft.kind),
-        ).join('')}
+        ${LIST_RESOURCES.map((r) => todoOption(r.kind, r.label, r.kind === todoDraft.kind)).join(
+          '',
+        )}
       </select>
       ${column ? todoColumnSelect(column) : ''}
       <button class="btn" onclick="addTodoList()" ${todoDraft.values.length ? '' : 'disabled'}>
@@ -31,7 +31,7 @@ function todoBuilder() {
 
 function todoColumnSelect(column) {
   return /* HTML */ `<select class="inline-select" onchange="setTodoDraftColumn(this.value)">
-    ${todoFilterColumns(todoDraft.kind)
+    ${filterableColumns(todoDraft.kind)
       .map((c) => todoOption(c.key, columnLabel(c), c.key === column.key))
       .join('')}
   </select>`;

@@ -1,8 +1,8 @@
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
-  pruneListFilters();
-  const items = sortItems('hebergements', ofCurrentTravel(state.accommodations)).filter(
-    keptByListFilters,
+  pruneFilterLevels('hebergements');
+  const items = resourceItems('hebergements').filter(
+    (a) => keptByFavOnly(a) && keptByFilters('hebergements', a),
   );
   return /* HTML */ `
     ${accommodationsHeader(items)}
@@ -10,8 +10,8 @@ function renderAccommodationsView() {
       items.length === 0
         ? emptyState(
             'Aucun hébergement',
-            activeListFilterCount()
-              ? 'Aucun hébergement ne passe les filtres actifs — décoche une pastille dans « Filtrer ».'
+            activeFilterCount('hebergements') || favOnly
+              ? 'Aucun hébergement ne passe les filtres actifs — décoche une valeur dans « Filtrer ».'
               : 'Ajoute tes premiers hébergements pour pouvoir les rattacher à tes étapes.',
           )
         : mode === 'table'

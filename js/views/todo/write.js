@@ -16,7 +16,7 @@ function addTodoList() {
 // A list is edited where it is read: clicking one of its pills adds or drops that word.
 function toggleTodoListValue(id, index) {
   const list = getTodoList(id);
-  const value = todoFilterValues(list.kind, todoColumn(list.kind, list.columnKey))[index];
+  const value = filterValues(list.kind, filterColumn(list.kind, list.columnKey))[index];
   list.filterValues = list.filterValues.includes(value)
     ? list.filterValues.filter((v) => v !== value)
     : [...list.filterValues, value];
