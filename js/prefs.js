@@ -13,7 +13,6 @@ let prefs = {
   sortOrder: {},
   showButtonLabels: true,
   trailColorByType: false,
-  routePaint: 'stripesMuted',
 };
 
 function loadPrefs() {

@@ -14,11 +14,5 @@ function toggleTrailColor() {
 }
 
 function trailColorOption() {
-  return /* HTML */ `<div class="filter-block">
-    <p class="filter-title">Fil du trajet</p>
-    <label class="filter-option">
-      <input type="checkbox" ${trailColorByType() ? 'checked' : ''} onchange="toggleTrailColor()" />
-      Coloré par type d’hébergement
-    </label>
-  </div>`;
+  return switchField('Coloré par type d’hébergement', trailColorByType(), 'toggleTrailColor()');
 }

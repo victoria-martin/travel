@@ -212,13 +212,14 @@ saisies, sinon la destination) ouvre le menu des voyages : les autres voyages, �
 voyage » et « Nouveau voyage ». Les deux derniers ouvrent la même modale. En barre latérale
 réduite, il ne reste que l'emoji.
 
-Au pied de la barre, sous l'état du Sheet, un bouton **⚙️ Réglages** déplie les préférences
-d'affichage — dans le flux de la barre, qui défile, et non en panneau flottant qu'elle rognerait.
-Elles s'y rangent en deux temps : **Partout** ce qui vaut pour toute l'app (les libellés des
-boutons), **Sur cette page** ce qui ne concerne que l'écran ouvert (la peinture de la bande
-d'itinéraire sur la liste des scénarios, la couleur du fil sur le détail). Un écran sans réglage
-propre n'affiche que le premier bloc. Le menu ⋮ des listes garde les mêmes options : la
-préférence se change indifféremment ici ou là.
+Au pied de la barre, sous l'état du Sheet, un bouton **⚙️ Réglages** ouvre les préférences
+d'affichage **en modale** : la barre défile, un panneau déplié dedans se rognait. Le **⋮** de
+n'importe quel écran ouvre exactement le même contenu, sans quitter la page — la préférence se
+change indifféremment ici ou là. Ce contenu est fait de deux blocs : **Réglages généraux** ce qui
+vaut pour toute l'app (les libellés des boutons), puis, **sous le nom de la page ouverte**, ce qui
+ne concerne qu'elle (« Détail du scénario » : l'affichage et la couleur du fil). Un écran sans
+réglage propre n'affiche que le premier bloc. Une préférence à deux états se bascule d'un
+**interrupteur** et non d'une case : son état se lit de loin.
 
 La **couleur d'accent** du voyage ouvert remplace les deux verts structurants du thème — barre
 latérale, boutons, états actifs. Sans couleur choisie, l'app garde les siens.
@@ -559,9 +560,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   à l'étude, beige en recherche ou sans hébergement, rouille à revoir ; les deux statuts qui
   attendent un geste — à réserver, à revoir — se rayent en diagonale. C'est l'avancement du
   voyage qui se lit d'un coup d'œil sur la liste, et non le type d'hébergement, qui reste la
-  couleur de la carte. L'infobulle d'un segment nomme le lieu, ses nuits et son statut. Les Réglages
-  comme le ⋮ de l'en-tête offrent quatre peintures de cette échelle, le temps de choisir celle qui
-  se lit le mieux. Elle
+  couleur de la carte. L'infobulle d'un segment nomme le lieu, ses nuits et son statut. Elle
   porte ses dates à ses deux bouts, chacune sous un tiret : le départ à gauche, le retour là où
   elle s'arrête — donc plus tôt que celui d'un scénario plus long. Son échelle est celle de la
   liste entière — le scénario le plus long tient toute la largeur, les autres se mesurent contre
@@ -577,18 +576,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   total : leur détail se lit dans le scénario. La sélection ne dure que la session, comme le
   scénario ouvert.
 - **En-tête du détail** : sa barre d'outils ne porte que des gestes sur la vue — les onglets du
-  panneau latéral, le bouton Dépenses — et le lien « ← Tous les scénarios ». Les données du
-  scénario tiennent le bloc d'identité : l'étoile de favori, le nom éditable, et sous eux la date
-  de départ suivie du nombre d'étapes et des nuits. Le total ferme cette même ligne : les
+  panneau latéral, le menu ⋮ — et le lien « ← Tous les scénarios ». Les données du scénario
+  tiennent le bloc d'identité : l'étoile de favori, le nom éditable, et sous eux la date de départ
+  suivie du nombre d'étapes et des nuits. Le total ferme cette même ligne : les
   GuestPoints, puis les euros en grand au bout.
 - **Ajouter une étape** ne se fait plus depuis la barre mais depuis la liste : un ＋ fantôme entre
   deux cartes, révélé au survol, qui insère à cet endroit ; et une ligne « ＋ Ajouter une étape »
   posée au pied de la liste, toujours visible, qui ajoute à la fin — c'est aussi le seul geste d'un
   scénario sans étape. Les deux offrent « Créer une étape » et « Créer une étape avec options ».
-- **Les dépenses du scénario** s'ouvrent en panneau de droite depuis le bouton 🧾 de la barre :
-  celui des fiches (`openSheet`), qui glisse par-dessus la liste sans la rétrécir et se ferme au
-  clic sur le fond ou par Échap. Le panneau n'édite rien de lui-même — chaque ligne écrit en
-  place, et l'ajout d'une dépense garde la modale.
 - **Date de départ** : un champ de la ligne de sous-titre, à côté du nom. Il date la première
   étape, et les nuits de chaque étape décalent les suivantes. Sans date de départ, aucune date ne
   s'affiche.
@@ -599,7 +594,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   (voiture, dépenses, total général) ; son pied porte les nuits et le total quel que soit l'onglet.
   Ses deux boutons « 🗺 Carte » et « 💶 Argent » vivent dans la barre de l'en-tête et sont aussi sa
   bascule — recliquer celui qui est allumé referme le panneau, et les étapes prennent toute la
-  largeur. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à l'autre. Sous
+  largeur. Le passage d'un mode à l'autre est animé : les deux colonnes glissent vers leur nouvelle
+  largeur au lieu de sauter. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à l'autre. Sous
   1100 px, le panneau repasse sous les étapes.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
@@ -608,11 +604,13 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**une ville ou un
   hébergement**, les deux dans le même select, exclusifs), la pastille de statut de l'hébergement
   quand le lieu en est un — la même que celle de la page Hébergements, et modifiable ici, où l'on
-  voit le trajet entier —, un select de nuits (0 à 14), et en bout de ligne le coût. Un hébergement
-  **réservé** marque son étape de deux façons : sa pastille de statut est peinte en vert plein et la
-  carte prend un liseré vert à son bord gauche — on lit sur la colonne jusqu'où le voyage est pris.
-  Le point du tracé, lui, reste neutre : il dit le rang de l'étape et non son état. Une étape masquée
-  ne porte pas la marque, elle est hors du voyage. Les pastilles passent à la ligne plutôt que de se réduire, une
+  voit le trajet entier —, un select de nuits (0 à 14), et en bout de ligne le coût. Le bord gauche de la
+  carte porte la couleur du **statut de l'étape** — le même que son segment du fil d'itinéraire :
+  réservé, à réserver, à l'étude, en recherche, sans hébergement, à revoir. Le fond de la carte prend la même
+  couleur, très diluée — la teinte du statut, mais jamais sa texture : des rayures sur une carte
+  entière mangeraient le contenu.
+  Une étape masquée ne le porte pas, elle est hors du voyage ; la pastille-lettre, elle, reste neutre
+  — elle dit le rang de l'étape et non son état. Les pastilles passent à la ligne plutôt que de se réduire, une
   colonne étroite ne devant jamais rendre un select inatteignable ; un champ vide se montre en
   pastille creuse (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Réordonnable en la glissant par
   sa poignée ⠿ — la carte survolée montre la ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
@@ -661,7 +659,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   que la bande de la liste —, qu'une préférence bascule sur la couleur du type
   d'hébergement — depuis les Réglages comme depuis le ⋮. Il porte aussi sa lettre, son nom et ses nuits, et il est large comme ses nuits,
   en cliquable : le maillon mène à sa carte. Il reste collé sous l'en-tête quand la liste défile,
-  puisque c'est là qu'il sert. Il ne s'affiche qu'à partir de deux étapes retenues.
+  puisque c'est là qu'il sert. Il ne s'affiche qu'à partir de deux étapes retenues, et une
+  préférence des Réglages le montre ou le cache — sur un scénario court la liste dit déjà tout.
 - **Créer une étape** : le ＋ entre deux rangées comme le bouton de l'en-tête ouvrent le même choix,
   « Créer une étape » ou « Créer une étape avec options » — la seconde pose un groupe de deux
   colonnes d'emblée. Dans une colonne, le ＋ n'a qu'un geste, donc pas de menu : l'étape y naît.
@@ -700,7 +699,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   qu'on vient de taper.
 - **Les lignes d'une étape** : sous la ligne du lieu de chaque carte, et sous les colonnes d'un
   groupe pour celles qui lui sont communes, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
-  précédé de l'emoji de son type (💶 pour une dépense) prend la largeur, le nombre et le montant
+  précédé de l'emoji de son type (💰 pour une dépense) prend la largeur, le nombre et le montant
   s'épinglent à droite. Un nombre de 1 et un montant vide ne s'affichent qu'au survol de leur ligne,
   sans la quitter — sa hauteur ne saute pas sous la souris. La pastille du nom ouvre un menu qui
   détache la ligne ou la remplace par une autre du même genre : une activité par une activité, une

@@ -14,10 +14,5 @@ function toggleButtonLabels() {
 }
 
 function buttonLabelsOption() {
-  return /* HTML */ `<label class="filter-option">
-    <input type="checkbox" ${showButtonLabels() ? 'checked' : ''} onchange="toggleButtonLabels()" />
-    Textes des boutons
-  </label>`;
+  return switchField('Textes des boutons', showButtonLabels(), 'toggleButtonLabels()');
 }
-
-// faire un test avec des switch a la place des checkbox

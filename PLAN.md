@@ -27,13 +27,13 @@ les types.
   existe déjà avec le picker attendons deja le rework
 
 - **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
-  [route-trail.js](js/views/scenarios/detail/route-trail.js) existe, son appel reste en commentaire
-  dans [detail.js](js/views/scenarios/detail/detail.js). La bande de maillons sous l'en-tête prend
-  trop de place, la colonne de gauche et la gouttière nue essayées ne valent pas mieux : trouver ce
-  que le fil doit montrer, et quand. Il se peint désormais du statut de l'étape comme la bande de
-  la liste, et le ⋮ de l'en-tête porte l'option « Fil coloré par type d'hébergement »
-  ([trail-color.js](js/views/scenarios/detail/trail-color.js)) — l'une et l'autre invisibles tant
-  que l'appel reste en commentaire.
+  [route-trail.js](js/views/scenarios/detail/route-trail.js) s'affiche de nouveau sous l'en-tête,
+  derrière la bascule « Afficher le fil » des Réglages
+  ([trail-show.js](js/views/scenarios/detail/trail-show.js)). La bande de maillons prend trop de
+  place, la colonne de gauche et la gouttière nue essayées ne valent pas mieux : trouver ce que le
+  fil doit montrer, et quand. Il se peint du statut de l'étape comme la bande de la liste, et
+  « Coloré par type d'hébergement » ([trail-color.js](js/views/scenarios/detail/trail-color.js))
+  bascule sa couleur, dans le même bloc du panneau.
 - **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 💡 idée : on commence a
   répondre à ca dans la trasfo de charges fixes en depense normameent
 
@@ -58,10 +58,6 @@ les types.
   plus que la source de la reprise, et repartent vides au premier enregistrement. Une fois la
   conversion passée dans le Sheet, les retirer de la collection avec `adoptScenarioSteps` et
   `explodeStepOptions`, des deux côtés — l'Apps Script et [storage.js](js/storage.js).
-- **Choisir la peinture de la bande d'itinéraire** <!--t:q7we--> — 🧩 ui · ⏳ à faire : les quatre
-  variantes de [route-paint.js](js/views/scenarios/route-paint.js) sont au ⋮ de la liste le temps de
-  les comparer à l'écran — couleurs d'origine, rayures, rayures + taupe, or vif + taupe. Garder
-  celle qui se lit, retirer les trois autres et l'option du menu avec elles.
 
 ## 💻 plan-tool
 
@@ -300,7 +296,7 @@ La page existe : modèle, statuts, prix, voiture par défaut et tableau sont dé
   **choisi**, et la voiture porte à côté les autres modèles proposés par le loueur pour la même
   location.
 
-## 💶 Dépenses
+## 💰 Dépenses
 
 La page existe : les deux blocs Calculé / Saisi, les sources dérivées et le récap sont décrits dans
 [la spec](docs/spec-voyage-toscane.md). Les charges fixes sont le bloc Saisi ; elles gardent leur

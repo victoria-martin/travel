@@ -16,7 +16,7 @@ function renderScenarioDetailView() {
   // ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
   // sous <div class="scenario-detail-cols"> pour à gauche et au dessus pr dessus
   return /* HTML */ `
-    ${scenarioDetailHeader(s)}
+    ${scenarioDetailHeader(s)} ${trailShown() ? scenarioRouteTrail(s) + scenarioRouteStrip(s) : ''}
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main view-scroller">
         ${stepList(s)}

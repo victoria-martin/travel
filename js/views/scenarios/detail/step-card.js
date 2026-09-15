@@ -20,18 +20,22 @@ function stepOutReason(scenario, step) {
   return step.hidden || isGroupHidden(scenario, step.groupId) ? 'Masquée' : 'Colonne écartée';
 }
 
-// L'étape porte l'état de sa réservation : le liseré de la carte et son point du tracé disent
-// ce qui est pris, sans lire la pastille de statut.
-function stepCardClass(step) {
-  const booked = isBookedAccommodation(getAccommodation(step.accommodationId));
-  return `step-card${step.hidden ? ' step-card-hidden' : ''}${booked ? ' step-card-booked' : ''}`;
+/*
+  L'étape porte son avancement sur sa bordure, à pleine teinte : ni fond ni texture, qui sur une
+  carte entière mangeraient le contenu. Une étape masquée est hors du voyage : elle garde ses
+  hachures.
+*/
+function stepCardPaint(scenario, step) {
+  if (step.hidden) return '';
+  return ` style="--step-color:${stepStatusInfo(stepStatus(scenario, step)).color}"`;
 }
 
 function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
       id="step-card-${step.id}"
-      class="${stepCardClass(step)} test-red"
+      class="step-card${step.hidden ? ' step-card-hidden' : ''}"
+      ${stepCardPaint(scenario, step)}
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >

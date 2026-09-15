@@ -25,12 +25,12 @@ function render() {
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
-      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', '💶', 'Dépenses')}
+      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', EXPENSE_EMOJI, 'Dépenses')}
       ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Activités')}
       ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
       ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
       ${navBtn('a-faire', '✅', 'À faire')}
-      <div class="sidebar-footer">${syncStatusHtml()} ${settingsMenu()}</div>
+      <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
     <div class="main" id="main"></div>
   `;
@@ -39,6 +39,17 @@ function render() {
   if (modal) renderModal();
   applyFlash();
   placeOpenInlineMenu();
+}
+
+/*
+  Un changement de mise en page se montre au lieu de sauter. Une transition CSS ne part jamais
+  ici : render() rebâtit le DOM, l'élément est neuf et n'a pas d'état d'avant. Le navigateur, lui,
+  sait photographier l'écran des deux côtés du re-rendu et animer le passage ; sans l'API, le
+  rendu est immédiat, comme avant.
+*/
+function renderWithTransition() {
+  if (!document.startViewTransition) return render();
+  document.startViewTransition(() => render());
 }
 
 function navBtn(key, icon, label) {

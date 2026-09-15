@@ -49,3 +49,14 @@ function stepArrivalDay(scenario, idx) {
   const arrival = stepArrival(scenario, idx);
   return arrival ? escapeHtml(formatStepDay(arrival)) : '';
 }
+
+// Un séjour se lit d'un bout à l'autre sans répéter ce qui ne change pas : le mois ne s'écrit deux
+// fois que lorsque le séjour l'enjambe.
+function stayRangeLabel(arrival, nights) {
+  if (!arrival) return '';
+  const departure = dateAfter(arrival, nights);
+  if (nights === 0) return escapeHtml(formatStepDay(arrival));
+  if (arrival.getMonth() === departure.getMonth())
+    return escapeHtml(`${arrival.getDate()}-${formatStepDay(departure)}`);
+  return escapeHtml(`${formatStepDay(arrival)} - ${formatStepDay(departure)}`);
+}

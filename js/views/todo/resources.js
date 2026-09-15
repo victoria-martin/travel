@@ -7,7 +7,7 @@ const TODO_RESOURCES = [
   { kind: 'attractions', label: 'Activités', emoji: '🏛️', items: () => state.attractions },
   { kind: 'transports', label: 'Transports', emoji: '✈️', items: () => state.transports },
   { kind: 'voitures', label: 'Voitures', emoji: '🚗', items: () => state.cars },
-  { kind: 'charges', label: 'Dépenses', emoji: '💶', items: () => state.fixedCosts },
+  { kind: 'charges', label: 'Dépenses', emoji: EXPENSE_EMOJI, items: () => state.fixedCosts },
   { kind: 'villes', label: 'Villes', emoji: '📍', items: () => state.cities },
 ];
 

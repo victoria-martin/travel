@@ -1,5 +1,3 @@
-const EXPENSE_EMOJI = '💶';
-
 // Le libellé suit ce que la ligne référence ; une référence effacée le dit plutôt que de laisser
 // une pastille vide.
 function extraLabel(line) {

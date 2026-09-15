@@ -2,9 +2,9 @@
 // de nuits.
 function stepLine(scenario, step) {
   return /* HTML */ `${stepTypeDropdown(scenario, step)}
-  <span class="step-place">
+  <div class="step-place">
     ${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}
-  </span>
+  </div>
   ${stepStatusTag(step)} ${stepNightsDropdown(scenario, step)}`;
 }
 

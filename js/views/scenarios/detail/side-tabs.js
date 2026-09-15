@@ -32,5 +32,5 @@ function scenarioSideTabsToggle() {
 function toggleScenarioSidePanel(key) {
   prefs.scenarioSidePanel = prefs.scenarioSidePanel === key ? null : key;
   persistPrefs();
-  render();
+  renderWithTransition();
 }

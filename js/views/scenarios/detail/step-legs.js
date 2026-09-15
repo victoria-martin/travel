@@ -35,6 +35,7 @@ function stepLegRank(scenario, step) {
 const LEG_LABELS = {
   full: (leg) => `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
   time: (leg) => durationLabel(leg.duration),
+  road: (leg) => `${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`,
 };
 
 function legSlot(scenario, step, label) {
@@ -49,6 +50,10 @@ function stepLegSlot(scenario, step) {
 
 function stepLegTimeSlot(scenario, step) {
   return legSlot(scenario, step, 'time');
+}
+
+function stepLegRoadSlot(scenario, step) {
+  return legSlot(scenario, step, 'road');
 }
 
 function stepLegSlots(scenario, rank) {

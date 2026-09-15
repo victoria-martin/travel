@@ -26,7 +26,7 @@ diffèrent s'affiche en fourchette. Une source sans aucune ligne ne s'affiche pa
 
 ## Écrans
 
-**Dépenses** 💶, en deux blocs et un récap. Le bloc Saisi est une liste ordinaire (tableau ou
+**Dépenses** 💰, en deux blocs et un récap. Le bloc Saisi est une liste ordinaire (tableau ou
 cartes), le bloc Calculé n'est éditable nulle part.
 
 ## Données exigées par ce flow

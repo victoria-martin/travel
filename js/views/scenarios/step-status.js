@@ -2,14 +2,14 @@
   Où en est une étape : dérivé de son hébergement et de son groupe, jamais écrit — un statut posé
   sur l'étape divergerait du sien dès qu'on touche l'un des deux. L'ordre de déclaration est une
   échelle, du plus avancé au moins avancé : « à revoir » la ferme, puisque c'est l'étape qui appelle
-  le geste, et `action` marque les deux qui attendent une main — la texture de
-  [route-paint.js](js/views/scenarios/route-paint.js) les montre. Un lieu qui regroupe plusieurs étapes prend le moins avancé des leurs — une ville n'est
-  pas réservée tant qu'il lui reste une nuit à trouver.
+  le geste, et `action` marque les deux qui attendent une main, que la bande raye. Un lieu qui
+  regroupe plusieurs étapes prend le moins avancé des leurs — une ville n'est pas réservée tant
+  qu'il lui reste une nuit à trouver.
 */
 const STEP_STATUSES = {
   booked: { label: 'Réservé', emoji: '🔒', color: '#7C8B5E' },
   toBook: { label: 'À réserver', emoji: '💳', color: '#DFA32C', action: true },
-  comparing: { label: 'À l’étude', emoji: '⚖️', color: '#C98A3E' },
+  comparing: { label: 'À l’étude', emoji: '⚖️', color: '#9C8F7A' },
   searching: { label: 'En recherche', emoji: '🔎', color: '#C4B9A3' },
   none: { label: 'Sans hébergement', emoji: '❔', color: '#D9CFB8' },
   broken: { label: 'À revoir', emoji: '👎', color: '#A6462E', action: true },
@@ -50,4 +50,12 @@ function placeStatus(scenario, place) {
 
 function stepStatusInfo(key) {
   return STEP_STATUSES[key];
+}
+
+// Le fond d'un segment : sa couleur, rayée quand le statut attend un geste — la texture reste à la
+// bande et au fil, sur une carte entière elle mangerait le contenu.
+function stepStatusBackground(key) {
+  const { color, action } = stepStatusInfo(key);
+  if (!action) return color;
+  return `repeating-linear-gradient(45deg, ${color} 0 3px, rgba(255,255,255,0.5) 3px 6px)`;
 }

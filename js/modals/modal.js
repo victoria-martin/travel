@@ -81,6 +81,7 @@ const MODAL_TYPES = {
     edits: true,
   },
   sync: { body: () => syncForm() },
+  settings: { body: () => settingsForm() },
 };
 
 // Un même formulaire se pose au centre ou en panneau de droite : c'est l'ouverture qui le dit et

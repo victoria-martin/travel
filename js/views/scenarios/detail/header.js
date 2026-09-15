@@ -26,8 +26,7 @@ function scenarioDetailHeader(s) {
       </div>
     </div>
     <div class="view-header-actions">
-      ${count > 0 ? scenarioSideTabsToggle() : ''} ${scenarioExpensesSheetBtn(s)}
-      ${toolbarMenu(trailColorOption())}
+      ${count > 0 ? scenarioSideTabsToggle() : ''} ${toolbarMenu()}
     </div>
     ${scenarioHeaderMoney(s)}
   </div>`;
