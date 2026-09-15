@@ -8,11 +8,15 @@ function fixedCostCard(cost) {
       <p class="card-name">${escapeHtml(cost.label) || 'Sans nom'}</p>
     </div>
     <div class="card-meta">
-      ${cost.amount ? `<span>Montant : ${escapeHtml(cost.amount)}</span>` : ''}
+      ${cost.amount ? `<span>Montant : ${escapeHtml(expenseAmountLabel(cost))}</span>` : ''}
       ${
         cost.categories && cost.categories.length ? `<span>${tagChips(cost.categories)}</span>` : ''
       }
-      ${cost.recurrence ? `<span>Récurrence : ${escapeHtml(cost.recurrence)}</span>` : ''}
+      ${
+        expenseRecurrence(cost.recurrence).unit
+          ? `<span>Récurrence : ${expenseRecurrence(cost.recurrence).label}</span>`
+          : ''
+      }
       <span>📝 ${fixedCostNotesEditable(cost)}</span>
     </div>
     <div class="card-actions">

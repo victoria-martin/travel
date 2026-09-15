@@ -29,7 +29,6 @@ function optionColumn(scenario, group, option, ranks) {
 function optionColumnHead(scenario, group, option) {
   const removable = groupOptions(group).length > 2;
   return /* HTML */ `<div class="option-head">
-    <span class="option-rank">${groupOptionName(group, option)}</span>
     ${optionChosenButton(scenario, group, option)}
     ${
       removable

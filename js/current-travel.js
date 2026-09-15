@@ -19,6 +19,11 @@ function openTravel(id) {
   persistPrefs();
 }
 
+function travelerCount() {
+  const travel = currentTravel();
+  return parseInt(travel && travel.travelers) || 0;
+}
+
 function ofCurrentTravel(items) {
   const travelId = currentTravelId();
   return (items || []).filter((item) => item.travelId === travelId);

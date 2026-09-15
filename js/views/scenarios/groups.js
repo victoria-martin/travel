@@ -25,7 +25,7 @@ function chosenGroupOption(group) {
   return groupOptions(group).find((o) => o.isSelected) || null;
 }
 
-// Une colonne se repère par son rang : c'est le groupe qui porte le nom de ce qu'on compare.
+// Une colonne se désigne par son rang : c'est le groupe qui porte le nom de ce qu'on compare.
 function groupOptionName(group, option) {
   return `Option ${groupOptions(group).indexOf(option) + 1}`;
 }

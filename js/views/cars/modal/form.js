@@ -60,7 +60,7 @@ function carForm(p) {
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" onclick="saveCar('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveCar('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
 }

@@ -6,7 +6,7 @@ function saveFixedCost(id) {
     label: document.getElementById('cost-label').value.trim(),
     amount: document.getElementById('cost-amount').value.trim(),
     categories: [...modal.payload.categories],
-    recurrence: document.getElementById('cost-recurrence').value.trim(),
+    recurrence: document.getElementById('cost-recurrence').value,
     notes: document.getElementById('cost-notes').value.trim(),
   };
 

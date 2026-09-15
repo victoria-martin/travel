@@ -20,7 +20,7 @@ function scenarioExpenseDropdown(scenario) {
                   onclick="pickScenarioExpense('${scenario.id}','${cost.id}')"
                 >
                   <span class="inline-label">${escapeHtml(costLabel(cost))}</span>
-                  ${cost.amount ? `<span class="inline-menu-aside">${escapeHtml(formatEuros(priceNumber(cost.amount)))}</span>` : ''}
+                  ${cost.amount ? `<span class="inline-menu-aside">${escapeHtml(expenseAmountLabel(cost))}</span>` : ''}
                 </button>`,
                 )
                 .join('')

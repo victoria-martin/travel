@@ -101,15 +101,50 @@ function showModal(type, sheet, args) {
 function closeModal() {
   modal = null;
   modalSnapshot = null;
+  dismissAsk = null;
   render();
 }
 
-// User-initiated close: confirm while the typed fields are not saved.
+/*
+  Fermer sur une saisie non enregistrée demande quoi en faire, et le demande dans l'app. La
+  question se pose par-dessus le formulaire sans le re-rendre : ses champs ne vivent que dans le
+  DOM tant qu'ils ne sont pas lus, et un render les remplacerait par la donnée d'avant.
+*/
+let dismissAsk = null;
+
 function dismissModal() {
-  if (modalIsDirty() && !confirm('Fermer sans enregistrer ? Les modifications seront perdues.')) {
-    return;
-  }
-  closeModal();
+  if (!modalIsDirty()) return closeModal();
+  if (dismissAsk) return;
+  dismissAsk = document.createElement('div');
+  dismissAsk.className = 'overlay overlay-ask';
+  dismissAsk.onclick = (e) => {
+    if (e.target === dismissAsk) keepEditing();
+  };
+  dismissAsk.innerHTML = /* HTML */ `<div class="modal modal-ask">
+    <h3>Enregistrer les modifications ?</h3>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Ne pas enregistrer</button>
+      <button class="btn btn-ghost" onclick="keepEditing()">Annuler</button>
+      <button class="btn" onclick="saveAndClose()">Enregistrer</button>
+    </div>
+  </div>`;
+  document.getElementById('app').appendChild(dismissAsk);
+}
+
+function keepEditing() {
+  dismissAsk.remove();
+  dismissAsk = null;
+}
+
+function saveAndClose() {
+  keepEditing();
+  submitModal();
+}
+
+// Le bouton d'enregistrement du formulaire est son seul point d'écriture : chaque type y lit ses
+// propres champs, la touche Entrée comme la question de fermeture n'ont qu'à le presser.
+function submitModal() {
+  document.getElementById('f-save')?.click();
 }
 
 function modalIsDirty() {
@@ -145,6 +180,12 @@ function renderModal() {
   modalSnapshot = cfg.edits ? modalFieldsState() : null;
 }
 
+// Entrée enregistre, Échap ferme ; un champ qui traite lui-même la touche — un tag qu'on ajoute,
+// un résultat qu'on choisit — l'a déjà consommée, et une zone de texte y écrit une ligne.
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && modal) dismissModal();
+  if (!modal || event.defaultPrevented) return;
+  if (event.key === 'Escape') return dismissAsk ? keepEditing() : dismissModal();
+  if (event.key !== 'Enter' || event.target.tagName === 'TEXTAREA') return;
+  if (dismissAsk) saveAndClose();
+  else submitModal();
 });

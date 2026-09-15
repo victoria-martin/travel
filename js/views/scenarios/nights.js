@@ -18,3 +18,10 @@ function optionNights(scenario, option) {
 function totalNights(scenario) {
   return visibleSteps(scenario).reduce((sum, st) => sum + stepNights(st), 0);
 }
+
+// Un séjour de N nuits dure N+1 jours : on arrive le premier et on repart le lendemain de la
+// dernière. Sans nuit il n'y a pas de journée à compter.
+function totalDays(scenario) {
+  const nights = totalNights(scenario);
+  return nights ? nights + 1 : 0;
+}

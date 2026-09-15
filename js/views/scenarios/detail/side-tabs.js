@@ -1,10 +1,11 @@
 /*
-  La colonne de droite montre une chose à la fois : la table dit laquelle, sous quelle icône et ce
-  qu'elle rend. L'onglet ouvert est une préférence de vue, retenue d'une session à l'autre comme le
-  dépli des familles du récap.
+  La colonne de droite montre une chose à la fois, ou rien : la table dit laquelle, sous quelle
+  icône et ce qu'elle rend. Ses deux boutons vivent dans la barre de l'en-tête et sont aussi la
+  bascule du panneau — recliquer celui qui est allumé le referme, d'où un seul état retenu d'une
+  session à l'autre, `null` quand rien n'est ouvert.
 */
 const SCENARIO_SIDE_TABS = [
-  { key: 'map', icon: '🗺', label: 'Carte', body: (s) => scenarioMapBlock(s) },
+  { key: 'map', icon: '🗺', label: 'Carte', body: (s) => scenarioMapBlock(s, 'scenario-side-map') },
   {
     key: 'money',
     icon: '💶',
@@ -14,13 +15,22 @@ const SCENARIO_SIDE_TABS = [
 ];
 
 function activeSideTab() {
-  return (
-    SCENARIO_SIDE_TABS.find((tab) => tab.key === prefs.scenarioSideTab) || SCENARIO_SIDE_TABS[0]
+  return SCENARIO_SIDE_TABS.find((tab) => tab.key === prefs.scenarioSidePanel);
+}
+
+function scenarioSideTabsToggle() {
+  return toolbarToggleGroup(
+    SCENARIO_SIDE_TABS.map((tab) => ({
+      icon: tab.icon,
+      label: tab.label,
+      onclick: `toggleScenarioSidePanel('${tab.key}')`,
+      active: tab.key === prefs.scenarioSidePanel,
+    })),
   );
 }
 
-function setScenarioSideTab(key) {
-  prefs.scenarioSideTab = key;
+function toggleScenarioSidePanel(key) {
+  prefs.scenarioSidePanel = prefs.scenarioSidePanel === key ? null : key;
   persistPrefs();
   render();
 }

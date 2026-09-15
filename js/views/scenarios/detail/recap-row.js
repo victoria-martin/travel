@@ -24,8 +24,36 @@ function scenarioRecapRow(r) {
 }
 
 function recapPlaceLabel(r) {
-  if (r.city) return `📍 ${escapeHtml(r.city.name)}`;
+  if (r.city) return recapIconLabel('📍', escapeHtml(r.city.name));
   if (r.acc)
-    return `${accType(r.acc.type).emoji} ${escapeHtml(r.acc.name)} <span class="acc-recap-city">· ${escapeHtml(r.acc.city)}</span>`;
-  return '<span class="acc-recap-city">Sans lieu</span>';
+    return recapIconLabel(
+      accType(r.acc.type).emoji,
+      `${escapeHtml(r.acc.name)} <span class="acc-recap-city">· ${escapeHtml(r.acc.city)}</span>`,
+    );
+  return recapIconLabel('', '<span class="acc-recap-city">Sans lieu</span>');
+}
+
+// Toutes les lignes du détail s'ouvrent sur la même gouttière : les noms s'alignent, qu'une ligne
+// porte une icône ou non, et le chiffre d'une ligne de route tombe sur eux.
+function recapIconLabel(icon, label) {
+  return `<span class="acc-recap-icon">${icon}</span>${label}`;
+}
+
+// Une ligne d'extra se lit pareil dans les deux familles : son libellé, son nombre s'il dépasse un,
+// son montant.
+function extraRecapRow(line) {
+  const count = extraCount(line);
+  return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
+    <span>${extraLabel(line)}</span>
+    <span class="acc-recap-nights">${count > 1 ? extraCountLabel(count) : ''}</span>
+    <strong>${formatEuros(extraAmount(line))}</strong>
+  </div>`;
+}
+
+// Entre deux lieux, la route qu'on conduit de l'un à l'autre : sa propre ligne, sans montant, donc
+// hors de la rangée à trois colonnes. Le chiffre vient d'OSRM après le rendu, comme dans la
+// gouttière.
+function recapLegRow(scenario, step) {
+  const slot = stepLegTimeSlot(scenario, step);
+  return slot ? `<div class="acc-recap-leg">${recapIconLabel('🚗', slot)}</div>` : '';
 }

@@ -31,25 +31,30 @@ function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
       id="step-card-${step.id}"
-      class="${stepCardClass(step)}"
+      class="${stepCardClass(step)} test-red"
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >
-      <div class="step-reorder">${stepDragHandle(step)} ${stepMoveButtons(scenario, step)}</div>
-      ${stepOrderBadge(scenario, step, rank)}
-      <div class="step-body">
-        <div class="step-title">
-          ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
-            key: `step:${step.id}:name`,
-            placeholder: 'Nom de l’étape…',
-          })}${stepPlaceSuffix(step)}
-          <span class="step-title-dates">${dateRangeLabel(arrival, stepNights(step))}</span>
+      <div class="step-reorder">
+        <div class="step-reorder-buttons">${stepMoveButtons(scenario, step)}</div>
+        ${stepDragHandle(step)}
+      </div>
+      <div class="step-main">
+        ${stepOrderBadge(scenario, step, rank)}
+        <div class="step-body">
+          <div class="step-title">
+            ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
+              key: `step:${step.id}:name`,
+              placeholder: 'Nom de l’étape…',
+            })}${stepPlaceSuffix(step)}
+            <span class="step-title-dates">${dateRangeLabel(arrival, stepNights(step))}</span>
+          </div>
+          ${stepDetailLine(step)}
+          <div class="step-acc">
+            ${stepLine(scenario, step)} ${step.groupId ? '' : makeGroupButton(scenario, step)}
+          </div>
+          ${extrasBlock(scenario, step)}
         </div>
-        ${stepDetailLine(step)}
-        <div class="step-acc">
-          ${stepLine(scenario, step)} ${step.groupId ? '' : makeGroupButton(scenario, step)}
-        </div>
-        ${extrasBlock(scenario, step)}
       </div>
       <div class="step-money">${stepMoney(scenario, step)}</div>
       <div class="step-actions">

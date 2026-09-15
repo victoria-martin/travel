@@ -47,7 +47,7 @@ function stepForm(p) {
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" onclick="saveStep('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveStep('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
 }

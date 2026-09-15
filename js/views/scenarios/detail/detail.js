@@ -18,9 +18,15 @@ function renderScenarioDetailView() {
     ${scenarioDetailHeader(s)}
     <div class="scenario-detail-cols">
       <div class="scenario-detail-main view-scroller">
-        ${stepList(s)} ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
+        ${stepList(s)}
+        <div class="scenario-detail-foot">
+          <div class="scenario-detail-money">
+            ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
+          </div>
+          ${scenarioMapBlock(s, 'scenario-foot-map')}
+        </div>
       </div>
-      ${prefs.showScenarioSidePanel ? scenarioSidePanel(s) : ''}
+      ${prefs.scenarioSidePanel ? scenarioSidePanel(s) : ''}
     </div>
   `;
 }

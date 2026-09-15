@@ -17,8 +17,7 @@ function scenarioTotalBlock(scenario) {
       'charges',
       'Charges',
       formatEuros(scenarioChargesTotal(scenario)),
-      recapSubRow('Voiture', formatEuros(carTotal(scenario))) +
-        recapSubRow('Dépenses', formatEuros(scenarioExpensesTotal(scenario))),
+      chargeDetailRows(scenario),
     )}
     ${recapGroup(
       'attractions',

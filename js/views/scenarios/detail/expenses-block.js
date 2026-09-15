@@ -1,5 +1,6 @@
 function scenarioExpensesBlock(scenario) {
   const expenses = getScenarioExpenses(scenario);
+  const span = scenarioSpan(scenario);
   return /* HTML */ `<div class="scenario-extra scenario-extra-expenses">
     <div class="scenario-extra-head">
       <div class="acc-recap-title">Dépenses</div>
@@ -10,7 +11,7 @@ function scenarioExpensesBlock(scenario) {
         ? /* HTML */ `<div class="scenario-extra-empty">
             Aucune dépense rattachée — celles du voyage restent sur la page Dépenses.
           </div>`
-        : expenses.map((cost) => scenarioExpenseRow(scenario, cost)).join('')
+        : expenses.map((cost) => scenarioExpenseRow(scenario, cost, span)).join('')
     }
     <div class="scenario-extra-actions">
       ${scenarioExpenseDropdown(scenario)}
@@ -23,10 +24,15 @@ function scenarioExpensesBlock(scenario) {
   </div>`;
 }
 
-function scenarioExpenseRow(scenario, cost) {
+// La ligne porte le total de la dépense pour ce scénario ; son unité dit d'où vient le compte.
+function scenarioExpenseRow(scenario, cost, span) {
+  const unit = expenseRecurrence(cost.recurrence).unit;
   return /* HTML */ `<div class="expense-line">
-    <span class="expense-label">${escapeHtml(cost.label || 'Sans libellé')}</span>
-    <strong class="expense-amount">${formatEuros(priceNumber(cost.amount))}</strong>
+    <span class="expense-label"
+      >${escapeHtml(cost.label || 'Sans libellé')}
+      ${unit ? `<span class="expense-unit">${escapeHtml(expenseAmountLabel(cost))}</span>` : ''}</span
+    >
+    <strong class="expense-amount">${formatEuros(expenseAmount(cost, span))}</strong>
     <button
       class="icon-btn"
       onclick="detachScenarioExpense('${scenario.id}','${cost.id}')"

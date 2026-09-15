@@ -1,5 +1,12 @@
 function emptyFixedCost() {
-  return { id: null, label: '', amount: '', categories: [], recurrence: '', notes: '' };
+  return {
+    id: null,
+    label: '',
+    amount: '',
+    categories: [],
+    recurrence: DEFAULT_EXPENSE_RECURRENCE,
+    notes: '',
+  };
 }
 
 function fixedCostForm(p) {
@@ -14,15 +21,22 @@ function fixedCostForm(p) {
     </div>
     ${tagsField(p, { field: 'categories', label: 'Catégories', options: allFixedCostCategories })}
     <div class="field">
-      <label>Récurrence</label
-      ><input id="cost-recurrence" type="text" value="${escapeHtml(p.recurrence)}" />
+      <label>Récurrence</label>
+      <select id="cost-recurrence">
+        ${Object.entries(EXPENSE_RECURRENCES)
+          .map(
+            ([key, r]) =>
+              `<option value="${key}" ${expenseRecurrenceKey(p.recurrence) === key ? 'selected' : ''}>${r.emoji} ${r.label}</option>`,
+          )
+          .join('')}
+      </select>
     </div>
     <div class="field">
       <label>Notes</label><textarea id="cost-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" onclick="saveFixedCost('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveFixedCost('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
 }

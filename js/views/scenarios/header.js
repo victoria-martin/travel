@@ -12,7 +12,7 @@ function scenariosHeader() {
         onclick: 'toggleCompareMode()',
         active: compareMode,
       })}
-      ${toolbarMenu()}
+      ${toolbarMenu(routePaintOptions())}
     </div>
   </div>`;
 }

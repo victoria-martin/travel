@@ -84,17 +84,27 @@ function formatCosts(cost) {
   );
 }
 
-function carTotal(scenario) {
-  const car = getScenarioCar(scenario);
-  return car ? priceNumber(car.pricePerDay) * totalNights(scenario) : 0;
+// Sur quoi une dépense rattachée à ce scénario se multiplie.
+function scenarioSpan(scenario) {
+  return {
+    nights: totalNights(scenario),
+    days: totalDays(scenario),
+    travelers: travelerCount(),
+  };
 }
 
-// Le montant d'une charge est pris tel quel, sans multiplication.
+// Une location se prend le jour de l'arrivée et se rend celui du départ : elle se compte en jours.
+function carTotal(scenario) {
+  const car = getScenarioCar(scenario);
+  return car ? priceNumber(car.pricePerDay) * totalDays(scenario) : 0;
+}
+
 function fixedCostsTotal(scenario) {
+  const span = scenarioSpan(scenario);
   return scenario.costIds
     .map(getFixedCost)
     .filter(Boolean)
-    .reduce((sum, c) => sum + priceNumber(c.amount), 0);
+    .reduce((sum, c) => sum + expenseAmount(c, span), 0);
 }
 
 // Les dépenses du scénario et celles rattachées à ses étapes se comptent ensemble.

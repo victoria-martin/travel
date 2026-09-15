@@ -1,7 +1,8 @@
 /*
-  La signature d'un scénario : un segment par lieu, dans l'ordre du trajet, large comme ses nuits.
-  L'échelle est celle de la liste entière — le plus long scénario tient toute la largeur, les autres
-  se mesurent contre lui — sans quoi deux voyages de durées différentes se ressembleraient.
+  La signature d'un scénario : un segment par lieu, dans l'ordre du trajet, large comme ses nuits et
+  teinté de l'avancement de son séjour. L'échelle est celle de la liste entière — le plus long
+  scénario tient toute la largeur, les autres se mesurent contre lui — sans quoi deux voyages de
+  durées différentes se ressembleraient.
 */
 function scenarioRouteBar(s, maxNights) {
   const places = nightsByPlace(s);
@@ -9,7 +10,7 @@ function scenarioRouteBar(s, maxNights) {
   const nights = totalNights(s);
   return /* HTML */ `<div class="scenario-route" style="width:${(nights / maxNights) * 100}%">
     ${routeDates(s)}
-    <div class="scenario-route-bar">${places.map((p) => routeSegment(p)).join('')}</div>
+    <div class="scenario-route-bar">${places.map((p) => routeSegment(s, p)).join('')}</div>
     <div class="scenario-route-legend">${places.map((p) => routeLabel(p, nights)).join('')}</div>
   </div>`;
 }
@@ -27,11 +28,14 @@ function routeDates(s) {
   </div>`;
 }
 
-function routeSegment(p) {
+function routeSegment(scenario, p) {
+  const key = placeStatus(scenario, p);
+  const status = stepStatusInfo(key);
+  const title = `${routePlaceName(p)} · ${nightsLabel(p.nights)} · ${status.emoji} ${status.label}`;
   return /* HTML */ `<span
     class="scenario-route-seg"
-    style="flex:${p.nights}; background:${accType(p.acc && p.acc.type).color};"
-    title="${escapeHtml(`${routePlaceName(p)} · ${nightsLabel(p.nights)}`)}"
+    style="flex:${p.nights}; background:${stepStatusBackground(key)};"
+    title="${escapeHtml(title)}"
   ></span>`;
 }
 

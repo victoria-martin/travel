@@ -1,3 +1,7 @@
+/*
+  La barre d'outils ne porte que des gestes sur la vue ; les données du scénario — son étoile, son
+  nom, sa date de départ — vivent ensemble dans le bloc d'identité.
+*/
 function scenarioDetailHeader(s) {
   const count = visibleSteps(s).length;
   return /* HTML */ `<div class="view-header scenario-header">
@@ -15,13 +19,14 @@ function scenarioDetailHeader(s) {
             })}
           </h2>
           <p class="view-sub">
-            ${count} étape${count > 1 ? 's' : ''} · ${nightsLabel(totalNights(s))}
+            ${scenarioStartDateField(s)} · ${count} étape${count > 1 ? 's' : ''} ·
+            ${nightsLabel(totalNights(s))}
           </p>
         </div>
       </div>
     </div>
     <div class="view-header-actions">
-      ${scenarioStartDateField(s)} ${count > 0 ? scenarioSidePanelToggleBtn() : ''}
+      ${count > 0 ? scenarioSideTabsToggle() : ''}
       ${toolbarPanel({
         key: 'add-step',
         icon: '+',
@@ -39,30 +44,28 @@ function scenarioDetailHeader(s) {
             Créer une étape avec options
           </button>`,
       })}
-      ${toolbarMenu()}
+      ${toolbarMenu(trailColorOption())}
     </div>
     ${scenarioHeaderMoney(s)}
   </div>`;
 }
 
-// Le total se lit comme sur la carte de la liste : les euros en grand, les GuestPoints sous eux.
+// Le total ferme la ligne des métadonnées : les GuestPoints d'abord, les euros en grand au bout.
 function scenarioHeaderMoney(s) {
   const total = scenarioTotal(s);
   return /* HTML */ `<div class="scenario-header-money">
-    <strong class="scenario-header-total">${formatEuros(total.euros)}</strong>
     ${total.guestPoints ? `<span>${formatGuestPoints(total.guestPoints)}</span>` : ''}
+    <strong class="scenario-header-total">${formatEuros(total.euros)}</strong>
   </div>`;
 }
 
 function scenarioStartDateField(s) {
-  return /* HTML */ `<label class="header-field">
-    Départ
-    <input
-      type="date"
-      value="${s.startDate || ''}"
-      onchange="setScenarioStartDate('${s.id}', this.value)"
-    />
-  </label>`;
+  return /* HTML */ `<input
+    class="scenario-start-date"
+    type="date"
+    value="${s.startDate || ''}"
+    onchange="setScenarioStartDate('${s.id}', this.value)"
+  />`;
 }
 
 function setScenarioStartDate(id, date) {

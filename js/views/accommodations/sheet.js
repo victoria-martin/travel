@@ -12,7 +12,7 @@ ROW_CLICKS.hebergements = openAccommodationSheet;
 
 function accommodationSheetButton(id) {
   return /* HTML */ `<button
-    class="inline-menu-side"
+    class="sheet-btn"
     title="Ouvrir la fiche"
     onclick="openAccommodationSheet('${id}')"
   >

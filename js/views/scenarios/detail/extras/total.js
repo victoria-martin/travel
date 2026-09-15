@@ -33,6 +33,10 @@ function scenarioAttractionsTotal(scenario) {
   return extraLinesTotal(scenarioAttractionLines(scenario));
 }
 
+function scenarioExtraCostLines(scenario) {
+  return scenarioExtraLines(scenario).filter((line) => line.costId);
+}
+
 function scenarioExtraCostsTotal(scenario) {
-  return extraLinesTotal(scenarioExtraLines(scenario).filter((line) => line.costId));
+  return extraLinesTotal(scenarioExtraCostLines(scenario));
 }

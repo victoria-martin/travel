@@ -86,11 +86,14 @@ function renderMain() {
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
   else if (view === 'transports') main.innerHTML = renderTransportsView();
-  else if (view === 'scenarios') main.innerHTML = renderScenariosView();
-  else if (view === 'scenario-detail') {
+  else if (view === 'scenarios') {
+    main.innerHTML = renderScenariosView();
+    if (compareMode)
+      comparedScenarios(ofCurrentTravel(state.scenarios)).forEach((s) => fillStepLegs(s));
+  } else if (view === 'scenario-detail') {
     main.innerHTML = renderScenarioDetailView();
-    setTimeout(initScenarioDetailMap, 30);
-    fillStepLegs();
+    setTimeout(initScenarioDetailMaps, 30);
+    fillStepLegs(getScenario(activeScenarioId));
   } else if (view === 'carte') {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);

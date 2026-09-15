@@ -81,7 +81,7 @@ hotel	Antico Casale	Sarzana	Ligurie	152	21/09	https://...	Super, pack remboursab
     <div id="paste-preview" style="font-size:12.5px; color:var(--ink-soft);"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" onclick="runPasteImport()">Analyser et importer</button>
+      <button class="btn" id="f-save" onclick="runPasteImport()">Analyser et importer</button>
     </div>
   `;
 }

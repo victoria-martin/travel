@@ -7,12 +7,13 @@ const PREFS_KEY = 'voyage-toscane-prefs';
 
 let prefs = {
   hiddenColumns: {},
-  showScenarioSidePanel: true,
-  scenarioSideTab: 'map',
+  scenarioSidePanel: 'map',
   recapFolds: {},
   sort: {},
   sortOrder: {},
   showButtonLabels: true,
+  trailColorByType: false,
+  routePaint: 'stripesMuted',
 };
 
 function loadPrefs() {

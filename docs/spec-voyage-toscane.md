@@ -154,7 +154,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Attraction**      | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un lieu à visiter ; localisée comme une ville                   |
 | **Transport**       | mode, statut, départ et arrivée (ville + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori            | un trajet du voyage ; en mode voiture il référence une location |
 | **Voiture**         | statut, loueur, modèle, prix / jour, prix total, dates, lieu de prise en charge, lien, notes, **par défaut**                                                        | liste simple ; une seule voiture par défaut                     |
-| **Charge fixe**     | libellé, montant, catégories, récurrence, notes                                                                                                                     | liste simple                                                    |
+| **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                    |
 | **Scénario**        | nom, favori, **choisi**, date de départ, voiture, charges, transports, **étapes**                                                                                   | un itinéraire candidat                                          |
 | **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
 | **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
@@ -186,11 +186,20 @@ importé sans choix explicite. Il s'affiche tel quel partout — tag de la ligne
 filtre de type — et se trie **après** toutes les valeurs connues.
 
 > Les deux listes vivent dans une map unique qui pilote à la fois les selects, les couleurs de la
-> carte et de la bande d'itinéraire, et l'ordre de départ de leur colonne. Les quatre types portent
+> carte et l'ordre de départ de leur colonne. Les quatre types portent
 > quatre teintes distinctes de la palette — rouille, ocre, sauge, vert profond — parce que deux
 > couleurs de même teinte à des clartés différentes ne se lisent pas comme deux catégories. Cet ordre est celui du workflow, et le lecteur le
 > range à sa main depuis le panneau « Trier » — voir le tri des hébergements. Un mot ajouté au
 > vocabulaire prend place après ceux qu'on a déjà rangés.
+
+**Statut d'une étape** — jamais saisi : il se déduit de l'hébergement posé et de la comparaison en
+cours. C'est une échelle, du plus avancé au moins avancé : Réservé 🔒 · À réserver 💳 · À l'étude
+⚖️ · En recherche 🔎 · Sans hébergement ❔ · À revoir 👎. « Réservé » l'emporte sur tout — une
+colonne retenue et réservée est réservée, même si les autres options sont encore à l'écran —
+« À l'étude » dit un groupe dont la colonne n'est pas tranchée, et « À revoir » ferme l'échelle :
+l'étape montre encore un hébergement écarté ou pas dispo, c'est elle qui appelle le geste. Un lieu
+qui regroupe plusieurs étapes prend le moins avancé des leurs : une ville n'est pas réservée tant
+qu'il lui reste une nuit à trouver.
 
 ---
 
@@ -449,13 +458,20 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 **Charge fixe**
 
-| Champ      | Détail                                             |
-| ---------- | -------------------------------------------------- |
-| libellé    |                                                    |
-| montant    | texte libre, pris tel quel                         |
-| catégories | plusieurs, en pastilles, éditables depuis la ligne |
-| récurrence | texte libre                                        |
-| notes      | éditables depuis la ligne                          |
+| Champ      | Détail                                                  |
+| ---------- | ------------------------------------------------------- |
+| libellé    |                                                         |
+| montant    | texte libre, unitaire — ce que coûte **une** récurrence |
+| catégories | plusieurs, en pastilles, éditables depuis la ligne      |
+| récurrence | une fois, par nuit, par jour, par voyageur              |
+| notes      | éditables depuis la ligne                               |
+
+- **Récurrence** : elle dit sur quoi le montant se multiplie, jamais combien de fois — le nombre ne
+  vit pas sur la dépense, il vient du scénario où elle est comptée. Une dépense « 10 € par nuit »
+  rattachée à un scénario de sept nuits y vaut 70 €, et 30 € dans un scénario de trois. Sur cette
+  page, où aucun scénario ne donne le compte, une dépense qui se multiplie s'affiche avec son unité
+  et reste **hors du total saisi**, comme une source dérivée à montant ouvert. La colonne se range
+  sur l'ordre du vocabulaire, pas sur ses libellés.
 
 - **Catégories** : mêmes mots libres que les tags des hébergements — une catégorie existe dès
   qu'elle est tapée quelque part, et disparaît avec sa dernière porteuse. Aucune liste à
@@ -505,10 +521,10 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 
 **Colonne** — appartient à un groupe.
 
-| Champ   | Détail                                                           |
-| ------- | ---------------------------------------------------------------- |
-| nom     | éditable en ligne ; vide, la colonne affiche « Option 1 », « 2 » |
-| retenue | ce sont ses étapes qui comptent dans les dates, totaux et carte  |
+| Champ   | Détail                                                                                 |
+| ------- | -------------------------------------------------------------------------------------- |
+| rang    | sa place dans le groupe ; ne s'affiche que dans la confirmation de « Garder celle-ci » |
+| retenue | ce sont ses étapes qui comptent dans les dates, totaux et carte                        |
 
 **Ligne** — une activité ou une dépense posée sur une étape ou sur un groupe.
 
@@ -531,7 +547,13 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   puis les autres. Actions : ouvrir, dupliquer (copie profonde, nouveaux identifiants, nom suffixé
   « (copie) »), supprimer — les deux dernières n'apparaissent qu'au survol de la carte.
 - **La bande d'itinéraire** ferme chaque carte : un segment par lieu du trajet, dans l'ordre, large
-  comme ses nuits et peint de la couleur du type d'hébergement (gris quand aucun n'est posé). Elle
+  comme ses nuits et peint de la couleur de son statut d'étape — vert réservé, or à réserver, ocre
+  à l'étude, beige en recherche ou sans hébergement, rouille à revoir ; les deux statuts qui
+  attendent un geste — à réserver, à revoir — se rayent en diagonale. C'est l'avancement du
+  voyage qui se lit d'un coup d'œil sur la liste, et non le type d'hébergement, qui reste la
+  couleur de la carte. L'infobulle d'un segment nomme le lieu, ses nuits et son statut. Le ⋮ de
+  l'en-tête offre quatre peintures de cette échelle, le temps de choisir celle qui se lit le
+  mieux. Elle
   porte ses dates à ses deux bouts, chacune sous un tiret : le départ à gauche, le retour là où
   elle s'arrête — donc plus tôt que celui d'un scénario plus long. Son échelle est celle de la
   liste entière — le scénario le plus long tient toute la largeur, les autres se mesurent contre
@@ -546,11 +568,23 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   attractions, et le total général avec les nuits. Charges et attractions ne montrent que leur
   total : leur détail se lit dans le scénario. La sélection ne dure que la session, comme le
   scénario ouvert.
-- **Date de départ** : un champ dans l'en-tête du détail. Il date la première étape, et les nuits
-  de chaque étape décalent les suivantes. Sans date de départ, aucune date ne s'affiche.
-- **Détail**, en deux colonnes : étapes + voiture + total général à gauche, bloc « Trajet » dans une
-  colonne de droite collante. Bouton « Masquer / Afficher la carte », dont l'état est retenu d'une
-  session à l'autre. Sous 1100 px, la carte repasse sous les étapes.
+- **En-tête du détail** : sa barre d'outils ne porte que des gestes sur la vue — les deux onglets
+  du panneau, « Ajouter une étape », le menu ⋮ — et le lien « ← Tous les scénarios ». Les données
+  du scénario tiennent le bloc d'identité : l'étoile de favori, le nom éditable, et sous eux la
+  date de départ suivie du nombre d'étapes et des nuits. Le total en euros, avec les GuestPoints
+  sous lui, se lit à droite.
+- **Date de départ** : un champ de la ligne de sous-titre, à côté du nom. Il date la première
+  étape, et les nuits de chaque étape décalent les suivantes. Sans date de départ, aucune date ne
+  s'affiche.
+- **Détail**, en deux colonnes : les étapes à gauche, le panneau latéral à droite. Sous les étapes,
+  un pied partage la largeur — voiture, dépenses et total général à gauche, la carte du trajet à
+  droite, collante à la hauteur du défilement.
+- **Le panneau latéral** montre une chose à la fois, ou rien : la carte du trajet, ou l'argent
+  (voiture, dépenses, total général) ; son pied porte les nuits et le total quel que soit l'onglet.
+  Ses deux boutons « 🗺 Carte » et « 💶 Argent » vivent dans la barre de l'en-tête et sont aussi sa
+  bascule — recliquer celui qui est allumé referme le panneau, et les étapes prennent toute la
+  largeur. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à l'autre. Sous
+  1100 px, le panneau repasse sous les étapes.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
   même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
@@ -575,13 +609,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   options, éditable en ligne comme un titre d'étape, puisque les colonnes comparent des façons de faire _cette_ étape-là
   et que chacune de leurs cartes garde son propre nom —, la date à laquelle il commence, et le
   compte de ses colonnes. Elles se posent côte à côte dans la largeur, chacune empilant de vraies
-  cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, son nom
-  éditable, la pastille ◉ / ○ qui la retient et, à partir de trois colonnes, le ✕ qui la retire avec
-  ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la hauteur de la
-  colonne d'à côté, puis « Garder celle-ci » tant qu'elles ne sont que deux. Au bout de l'en-tête,
-  le compte des colonnes et l'œil qui masque le groupe, seule action qu'il porte en propre. La colonne
-  retenue est cernée de jaune — liseré, trait sous son nom, trait au-dessus de son pied et pastille
-  pleine : on la repère sans la lire. Toutes les colonnes
+  cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, ses seuls
+  gestes, alignés à droite : la pastille ◉ / ○ qui la retient et, à partir de trois colonnes, le ✕
+  qui la retire avec ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la
+  hauteur de la colonne d'à côté, puis « Garder celle-ci » tant qu'elles ne sont que deux. Au bout
+  de l'en-tête, le compte des colonnes et l'œil qui masque le groupe, seule action qu'il porte en
+  propre. Une colonne ne porte pas de titre : le groupe dit ce qu'on compare, et les cartes disent
+  chacune la sienne. La colonne retenue est cernée de jaune — liseré, fond, trait au-dessus de son
+  pied et pastille pleine : on la repère sans la lire. Toutes les colonnes
   partent du même jour et se datent comme si elles étaient retenues, sinon rien ne les comparerait ;
   seules les cartes de la colonne retenue portent une lettre, les autres n'étant sur aucun tracé.
   Le ＋ sous la rangée ajoute une colonne, qui recopie les étapes de celle qui est retenue — on n'en
@@ -683,20 +718,37 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   dépense » ouvre la modale Dépenses et rattache la nouvelle au retour. Le ✕ retire du scénario
   sans supprimer la dépense, qui reste sur la page Dépenses.
 - **Total général**, le seul bloc de chiffres de l'écran : trois familles — Hébergements, Charges
-  (voiture, dépenses), Attractions — puis le total des nuits et le montant. Les GuestPoints y
+  (la voiture et les dépenses), Attractions — puis le total des nuits et le montant. Les GuestPoints y
   gardent leur propre montant, à côté des euros : « Hébergements en GP » est une ligne à part, hors
   des familles, puisqu'ils ne s'additionnent à rien.
 - **Une famille se déplie au chevron** et porte son détail, fermé par une ligne « Total ». Son
   montant se lit en face de son titre, repliée comme dépliée, et la ligne de pied le redit sous le
   détail. Les familles sont indépendantes — les trois peuvent rester ouvertes — et chacune garde son
   dépli d'une session à l'autre, comme la carte.
-- **Le détail des hébergements** : une ligne par lieu (lieu · nuits · dates · total), **dans
-  l'ordre du trajet** — un lieu revisité tient sur une seule ligne, ses nuits additionnées et ses
-  dates listées, placée à sa première date. Une dernière étape sans nuit ferme la liste avec sa
-  seule date d'arrivée. Les nuits en home exchange y figurent avec leur montant en GuestPoints.
+- **Le détail des hébergements** : une ligne par arrêt, **dans l'ordre du trajet** — un lieu où
+  l'on dort (lieu · nuits · dates · total), une étape sans nuit avec sa seule date. Le départ, le
+  retour et les haltes sont donc dans la liste au même titre que les nuitées : sans eux, la route
+  qui part du premier ou mène au dernier n'aurait pas d'origine lisible. Un lieu revisité tient sur
+  une seule ligne, ses nuits additionnées et ses dates listées, placée à sa première date. Les
+  nuits en home exchange y figurent avec leur montant en GuestPoints.
+  Toutes les lignes s'ouvrent sur la même gouttière d'icône — le type de l'hébergement, 📍 pour une
+  ville, rien pour une étape de passage — d'une largeur fixe : les noms s'alignent, qu'une ligne
+  porte une icône ou non. Chaque arrêt est précédé du temps de conduite pour y arriver — « 🚗 1 h
+  11 », sur sa propre ligne, l'icône dans la même gouttière et le chiffre aligné sur les noms, sans
+  la distance : le récap dit combien de route il y a d'un lieu au suivant, les
+  kilomètres se lisent dans la gouttière de la liste d'étapes. Le filet passe au-dessus de ce temps
+  et non sous lui : on arrive quelque part, donc la route et le lieu où elle mène se lisent d'un
+  bloc. Il vient
+  du même itinéraire que le tracé et n'apparaît qu'une fois la réponse revenue ; seules deux étapes
+  voisines et géolocalisées en portent un — la toute première étape du trajet n'ayant rien avant
+  elle, sa ligne n'en porte pas.
+- **Le détail des charges** : la voiture, puis **une ligne par dépense** — celles rattachées au
+  scénario d'abord, puis celles posées sur ses étapes et ses groupes, avec leur nombre quand il
+  dépasse un. Pas de ligne « Dépenses » qui les additionnerait : le détail d'une famille nomme ce
+  qu'elle contient, et un budget essence se lit sous son nom.
 - **Le détail des attractions** : une ligne par activité rattachée aux étapes, dans l'ordre du
   trajet, avec son nombre quand il dépasse un. Une dépense rattachée à une étape n'y figure pas :
-  elle grossit la ligne « Dépenses » des Charges, aux côtés des dépenses du scénario.
+  elle se range dans le détail des Charges, aux côtés des dépenses du scénario.
 - **Les totaux se calculent par étape** : le coût d'une étape (budget saisi, sinon prix/nuit ×
   nuits) alimente aussi bien la ligne de son lieu que les totaux du scénario.
 - **Trajet** : une pastille par étape portant sa lettre, le tracé routier réel, et des chevrons
@@ -767,6 +819,13 @@ appareil.
   du navigateur parcourent les pages visitées. Une adresse inconnue laisse la page courante ; un
   scénario supprimé retombe sur la liste. Sans `#`, l'app ouvre le scénario **TEST** comme avant.
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Fermer un formulaire sur une saisie non enregistrée** pose la question dans l'app, jamais dans
+  le `confirm` du navigateur : « Enregistrer les modifications ? », avec le choix d'enregistrer, de
+  fermer sans enregistrer, ou de revenir au formulaire. La question se pose par-dessus les champs
+  sans les re-rendre — ils ne vivent que dans l'écran tant qu'ils ne sont pas lus.
+- **Entrée enregistre, Échap ferme** dans toute modale comme dans tout panneau. Un champ qui traite
+  déjà la touche la garde : Entrée ajoute un tag, choisit un résultat, et va à la ligne dans une
+  zone de texte.
 - **Ce qui vient d'apparaître s'allume** : un geste refait toute la page, donc ce qui naît d'un clic
   — et ce qui reste quand une comparaison se termine — se cerne de jaune une seconde et se ramène
   sous les yeux. Une sortie s'anime avant d'être écrite : ce qui s'en va se replie d'abord. Les deux
@@ -796,6 +855,10 @@ appareil.
   deux montants est saisi, et la cellule dit laquelle des deux elle affiche (« budget 150 € »).
   Une entité sans prix **est** une enveloppe. Implémenté sur les transports ; les charges fixes,
   les hébergements et les voitures gardent pour l'instant leur champ de prix unique.
+- **Nuits et jours** : les nuits sont saisies, les jours s'en déduisent — un séjour de N nuits dure
+  N+1 journées, on arrive la première et on repart le lendemain de la dernière ; sans nuit il n'y a
+  pas de journée. Ce qui se loue à la journée se compte donc en jours : une location de voiture se
+  prend le jour de l'arrivée et se rend celui du départ.
 - **Liste vide** : un message d'état vide qui dit quoi faire, et qui change selon la cause —
   « aucun favori » et « aucun résultat pour ces tags » ne disent pas la même chose que
   « aucune entrée ».

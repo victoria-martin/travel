@@ -235,8 +235,8 @@ body {
   flex-wrap: wrap;
 }
 /* L'en-tête d'un scénario porte son total : l'identité tient les deux rangées de gauche, les
-   boutons la première à droite, le total la seconde — en face des métadonnées, comme sur la carte
-   de la liste. */
+   boutons la première à droite, le total la seconde — au bout de la ligne des métadonnées, qu'il
+   ferme. */
 .scenario-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -268,8 +268,8 @@ body {
   justify-self: end;
   align-self: end;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  align-items: baseline;
+  gap: 12px;
   font-size: 12.5px;
   color: var(--ink-soft);
   white-space: nowrap;
@@ -282,21 +282,22 @@ body {
   color: var(--ink);
   line-height: 1.15;
 }
-.header-field {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--ink-soft);
-}
-.header-field input {
+/* La date se lit comme le reste du sous-titre, et s'ouvre au clic comme un champ. */
+.scenario-start-date {
   font-family: inherit;
-  font-size: 13px;
-  color: var(--ink);
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  font-size: inherit;
+  color: inherit;
+  padding: 1px 3px;
+  margin: 0 -3px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: none;
+}
+.scenario-start-date:hover,
+.scenario-start-date:focus {
+  border-color: var(--line);
   background: var(--white);
+  color: var(--ink);
 }
 /* Every control sitting in a view header shares one height. */
 .view-header .btn,
@@ -609,7 +610,7 @@ th {
 }
 
 .test-red {
-  /* border: 1px solid red; */
+  border: 1px solid red;
 }
 
 /* .flex {
@@ -757,7 +758,7 @@ tr:hover td {
 .inline-menu-row .inline-menu-item {
   min-width: 0;
 }
-.inline-menu-side {
+.sheet-btn {
   flex: 0 0 auto;
   padding: 4px 7px;
   border: none;
@@ -767,12 +768,14 @@ tr:hover td {
   font-family: inherit;
   font-size: 13px;
   cursor: pointer;
+}
+.inline-menu-row .sheet-btn {
   opacity: 0.45;
 }
-.inline-menu-row:hover .inline-menu-side {
+.inline-menu-row:hover .sheet-btn {
   opacity: 1;
 }
-.inline-menu-side:hover {
+.sheet-btn:hover {
   background: var(--paper-raised);
   color: var(--ink);
 }
@@ -868,8 +871,30 @@ tr:hover td {
   width: 440px;
   max-width: 100%;
   max-height: none;
+  padding-bottom: 0;
   border-radius: 0;
   border-width: 0 0 0 1px;
+}
+/* Le pied colle au bas du panneau : Enregistrer se lit sans dérouler la fiche. Il tient toute la
+   largeur, d'où les marges qui reprennent le retrait du panneau. Ce retrait est repris en padding
+   plutôt que laissé sous la barre, sinon elle décollerait du bord en fin de défilement. */
+.modal-sheet .modal-actions {
+  position: sticky;
+  bottom: 0;
+  margin: 18px -26px 0;
+  padding: 14px 26px;
+  background: var(--paper-raised);
+  border-top: 1px solid var(--line);
+}
+/* La question posée par-dessus un formulaire : son fond s'ajoute à celui d'en dessous. */
+.overlay-ask {
+  background: rgba(36, 49, 43, 0.25);
+}
+.modal-ask {
+  max-width: 400px;
+}
+.modal-ask h3 {
+  margin-bottom: 0;
 }
 .travel-modal-header {
   display: flex;
@@ -1121,7 +1146,7 @@ tr:hover td {
 .scenario-route-dates span:last-child::after {
   right: 0;
 }
-/* Deux séjours voisins du même type ne feraient qu'un bloc : le fond de la carte les sépare. */
+/* Deux séjours voisins de même état ne feraient qu'un bloc : le fond de la carte les sépare. */
 .scenario-route-bar {
   display: flex;
   gap: 2px;
@@ -1276,7 +1301,8 @@ tr:hover td {
 .step-card {
   position: relative;
   display: flex;
-  gap: 12px;
+  gap: 4px;
+  border: solid 1px red;
   align-items: flex-start;
   background: var(--paper-raised);
   border: 1px solid var(--line);
@@ -1284,27 +1310,50 @@ tr:hover td {
      celui d'un scénario, sans quoi marquer une étape la décalerait de deux pixels. */
   border-left: 3px solid var(--line);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 12px 12px 12px 8px;
   box-shadow: 0 1px 2px rgba(36, 49, 43, 0.05);
 }
 /* Dans une colonne d'option, la carte se détache du fond de la colonne et non de celui de la page. */
 .option-column .step-card {
   background: var(--white);
 }
+
+/* La colonne tient toute la hauteur de la carte : les flèches en haut contre le rang, la poignée
+   au pied, là où le glisser ne recouvre aucune ligne. */
 .step-reorder {
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-self: stretch;
   gap: 2px;
-  margin: 5px 0 0 -6px;
+  margin: 0;
   flex-shrink: 0;
 }
-.step-move-btn {
-  width: 13px;
-  height: 11px;
-  font-size: 8px;
+/* Les flèches tiennent le haut et poussent la poignée au pied de la carte. */
+.step-reorder-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+/* Les flèches passent avant `.icon-btn` dans la feuille : leurs deux classes les redimensionnent. */
+.icon-btn.step-move-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
   border: none;
   border-radius: 3px;
+}
+/* Réordonner est un geste de survol, comme les actions de la carte — la poignée comme les flèches.
+   La visibilité plutôt que l'opacité, qui dit déjà quelle flèche n'a plus de voisin. */
+.step-reorder .step-move-btn,
+.step-reorder .step-drag-handle {
+  visibility: hidden;
+}
+.step-card:hover .step-move-btn,
+.step-card:hover .step-drag-handle {
+  visibility: visible;
 }
 /* Dragging a step: the hovered card wears the line where the step will land. */
 .step-drag-handle {
@@ -1312,7 +1361,7 @@ tr:hover td {
   cursor: grab;
   font-size: 13px;
   line-height: 1;
-  padding-bottom: 2px;
+  margin-top: auto;
 }
 .step-dragging {
   opacity: 0.4;
@@ -1364,9 +1413,22 @@ tr:hover td {
   color: var(--ink-soft);
   border: 1px dashed var(--ink-soft);
 }
+/* Le rang et le corps forment un bloc : l'espace qui les sépare est le leur, celui qui les tient
+   à distance des flèches est celui de la carte. */
+.step-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
 .step-body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* border: solid 1px blue; */
 }
 .step-title {
   font-weight: 600;
@@ -1432,6 +1494,15 @@ tr:hover td {
   align-items: center;
   gap: 8px;
   margin-top: 10px;
+}
+.step-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+}
+.step-place .sheet-btn {
+  padding: 4px;
 }
 .step-place-tag {
   flex: 0 1 auto;
@@ -1546,32 +1617,19 @@ tr:hover td {
   background: var(--paper-raised);
   cursor: pointer;
 }
-/* La colonne retenue est cernée de jaune, de son liseré jusqu'à sa barre de tête : c'est elle
-   qu'on lit quand on parcourt le scénario, les autres restent des comparaisons. */
+/* La colonne retenue est cernée de jaune : c'est elle qu'on lit quand on parcourt le scénario,
+   les autres restent des comparaisons. */
 .option-column-chosen {
   border-color: var(--gold);
   background: color-mix(in srgb, var(--gold) 9%, var(--white));
   box-shadow: 0 2px 10px color-mix(in srgb, var(--gold) 28%, transparent);
 }
-.option-column-chosen .option-head {
-  border-bottom-color: var(--gold);
-  color: var(--ink);
-}
+/* La tête porte les gestes de la colonne — la retenir, la retirer — et rien d'autre. */
 .option-head {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--line);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-soft);
-}
-.option-rank {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .option-remove,
 .step-add-option {
@@ -1651,7 +1709,7 @@ tr:hover td {
 }
 /* Les lignes d'une étape ou d'un groupe — activités et dépenses — sur une grille à elles, et non
    sur celle du lieu : leur nom prend la largeur, le nombre et le montant s'épinglent à droite. */
-.step-card > .step-body > .step-extras {
+.step-card > .step-main > .step-body > .step-extras {
   padding-right: 92px;
 }
 .step-extras {
@@ -1893,37 +1951,6 @@ tr:hover td {
   min-height: 0;
   padding-bottom: var(--main-pad-y);
 }
-.side-tabs {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-  margin-bottom: 10px;
-}
-.side-tab {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--paper-raised);
-  font-family: inherit;
-  font-size: 13px;
-  color: var(--ink-soft);
-  cursor: pointer;
-}
-.side-tab:hover {
-  border-color: var(--stone);
-  background: var(--white);
-}
-.side-tab-on {
-  background: var(--white);
-  border-color: var(--stone);
-  color: var(--ink);
-  font-weight: 600;
-}
 .side-panel {
   flex: 1;
   min-height: 0;
@@ -1969,6 +1996,34 @@ tr:hover td {
     padding-bottom: 0;
   }
 }
+/* Sous les étapes, l'argent et la carte se partagent la largeur de la colonne. */
+.scenario-detail-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+.scenario-detail-money {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.scenario-detail-foot .scenario-map-block {
+  flex: none;
+  position: sticky;
+  top: 0;
+}
+.scenario-detail-foot .scenario-map-canvas {
+  flex: none;
+  height: min(420px, 60vh);
+}
+@media (max-width: 900px) {
+  .scenario-detail-foot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 /* Dans son onglet, la carte prend la hauteur du panneau ; en une colonne, la sienne. */
 .scenario-map-block {
   flex: 1;
@@ -1976,7 +2031,7 @@ tr:hover td {
   display: flex;
   flex-direction: column;
 }
-#scenario-map {
+.scenario-map-canvas {
   flex: 1;
   min-height: 0;
   border-radius: 10px;
@@ -1986,7 +2041,7 @@ tr:hover td {
   .scenario-map-block {
     flex: none;
   }
-  #scenario-map {
+  .scenario-map-canvas {
     flex: none;
     height: min(560px, calc(100vh - 180px));
   }
@@ -2042,6 +2097,15 @@ tr:hover td {
   border-top: 1px solid var(--ink-soft);
   font-weight: 600;
 }
+/*
+  La gouttière d'icône : une largeur et une taille de glyphe fixes, les mêmes sur toutes les lignes.
+  Sans elles une ligne de route, écrite plus petit, décalerait son chiffre par rapport aux noms.
+*/
+.acc-recap-icon {
+  display: inline-block;
+  width: 24px;
+  font-size: 13.5px;
+}
 .acc-recap-city {
   color: var(--ink-soft);
   font-weight: 400;
@@ -2078,6 +2142,23 @@ tr:hover td {
 .acc-recap-subtotal {
   font-weight: 600;
   color: var(--ink);
+}
+/*
+  La route entre deux lieux : pas de montant, donc pas de rangée à trois colonnes. Le filet passe
+  au-dessus d'elle et non sous elle — on arrive quelque part, donc le temps de route et le lieu où
+  il mène se lisent d'un bloc.
+*/
+.acc-recap-leg {
+  padding: 5px 0 0 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+/* La route et le lieu où elle mène sont un bloc : rien ne les sépare, ni filet ni blanc. */
+.acc-recap-leg + .acc-recap-row,
+.acc-recap-fold .acc-recap-leg + .acc-recap-row {
+  border-top: none;
+  padding-top: 0;
 }
 .icon-btn {
   background: none;
@@ -2470,6 +2551,10 @@ tr:hover td {
 }
 .expense-label {
   flex: 1;
+}
+.expense-unit {
+  color: var(--ink-soft);
+  font-size: 12px;
 }
 .expense-amount-open {
   color: var(--ink-soft);

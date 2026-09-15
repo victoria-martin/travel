@@ -359,7 +359,7 @@ function syncForm() {
     <div class="modal-actions">
       ${syncActive() ? `<button class="btn btn-danger" onclick="disconnectSync()">Déconnecter</button>` : ''}
       <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
-      <button class="btn" onclick="saveSyncUrl()">Connecter</button>
+      <button class="btn" id="f-save" onclick="saveSyncUrl()">Connecter</button>
     </div>
   `;
 }

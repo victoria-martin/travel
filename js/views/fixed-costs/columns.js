@@ -22,7 +22,12 @@ COLUMN_SETS.charges = [
     key: 'recurrence',
     label: 'Récurrence',
     cell: fixedCostRecurrenceCell,
-    sortValue: (c) => (c.recurrence || '').toLowerCase(),
+    sortValue: (c) => expenseRecurrenceKey(c.recurrence),
+    sortOrder: {
+      key: 'expenseRecurrence',
+      dict: EXPENSE_RECURRENCES,
+      label: 'Ordre des récurrences',
+    },
   },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: fixedCostActionsCell },
 ];
@@ -32,7 +37,7 @@ function fixedCostLabelCell(c) {
 }
 
 function fixedCostAmountCell(c) {
-  return textCell(c.amount);
+  return textCell(expenseAmountLabel(c));
 }
 
 function fixedCostCategoriesCell(c) {
@@ -45,7 +50,8 @@ function fixedCostCategoriesCell(c) {
 }
 
 function fixedCostRecurrenceCell(c) {
-  return textCell(c.recurrence);
+  const recurrence = expenseRecurrence(c.recurrence);
+  return tagLabel(recurrence.emoji, recurrence.label);
 }
 
 // duplicateFixedCostButton

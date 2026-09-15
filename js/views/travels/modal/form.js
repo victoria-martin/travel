@@ -123,7 +123,7 @@ function travelForm(p) {
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" onclick="saveTravel('${p.id || ''}')">Enregistrer</button>
+      <button class="btn" id="f-save" onclick="saveTravel('${p.id || ''}')">Enregistrer</button>
     </div>
   `;
 }

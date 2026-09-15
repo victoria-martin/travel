@@ -3,7 +3,11 @@
   d'un bout à l'autre, et l'écart entre deux étapes dit la route qui les sépare. C'est la bande qui
   porte cet écart — sa hauteur est la distance — et le chiffre se pose contre le trait. Le tronçon
   vient des `legs` du même appel OSRM que le tracé, donc il n'arrive qu'après le rendu : la bande
-  porte un emplacement vide, rempli quand la réponse revient, pour l'étape qui la suit.
+  porte un emplacement vide, rempli quand la réponse revient, pour l'étape qui la suit. Le récap
+  pose les mêmes emplacements entre ses lignes, et plusieurs scénarios peuvent être à l'écran à la
+  fois : un emplacement porte donc le scénario dont il lit la route, en plus du rang du tronçon, et
+  ce qu'il en montre — la gouttière a la place du couple durée · distance, le récap n'en garde que
+  le temps de conduite.
 */
 
 // Position de chaque étape retenue dans les waypoints envoyés à OSRM, `null` si elle n'y est pas.
@@ -28,14 +32,30 @@ function stepLegRank(scenario, step) {
   return before === null || ranks[step.id] === null ? null : before;
 }
 
-function stepLegSlot(scenario, step) {
+const LEG_LABELS = {
+  full: (leg) => `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
+  time: (leg) => durationLabel(leg.duration),
+};
+
+function legSlot(scenario, step, label) {
   const rank = stepLegRank(scenario, step);
   if (rank === null) return '';
-  return `<span class="step-leg" id="step-leg-${rank}"></span>`;
+  return `<span class="step-leg" data-leg="${scenario.id}:${rank}" data-leg-label="${label}"></span>`;
 }
 
-async function fillStepLegs() {
-  const scenario = getScenario(activeScenarioId);
+function stepLegSlot(scenario, step) {
+  return legSlot(scenario, step, 'full');
+}
+
+function stepLegTimeSlot(scenario, step) {
+  return legSlot(scenario, step, 'time');
+}
+
+function stepLegSlots(scenario, rank) {
+  return document.querySelectorAll(`[data-leg="${scenario.id}:${rank}"]`);
+}
+
+async function fillStepLegs(scenario) {
   if (!scenario) return;
   const points = visibleSteps(scenario).map(coordsFor).filter(Boolean);
   if (points.length < 2) return;
@@ -43,10 +63,12 @@ async function fillStepLegs() {
   try {
     const { legs } = await fetchRoute(points);
     const longest = Math.max(...legs.map((leg) => leg.distance));
-    legs.forEach((leg, i) => setStepLeg(i, leg, legHeight(leg.distance, longest)));
+    legs.forEach((leg, i) => setStepLeg(scenario, i, leg, legHeight(leg.distance, longest)));
   } catch (e) {
     console.warn('Tronçons routiers indisponibles', e);
-    document.querySelectorAll('.step-leg').forEach((slot) => (slot.textContent = '⚠️'));
+    document
+      .querySelectorAll(`[data-leg^="${scenario.id}:"]`)
+      .forEach((slot) => (slot.textContent = '⚠️'));
   }
 }
 
@@ -62,14 +84,14 @@ function legHeight(distance, longest) {
   return Math.round(LEG_MIN_HEIGHT + (LEG_MAX_HEIGHT - LEG_MIN_HEIGHT) * share);
 }
 
-// Seule la liste du scénario porte la gouttière : dans une colonne d'option, la bande garde sa
-// hauteur naturelle et n'affiche que le chiffre.
-function setStepLeg(index, leg, height) {
-  const slot = document.getElementById(`step-leg-${index}`);
-  if (!slot) return;
-  slot.textContent = `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`;
-  const gap = slot.closest('.step-list > .step-gap');
-  if (gap) gap.style.height = `${height}px`;
+// Seule la liste du scénario porte la gouttière : ailleurs — récap, colonne d'option — la bande
+// garde sa hauteur naturelle et n'affiche que le chiffre.
+function setStepLeg(scenario, index, leg, height) {
+  stepLegSlots(scenario, index).forEach((slot) => {
+    slot.textContent = LEG_LABELS[slot.dataset.legLabel](leg);
+    const gap = slot.closest('.step-list > .step-gap');
+    if (gap) gap.style.height = `${height}px`;
+  });
 }
 
 function distanceLabel(metres) {

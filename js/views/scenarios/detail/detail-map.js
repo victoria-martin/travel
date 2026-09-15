@@ -1,12 +1,17 @@
-let scenarioDetailMap = null;
+/*
+  Le tracé s'affiche partout où l'écran pose un canevas — le panneau latéral, le pied de la liste
+  d'étapes — et chacun porte son id, donc sa propre instance Leaflet et son propre emplacement de
+  message. Quitter un emplacement le démonte, y revenir le refait.
+*/
+let scenarioDetailMaps = [];
 
-function scenarioMapBlock(scenario) {
+function scenarioMapBlock(scenario, id) {
   const hasPlaces = visibleSteps(scenario).some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">
     ${
       hasPlaces
-        ? /* HTML */ `<div id="scenario-map"></div>
-            <div id="scenario-route-notice" class="scenario-route-notice"></div>`
+        ? /* HTML */ `<div class="scenario-map-canvas" id="${id}"></div>
+            <div id="${id}-notice" class="scenario-route-notice"></div>`
         : /* HTML */ `<div class="scenario-map-empty">
             Rattache à tes étapes des lieux géolocalisés pour voir le trajet.
           </div>`
@@ -14,18 +19,14 @@ function scenarioMapBlock(scenario) {
   </div>`;
 }
 
-// La carte ne vit que dans son onglet : quitter l'onglet la démonte, y revenir la refait.
-function initScenarioDetailMap() {
-  if (scenarioDetailMap) {
-    scenarioDetailMap.remove();
-    scenarioDetailMap = null;
-  }
-  const el = document.getElementById('scenario-map');
-  if (!el || typeof L === 'undefined') return;
+function initScenarioDetailMaps() {
+  scenarioDetailMaps.forEach((map) => map.remove());
+  scenarioDetailMaps = [];
   const scenario = getScenario(activeScenarioId);
-  if (!scenario) return;
-
-  scenarioDetailMap = createLeafletMap('scenario-map');
-  const points = drawScenarioOnMap(scenarioDetailMap, scenario, 'scenario-route-notice', '');
-  fitToPoints(scenarioDetailMap, points);
+  if (!scenario || typeof L === 'undefined') return;
+  document.querySelectorAll('.scenario-map-canvas').forEach((el) => {
+    const map = createLeafletMap(el.id);
+    scenarioDetailMaps.push(map);
+    fitToPoints(map, drawScenarioOnMap(map, scenario, `${el.id}-notice`, ''));
+  });
 }
