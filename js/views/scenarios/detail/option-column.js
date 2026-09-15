@@ -13,25 +13,51 @@ function optionColumn(scenario, group, option, ranks) {
     return (i === 0 ? '' : columnInsertGap(scenario, step, option)) + card;
   });
   const after = steps.length ? scenario.steps.indexOf(steps[steps.length - 1]) + 1 : 0;
-  return /* HTML */ `<div class="option-column${option.isSelected ? ' option-column-chosen' : ''}">
+  return /* HTML */ `<div
+    id="option-column-${option.id}"
+    class="option-column${option.isSelected ? ' option-column-chosen' : ''}"
+  >
     ${optionColumnHead(scenario, group, option)} ${cards.join('')}
     <div class="step-gap">${addStepButton(scenario, after, option)}</div>
-    ${optionColumnFoot(scenario, option)}
+    ${optionColumnFoot(scenario, option)} ${optionKeepButton(scenario, group, option)}
   </div>`;
 }
 
+// Le ✕ ne s'offre qu'à partir de trois colonnes : à deux, retirer l'une revient à terminer la
+// comparaison, et c'est « Garder celle-ci » qui le dit.
 function optionColumnHead(scenario, group, option) {
+  const removable = groupOptions(group).length > 2;
   return /* HTML */ `<div class="option-head">
     <span class="option-rank">${groupOptionName(group, option)}</span>
     ${optionChosenButton(scenario, group, option)}
-    <button
-      class="icon-btn option-remove"
-      onclick="removeGroupOption('${scenario.id}','${group.id}','${option.id}')"
-      title="Retirer cette colonne et ses étapes"
-    >
-      ✕
-    </button>
+    ${
+      removable
+        ? /* HTML */ `<button
+            class="icon-btn option-remove"
+            onclick="removeGroupOption('${scenario.id}','${group.id}','${option.id}')"
+            title="Retirer cette colonne et ses étapes"
+          >
+            ✕
+          </button>`
+        : ''
+    }
   </div>`;
+}
+
+/*
+  Terminer la comparaison : les autres colonnes se replient, celle-ci redevient une étape ordinaire
+  du fil. Le bouton reste affiché plutôt que de naître au survol — c'est la sortie du groupe, elle
+  ne se devine pas.
+*/
+function optionKeepButton(scenario, group, option) {
+  if (groupOptions(group).length > 2) return '';
+  return /* HTML */ `<button
+    class="inline-tag option-keep"
+    onclick="keepGroupOption('${scenario.id}','${group.id}','${option.id}')"
+    title="Terminer la comparaison et ne garder que cette colonne"
+  >
+    Garder celle-ci
+  </button>`;
 }
 
 function optionColumnFoot(scenario, option) {

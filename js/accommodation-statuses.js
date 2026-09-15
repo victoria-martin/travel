@@ -29,3 +29,9 @@ function accStatusFromText(text) {
   );
   return found || '';
 }
+
+// Réservé est le seul statut que l'écran marque : une étape dont l'hébergement est pris se lit
+// sans lire sa pastille.
+function isBookedAccommodation(acc) {
+  return !!acc && accStatusKey(acc.status) === 'booked';
+}

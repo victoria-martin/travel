@@ -16,11 +16,18 @@ function stepOrderBadge(step, rank) {
   </div>`;
 }
 
+// L'étape porte l'état de sa réservation : le liseré de la carte et son point du tracé disent
+// ce qui est pris, sans lire la pastille de statut.
+function stepCardClass(step) {
+  const booked = isBookedAccommodation(getAccommodation(step.accommodationId));
+  return `step-card${step.hidden ? ' step-card-hidden' : ''}${booked ? ' step-card-booked' : ''}`;
+}
+
 function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
       id="step-card-${step.id}"
-      class="step-card${step.hidden ? ' step-card-hidden' : ''}"
+      class="${stepCardClass(step)}"
       ondragover="overStepCard(event)"
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >
@@ -42,7 +49,6 @@ function stepCard(scenario, step, rank, arrival) {
       </div>
       <div class="step-money">${stepMoney(scenario, step)}</div>
       <div class="step-actions">
-        ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
         <button
           class="icon-btn"
           onclick="openModal('step','${scenario.id}','${step.id}')"
@@ -50,6 +56,7 @@ function stepCard(scenario, step, rank, arrival) {
         >
           ✎
         </button>
+        ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
         <button
           class="icon-btn"
           onclick="deleteStep('${scenario.id}','${step.id}')"

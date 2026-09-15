@@ -24,6 +24,7 @@ function makeStepGroup(scenarioId, stepId) {
   step.groupId = group.id;
   step.optionId = first.id;
   insertOptionSteps(scenario, group, [{ ...columnCopy(step, second.id), groupId: group.id }]);
+  flashOnNextRender(`option-column-${second.id}`);
   saveNow();
   render();
 }
@@ -43,6 +44,7 @@ function addGroupOption(scenarioId, groupId) {
       groupId: group.id,
     })),
   );
+  flashOnNextRender(`option-column-${option.id}`);
   saveNow();
   render();
 }
@@ -64,14 +66,37 @@ function renameStepGroup(scenarioId, groupId, name) {
 }
 
 /*
-  Retirer une colonne emporte ses étapes. La dernière ne se retire pas : il ne resterait rien à
-  comparer. Quand une seule subsiste, le groupe se défait — ses étapes redeviennent ordinaires et
-  ses lignes communes rejoignent la première d'entre elles, seul endroit où elles peuvent tenir.
+  La comparaison se termine par le choix d'une colonne : les autres se replient, puis le groupe se
+  défait au profit de celle-ci. C'est le seul retrait proposé quand il ne reste que deux colonnes —
+  y retirer une colonne défaisait le groupe sans le dire.
+*/
+function keepGroupOption(scenarioId, groupId, optionId) {
+  openInlineMenu = null;
+  const scenario = getScenario(scenarioId);
+  const group = getStepGroup(scenario, groupId);
+  const dropped = groupOptions(group).filter((o) => o.id !== optionId);
+  collapseThen(
+    dropped.map((o) => `option-column-${o.id}`),
+    () => {
+      scenario.steps = scenario.steps.filter(
+        (st) => st.groupId !== groupId || st.optionId === optionId,
+      );
+      dissolveGroup(scenario, group);
+      saveNow();
+      render();
+    },
+  );
+}
+
+/*
+  Retirer une colonne emporte ses étapes. Elle ne s'offre qu'à partir de trois : à deux, c'est
+  « Garder celle-ci » qui termine la comparaison. Une colonne qui se vide autrement défait tout de
+  même le groupe — ses étapes redeviennent ordinaires et ses lignes communes rejoignent la première
+  d'entre elles, seul endroit où elles peuvent tenir.
 */
 function removeGroupOption(scenarioId, groupId, optionId) {
   openInlineMenu = null;
   const scenario = getScenario(scenarioId);
-  if (groupOptions(getStepGroup(scenario, groupId)).length < 2) return;
   scenario.steps = scenario.steps.filter((st) => st.optionId !== optionId);
   pruneEmptyOption(scenario, groupId, optionId);
   saveNow();
@@ -93,6 +118,7 @@ function dissolveGroup(scenario, group) {
   if (steps.length) {
     holderExtras(steps[0]).push(...holderExtras(group));
     steps[0].name = steps[0].name || group.name || '';
+    flashOnNextRender(`step-card-${steps[0].id}`);
   }
   steps.forEach((st) => {
     st.groupId = '';

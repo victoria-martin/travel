@@ -8,18 +8,20 @@ function accommodationStatusTag(a) {
   return inlineDropdown(
     `status:${a.id}`,
     'status-dropdown',
-    /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
+    /* HTML */ `<summary class="inline-tag${isBookedAccommodation(a) ? ' inline-tag-booked' : ''}">
+        ${tagLabel(current.emoji, current.label)}
+      </summary>
       <div class="inline-menu">
         ${Object.entries(ACCOMMODATION_STATUSES)
-        .map(
-          ([key, s]) => `<button
+          .map(
+            ([key, s]) => `<button
             class="inline-menu-item ${s === current ? 'selected' : ''}"
             onclick="pickAccommodationStatus('${a.id}', '${key}')"
           >
             ${tagLabel(s.emoji, s.label)}
           </button>`,
-        )
-        .join('')}
+          )
+          .join('')}
       </div>`,
   );
 }

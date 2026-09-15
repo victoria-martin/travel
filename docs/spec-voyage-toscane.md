@@ -48,6 +48,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   Savone · Castelbianco ». Une ville prend son nom comme niveau ville à défaut de géocodage.
 - **Une étape porte son lieu**, et son titre en montre la ville et la région, moins ce que son
   propre nom et la pastille du lieu disent déjà.
+- **L'ocre dit « choisi », le vert dit « réservé ».** Deux axes, deux couleurs : l'ocre marque ce
+  qu'on retient (scénario choisi, colonne retenue), le vert ce qui est pris — le statut **Réservé**
+  d'un hébergement. Croiser les deux sur une même carte se lit donc sans ambiguïté.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Voitures et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
@@ -539,11 +542,16 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
   0 nuit), puis en dessous sa date d'arrivée libre si elle est saisie dans la modale, et ses notes.
   Ensuite sa ligne : un select de type d'hébergement, un select de lieu (**une ville ou un
-  hébergement**, les deux dans le même select, exclusifs), un select de nuits (0 à 14), et en bout
-  de ligne le coût. Les pastilles passent à la ligne plutôt que de se réduire, une colonne étroite
-  ne devant jamais rendre un select inatteignable ; un champ vide se montre en pastille creuse
-  (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Réordonnable en la glissant par sa poignée ⠿ — la carte survolée montre la
-  ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
+  hébergement**, les deux dans le même select, exclusifs), la pastille de statut de l'hébergement
+  quand le lieu en est un — la même que celle de la page Hébergements, et modifiable ici, où l'on
+  voit le trajet entier —, un select de nuits (0 à 14), et en bout de ligne le coût. Un hébergement
+  **réservé** marque son étape de deux façons : sa pastille de statut est peinte en vert plein et la
+  carte prend un liseré vert à son bord gauche — on lit sur la colonne jusqu'où le voyage est pris.
+  Le point du tracé, lui, reste neutre : il dit le rang de l'étape et non son état. Une étape masquée
+  ne porte pas la marque, elle est hors du voyage. Les pastilles passent à la ligne plutôt que de se réduire, une
+  colonne étroite ne devant jamais rendre un select inatteignable ; un champ vide se montre en
+  pastille creuse (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Réordonnable en la glissant par
+  sa poignée ⠿ — la carte survolée montre la ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
   masquable, supprimable. Son coût se lit **en haut à droite** de la carte, sur le modèle du total
   d'un scénario dans la liste : le montant qui compte en gros, et sous lui celui qu'un budget
@@ -554,8 +562,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   et que chacune de leurs cartes garde son propre nom —, la date à laquelle il commence, et le
   compte de ses colonnes. Elles se posent côte à côte dans la largeur, chacune empilant de vraies
   cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, son nom
-  éditable, la pastille ◉ / ○ qui la retient et le ✕ qui la retire avec ses étapes ; au pied, ses
-  nuits et son coût, alignés en bas quelle que soit la hauteur de la colonne d'à côté. La colonne
+  éditable, la pastille ◉ / ○ qui la retient et, à partir de trois colonnes, le ✕ qui la retire avec
+  ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la hauteur de la
+  colonne d'à côté, puis « Garder celle-ci » tant qu'elles ne sont que deux. La colonne
   retenue est cernée de jaune — liseré, trait sous son nom, trait au-dessus de son pied et pastille
   pleine : on la repère sans la lire. Toutes les colonnes
   partent du même jour et se datent comme si elles étaient retenues, sinon rien ne les comparerait ;
@@ -563,9 +572,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Le ＋ sous la rangée ajoute une colonne, qui recopie les étapes de celle qui est retenue — on n'en
   change qu'un bout — et le ＋ dans une colonne y insère une étape de plus.
 - **Comparer commence sur l'étape qu'on a** : le `＋ option` d'une carte d'étape en fait la première
-  colonne d'un groupe neuf et pose sa copie en seconde. Symétriquement, un groupe qui retombe à une
-  seule colonne se défait : ses étapes redeviennent ordinaires et ses lignes communes rejoignent la
-  première d'entre elles, seul endroit où elles peuvent tenir.
+  colonne d'un groupe neuf et pose sa copie en seconde. La colonne qui vient de naître s'allume le
+  temps qu'on la retrouve parmi les autres.
+- **La comparaison se termine par le choix d'une colonne.** À deux colonnes, retirer l'une revient à
+  défaire le groupe : c'est donc « Garder celle-ci » qu'on y trouve, et pas le ✕. Les autres colonnes
+  se replient sous les yeux, puis celle qu'on garde redevient une étape ordinaire du fil, allumée à
+  son tour. Un groupe qui retombe à une seule colonne autrement — dernière étape supprimée, étape
+  sortie au glisser — se défait de même : ses étapes redeviennent ordinaires et ses lignes communes
+  rejoignent la première d'entre elles, seul endroit où elles peuvent tenir.
 - **Le type restreint les hébergements, jamais les villes** : posé sur une étape, il réduit le
   select de lieu aux hébergements de ce type ; les villes ferment la liste quel qu'il soit, une
   étape se posant dans une ville avant qu'on sache où l'on y dort. Changer de type efface un
@@ -598,15 +612,16 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   même itinéraire que le tracé de la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
   tronçon qui enjamberait une étape masquée, écartée ou sans lieu ne dirait pas la distance des
   deux cartes qu'on lit. Dans un groupe, il se lit donc entre deux cartes de la colonne retenue. Le `＋` d'insertion sort à droite du libellé au survol.
-- **La gouttière du scénario** : à gauche de la liste, un trait vertical court d'un bout à l'autre
+- **La gouttière du scénario** : à droite de la liste, un trait vertical court d'un bout à l'autre
   et porte un point par étape ; l'écart entre deux points est la route qui les sépare, le plus long
   tronçon du scénario tenant l'écart plein et les autres s'y rapportant, avec un plancher qui garde
   le plus court lisible. Le trait est d'un seul tenant, à une seule largeur : c'est l'écart entre
-  deux points qui dit la route, la grossir ne le dirait pas deux fois. Il longe le bord gauche et
-  la gouttière ne porte que lui : la bande entre deux cartes tient le ＋ qui ouvre une étape au
-  milieu de leur largeur, entre deux traits qui rejoignent l'une et l'autre, et la route chiffrée à
-  son bord gauche, sur la même ligne que le ＋. Le ＋ y reste visible sans survol, et la bande ne
-  descend jamais sous sa hauteur, sinon il déborderait sur les cartes.
+  deux points qui dit la route, la grossir ne le dirait pas deux fois. Un point tombe à la hauteur
+  de la pastille-lettre de sa carte, centré sur le trait. Il longe le bord droit et la gouttière ne
+  porte que lui : la bande entre deux cartes tient le ＋ qui ouvre une étape au milieu de leur
+  largeur, et la route chiffrée à son bord droit, contre le trait, sur la même ligne que le ＋. Le ＋
+  ne s'y montre qu'au survol, et la bande ne descend jamais sous sa hauteur, sinon il déborderait sur
+  les cartes.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
   — ceux sans type connu fermant la marche —, puis les villes. Dans chaque groupe, les favoris
   passent en tête, précédés d'une ★, le reste est trié par nom. Chaque en-tête de groupe le replie
@@ -707,11 +722,19 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
   du navigateur parcourent les pages visitées. Une adresse inconnue laisse la page courante ; un
   scénario supprimé retombe sur la liste. Sans `#`, l'app ouvre le scénario **TEST** comme avant.
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Ce qui vient d'apparaître s'allume** : un geste refait toute la page, donc ce qui naît d'un clic
+  — et ce qui reste quand une comparaison se termine — se cerne de jaune une seconde et se ramène
+  sous les yeux. Une sortie s'anime avant d'être écrite : ce qui s'en va se replie d'abord. Les deux
+  animations tombent à rien quand le système demande de réduire le mouvement.
 - **Barre d'outils** : les mêmes contrôles, dans le même ordre, en haut à droite de chaque écran —
   « Trier », « Filtrer », « Colonnes », les filtres propres à l'écran, la bascule tableau / cartes,
   « Ajouter », puis le menu ⋮. Chacun porte une icône, et un compteur quand il a quelque chose
   d'actif. « Trier » et « Filtrer » sont deux panneaux distincts. Le détail d'un scénario a la
   sienne : date de départ, bascule de la carte, « Ajouter une étape », ⋮.
+- **Dropdown inline** : le menu d'un tag se pose par-dessus la page, hors du cadre qui porte sa
+  cellule — le tableau, qui défile horizontalement, rognerait sinon celui des dernières lignes. Il
+  s'ouvre sous son déclencheur, au-dessus quand la place est de ce côté, et se referme dès qu'on
+  fait défiler.
 - **Libellés des boutons** : une option unique pour toute l'app, qui affiche ou masque le texte à
   côté des icônes. Elle se change depuis la barre latérale ou depuis le menu ⋮ de n'importe quelle
   liste. Icône seule, le libellé reste lisible au survol.

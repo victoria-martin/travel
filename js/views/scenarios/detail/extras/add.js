@@ -116,6 +116,7 @@ function repaintExtraOptions(scenarioId, holderId) {
     scenarioId,
     holderId,
   );
+  placeOpenInlineMenu();
 }
 
 // `Entrée` prend la première correspondance, l'activité avant la dépense ; sans aucune, elle crée

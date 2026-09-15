@@ -48,6 +48,8 @@ function render() {
   renderMain();
   viewScroller().scrollTop = scrollTop;
   if (modal) renderModal();
+  applyFlash();
+  placeOpenInlineMenu();
 }
 
 function navBtn(key, icon, label) {

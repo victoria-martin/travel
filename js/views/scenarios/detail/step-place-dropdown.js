@@ -170,4 +170,5 @@ function createStepCity(scenarioId, stepId) {
 
 function repaintPlaceOptions(scenarioId, stepId) {
   document.getElementById(`place-options-${stepId}`).innerHTML = placeOptions(scenarioId, stepId);
+  placeOpenInlineMenu();
 }
