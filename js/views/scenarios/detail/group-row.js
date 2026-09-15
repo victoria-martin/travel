@@ -5,7 +5,7 @@
   toutes partent du même jour.
 */
 function groupRow(scenario, group, ranks) {
-  return /* HTML */ `<div class="step-group">
+  return /* HTML */ `<div class="step-group${group.hidden ? ' step-group-hidden' : ''}">
     <div class="step-group-head">
       <div class="step-group-title">
         <span class="step-group-move">${groupMoveButtons(scenario, group)}</span>
@@ -20,7 +20,12 @@ function groupRow(scenario, group, ranks) {
         )}
         <span class="step-title-dates">${groupArrivalLabel(scenario, group)}</span>
       </div>
-      <span class="step-group-count">${groupOptions(group).length} options — une seule compte</span>
+      <div class="step-group-actions">
+        <span class="step-group-count"
+          >${groupOptions(group).length} options — une seule compte</span
+        >
+        ${hiddenButton(group.hidden, `toggleGroupHidden('${scenario.id}','${group.id}')`)}
+      </div>
     </div>
     <div class="option-columns">
       ${groupOptions(group)

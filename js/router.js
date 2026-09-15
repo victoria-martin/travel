@@ -3,7 +3,7 @@
   every URL to index.html — neither file:// nor GitHub Pages can, so a reload would 404.
 */
 
-// The nine pages of the sidebar. `scenario-detail` is the tenth view, routed as `#scenario/<id>`.
+// The ten pages of the sidebar. `scenario-detail` is the eleventh view, routed as `#scenario/<id>`.
 const VIEWS = [
   'hebergements',
   'voitures',
@@ -14,6 +14,7 @@ const VIEWS = [
   'scenarios',
   'carte',
   'notes',
+  'a-faire',
 ];
 
 const SCENARIO_ROUTE = 'scenario/';

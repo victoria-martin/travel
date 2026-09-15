@@ -59,6 +59,15 @@ function chooseGroupOption(scenarioId, groupId, optionId) {
   render();
 }
 
+// Masquer le groupe sort toutes ses colonnes du voyage d'un geste : c'est l'étape entière qu'on met
+// de côté, pas l'une de ses options.
+function toggleGroupHidden(scenarioId, groupId) {
+  const group = getStepGroup(getScenario(scenarioId), groupId);
+  group.hidden = !group.hidden;
+  saveNow();
+  render();
+}
+
 // Le groupe porte le nom de l'étape qui s'est ouverte en options ; ses colonnes gardent le leur.
 function renameStepGroup(scenarioId, groupId, name) {
   getStepGroup(getScenario(scenarioId), groupId).name = name.trim();
@@ -71,10 +80,13 @@ function renameStepGroup(scenarioId, groupId, name) {
   y retirer une colonne défaisait le groupe sans le dire.
 */
 function keepGroupOption(scenarioId, groupId, optionId) {
-  openInlineMenu = null;
   const scenario = getScenario(scenarioId);
   const group = getStepGroup(scenario, groupId);
   const dropped = groupOptions(group).filter((o) => o.id !== optionId);
+  const name = groupOptionName(group, getGroupOption(group, optionId));
+  if (!confirm(`Ne garder que ${name} ? Les autres options et leurs étapes seront supprimées.`))
+    return;
+  openInlineMenu = null;
   collapseThen(
     dropped.map((o) => `option-column-${o.id}`),
     () => {

@@ -34,10 +34,15 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   ses nuits : une location se loue à la journée.
 - **Ce qui décide table ou type : la forme temporelle.** Dormir se compte en nuits (Hébergements),
   disposer d'un bien loué en jours (Voitures), se déplacer va d'un départ à une arrivée
-  (Transports), faire occupe un créneau sur place (À faire), payer n'occupe rien (Dépenses). Une
+  (Transports), faire occupe un créneau sur place (Activités), payer n'occupe rien (Dépenses). Une
   chose neuve n'ouvre une table que si sa forme temporelle n'existe pas encore — sinon c'est un
-  type dans une table existante. C'est pourquoi un restaurant est un type d'« À faire », et une
+  type dans une table existante. C'est pourquoi un restaurant est un type d'« Activités », et une
   location de voiture n'est pas un transport : le trajet **utilise** la location.
+- **Une liste « à faire » ne se saisit pas, elle se compose** : une ressource, une colonne, et les
+  mots gardés sur cette colonne. Ce qui reste à traiter se lit déjà dans les statuts des autres
+  pages — le redemander ligne à ligne ferait une seconde vérité à tenir à jour. Une liste affiche
+  donc le tableau de sa page d'origine, mêmes cellules et mêmes éditions en place : rien n'y est
+  réécrit, rien ne peut y diverger.
 - **Une page a une adresse, et c'est un `#`.** `index.html#villes`, `index.html#scenario/<id>` :
   l'adresse se recharge, se met en favori et s'envoie. Un vrai chemin (`/villes`) demanderait un
   serveur qui réécrit tout vers `index.html` — ni `file://` ni GitHub Pages ne le font, et le
@@ -81,9 +86,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 - **Un groupe ne se déduit pas de ses colonnes, il les porte** : c'est lui qui tient ses lignes
   communes, et sans objet à lui elles n'auraient nulle part où vivre. C'est tout ce qui reste de
   l'étape qui portait les options.
-- **Une étape masquée et l'étape d'une colonne écartée ne comptent nulle part** : ni dates, ni
-  nuits, ni totaux, ni carte, ni récap, ni nombre d'étapes. Ce sont des variantes mises de côté,
-  gardées sous la main plutôt que supprimées. Seule la liste du détail les montre. Conséquence :
+- **Une étape masquée, l'étape d'un groupe masqué et celle d'une colonne écartée ne comptent nulle
+  part** : ni dates, ni nuits, ni totaux, ni carte, ni récap, ni nombre d'étapes. Ce sont des
+  variantes mises de côté, gardées sous la main plutôt que supprimées, et seule la liste du détail
+  les montre. Masquer un groupe sort toutes ses colonnes d'un geste : c'est l'étape entière qu'on met
+  de côté, pas l'une de ses façons de la faire. Conséquence :
   partout ailleurs, le rang d'une étape est son rang **parmi les visibles** — masquer la deuxième
   fait passer C en B, et décale les dates. Retenir une autre colonne les décale de même, puisque
   l'arrivée d'une étape somme les nuits qui la précèdent.
@@ -152,6 +159,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 | **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                        |
 | **Option d'étape**  | nom, lieu (une ville **ou** un hébergement), nuits, budget, retenue                                                                                                 | appartient à une étape ; une seule est retenue                  |
 | **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                              |
+| **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »    |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -266,6 +274,11 @@ La vue principale, en **tableau ou en cartes**.
   tête, puis nom, localisation, prix, dates et notes. Statut, tags et coup de cœur ne s'y trouvent
   pas, ils se posent depuis la liste. Le type est celui de la porte pour HomeExchange et Airbnb ;
   Booking logeant aussi bien un hôtel qu'une maison, sa porte garde le select que l'import remplit.
+- **La fiche s'ouvre en panneau** : cliquer une ligne du tableau — ailleurs que sur une cellule qui
+  agit déjà, pastille, champ ou bouton — pose la fiche contre le bord droit de l'écran, sur un fond
+  assombri ; Échap ou un clic dehors la referme, sous la même garde que la modale quand une saisie
+  n'est pas enregistrée. C'est le formulaire de la modale au mot près, posé autrement : les deux ne
+  peuvent pas diverger. L'**ajout**, lui, garde la modale centrée.
 - **Créer / modifier** : la modale complète, celle de la porte « à la main » et de toute
   modification. L'adresse se géocode sur clic du bouton « Localiser », qui
   propose des résultats ; le choix d'un résultat écrase pays, région, province, ville et coordonnées.
@@ -305,9 +318,9 @@ La vue principale, en **tableau ou en cartes**.
 Liste triée par nom : nom, adresse (ou les niveaux renseignés), coordonnées, notes. Même
 bloc de localisation que les hébergements. Sert à poser une étape de passage sans nuitée.
 
-### À faire
+### Activités
 
-**Attraction** — un lieu à visiter. L'écran s'appelle « À faire » : la table réunit tout ce qui
+**Attraction** — un lieu à visiter. L'écran s'appelle « Activités » : la table réunit tout ce qui
 occupe un créneau sur place, restaurants compris.
 
 | Champ                         | Détail                                                    |
@@ -423,7 +436,7 @@ groupe par source, dont le titre mène à la page où la corriger :
 | Hébergements réservés | une ligne par hébergement au statut Réservé 🔒 |
 | Voiture par défaut    | la voiture marquée ◉, si elle en porte une     |
 | Transports réservés   | une ligne par transport au statut Réservé 🔒   |
-| À faire, validé       | une ligne par activité au statut Go ✅         |
+| Activités, validé     | une ligne par activité au statut Go ✅         |
 
 Une source sans montant ferme reste **hors du total** et s'affiche telle quelle : un prix par nuit
 ou par jour garde son unité (« 120 € / nuit ») tant que rien ne dit sur combien le multiplier, et
@@ -486,6 +499,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | Champ    | Détail                                                            |
 | -------- | ----------------------------------------------------------------- |
 | nom      | éditable en ligne ; celui de l'étape qui s'est ouverte en options |
+| masqué   | le groupe reste dans la liste mais sort de tous les calculs       |
 | colonnes | au moins deux ; une seule retenue                                 |
 | lignes   | les activités et dépenses communes à toutes ses colonnes          |
 
@@ -555,8 +569,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
   masquable, supprimable. Son coût se lit **en haut à droite** de la carte, sur le modèle du total
   d'un scénario dans la liste : le montant qui compte en gros, et sous lui celui qu'un budget
-  remplace ou l'invite à le saisir. Ses trois actions se posent **en bas à droite** et n'apparaissent
-  qu'au survol, la seule zone libre — en haut elles couvriraient le prix.
+  remplace ou l'invite à le saisir. Ses quatre actions se posent **en bas à droite** et
+  n'apparaissent qu'au survol, la seule zone libre — en haut elles couvriraient le prix.
 - **Un groupe** : ses flèches ↑↓ et son nom en tête — celui de l'étape qui s'est ouverte en
   options, éditable en ligne comme un titre d'étape, puisque les colonnes comparent des façons de faire _cette_ étape-là
   et que chacune de leurs cartes garde son propre nom —, la date à laquelle il commence, et le
@@ -564,7 +578,8 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   cartes d'étape, sur un fond en creux dont elles se détachent. En tête de colonne, son nom
   éditable, la pastille ◉ / ○ qui la retient et, à partir de trois colonnes, le ✕ qui la retire avec
   ses étapes ; au pied, ses nuits et son coût, alignés en bas quelle que soit la hauteur de la
-  colonne d'à côté, puis « Garder celle-ci » tant qu'elles ne sont que deux. La colonne
+  colonne d'à côté, puis « Garder celle-ci » tant qu'elles ne sont que deux. Au bout de l'en-tête,
+  le compte des colonnes et l'œil qui masque le groupe, seule action qu'il porte en propre. La colonne
   retenue est cernée de jaune — liseré, trait sous son nom, trait au-dessus de son pied et pastille
   pleine : on la repère sans la lire. Toutes les colonnes
   partent du même jour et se datent comme si elles étaient retenues, sinon rien ne les comparerait ;
@@ -587,7 +602,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   la ville, elle, reste. Le select de lieu s'ouvre sur un champ de recherche qui interroge le nom du
   lieu comme ses niveaux — « Toscane » trouve tout ce qui y est — et une **ville qui manque s'y crée
   sous le nom tapé**, comme une activité depuis le ＋ d'une carte : elle entre dans les villes du
-  voyage, l'étape la prend pour lieu, et le reste se complète depuis la page Villes.
+  voyage, l'étape la prend pour lieu, et le reste se complète depuis la page Villes. Chaque
+  hébergement de la liste porte un ↗ en bout de ligne, qui ouvre sa fiche en panneau sans quitter le
+  scénario : un prix ou une adresse se vérifie là où l'on choisit.
 - **Le fil du trajet** : sous l'en-tête du détail, une bande de maillons, un par étape retenue,
   dans l'ordre du trajet. Chacun porte un trait de la couleur du type de son hébergement, sa lettre,
   son nom et ses nuits, et il est large comme ses nuits — la même lecture que la bande de la liste,
@@ -598,10 +615,12 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   colonnes d'emblée. Dans une colonne, le ＋ n'a qu'un geste, donc pas de menu : l'étape y naît.
 - **La modale d'étape** édite les nuits et le budget de l'étape. Le lieu, lui, ne se choisit que
   sur la carte.
-- **Masquer une étape** (case à cocher en haut à gauche de la carte) : cochée, la carte passe en
-  grisé-pointillé, son contenu et ses actions se désaturent, son titre se barre, sa pastille devient
-  un point, ses dates disparaissent, et le scénario se lit comme si elle n'existait pas. Sert à
-  comparer deux variantes d'un même trajet sans rien perdre.
+- **Masquer une étape ou un groupe** (l'œil, à gauche de la corbeille dans les actions de la carte,
+  au bout de l'en-tête pour un groupe) : l'œil barré dit que c'est déjà masqué. La carte prend alors
+  une bordure en pointillés et un fond hachuré, son contenu s'efface à moitié sans rien perdre de ses
+  couleurs, sa pastille devient un point, ses dates disparaissent, et le scénario se lit comme si
+  elle n'existait pas — la matière dit de loin ce qui est mis de côté. Sur un groupe, le geste
+  emporte toutes ses colonnes. Sert à comparer deux variantes d'un même trajet sans rien perdre.
 - **Dupliquer une étape** (⧉) : la copie s'insère **juste sous** l'originale, champs identiques, sans
   suffixe au nom — on ajuste l'une des deux, ou on en masque une.
 - **Insérer une étape entre deux autres** : un `＋` apparaît au survol de l'espace qui sépare deux
@@ -612,14 +631,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   même itinéraire que le tracé de la carte. Seules deux étapes voisines, toutes deux visibles et géolocalisées, en portent un : un
   tronçon qui enjamberait une étape masquée, écartée ou sans lieu ne dirait pas la distance des
   deux cartes qu'on lit. Dans un groupe, il se lit donc entre deux cartes de la colonne retenue. Le `＋` d'insertion sort à droite du libellé au survol.
-- **La gouttière du scénario** : à droite de la liste, un trait vertical court d'un bout à l'autre
+- **La gouttière du scénario** : à gauche de la liste, un trait vertical court d'un bout à l'autre
   et porte un point par étape ; l'écart entre deux points est la route qui les sépare, le plus long
   tronçon du scénario tenant l'écart plein et les autres s'y rapportant, avec un plancher qui garde
   le plus court lisible. Le trait est d'un seul tenant, à une seule largeur : c'est l'écart entre
   deux points qui dit la route, la grossir ne le dirait pas deux fois. Un point tombe à la hauteur
-  de la pastille-lettre de sa carte, centré sur le trait. Il longe le bord droit et la gouttière ne
+  de la pastille-lettre de sa carte, centré sur le trait. Il longe le bord gauche et la gouttière ne
   porte que lui : la bande entre deux cartes tient le ＋ qui ouvre une étape au milieu de leur
-  largeur, et la route chiffrée à son bord droit, contre le trait, sur la même ligne que le ＋. Le ＋
+  largeur, et la route chiffrée à son bord droit, sur la même ligne que le ＋. Le ＋
   ne s'y montre qu'au survol, et la bande ne descend jamais sous sa hauteur, sinon il déborderait sur
   les cartes.
 - **Le select de lieu** : les hébergements d'abord, un groupe par type dans l'ordre du vocabulaire
@@ -712,6 +731,32 @@ attachées à ces étapes ou aux groupes qu'elles traversent.
 | texte | un bloc par voyage |
 
 Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
+
+### À faire
+
+**Liste dynamique** — une question posée à une collection, pas des lignes qu'on saisit. L'écran
+réunit ce qui reste à traiter dans le voyage : les hébergements à booker, les transports à
+réserver, les voitures encore en attente.
+
+| Champ     | Détail                                                                              |
+| --------- | ----------------------------------------------------------------------------------- |
+| ressource | la collection lue : Hébergements, Activités, Transports, Voitures, Dépenses, Villes |
+| colonne   | la colonne sur laquelle la liste filtre                                             |
+| valeurs   | les mots gardés sur cette colonne — OU entre eux                                    |
+
+Le builder tient les trois en tête de page : deux selects, puis la rangée des valeurs à cocher.
+Une colonne n'est proposée que si elle porte des **mots** — son vocabulaire (statut, type, mode)
+ou ceux que ses lignes portent (ville, province, récurrence) ; un prix, une date, un favori n'en
+portent pas, et une égalité sur un nombre ne filtre rien. Une valeur n'est proposée que si une
+ligne la porte vraiment.
+
+Chaque liste montre le tableau de sa page d'origine, ses colonnes visibles et ses éditions en
+place : on change un statut là où on le lit, et la ligne quitte la liste. La rangée de pastilles
+reste sous le titre — c'est là qu'on ajoute ou retire un mot, une liste n'a pas de mode édition.
+Changer de ressource ou de colonne, en revanche, fait une autre liste.
+
+Les listes vivent dans le Sheet comme le reste du voyage : elles se retrouvent sur un autre
+appareil.
 
 ---
 

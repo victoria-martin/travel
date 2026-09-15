@@ -6,7 +6,7 @@
   modifieraient la donnée qu'Annuler est censé laisser intacte.
 */
 
-let modal = null; // {type, payload}
+let modal = null; // {type, sheet, payload}
 let modalSnapshot = null; // field values as opened, to tell whether anything was typed
 
 const MODAL_TYPES = {
@@ -83,8 +83,18 @@ const MODAL_TYPES = {
   sync: { body: () => syncForm() },
 };
 
+// Un même formulaire se pose au centre ou en panneau de droite : c'est l'ouverture qui le dit et
+// non le type, une fiche s'ouvrant en panneau là où sa création garde la modale.
 function openModal(type, ...args) {
-  modal = { type, ...MODAL_TYPES[type].open(...args) };
+  showModal(type, false, args);
+}
+
+function openSheet(type, ...args) {
+  showModal(type, true, args);
+}
+
+function showModal(type, sheet, args) {
+  modal = { type, sheet, ...MODAL_TYPES[type].open(...args) };
   render();
 }
 
@@ -120,15 +130,21 @@ function modalFieldValue(field) {
 
 function renderModal() {
   const container = document.createElement('div');
-  container.className = 'overlay';
   container.onclick = (e) => {
     if (e.target === container) dismissModal();
   };
 
   const cfg = MODAL_TYPES[modal.type];
-  const style = cfg.width ? `max-width:${cfg.width};` : '';
-  container.innerHTML = `<div class="modal" style="${style}">${cfg.body(modal)}</div>`;
+  // Un panneau tient toute la hauteur contre le bord droit : sa largeur est la sienne.
+  const style = cfg.width && !modal.sheet ? `max-width:${cfg.width};` : '';
+  container.className = modal.sheet ? 'overlay overlay-sheet' : 'overlay';
+  const box = modal.sheet ? 'modal modal-sheet' : 'modal';
+  container.innerHTML = `<div class="${box}" style="${style}">${cfg.body(modal)}</div>`;
   document.getElementById('app').appendChild(container);
   if (cfg.after) cfg.after(modal);
   modalSnapshot = cfg.edits ? modalFieldsState() : null;
 }
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && modal) dismissModal();
+});

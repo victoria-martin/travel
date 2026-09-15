@@ -129,6 +129,7 @@ const COLLECTIONS = {
     'isChosen',
   ],
   tripNotes: ['travelId', 'id', 'text'],
+  todoLists: ['travelId', 'id', 'kind', 'columnKey', 'filterValues'],
   // Le lieu, les nuits et le budget sont à l'étape ; `groupId` et `optionId` disent la colonne à
   // laquelle elle appartient, vides si elle n'est comparée à rien.
   steps: [
@@ -150,8 +151,9 @@ const COLLECTIONS = {
     // reprise, et repart vide au premier enregistrement.
     'city',
   ],
-  // Un groupe n'a que ses deux listes filles : ses colonnes et ses lignes communes.
-  stepGroups: ['travelId', 'id', 'scenarioId'],
+  // Un groupe porte son masquage, et pour le reste ses deux listes filles : ses colonnes et ses
+  // lignes communes.
+  stepGroups: ['travelId', 'id', 'scenarioId', 'hidden'],
   groupOptions: ['travelId', 'id', 'scenarioId', 'groupId', 'name', 'isSelected'],
   groupAttractions: [
     'travelId',
@@ -195,7 +197,7 @@ const GROUP_CHILDREN = { options: 'groupOptions', extras: 'groupAttractions' };
 const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
-const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories'];
+const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories', 'filterValues'];
 // Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
 const LEGACY_HEADERS = { address: 'geoAddress', categories: 'category' };
 

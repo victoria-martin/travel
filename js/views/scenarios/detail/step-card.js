@@ -1,9 +1,9 @@
 // Une étape hors du tracé n'a pas de rang : la pastille dit sur place ce qui l'en sort.
-function stepOrderBadge(step, rank) {
+function stepOrderBadge(scenario, step, rank) {
   if (rank === null)
     return /* HTML */ `<div
       class="step-order step-order-hidden"
-      title="${step.hidden ? 'Masquée' : 'Colonne écartée'} — hors des dates, des totaux et de la carte"
+      title="${stepOutReason(scenario, step)} — hors des dates, des totaux et de la carte"
     >
       •
     </div>`;
@@ -14,6 +14,10 @@ function stepOrderBadge(step, rank) {
   >
     ${stepLetter(rank)}
   </div>`;
+}
+
+function stepOutReason(scenario, step) {
+  return step.hidden || isGroupHidden(scenario, step.groupId) ? 'Masquée' : 'Colonne écartée';
 }
 
 // L'étape porte l'état de sa réservation : le liseré de la carte et son point du tracé disent
@@ -32,7 +36,7 @@ function stepCard(scenario, step, rank, arrival) {
       ondrop="dropOnStepCard(event,'${scenario.id}','${step.id}')"
     >
       <div class="step-reorder">${stepDragHandle(step)} ${stepMoveButtons(scenario, step)}</div>
-      ${stepHiddenCheckbox(scenario, step)} ${stepOrderBadge(step, rank)}
+      ${stepOrderBadge(scenario, step, rank)}
       <div class="step-body">
         <div class="step-title">
           ${editableText(step.name, `renameStep('${scenario.id}','${step.id}', this.innerText)`, {
@@ -57,6 +61,7 @@ function stepCard(scenario, step, rank, arrival) {
           ✎
         </button>
         ${duplicateButton(`duplicateStep('${scenario.id}','${step.id}')`)}
+        ${hiddenButton(step.hidden, `toggleStepHidden('${scenario.id}','${step.id}')`)}
         <button
           class="icon-btn"
           onclick="deleteStep('${scenario.id}','${step.id}')"
@@ -97,16 +102,6 @@ function makeGroupButton(scenario, step) {
   >
     ＋ option
   </button>`;
-}
-
-function stepHiddenCheckbox(scenario, step) {
-  return /* HTML */ `<input
-    type="checkbox"
-    class="step-hidden-check"
-    ${step.hidden ? 'checked' : ''}
-    onchange="toggleStepHidden('${scenario.id}','${step.id}')"
-    title="Masquer — hors des dates, des totaux et de la carte"
-  />`;
 }
 
 /*

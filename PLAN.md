@@ -31,6 +31,11 @@ les types.
   du cache local ([storage.js](js/storage.js#L36)) ; sur un navigateur vierge, les scénarios
   n'arrivent qu'au premier pull du Sheet et on reste sur la liste. En faire un one-shot consommé à
   la première arrivée de données, sans déranger la vue courante lors des pulls suivants.
+- **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
+  [route-trail.js](js/views/scenarios/detail/route-trail.js) existe, son appel reste en commentaire
+  dans [detail.js](js/views/scenarios/detail/detail.js). La bande de maillons sous l'en-tête prend
+  trop de place, la colonne de gauche et la gouttière nue essayées ne valent pas mieux : trouver ce
+  que le fil doit montrer, et quand.
 - **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 💡 idée : on commence a
   répondre à ca dans la trasfo de charges fixes en depense normameent
 
@@ -349,11 +354,10 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   est à la fois un village à visiter et un lieu d'étape. Trancher entre le tag `village` sur
   l'attraction, qui duplique la ville, et un `cityId` optionnel qui **référence** une ville
   existante, comme une étape de scénario référence un hébergement.
-- **Renommer l'entité en « À faire »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale
-  et le titre disent « À faire », mais les libellés d'item disent encore « une attraction »
+- **Renommer l'entité en « activité »** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la barre latérale
+  et le titre disent « Activités », mais les libellés d'item disent encore « une attraction »
   (modale, recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`. Reste
-  à choisir le mot au singulier, puis à décider si les clés suivent — c'est la même migration que
-  <!--t:omun-->.
+  à décider si les clés suivent — c'est la même migration que <!--t:omun-->.
 - **Les horaires depuis un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : le nom,
   l'adresse et les coordonnées se remplissent déjà
   ([GoogleMaps.js](apps-script/GoogleMaps.js)), lus dans l'URL finale et dans les métadonnées de
@@ -423,10 +427,12 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   qui doit pouvoit editer
   qui doit calculer une valeur dynamiquement donc ne dois pas pouvoir êtr emodifié (ui particuliere)
 
-- **Ouvrir une ligne dans un panneau de détail** <!--t:n3vd--> — 🧩 ui · 🖼️ écran · 💡 idée :
-  cliquer une ligne de tableau ouvre la ressource dans un panneau latéral, à la Notion, plutôt que
-  dans la modale d'édition. Les hébergements d'abord. C'est la revue de navigation qui précède la
-  PWA.
+- **Ouvrir une ligne dans un panneau de détail : les autres listes** <!--t:n3vd--> — 🧩 ui ·
+  🖼️ écran · 💡 idée : les hébergements ouvrent leur fiche en panneau, d'une ligne du tableau
+  comme du ↗ du menu de lieu d'une étape. Reste à déclarer `ROW_CLICKS` pour villes, activités,
+  transports et voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
+  trancher ce que devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
+  de navigation qui précède la PWA.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un
   service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
   puisque tout est déjà dans `localStorage`, et l'URL reste partageable. React Native est écarté :
@@ -462,6 +468,31 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Vérifier que le backend est documenté** <!--t:m9ci--> — 📄 doc · ⏳ à faire : l'en-tête de
   [Code.js](apps-script/Code.js#L1-L6) donne la procédure de déploiement ; confirmer qu'elle est à
   jour et reprise dans [docs/protocole-sync-sheet.md](docs/protocole-sync-sheet.md).
+
+## ✅ À faire
+
+La page existe : le builder, les listes dynamiques et leur modèle sont décrits dans
+[la spec](docs/spec-voyage-toscane.md). Ce qui reste :
+
+- **Créer l'onglet `todoLists` dans le Sheet** <!--t:tq7d--> — 🔌 intégration · ⏳ à faire :
+  `todoLists` est déclarée dans [Code.js](apps-script/Code.js) et dans
+  [storage.js](js/storage.js), mais l'onglet n'existera qu'après un `pnpm push-script` et un
+  premier envoi. Tant que ce n'est pas fait, les listes ne vivent qu'en local.
+- **Filtrer sur « Non renseigné »** <!--t:x5nb--> — 💾 données · 🔍 à étudier : une valeur vide ne
+  se propose pas, parce qu'une cellule du Sheet joint les valeurs par virgules et qu'un morceau
+  vide se perd à la relecture ([Code.js](apps-script/Code.js) `LIST_FIELDS`). Il faudrait un mot
+  sentinelle pour lister ce qui n'a pas de statut.
+- **Filtrer sur les tags** <!--t:g2vw--> — 🧩 ui · ⏳ à faire : la colonne Tags ne déclare pas de
+  `sortValue`, donc le builder ne la propose pas. Un tag est pourtant l'axe le plus naturel d'une
+  liste à faire.
+- **Changer la ressource d'une liste** <!--t:m8rc--> — 🧩 ui · 💡 idée : on modifie les valeurs en
+  cliquant les pastilles de la liste, mais changer de ressource ou de colonne demande de la
+  supprimer et de la refaire.
+- **Nommer une liste** <!--t:k6ja--> — 🗃️ modèle · 💡 idée : le titre est composé de la ressource
+  et de la colonne. Un nom libre — « avant de partir », « à payer » — dirait mieux pourquoi la
+  liste existe.
+- **Ordonner les listes** <!--t:p9wd--> — 🧩 ui · 💡 idée : elles se suivent dans l'ordre de
+  création. Un glisser comme celui des étapes les rangerait.
 
 ## Layout
 

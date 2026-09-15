@@ -10,8 +10,10 @@ function renderScenarioDetailView() {
       emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.')
     );
   }
+  // laisser ce comm TEST
   // on a enlevé scenarioRouteTrails temportairement
   // ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
+  // sous <div class="scenario-detail-cols"> pour à gauche et au dessus pr dessus
   return /* HTML */ `
     ${scenarioDetailHeader(s)}
     <div class="scenario-detail-cols">

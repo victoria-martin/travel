@@ -26,9 +26,10 @@ function render() {
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
       ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', '💶', 'Dépenses')}
-      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'À faire')}
+      ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Activités')}
       ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
       ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
+      ${navBtn('a-faire', '✅', 'À faire')}
       <div
         style="margin-top:14px; border-top:1px solid rgba(255,255,255,.12); padding-top:14px; display:flex; flex-direction:column; gap:6px;"
       >
@@ -94,5 +95,6 @@ function renderMain() {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);
   } else if (view === 'notes') main.innerHTML = renderNotesView();
+  else if (view === 'a-faire') main.innerHTML = renderTodoView();
   trackViewHeaderHeight(main);
 }

@@ -26,7 +26,7 @@ function stepRanks(scenario) {
   const ranks = {};
   let rank = 0;
   scenario.steps.forEach((st) => {
-    ranks[st.id] = !st.hidden && isStepRetained(scenario, st) ? rank++ : null;
+    ranks[st.id] = isStepVisible(scenario, st) ? rank++ : null;
   });
   return ranks;
 }

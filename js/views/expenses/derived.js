@@ -60,7 +60,7 @@ const DERIVED_EXPENSE_SOURCES = [
   },
   {
     key: 'attractions',
-    label: 'À faire, validé',
+    label: 'Activités, validé',
     view: 'attractions',
     lines: () =>
       ofCurrentTravel(state.attractions)

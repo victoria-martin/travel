@@ -16,6 +16,7 @@ function optionColumn(scenario, group, option, ranks) {
   return /* HTML */ `<div
     id="option-column-${option.id}"
     class="option-column${option.isSelected ? ' option-column-chosen' : ''}"
+    onclick="chooseOptionFromColumn(event,'${scenario.id}','${group.id}','${option.id}')"
   >
     ${optionColumnHead(scenario, group, option)} ${cards.join('')}
     <div class="step-gap">${addStepButton(scenario, after, option)}</div>
@@ -65,6 +66,19 @@ function optionColumnFoot(scenario, option) {
     <span class="option-foot-nights">${nightsLabel(optionNights(scenario, option))}</span>
     <strong>${formatCosts(optionCost(scenario, option))}</strong>
   </div>`;
+}
+
+/*
+  C'est la colonne entière qu'on retient — la pastille ne fait que le dire. Ce qui porte déjà un
+  geste garde le sien : sans ce filtre, la pastille retiendrait puis le clic remonterait ici
+  démarquer aussitôt. Le fond d'un menu ouvert s'exclut par appartenance, comme la poignée de
+  glisser : ni l'un ni l'autre n'est un bouton.
+*/
+const OPTION_COLUMN_ACTORS = 'button, a, input, summary, .editable, .inline-menu, [draggable=true]';
+
+function chooseOptionFromColumn(event, scenarioId, groupId, optionId) {
+  if (event.target.closest(OPTION_COLUMN_ACTORS)) return;
+  chooseGroupOption(scenarioId, groupId, optionId);
 }
 
 function optionChosenButton(scenario, group, option) {

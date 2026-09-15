@@ -122,12 +122,17 @@ function placeOptions(scenarioId, stepId) {
       `togglePlaceGroup('${key}','${scenarioId}','${stepId}')`,
       !needle && foldedPlaceGroups.has(key),
     );
-  const accommodationItem = (a) => `<button
-      class="inline-menu-item ${step.accommodationId === a.id ? 'selected' : ''}"
-      onclick="${pick(`heb:${a.id}`)}"
-    >
-      ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
-    </button>`;
+  // Le ↗ du bout de ligne ouvre la fiche de l'hébergement : il vit à côté du choix, pas dedans,
+  // un bouton ne pouvant en contenir un autre.
+  const accommodationItem = (a) => `<div class="inline-menu-row">
+      <button
+        class="inline-menu-item ${step.accommodationId === a.id ? 'selected' : ''}"
+        onclick="${pick(`heb:${a.id}`)}"
+      >
+        ${tagLabel(accType(a.type).emoji, `${a.favorite ? '★ ' : ''}${placeOptionLabel(a)}`)}
+      </button>
+      ${accommodationSheetButton(a.id)}
+    </div>`;
   const groups =
     accommodationTypeGroups(accommodations, accommodationItem, group) +
     group(

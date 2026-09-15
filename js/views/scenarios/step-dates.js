@@ -22,7 +22,7 @@ function groupArrival(scenario, group) {
   const first = scenario.steps.findIndex((st) => st.groupId === group.id);
   const nightsBefore = scenario.steps
     .slice(0, first)
-    .filter((st) => !st.hidden && isStepRetained(scenario, st))
+    .filter((st) => isStepVisible(scenario, st))
     .reduce((sum, st) => sum + stepNights(st), 0);
   return dateAfter(scenarioStart(scenario), nightsBefore);
 }

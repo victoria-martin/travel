@@ -39,6 +39,13 @@ function groupSteps(scenario, group) {
   return scenario.steps.filter((st) => st.groupId === group.id);
 }
 
+// Un groupe masqué met ses colonnes hors du voyage d'un geste : c'est l'étape entière qu'on met de
+// côté, pas l'une de ses options.
+function isGroupHidden(scenario, groupId) {
+  const group = getStepGroup(scenario, groupId);
+  return !!(group && group.hidden);
+}
+
 // Une étape compte si elle n'appartient à aucune colonne, ou à la colonne retenue de son groupe.
 function isStepRetained(scenario, step) {
   if (!step.optionId) return true;

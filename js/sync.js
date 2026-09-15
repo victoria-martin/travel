@@ -205,6 +205,7 @@ function mergeStates(remote, local, base) {
     transports: mergeCollections(remote.transports, local.transports, base.transports),
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
     tripNotes: mergeCollections(remote.tripNotes, local.tripNotes, base.tripNotes),
+    todoLists: mergeCollections(remote.todoLists, local.todoLists, base.todoLists),
   };
 }
 

@@ -1,7 +1,7 @@
 function attractionsHeader(items) {
   return /* HTML */ `<div class="view-header">
     <div>
-      <h2 class="view-title">À faire</h2>
+      <h2 class="view-title">Activités</h2>
       <p class="view-sub">
         ${Object.values(ATTRACTION_TYPES)
           .map((t) => t.label)

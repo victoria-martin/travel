@@ -633,6 +633,9 @@ tr:last-child td {
 tr:hover td {
   background: #f6efe0;
 }
+.row-openable {
+  cursor: pointer;
+}
 
 /* ---------- Cards ---------- */
 .card-grid {
@@ -747,6 +750,32 @@ tr:hover td {
   margin-left: auto;
   color: var(--ink-soft);
 }
+.inline-menu-row {
+  display: flex;
+  align-items: center;
+}
+.inline-menu-row .inline-menu-item {
+  min-width: 0;
+}
+.inline-menu-side {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.45;
+}
+.inline-menu-row:hover .inline-menu-side {
+  opacity: 1;
+}
+.inline-menu-side:hover {
+  background: var(--paper-raised);
+  color: var(--ink);
+}
 .inline-tag {
   display: inline-flex;
   align-items: center;
@@ -828,6 +857,19 @@ tr:hover td {
   font-family: 'Fraunces', serif;
   margin: 0 0 16px 0;
   font-size: 20px;
+}
+/* Le panneau de droite : la même modale, tenue contre le bord sur toute la hauteur. */
+.overlay-sheet {
+  padding: 0;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+.modal-sheet {
+  width: 440px;
+  max-width: 100%;
+  max-height: none;
+  border-radius: 0;
+  border-width: 0 0 0 1px;
 }
 .travel-modal-header {
   display: flex;
@@ -1135,11 +1177,11 @@ tr:hover td {
 }
 
 /*
-  La liste garde une gouttière à droite, où le trait du voyage court d'une étape à la dernière :
+  La liste garde une gouttière à gauche, où le trait du voyage court d'une étape à la dernière :
   chaque carte y pose son point, et l'écart entre deux points est la route qui les sépare — c'est la
   bande, dont la hauteur vient des tronçons, qui l'impose. La gouttière ne porte que le trait ; la
-  bande, elle, reste vide — la route chiffrée à son bord droit, contre le trait, et le ＋ d'insertion
-  au milieu, qui n'apparaît qu'au survol.
+  bande, elle, reste vide — la route chiffrée à son bord droit, et le ＋ d'insertion au milieu, qui
+  n'apparaît qu'au survol.
 */
 .step-list {
   position: relative;
@@ -1147,13 +1189,13 @@ tr:hover td {
   flex-direction: column;
   gap: 0;
   margin: 18px 0;
-  padding-right: 34px;
+  padding-left: 34px;
 }
 /* Le trait court d'un centre de point à l'autre : 25px, la hauteur où la pastille de rang tombe. */
 .step-list::before {
   content: '';
   position: absolute;
-  right: 6px;
+  left: 6px;
   top: 25px;
   bottom: 25px;
   width: 2px;
@@ -1168,12 +1210,22 @@ tr:hover td {
 .step-list > .step-group::before {
   content: '';
   position: absolute;
-  right: -33px;
   top: 20px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: var(--stone);
+}
+/*
+  Le point se centre sur le trait, à 7px du bord de la liste. Un décalage part du bord intérieur de
+  ce qui le porte : les deux valeurs diffèrent des deux pixels du liseré de réservation, que la
+  carte porte à gauche et le groupe non.
+*/
+.step-list > .step-card::before {
+  left: -35px;
+}
+.step-list > .step-group::before {
+  left: -33px;
 }
 /*
   La hauteur minimale est celle du ＋ : en dessous, il déborderait. Le ＋ tient le milieu de la
@@ -1290,13 +1342,13 @@ tr:hover td {
   color: var(--ink-soft);
   border: 1px dashed var(--ink-soft);
 }
-.step-hidden-check {
+.eye-icon {
   width: 15px;
   height: 15px;
-  margin-top: 6px;
-  accent-color: var(--stone);
-  cursor: pointer;
-  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
 }
 /*
   Réservé : le vert dit ce qui est pris — l'ocre reste à « choisi ». Il ne borde que la carte : le
@@ -1305,19 +1357,6 @@ tr:hover td {
 */
 .step-card-booked:not(.step-card-hidden) {
   border-left-color: var(--sage);
-}
-.step-card-hidden {
-  border-style: dashed;
-  background: transparent;
-}
-.step-card-hidden .step-body,
-.step-card-hidden .step-actions,
-.step-card-hidden .step-order {
-  opacity: 0.45;
-  filter: grayscale(1);
-}
-.step-card-hidden .step-title {
-  text-decoration: line-through;
 }
 .step-order-hidden {
   box-sizing: border-box;
@@ -1427,6 +1466,9 @@ tr:hover td {
   border-radius: 12px;
   padding: 12px 12px 14px;
   background: color-mix(in srgb, var(--stone) 7%, var(--paper));
+  /* test */
+  border-style: dashed;
+  background: transparent;
 }
 .step-group-head {
   display: flex;
@@ -1459,6 +1501,33 @@ tr:hover td {
 .step-group-count {
   flex-shrink: 0;
 }
+.step-group-actions {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/*
+  Une étape ou un groupe masqué reste dans la liste, en pointillés et hachuré : mis de côté, pas
+  effacé. La matière dit l'état de loin, sans rien enlever au contenu — qui garde ses couleurs et se
+  lit encore, en retrait.
+*/
+.step-card-hidden,
+.step-group-hidden {
+  border-style: dashed;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 5px,
+    color-mix(in srgb, var(--line) 60%, transparent) 5px 10px
+  );
+}
+.step-card-hidden > *,
+.step-group-hidden > * {
+  opacity: 0.6;
+}
+
 .option-columns {
   display: flex;
   flex-wrap: wrap;
@@ -1475,6 +1544,7 @@ tr:hover td {
   border-radius: 10px;
   padding: 8px 10px 10px;
   background: var(--paper-raised);
+  cursor: pointer;
 }
 /* La colonne retenue est cernée de jaune, de son liseré jusqu'à sa barre de tête : c'est elle
    qu'on lit quand on parcourt le scénario, les autres restent des comparaisons. */
@@ -2443,4 +2513,70 @@ tr:hover td {
   .is-collapsing {
     animation-duration: 0.01s;
   }
+}
+
+/* Page À faire : le builder en tête, puis une carte par liste dynamique. */
+.todo-builder {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.todo-builder-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.todo-builder .btn[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+.todo-hint {
+  color: var(--ink-soft);
+  font-size: 13px;
+  margin: 0;
+}
+.todo-list {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.todo-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.todo-list-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+/* La colonne filtrée se lit sous le nom de la ressource, pas à sa hauteur. */
+.todo-list-on {
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.todo-list-count {
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ink-soft);
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 8px;
 }
