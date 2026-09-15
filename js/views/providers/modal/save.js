@@ -17,6 +17,7 @@ function readProviderForm(id) {
     bookingUrl: document.getElementById('prov-booking').value.trim(),
     notes: document.getElementById('prov-notes').value.trim(),
     options: modal.payload.options.filter((option) => option.label || option.amount),
+    modelIds: modal.payload.modelIds || [],
   };
 }
 

@@ -45,17 +45,7 @@ function offerForm(p) {
     </div>
     <div class="field">
       <label>Modèle</label>
-      <select id="car-model">
-        <option value="" ${p.modelId ? '' : 'selected'}>
-          ${escapeHtml(p.model) || 'Aucun modèle'}
-        </option>
-        ${travelCarModels()
-          .map(
-            (m) =>
-              `<option value="${m.id}" ${p.modelId === m.id ? 'selected' : ''}>${escapeHtml(m.name)}</option>`,
-          )
-          .join('')}
-      </select>
+      <div id="offer-model-field">${offerModelSelect(p)}</div>
     </div>
     ${offerOptionsField(p)}
     <div class="field">
@@ -80,9 +70,33 @@ function offerForm(p) {
   `;
 }
 
-// Les options sont celles du loueur de la location : en changer change le catalogue proposé.
+/*
+  Les modèles proposés sont ceux du loueur de la location, pas tout le catalogue du voyage. Celui
+  que l'offre porte déjà reste dans la liste même si le loueur ne le coche plus : le menu ne fait
+  pas disparaître une valeur enregistrée.
+*/
+function offerModelSelect(p) {
+  const models = providerCarModels(offerRental(p).providerId);
+  const current = getCarModel(p.modelId);
+  if (current && !models.includes(current)) models.push(current);
+  return /* HTML */ `<select id="car-model">
+    <option value="" ${p.modelId ? '' : 'selected'}>
+      ${escapeHtml(p.model) || 'Aucun modèle'}
+    </option>
+    ${models
+      .map(
+        (m) =>
+          `<option value="${m.id}" ${p.modelId === m.id ? 'selected' : ''}>${escapeHtml(m.name)}</option>`,
+      )
+      .join('')}
+  </select>`;
+}
+
+// Le loueur de la location décide des modèles ET des options : en changer repeint les deux.
 function repaintOfferRental() {
   modal.payload.rentalId = document.getElementById('car-rental').value;
+  modal.payload.modelId = document.getElementById('car-model').value;
   modal.payload.optionIds = [];
+  document.getElementById('offer-model-field').innerHTML = offerModelSelect(modal.payload);
   repaintOfferOptions();
 }

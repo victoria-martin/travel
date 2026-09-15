@@ -8,6 +8,7 @@ function emptyProvider() {
     bookingUrl: '',
     notes: '',
     options: [],
+    modelIds: [],
   };
 }
 
@@ -17,7 +18,7 @@ function providerForm(p) {
     <div class="field-row">
       <div class="field">
         <label>Mode</label>
-        <select id="prov-mode">
+        <select id="prov-mode" onchange="repaintProviderModels()">
           <option value="" ${p.mode ? '' : 'selected'}>
             ${UNSET_TRANSPORT_MODE.emoji} ${UNSET_TRANSPORT_MODE.label}
           </option>
@@ -53,7 +54,7 @@ function providerForm(p) {
         ><input id="prov-booking" type="text" value="${escapeHtml(p.bookingUrl)}" />
       </div>
     </div>
-    ${providerOptionsField(p)}
+    ${providerOptionsField(p)} ${providerModelsField(p)}
     <div class="field">
       <label>Notes</label><textarea id="prov-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>

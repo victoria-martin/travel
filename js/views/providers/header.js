@@ -3,7 +3,6 @@ function providersHeaderActions() {
   ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('prestataire')" })}`;
 }
 
-function providersHeaderSub() {
-  const items = ofCurrentTravel(state.providers);
-  return `${items.length} prestataire${items.length > 1 ? 's' : ''}`;
+function providersCount() {
+  return ofCurrentTravel(state.providers).length;
 }

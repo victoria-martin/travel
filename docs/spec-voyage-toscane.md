@@ -58,6 +58,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   d'un hébergement. Croiser les deux sur une même carte se lit donc sans ambiguïté.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
   Locations et Charges fixes — jamais des copies.
+- **Un modèle appartient au voyage, sa disponibilité au loueur.** Ce que la voiture est ne dépend de
+  personne ; savoir qu'on la trouve chez Hertz est une relation, que le loueur porte. D'où le menu
+  Modèle d'une offre, qui ne propose que les modèles de son loueur au lieu de tout le catalogue.
 - **Une offre dit ce que le loueur propose, un scénario ce qu'on y prend.** Les options cochées sur
   un véhicule sont le catalogue retenu chez ce loueur ; celles d'un scénario sont son choix à lui,
   et deux scénarios comparent deux assurances sur la même voiture sans la dupliquer. Le montant, lui,
@@ -425,9 +428,10 @@ défaut par date de départ, puis par mode.
 
 **Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte trois onglets : les
 trajets, « Loueurs & compagnies », et « Voitures » — les modèles qu'on compare d'un loueur à
-l'autre. Le titre de l'en-tête reste « Transports » ; c'est le sous-titre qui nomme l'onglet
-ouvert, suivi de ce qu'il compte. C'est son **mode** qui dit comment on nomme un prestataire —
-loueur pour la voiture, compagnie pour l'avion, le train, le bus et le ferry.
+l'autre. Ils prennent leur propre rangée sous le titre de la page, chacun avec son icône, son nom
+toujours écrit, et une pastille qui porte le nombre de lignes qu'il tient ; l'onglet ouvert est
+souligné. C'est son **mode** qui dit comment on nomme un prestataire — loueur pour la voiture,
+compagnie pour l'avion, le train, le bus et le ferry.
 
 | Champ       | Détail                                                                   |
 | ----------- | ------------------------------------------------------------------------ |
@@ -437,6 +441,7 @@ loueur pour la voiture, compagnie pour l'avion, le train, le bus et le ferry.
 | site        |                                                                          |
 | réservation | la page de l'offre, à côté du site officiel                              |
 | options     | autant de lignes qu'on veut : un libellé, un montant, et ce qu'il compte |
+| modèles     | en mode voiture : les modèles du voyage qu'on trouve chez ce loueur      |
 | notes       |                                                                          |
 
 Tableau seul, tri et colonnes configurables comme les trajets. L'onglet ouvert est le geste en
@@ -449,6 +454,10 @@ cours : il ne vit ni dans l'adresse ni dans les préférences, revenir sur la pa
 - **La fiche s'ouvre en panneau** : cliquer une ligne de l'onglet — ailleurs que sur une cellule qui
   agit déjà — pose la fiche contre le bord droit de l'écran, comme celle d'un hébergement. L'ajout
   et la reprise en cours de saisie gardent la modale centrée.
+- **Un loueur dit quels modèles il propose** : des cases à cocher dans sa fiche, une par modèle du
+  voyage, et une ligne pour taper celui qui manque — il rejoint alors le catalogue et se coche. Le
+  bloc n'existe qu'en mode voiture. C'est une **référence** et non une possession : la même Golf
+  cochée chez deux loueurs reste une seule Golf, sans quoi on ne pourrait plus les comparer.
 - **Un select ne propose que les prestataires de son mode** : un vol ne se prend pas chez un loueur.
 - **Celui qui manque se crée sans quitter sa saisie** : le dernier item du select — « ＋ Ajouter une
   compagnie » — pose un petit formulaire par-dessus la modale ouverte, sans la re-rendre, et le
@@ -466,8 +475,9 @@ l'onglet « Voitures » liste, et rien d'autre.
   par une assurance se lisent l'une sous l'autre — c'est précisément ce qu'on vient y comparer.
 - **Le prix n'est jamais sur le modèle** : il dépend du loueur et des dates, il vit sur l'offre. Un
   modèle du catalogue qu'aucune location n'a relevé s'affiche sans offre.
-- **Le catalogue se remplit en saisissant** : un modèle tapé dans une location le rejoint. On peut
-  aussi l'ajouter depuis l'onglet, avant d'avoir cherché quoi que ce soit.
+- **Le catalogue se remplit en saisissant** : un modèle tapé dans une location rejoint le voyage
+  **et** le loueur de cette location. On peut aussi l'ajouter depuis l'onglet ou depuis la fiche du
+  loueur, avant d'avoir cherché quoi que ce soit.
 
 ### Locations
 

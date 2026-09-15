@@ -2,8 +2,9 @@
   La grille de saisie : on recopie la liste du loueur véhicule par véhicule, Entrée enregistre la
   ligne et en rouvre une vide. Elle ne demande que ce que la liste affiche — modèle, motorisation,
   boîte, prix total ; le statut, les options et le reste se posent ensuite depuis la fiche.
-  Le modèle tapé rejoint le catalogue du voyage, celui de l'onglet Voitures. Une seule location a
-  sa ligne ouverte à la fois : c'est celle où l'on tape.
+  Le modèle tapé rejoint le catalogue du voyage, celui de l'onglet Voitures, et le loueur de la
+  location : on le retrouve au menu de la prochaine offre prise chez lui. Une seule location a sa
+  ligne ouverte à la fois : c'est celle où l'on tape.
 */
 let draftRentalId = null;
 
@@ -34,7 +35,7 @@ function offerDraftRow(rentalId) {
   >
     <input id="draft-model" type="text" placeholder="Golf" list="draft-models" />
     <datalist id="draft-models">
-      ${travelCarModels()
+      ${providerCarModels(getRental(rentalId).providerId)
         .map((model) => `<option value="${escapeHtml(model.name)}"></option>`)
         .join('')}
     </datalist>
@@ -68,6 +69,7 @@ function saveOfferDraft() {
     document.getElementById('draft-fuel').value,
     document.getElementById('draft-gearbox').value,
   );
+  addProviderModel(getRental(draftRentalId).providerId, model.id);
   state.offers.push({
     ...emptyOffer(),
     id: uid(),

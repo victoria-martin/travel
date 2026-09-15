@@ -273,7 +273,15 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 ## 🚗 Locations
 
 La page existe : les locations, leurs véhicules, la grille de saisie, les options et la voiture par
-défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md). Rien en attente.
+défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md).
+
+- **Le tarif par jour ne se saisit plus** <!--t:m8vd--> — 🐛 fix · ⏳ à faire : ni la fiche
+  ([modal/form.js](js/views/rentals/modal/form.js)) ni la grille de saisie rapide n'ont de champ
+  `pricePerDay` — seul le prix total y est. `offerDayPrice`
+  ([offer-price.js](js/views/rentals/offer-price.js)) le divise alors par les jours de la location,
+  et une offre sans dates retombe sur un `pricePerDay` que plus rien ne remplit : elle coûte donc
+  **zéro** dans un scénario. Remettre le champ aux deux endroits ; l'arbitrage total / par jour est
+  déjà écrit.
 
 ## 💰 Dépenses
 

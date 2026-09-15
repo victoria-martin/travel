@@ -91,6 +91,7 @@ function migrateData(data) {
   });
   adoptRentals(data);
   adoptCarModels(data);
+  adoptProviderModels(data);
   // La page Voitures est devenue Locations : une liste enregistrée la désigne par sa clé.
   (data.todoLists || []).forEach((list) => {
     if (list.kind === 'voitures') list.kind = 'locations';
@@ -152,6 +153,27 @@ function adoptProviders(data) {
   });
   data.providers.forEach((p) => {
     if (!Array.isArray(p.options)) p.options = [];
+    if (!Array.isArray(p.modelIds)) p.modelIds = [];
+  });
+}
+
+/*
+  Quels modèles un loueur propose ne se déduisait que des offres déjà relevées : le menu Modèle
+  d'une offre listait donc tout le voyage. Le loueur porte désormais ses modèles, et ce qu'on a
+  relevé chez lui en est la reprise — sans quoi son catalogue naîtrait vide sous une offre qui
+  pointe déjà un modèle.
+*/
+function adoptProviderModels(data) {
+  const byProvider = {};
+  (data.offers || []).forEach((offer) => {
+    const rental = (data.rentals || []).find((r) => r.id === offer.rentalId);
+    if (!rental || !rental.providerId || !offer.modelId) return;
+    (byProvider[rental.providerId] = byProvider[rental.providerId] || new Set()).add(offer.modelId);
+  });
+  data.providers.forEach((provider) => {
+    const seen = byProvider[provider.id];
+    if (!seen) return;
+    provider.modelIds = [...new Set([...provider.modelIds, ...seen])];
   });
 }
 

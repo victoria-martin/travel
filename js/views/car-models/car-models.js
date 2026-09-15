@@ -12,7 +12,6 @@ function carModelsHeaderActions() {
   return toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('modele')" });
 }
 
-function carModelsHeaderSub() {
-  const models = travelCarModels();
-  return `${models.length} modèle${models.length > 1 ? 's' : ''}`;
+function carModelsCount() {
+  return travelCarModels().length;
 }

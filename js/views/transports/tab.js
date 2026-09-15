@@ -9,7 +9,7 @@ const TRANSPORT_TABS = [
     key: 'trajets',
     icon: svgIcon('plane'),
     label: 'Trajets',
-    sub: () => transportsHeaderSub(),
+    count: () => transportsCount(),
     actions: () => transportsHeaderActions(),
     body: () => renderTransportsList(),
   },
@@ -17,7 +17,7 @@ const TRANSPORT_TABS = [
     key: 'prestataires',
     icon: svgIcon('building-2'),
     label: 'Loueurs & compagnies',
-    sub: () => providersHeaderSub(),
+    count: () => providersCount(),
     actions: () => providersHeaderActions(),
     body: () => renderProvidersTab(),
   },
@@ -25,7 +25,7 @@ const TRANSPORT_TABS = [
     key: 'voitures',
     icon: svgIcon('car'),
     label: 'Voitures',
-    sub: () => carModelsHeaderSub(),
+    count: () => carModelsCount(),
     actions: () => carModelsHeaderActions(),
     body: () => renderCarModelsTab(),
   },
@@ -42,13 +42,22 @@ function setTransportsTab(key) {
   render();
 }
 
-function transportsTabToggle() {
-  return toolbarToggleGroup(
-    TRANSPORT_TABS.map((tab) => ({
-      icon: tab.icon,
-      label: tab.label,
-      active: transportsTab === tab.key,
-      onclick: `setTransportsTab('${tab.key}')`,
-    })),
-  );
+function transportsTabs() {
+  return /* HTML */ `<div class="view-tabs" role="tablist">
+    ${TRANSPORT_TABS.map((tab) => transportsTabButton(tab)).join('')}
+  </div>`;
+}
+
+function transportsTabButton(tab) {
+  const active = transportsTab === tab.key;
+  return /* HTML */ `<button
+    class="view-tab ${active ? 'active' : ''}"
+    role="tab"
+    aria-selected="${active}"
+    onclick="setTransportsTab('${tab.key}')"
+  >
+    <span class="view-tab-icon">${tab.icon}</span>
+    <span>${escapeHtml(tab.label)}</span>
+    <span class="view-tab-count">${tab.count()}</span>
+  </button>`;
 }

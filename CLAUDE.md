@@ -60,6 +60,21 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-15** — un loueur porte les **modèles qu'il propose**
+  ([model-rows.js](js/views/providers/modal/model-rows.js)) : le menu Modèle d'une offre listait
+  tout le catalogue du voyage, donc on ne pouvait pas dire « chez Europcar il y a une BMW ». C'est
+  une **référence** et non le retour de `provider.models` supprimé le matin même — le modèle reste
+  du voyage, une seule Golf que deux loueurs cochent, sinon la comparaison qui fait tout l'intérêt
+  de l'onglet Voitures disparaît. La reprise (`adoptProviderModels`, [storage.js](js/storage.js))
+  part de ce qu'on a déjà relevé — les offres du loueur donnent ses modèles — et tourne après
+  `adoptCarModels` et `adoptRentals`, qui posent respectivement le `modelId` d'une offre et le
+  loueur de sa location. Le menu garde le modèle que l'offre porte même si le loueur ne le coche
+  plus : un select ne fait pas disparaître une valeur enregistrée. Changer la location d'une offre
+  repeint désormais les deux blocs que le loueur décide, modèles et options, et le modèle choisi
+  se relit avant le repeint plutôt que de se perdre. Le mode commande le bloc comme il commande
+  déjà les champs d'un trajet : seule la voiture a des modèles, d'où un `onchange` sur le select
+  de mode.
+
 - **2026-09-15** — `cars` devient [offers](js/views/rentals/get-offer.js) : la collection ne tenait
   pas des voitures mais des **prix**, et la voiture, c'est `carModels`. Les deux noms étaient
   croisés par rapport à l'écran — le code appelait `cars` ce que la page Locations nomme

@@ -15,6 +15,7 @@ COLUMN_SETS.prestataires = [
     sortOrder: { key: 'transportMode', dict: TRANSPORT_MODES, label: 'Ordre des modes' },
   },
   { key: 'options', label: 'Options', cell: providerOptionsCell },
+  { key: 'models', label: 'Modèles', cell: providerModelsCell },
   { key: 'site', label: 'Site', cell: providerSiteCell },
   { key: 'booking', label: 'Réservation', cell: providerBookingCell },
   { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: providerNotesCell },
@@ -28,6 +29,13 @@ SORT_DEFAULTS.prestataires = [
 
 function providerNameCell(p) {
   return textCell(p.name);
+}
+
+// Seule la voiture a des modèles : les autres modes n'ont rien à montrer ici.
+function providerModelsCell(p) {
+  const models = providerCarModels(p.id);
+  if (!models.length) return '—';
+  return models.map((model) => `<span class="tag-chip">${escapeHtml(model.name)}</span>`).join('');
 }
 
 function providerSiteCell(p) {

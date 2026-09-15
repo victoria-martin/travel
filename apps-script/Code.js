@@ -42,7 +42,19 @@ const COLLECTIONS = {
     'favorite',
   ],
   // Un prestataire porte ses options dans une seule cellule : elles ne se lisent qu'avec lui.
-  providers: ['travelId', 'id', 'mode', 'name', 'logo', 'site', 'bookingUrl', 'notes', 'options'],
+  // `modelIds` dit quels modèles du voyage ce loueur propose ; le modèle, lui, reste au voyage.
+  providers: [
+    'travelId',
+    'id',
+    'mode',
+    'name',
+    'logo',
+    'site',
+    'bookingUrl',
+    'notes',
+    'options',
+    'modelIds',
+  ],
   // Un modèle est du voyage et non d'un loueur : la même Golf se compare chez deux loueurs.
   carModels: ['travelId', 'id', 'name', 'fuel', 'gearbox'],
   // Le lieu, les dates et le loueur sont à la location ; le véhicule n'en porte que la référence.
@@ -234,6 +246,7 @@ const LIST_FIELDS = [
   'filterValues',
   'optionIds',
   'offerOptionIds',
+  'modelIds',
 ];
 // Une liste d'objets ne tient pas dans une cellule séparée par des virgules : elle s'y écrit en JSON.
 const JSON_FIELDS = ['options'];
