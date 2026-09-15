@@ -33,7 +33,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   dans un scénario est son prix **multiplié par les jours**, comme un hébergement est multiplié par
   ses nuits : une location se loue à la journée.
 - **Ce qui décide table ou type : la forme temporelle.** Dormir se compte en nuits (Hébergements),
-  disposer d'un bien loué en jours (Voitures), se déplacer va d'un départ à une arrivée
+  disposer d'un bien loué en jours (Locations), se déplacer va d'un départ à une arrivée
   (Transports), faire occupe un créneau sur place (Activités), payer n'occupe rien (Dépenses). Une
   chose neuve n'ouvre une table que si sa forme temporelle n'existe pas encore — sinon c'est un
   type dans une table existante. C'est pourquoi un restaurant est un type d'« Activités », et une
@@ -57,7 +57,7 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   qu'on retient (scénario choisi, colonne retenue), le vert ce qui est pris — le statut **Réservé**
   d'un hébergement. Croiser les deux sur une même carte se lit donc sans ambiguïté.
 - Un scénario porte **une** voiture et **plusieurs** charges fixes, **en référence** aux tables
-  Voitures et Charges fixes — jamais des copies.
+  Locations et Charges fixes — jamais des copies.
 - Un home exchange se paie en **GuestPoints** : ces montants ne s'additionnent **jamais** aux
   euros. Ils ont leur propre ligne de total.
 - Un prix se saisit en texte libre (`120`, `1 200,50 €`) : seul le nombre est extrait pour les
@@ -386,18 +386,18 @@ localisation que les villes et les hébergements.
 
 **Transport** — un trajet du voyage.
 
-| Champ                | Détail                                                                                                         |
-| -------------------- | -------------------------------------------------------------------------------------------------------------- |
-| mode                 | liste figée ; décide des champs utiles                                                                         |
-| statut               | liste propre, courte                                                                                           |
-| départ, arrivée      | une ville de la table Villes, plus une précision libre à côté                                                  |
-| dates et heures      | date et heure de départ, date et heure d'arrivée                                                               |
-| compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre     |
-| voiture              | en mode voiture seulement : référence une entrée de la table Voitures, dont le loueur et le modèle s'affichent |
-| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                                 |
-| lien                 |                                                                                                                |
-| notes                |                                                                                                                |
-| favori               | étoile en tête de ligne                                                                                        |
+| Champ                | Détail                                                                                                          |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| mode                 | liste figée ; décide des champs utiles                                                                          |
+| statut               | liste propre, courte                                                                                            |
+| départ, arrivée      | une ville de la table Villes, plus une précision libre à côté                                                   |
+| dates et heures      | date et heure de départ, date et heure d'arrivée                                                                |
+| compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre      |
+| voiture              | en mode voiture seulement : référence un véhicule de la page Locations, dont le loueur et le modèle s'affichent |
+| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                                  |
+| lien                 |                                                                                                                 |
+| notes                |                                                                                                                 |
+| favori               | étoile en tête de ligne                                                                                         |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, mode, départ, arrivée, part le, arrive le
 (masquée par défaut), compagnie / loueur, prix, statut, lien, notes (masquée par défaut). Tri par
@@ -441,37 +441,62 @@ cours : il ne vit ni dans l'adresse ni dans les préférences, revenir sur la pa
   assistance. Son montant se compte en forfait, par jour, par bagage, par personne ou par trajet —
   liste figée. Le libellé reste libre, et les options déjà posées ailleurs le proposent en
   autocomplétion : les mots se partagent sans qu'un vocabulaire soit à administrer.
+- **La fiche s'ouvre en panneau** : cliquer une ligne de l'onglet — ailleurs que sur une cellule qui
+  agit déjà — pose la fiche contre le bord droit de l'écran, comme celle d'un hébergement. L'ajout
+  et la reprise en cours de saisie gardent la modale centrée.
 - **Un select ne propose que les prestataires de son mode** : un vol ne se prend pas chez un loueur.
 - **Celui qui manque se crée sans quitter sa saisie** : le dernier item du select — « ＋ Ajouter une
   compagnie » — pose un petit formulaire par-dessus la modale ouverte, sans la re-rendre, et le
   prestataire créé s'y sélectionne. Il ne porte alors que son nom et son mode ; le reste se complète
   dans l'onglet.
 
-### Voitures
+### Locations
 
-**Voiture**
+**Location** — une recherche chez un loueur : ce qu'on tape une fois pour toute une liste de
+véhicules.
 
-| Champ                   | Détail                                                                    |
-| ----------------------- | ------------------------------------------------------------------------- |
-| loueur                  | référence un prestataire ; avec le modèle, le libellé « loueur · modèle » |
-| modèle                  | texte libre                                                               |
-| prix / jour             | texte libre ; c'est lui que le scénario multiplie par les jours           |
-| prix total              | texte libre ; saisi à la main, jamais calculé                             |
-| statut                  | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                |
-| dates                   | texte libre                                                               |
-| lieu de prise en charge |                                                                           |
-| lien                    |                                                                           |
-| notes                   | éditables depuis la ligne                                                 |
-| par défaut              | une seule voiture à la fois                                               |
+| Champ          | Détail                                                  |
+| -------------- | ------------------------------------------------------- |
+| loueur         | référence un prestataire                                |
+| lieu           | l'agence ou l'aéroport de prise en charge               |
+| départ, retour | une date et une heure chacun ; les jours s'en déduisent |
+| lien           | la page de la recherche chez le loueur                  |
+| notes          |                                                         |
 
-Liste simple : tableau ou cartes, ajout/modification en modale, suppression confirmée. Aucune
-colonne masquable, aucun tri configurable — le besoin ne s'est pas présenté.
+**Véhicule** — une offre de cette location.
 
-- **Notes éditables en ligne**, comme sur les hébergements : sous le libellé dans le tableau, sur la
-  ligne 📝 des cartes.
-- **Voiture par défaut** : un rond ◉ en tête de ligne. Une seule voiture à la fois — la marquer
-  démarque les autres, la re-cliquer n'en laisse aucune.
-- Le **lien** d'une voiture s'ouvre depuis la ligne (« Voir ») ou depuis sa carte (« Lien »).
+| Champ        | Détail                                                                      |
+| ------------ | --------------------------------------------------------------------------- |
+| modèle       | « Fiat 500 »                                                                |
+| motorisation | essence · diesel · hybride · électrique                                     |
+| boîte        | automatique · manuelle                                                      |
+| prix total   | ce que le loueur affiche pour toute la location ; le prix / jour en découle |
+| options      | celles cochées dans le catalogue du loueur                                  |
+| statut       | 🔒 Réservé · 💳 À réserver · ✅ Go · 👀 À voir · 👎 Écarté                  |
+| lien, notes  | notes éditables depuis la ligne                                             |
+| par défaut   | un seul véhicule à la fois, pour tout le voyage                             |
+
+La page est la liste des locations. Chacune se déplie sur ses véhicules, et le dépli est le geste
+en cours : revenir sur la page les retrouve tous fermés.
+
+- **La saisie suit le site du loueur** : « Nouvelle recherche » demande le loueur, le lieu et les
+  deux dates, puis ouvre la location sur une ligne de saisie — modèle, motorisation, boîte, prix
+  total. `Entrée` enregistre la ligne et en rouvre une vide, on recopie la liste affichée sans
+  rouvrir de modale. Le reste (statut, options, lien) se pose ensuite depuis la fiche du véhicule.
+- **Le prix se saisit en total, jamais par jour** : c'est le chiffre que le loueur affiche. Le prix
+  par jour est une dérivation du total et des jours de la location, et c'est lui que le scénario
+  multiplie par ses jours à lui. Une voiture reprise d'avant les locations n'a parfois que son prix
+  par jour : il répond alors tant qu'aucun total n'est saisi.
+- **Les options viennent du loueur, la case vient du véhicule** : le catalogue et les prix vivent
+  chez le prestataire, le véhicule ne porte que ce qu'il a coché. Une option tapée depuis la fiche
+  d'un véhicule rejoint le catalogue du loueur — corriger son prix le corrige pour tous les
+  véhicules qui l'ont prise. Une option au jour se compte sur les jours de la location, une option
+  par personne sur les voyageurs, un forfait une fois ; un bagage et un trajet comptent une fois,
+  rien ne dit combien on en prend.
+- **Voiture par défaut** : un rond ◉ en tête de ligne. Un seul véhicule à la fois pour tout le
+  voyage — le marquer démarque les autres. C'est lui que la page Dépenses lit, options comprises.
+- La page Locations écrit ses lignes en clair ; les colonnes d'un véhicule servent aux listes
+  filtrées de la page À faire, qui lisent la collection entière.
 
 ### Dépenses
 
@@ -528,10 +553,10 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 | -------------- | --------------------------------------------------------------------------- |
 | nom            | éditable en ligne dans le détail                                            |
 | favori         | ⭐, remonte en tête de liste                                                |
-| archivé        | sort de la liste sans être supprimé ; un archivé n'est plus le choisi        |
+| archivé        | sort de la liste sans être supprimé ; un archivé n'est plus le choisi       |
 | choisi         | ◉ un seul par voyage ; c'est lui que lisent les écrans transverses          |
 | date de départ | par défaut celle du voyage ; date les étapes, vide aucune date ne s'affiche |
-| voiture        | une référence à la table Voitures                                           |
+| voiture        | une référence à un véhicule de la page Locations                            |
 | charges        | des références à la table Charges fixes                                     |
 | transports     | des références à la table Transports                                        |
 | étapes         | ordonnées ; l'ordre est le trajet                                           |
@@ -635,8 +660,11 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Ses deux boutons « 🗺 Carte » et « 💶 Argent » vivent dans la barre de l'en-tête et sont aussi sa
   bascule — recliquer celui qui est allumé referme le panneau, et les étapes prennent toute la
   largeur. Le passage d'un mode à l'autre est animé : les deux colonnes glissent vers leur nouvelle
-  largeur au lieu de sauter. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à l'autre. Sous
-  1100 px, le panneau repasse sous les étapes.
+  largeur au lieu de sauter. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à
+  l'autre. Sous 1100 px, le panneau repasse sous les étapes.
+- **Le partage des deux colonnes se glisse** : la poignée entre elles se tire à la souris, chaque
+  colonne gardant au moins 280 px. La largeur est retenue **par onglet** — la carte se lit large,
+  l'argent tient en une colonne étroite — et d'une session à l'autre.
 - **Une étape** : une pastille-lettre (A, B, C… dans l'ordre du trajet — grisée et légendée quand
   le lieu n'est pas géolocalisé, donc absent de la carte), un titre éditable en ligne suivi sur la
   même ligne de ses dates calculées (« sam. 13 juin → lun. 15 juin », la seule date d'arrivée si
@@ -646,7 +674,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   quand le lieu en est un — la même que celle de la page Hébergements, et modifiable ici, où l'on
   voit le trajet entier —, un select de nuits (0 à 14), et en bout de ligne le coût. Le bord gauche de la
   carte porte la couleur du **statut de l'étape** — le même que son segment du fil d'itinéraire :
-  réservé, à réserver, à l'étude, en recherche, sans hébergement, à revoir. Le fond de la carte prend la même
+  réservé, à réserver, à l'étude, en recherche, sans hébergement, à revoir. Ce statut se nomme aussi
+  en toutes lettres, dans un tag teinté posé en bout de carte au-dessus du montant : il est déduit
+  et non saisi, donc sans bordure et sans geste, et son infobulle dit d'où il vient. Le fond de la carte prend la même
   couleur, très diluée — la teinte du statut, mais jamais sa texture : des rayures sur une carte
   entière mangeraient le contenu.
   Une étape masquée ne le porte pas, elle est hors du voyage ; la pastille-lettre, elle, reste neutre
@@ -765,7 +795,7 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   écartées étant des comparaisons.
 - **Voiture** : un select parmi les voitures de la table (« loueur · modèle »), et son coût — prix
   / jour de la voiture × nuits du scénario. Le prix total saisi sur la voiture ne sert qu'à la vue
-  Voitures : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
+  Locations : il ne dépend pas des dates d'un scénario. Un scénario créé naît avec la **voiture par défaut**
   rattachée : c'est une valeur de départ, pas un repli — « Aucune voiture » reste un choix qui
   tient, et les scénarios existants ne bougent pas.
 - **Dépenses**, sous le bloc Voiture, dans sa propre teinte pour ne pas se lire comme une étape :
@@ -851,11 +881,11 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 réunit ce qui reste à traiter dans le voyage : les hébergements à booker, les transports à
 réserver, les voitures encore en attente.
 
-| Champ     | Détail                                                                              |
-| --------- | ----------------------------------------------------------------------------------- |
-| ressource | la collection lue : Hébergements, Activités, Transports, Voitures, Dépenses, Villes |
-| colonne   | la colonne sur laquelle la liste filtre                                             |
-| valeurs   | les mots gardés sur cette colonne — OU entre eux                                    |
+| Champ     | Détail                                                                               |
+| --------- | ------------------------------------------------------------------------------------ |
+| ressource | la collection lue : Hébergements, Activités, Transports, Locations, Dépenses, Villes |
+| colonne   | la colonne sur laquelle la liste filtre                                              |
+| valeurs   | les mots gardés sur cette colonne — OU entre eux                                     |
 
 Le builder tient les trois en tête de page : deux selects, puis la rangée des valeurs à cocher.
 Une colonne n'est proposée que si elle porte des **mots** — son vocabulaire (statut, type, mode)

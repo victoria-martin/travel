@@ -1218,6 +1218,8 @@ tr:hover td {
   gap: 0;
   margin: 18px 0;
   padding-left: 32px;
+  /* La marge droite est celle du ＋ des options, posé hors de la carte. */
+  padding-right: 32px;
 }
 /* Le trait court d'un centre de point à l'autre : 25px, la hauteur où la pastille de rang tombe. */
 .step-list::before {
@@ -1266,7 +1268,7 @@ tr:hover td {
 }
 .step-list > .step-gap .step-leg {
   position: absolute;
-  right: 0;
+  right: 32px;
 }
 
 /* La bande entre deux cartes porte le tronçon routier et son ＋ d'insertion. */
@@ -1326,10 +1328,34 @@ tr:hover td {
   padding: 12px 12px 12px 8px;
   box-shadow: 0 1px 2px rgba(36, 49, 43, 0.05);
 }
+/* Le statut et le montant se lisent d'un même coup d'œil, en bout de carte. */
+.step-side {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+/* Le statut est déduit et non saisi : un tag sans bordure ni curseur, teinté de la couleur que la
+   bordure gauche porte déjà. */
+.step-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-color) 22%, transparent);
+  color: color-mix(in srgb, var(--step-color) 55%, var(--ink));
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
 /* Dans une colonne d'option, la carte se détache du fond de la colonne et non de celui de la page. */
 .option-column .step-card {
   background: var(--white);
-  background: var(--paper-raised);
+  background: var(--sage-pale);
+  background: transparent;
+  /* background: var(--paper); */
 }
 
 /* La colonne tient toute la hauteur de la carte : les flèches en haut contre le rang, la poignée
@@ -1480,6 +1506,21 @@ tr:hover td {
   font-weight: 500;
   color: var(--ink-soft);
 }
+/* Le ＋ des options est le fantôme de celui d'entre deux cartes : même bordure invisible, même
+   survol. Il se pose hors de la carte, à mi-hauteur, dans la marge que la liste lui réserve. */
+.step-fork-btn {
+  position: absolute;
+  top: 50%;
+  right: -26px;
+  transform: translateY(-50%);
+  border-color: transparent;
+  background: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.step-card:hover .step-fork-btn {
+  opacity: 1;
+}
 /* Les actions vivent en bas à droite, la seule zone libre : en haut elles couvriraient le prix. */
 .step-actions {
   position: absolute;
@@ -1494,12 +1535,14 @@ tr:hover td {
   opacity: 1;
   pointer-events: auto;
 }
+.step-stay {
+  margin-top: 10px;
+}
 .step-acc {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
 }
 .step-place {
   display: flex;
@@ -1551,7 +1594,10 @@ tr:hover td {
   background: color-mix(in srgb, var(--stone) 7%, var(--paper));
   /* test */
   border-style: dashed;
+  background: var(--paper-raised);
+  background: var(--paper);
   background: transparent;
+  background: var(--sage-pale);
 }
 .step-group-head {
   display: flex;
@@ -1627,6 +1673,7 @@ tr:hover td {
   border-radius: 10px;
   padding: 8px 10px 10px;
   background: var(--paper-raised);
+  border: solid 1px var(--line);
   cursor: pointer;
 }
 /* La colonne retenue est cernée de jaune : c'est elle qu'on lit quand on parcourt le scénario,
@@ -1650,7 +1697,6 @@ tr:hover td {
   transition: opacity 0.15s;
 }
 .option-column:hover .option-remove,
-.step-card:hover .step-add-option,
 .step-group:hover .step-add-option {
   opacity: 1;
 }
@@ -1662,7 +1708,7 @@ tr:hover td {
 }
 .option-column-chosen .option-keep {
   border-color: var(--gold);
-  background: color-mix(in srgb, var(--gold) 22%, var(--white));
+  background: color-mix(in srgb, var(--gold) 22%, var(--paper-raised));
 }
 /* Un champ vide se remplit d'un clic : sa pastille se montre creuse plutôt que de s'effacer. */
 /* Réservé est le seul statut peint : les autres se lisent, celui-là se repère. */
@@ -1722,11 +1768,14 @@ tr:hover td {
 }
 /* Les lignes d'une étape ou d'un groupe — activités et dépenses — sur une grille à elles, et non
    sur celle du lieu : leur nom prend la largeur, le nombre et le montant s'épinglent à droite. */
-.step-card > .step-main > .step-body > .step-extras {
+.step-card > .step-main > .step-body > .step-stay > .step-extras {
   padding-right: 92px;
 }
 .step-extras {
   margin-top: 6px;
+}
+.step-stay > .step-extras {
+  margin-top: 2px;
 }
 .step-extra-row {
   display: grid;
@@ -2012,7 +2061,6 @@ tr:hover td {
 }
 .scenario-detail-cols {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 400px;
   gap: 16px;
   align-items: stretch;
   flex: 1;
@@ -2021,9 +2069,18 @@ tr:hover td {
 .scenario-detail-cols:not(:has(.scenario-detail-side)) {
   grid-template-columns: minmax(0, 1fr);
 }
-/* La carte se lit d'autant mieux qu'elle est large : elle prend la moitié de l'écran. */
-.scenario-detail-cols:has(.side-map) {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+/* La poignée tient la place du gap : les deux colonnes restent écartées d'autant qu'avant. */
+.scenario-detail-cols:has(.scenario-split) {
+  column-gap: 6px;
+}
+.scenario-split {
+  cursor: col-resize;
+  border-radius: 3px;
+  touch-action: none;
+}
+.scenario-split:hover,
+.scenario-split:active {
+  background: var(--ink-soft);
 }
 /* D'un mode à l'autre, les deux colonnes se suivent au lieu de sauter : chacune se nomme, et le
    navigateur anime son passage d'une taille à l'autre. Le contenu du panneau se fond plutôt que de
@@ -2866,4 +2923,107 @@ tr:hover td {
 }
 .provider-ask h3 {
   margin-bottom: 14px;
+}
+/* Une location tient ses véhicules : son en-tête les déplie, la ligne de saisie ferme la liste. */
+.rental-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rental-card {
+  position: relative;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.rental-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 96px 12px 14px;
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.rental-title {
+  font-weight: 600;
+}
+.rental-dates,
+.rental-count {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.rental-count {
+  margin-left: auto;
+}
+.rental-actions {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  gap: 2px;
+}
+.rental-vehicles {
+  border-top: 1px solid var(--line);
+  padding: 8px 14px 12px;
+}
+.vehicle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+.vehicle-row + .vehicle-row {
+  border-top: 1px solid var(--line);
+}
+.vehicle-model {
+  display: block;
+  font-weight: 600;
+  min-width: 160px;
+}
+.vehicle-model .row-notes {
+  font-weight: 400;
+}
+.vehicle-price {
+  margin-left: auto;
+  white-space: nowrap;
+}
+.vehicle-options {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.vehicle-actions {
+  display: flex;
+  gap: 2px;
+}
+.vehicle-add {
+  margin-top: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+}
+.vehicle-add:hover {
+  color: var(--ink);
+}
+.vehicle-draft input,
+.vehicle-draft select {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper);
+}
+.vehicle-draft input:first-child {
+  flex: 1;
 }

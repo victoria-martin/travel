@@ -23,22 +23,18 @@ const DERIVED_EXPENSE_SOURCES = [
   {
     key: 'car',
     label: 'Voiture par défaut',
-    view: 'voitures',
+    view: 'locations',
     lines: () => {
       const car = defaultCar();
       if (!car) return [];
-      const total = hasPriceValue(car.priceTotal) ? priceNumber(car.priceTotal) : null;
+      const total = vehicleTotal(car);
       return [
         {
           icon: '🚗',
           label: carLabel(car),
-          unit: total ? '' : 'par jour',
-          amount: total,
-          display: total
-            ? formatEuros(total)
-            : car.pricePerDay
-              ? `${formatEuros(priceNumber(car.pricePerDay))} / jour`
-              : '—',
+          unit: '',
+          amount: total || null,
+          display: total ? formatEuros(total) : '—',
         },
       ];
     },

@@ -43,22 +43,39 @@ const COLLECTIONS = {
   ],
   // Un prestataire porte ses options dans une seule cellule : elles ne se lisent qu'avec lui.
   providers: ['travelId', 'id', 'mode', 'name', 'logo', 'site', 'bookingUrl', 'notes', 'options'],
+  // Le lieu, les dates et le loueur sont à la location ; le véhicule n'en porte que la référence.
+  rentals: [
+    'travelId',
+    'id',
+    'providerId',
+    'location',
+    'pickupDate',
+    'pickupTime',
+    'dropoffDate',
+    'dropoffTime',
+    'link',
+    'notes',
+  ],
   cars: [
     'travelId',
     'id',
+    'rentalId',
     'status',
-    'providerId',
     'model',
-    'pricePerDay',
+    'fuel',
+    'gearbox',
     'priceTotal',
-    'dates',
-    'location',
+    'pricePerDay',
+    'optionIds',
     'link',
     'notes',
     'isDefault',
-    // Le loueur était un texte recopié à chaque ligne : cette colonne n'est plus que la source de
-    // la reprise, et repart vide au premier enregistrement.
+    // Le loueur, le lieu et les dates étaient recopiés à chaque ligne : ces colonnes ne sont plus
+    // que la source de la reprise, et repartent vides au premier enregistrement.
     'name',
+    'providerId',
+    'location',
+    'dates',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'categories', 'recurrence', 'notes'],
   cities: [
@@ -205,7 +222,7 @@ const GROUP_CHILDREN = { options: 'groupOptions', extras: 'groupAttractions' };
 const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
 const NUM_FIELDS = ['nights', 'travelers', 'count'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
-const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories', 'filterValues'];
+const LIST_FIELDS = ['costIds', 'transportIds', 'tags', 'categories', 'filterValues', 'optionIds'];
 // Une liste d'objets ne tient pas dans une cellule séparée par des virgules : elle s'y écrit en JSON.
 const JSON_FIELDS = ['options'];
 // Ancien en-tête d'une colonne renommée : l'onglet se relit avant d'être réécrit au nom d'aujourd'hui.
@@ -274,6 +291,7 @@ function readState() {
     travels: rows.travels,
     accommodations: rows.accommodations,
     providers: rows.providers,
+    rentals: rows.rentals,
     cars: rows.cars,
     fixedCosts: rows.fixedCosts,
     cities: rows.cities,
@@ -485,6 +503,7 @@ function normalizeState(data) {
     travels: normalizeCollection('travels', data.travels),
     accommodations: normalizeCollection('accommodations', data.accommodations),
     providers: normalizeCollection('providers', data.providers),
+    rentals: normalizeCollection('rentals', data.rentals),
     cars: normalizeCollection('cars', data.cars),
     fixedCosts: normalizeCollection('fixedCosts', data.fixedCosts),
     cities: normalizeCollection('cities', data.cities),
@@ -595,6 +614,7 @@ function writeState(data) {
   writeSheet('travels', data.travels || []);
   writeSheet('accommodations', data.accommodations || []);
   writeSheet('providers', data.providers || []);
+  writeSheet('rentals', data.rentals || []);
   writeSheet('cars', data.cars || []);
   writeSheet('fixedCosts', data.fixedCosts || []);
   writeSheet('cities', data.cities || []);

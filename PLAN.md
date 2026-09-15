@@ -22,7 +22,7 @@ les types.
   le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
   ([step-card.js:73](js/views/scenarios/detail/step-card.js#L73)). Le retirer ou lui donner un rôle.
 - **Bouton « + Ajouter une voiture »** <!--t:tzp2--> — 🧩 ui · 🔍 à étudier : ouvre la modale
-  Voitures et rattache la nouvelle voiture au scénario.
+  Locations et rattache le nouveau véhicule au scénario.
 
   existe déjà avec le picker attendons deja le rework
 
@@ -212,7 +212,7 @@ voyage ». Tout est à trancher, rien n'est commencé.
   [tags.js:5](js/views/tags.js#L5). Les deux existent déjà dans l'app, il faut choisir lequel.
 - **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 🔍 à étudier : un bouton « Partir d'une liste
   type » qui crée les items d'un coup, versus une liste vide. Si modèle il y a, il vit à côté de la
-  vue, comme [default-car.js](js/views/cars/default-car.js).
+  vue, comme [default-car.js](js/views/rentals/default-car.js).
 - **Cocher** <!--t:30rq--> — 🧩 ui · 💡 idée : une case par ligne, écrite directement en base comme
   les inline-edits existants, et un compteur « 12 / 30 » dans l'en-tête.
 
@@ -275,17 +275,10 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   l'emoji et le libellé. Les remplacer par un bouton + une liste en `div`, ce qui remplace aussi
   leurs `onchange`.
 
-## 🚗 Voitures
+## 🚗 Locations
 
-La page existe : modèle, statuts, prix, voiture par défaut et tableau sont décrits dans
-[la spec](docs/spec-voyage-toscane.md). Ce qui reste :
-
-- **Type de motorisation** <!--t:md3s--> — 🗃️ modèle · ⏳ à faire : essence, diesel, hybride,
-  électrique. Une liste figée sur le modèle de [car-statuses.js](js/car-statuses.js), plus une
-  colonne et un champ de modale.
-- **Modèles équivalents** <!--t:eq9v--> — 🗃️ modèle · ⏳ à faire : `model` devient le modèle
-  **choisi**, et la voiture porte à côté les autres modèles proposés par le loueur pour la même
-  location.
+La page existe : les locations, leurs véhicules, la grille de saisie, les options et la voiture par
+défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md). Rien en attente.
 
 ## 💰 Dépenses
 
@@ -411,7 +404,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   voyage en cours. Reste à décider s'il est toujours affiché ou repliable comme la carte d'un
   scénario. Remplace la page **Browse**, à renommer.
 - **Nommer les vues en anglais** <!--t:omun--> — 🧹 refacto · 🌙 plus tard : deux espaces de noms
-  cohabitent, les vues en français (`hebergements`, `voitures`, `depenses`, `villes` — clés de
+  cohabitent, les vues en français (`hebergements`, `locations`, `depenses`, `villes` — clés de
   `view`, `listViewMode`, `COLUMN_SETS`, `prefs.sort`) et les données en anglais (`accommodations`,
   `cars`, `fixedCosts`, `cities` — clés de `state` et du Sheet). Renommer les vues sur les secondes
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
@@ -435,8 +428,8 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 
 - **Ouvrir une ligne dans un panneau de détail : les autres listes** <!--t:n3vd--> — 🧩 ui ·
   🖼️ écran · 💡 idée : les hébergements ouvrent leur fiche en panneau, d'une ligne du tableau
-  comme du ↗ du menu de lieu d'une étape. Reste à déclarer `ROW_CLICKS` pour villes, activités,
-  transports et voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
+  comme du ↗ du menu de lieu d'une étape, les loueurs & compagnies d'une ligne de leur onglet. Reste
+  à déclarer `ROW_CLICKS` pour villes, activités, transports et voitures, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à
   trancher ce que devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un

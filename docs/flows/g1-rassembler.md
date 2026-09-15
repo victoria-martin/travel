@@ -9,7 +9,7 @@ itinéraire à construire.
 
 ```
 J'ai un lien / une adresse
-  → page de la table concernée (Hébergements · Villes · À faire · Transports · Voitures)
+  → page de la table concernée (Hébergements · Villes · À faire · Transports · Locations)
   → « Ajouter »
   → modale
       ├─ coller un lien HomeExchange / Booking → champs vides pré-remplis
@@ -25,13 +25,13 @@ la voie d'entrée des lignes.
 
 ## Écrans
 
-| Écran | Forme |
-| ----- | ----- |
+| Écran           | Forme                                                             |
+| --------------- | ----------------------------------------------------------------- |
 | Hébergements 🏠 | tableau **ou** cartes · tri, filtres, colonnes · édition en ligne |
-| Villes 📍 | tableau simple |
-| À faire 🏛️ | tableau seul |
-| Transports ✈️ | tableau seul |
-| Voitures 🚗 | tableau **ou** cartes |
+| Villes 📍       | tableau simple                                                    |
+| À faire 🏛️      | tableau seul                                                      |
+| Transports ✈️   | tableau seul                                                      |
+| Locations 🚗    | locations dépliables, une ligne par véhicule                      |
 
 Cinq écrans, une seule grammaire : la barre d'outils est la même partout (Trier · Filtrer ·
 Colonnes · filtres propres · bascule tableau/cartes · Ajouter · ⋮). C'est ce qui fait qu'un écran

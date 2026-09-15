@@ -96,7 +96,7 @@ function scenarioSpan(scenario) {
 // Une location se prend le jour de l'arrivée et se rend celui du départ : elle se compte en jours.
 function carTotal(scenario) {
   const car = getScenarioCar(scenario);
-  return car ? priceNumber(car.pricePerDay) * totalDays(scenario) : 0;
+  return car ? vehicleDayPrice(car) * totalDays(scenario) : 0;
 }
 
 function fixedCostsTotal(scenario) {

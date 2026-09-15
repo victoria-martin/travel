@@ -44,7 +44,8 @@ js/views/locate/                 bloc de localisation partagé
 js/views/accommodations.js       vue Hébergements — assemblage, filtres, favoris
 js/views/accommodations/         son en-tête, ses colonnes, ses cartes, sa modale, l'import collé
 js/views/cities/                 vue Villes
-js/views/cars/                   vue Voitures
+js/views/providers/              loueurs et compagnies, onglet de la vue Transports
+js/views/rentals/                vue Locations — une location, ses véhicules, ses options
 js/views/fixed-costs/            vue Charges fixes
 js/views/scenarios/              vue Scénarios — liste (list/), détail (detail/), et les briques
                                  communes : nuits, dates d'étapes, lettres, montants, carte

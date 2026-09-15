@@ -6,7 +6,7 @@
 // The ten pages of the sidebar. `scenario-detail` is the eleventh view, routed as `#scenario/<id>`.
 const VIEWS = [
   'hebergements',
-  'voitures',
+  'locations',
   'depenses',
   'villes',
   'attractions',

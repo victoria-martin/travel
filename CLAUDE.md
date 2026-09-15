@@ -60,12 +60,32 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-15** — la page Voitures devient **Locations** et suit le site du loueur : on cherche une fois (loueur, lieu,
+  dates) et on lit une liste de véhicules. Le contexte devient donc une entité,
+  [rentals](js/views/rentals/get-rental.js), et le véhicule n'en porte que la référence — lieu, dates
+  et loueur cessent d'être recopiés sur chaque ligne, comme le nom du loueur l'a cessé le matin
+  même. Le prix saisi est le **total** que le loueur affiche ; le prix par jour devient une
+  dérivation ([vehicle-price.js](js/views/rentals/vehicle-price.js)), ce qui laisse le scénario
+  multiplier un prix par jour par ses jours à lui sans rien changer. Les options d'un véhicule sont
+  des cases cochées dans le catalogue de son loueur : le prix vit à un seul endroit, et l'option
+  tapée depuis la fiche d'un véhicule rejoint ce catalogue
+  ([options-field.js](js/views/rentals/modal/options-field.js)). La saisie rapide est une ligne du
+  tableau et non une modale ([vehicle-draft.js](js/views/rentals/vehicle-draft.js)) : `Entrée`
+  enregistre et rouvre une ligne vide, on recopie l'écran du loueur sans jamais changer de fenêtre.
+  La page se nomme donc **Locations** et son dossier aussi ([js/views/rentals/](js/views/rentals/)) :
+  « Voitures » nommait la ligne d'avant, pas ce que la page range. La clé de la vue suit — une liste
+  enregistrée de la page À faire et les préférences de colonnes se reprennent sous la nouvelle.
+  La liste dépliable remplaçant le tableau plat, la bascule tableau/cartes de la page disparaît ;
+  `COLUMN_SETS.voitures` reste pour les listes filtrées de la page À faire, qui lisent la collection
+  entière — d'où sa colonne Location, que la page n'a pas à répéter sous l'en-tête qui la
+  porte déjà.
+
 - **2026-09-15** — le loueur d'une voiture et la compagnie d'un trajet étaient deux textes libres,
   recopiés à chaque ligne : ils deviennent une seule entité, [js/views/providers/](js/views/providers/),
   dont le **mode** dit le mot — loueur pour la voiture, compagnie pour les quatre autres. Le domaine
   ne se range pas sous l'écran qui l'affiche : la table vit dans un second onglet de la page
   Transports ([tab.js](js/views/transports/tab.js), une globale comme `compareMode`, hors du hash et
-  des prefs), mais Voitures la lit aussi, donc le dossier reste à plat. Une voiture référence son
+  des prefs), mais la page des locations la lit aussi, donc le dossier reste à plat. Une voiture référence son
   loueur et un trajet de mode voiture n'en porte pas : il passe par sa voiture, sinon les deux
   chemins diraient chacun le sien. Les options d'un prestataire sont propres à lui — un vocabulaire
   global n'aurait partagé que le mot et coûté un second écran — et un `datalist` des libellés déjà
@@ -190,7 +210,7 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 - **2026-09-13** — `js/views/transports/` créé pour le domaine Transport, sur le découpage
   d'`attractions/`. Le mode est ce qui décide des champs : les quatre modes à compagnie portent
   `carrier` / `reference`, la voiture porte un `carId` qui **référence**
-  [get-car.js](js/views/cars/get-car.js) au lieu de recopier la location — d'où deux blocs exclusifs
+  [get-car.js](js/views/rentals/get-car.js) au lieu de recopier la location — d'où deux blocs exclusifs
   dans la modale, repeints au changement de mode, et une lecture du formulaire qui garde la valeur
   du bloc absent plutôt que de l'effacer. Un départ est une ville **plus** une précision libre :
   un aéroport n'est pas une ville, mais il est dans une ville. `price.js` est la première

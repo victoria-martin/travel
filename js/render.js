@@ -25,7 +25,7 @@ function render() {
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', '🏠', 'Hébergements')}
-      ${navBtn('voitures', '🚗', 'Voitures')} ${navBtn('depenses', EXPENSE_EMOJI, 'Dépenses')}
+      ${navBtn('locations', '🚗', 'Locations')} ${navBtn('depenses', EXPENSE_EMOJI, 'Dépenses')}
       ${navBtn('villes', '📍', 'Villes')} ${navBtn('attractions', '🏛️', 'Activités')}
       ${navBtn('transports', '✈️', 'Transports')} ${navBtn('scenarios', '🧭', 'Scénarios')}
       ${navBtn('carte', '🗺️', 'Carte')} ${navBtn('notes', '📝', 'Notes')}
@@ -80,7 +80,7 @@ function trackViewHeaderHeight(main) {
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
-  else if (view === 'voitures') main.innerHTML = renderCarsView();
+  else if (view === 'locations') main.innerHTML = renderRentalsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();
   else if (view === 'villes') main.innerHTML = renderCitiesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();

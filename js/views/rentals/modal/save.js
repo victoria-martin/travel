@@ -1,16 +1,18 @@
 function saveCar(id) {
   const existing = id ? getCar(id) : null;
   const car = {
+    ...emptyCar(),
     id: id || uid(),
     travelId: currentTravelId(),
     isDefault: !!(existing && existing.isDefault),
+    pricePerDay: existing ? existing.pricePerDay : '',
+    rentalId: document.getElementById('car-rental').value,
     status: carStatusKey(document.getElementById('car-status').value),
-    providerId: document.getElementById('car-provider').value,
     model: document.getElementById('car-model').value.trim(),
-    pricePerDay: document.getElementById('car-price-per-day').value.trim(),
+    fuel: carFuelKey(document.getElementById('car-fuel').value),
+    gearbox: carGearboxKey(document.getElementById('car-gearbox').value),
     priceTotal: document.getElementById('car-price-total').value.trim(),
-    dates: document.getElementById('car-dates').value.trim(),
-    location: document.getElementById('car-location').value.trim(),
+    optionIds: modal.payload.optionIds,
     link: document.getElementById('car-link').value.trim(),
     notes: document.getElementById('car-notes').value.trim(),
   };

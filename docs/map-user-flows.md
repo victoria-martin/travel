@@ -71,7 +71,7 @@ Les écrans, vus de haut : dix, une barre latérale.
 | **Villes** 📍       | G1      | tableau simple                                                    |
 | **À faire** 🏛️      | G1 · G5 | tableau seul                                                      |
 | **Transports** ✈️   | G1 · G5 | tableau seul                                                      |
-| **Voitures** 🚗     | G1 · G5 | tableau **ou** cartes                                             |
+| **Locations** 🚗    | G1 · G5 | locations dépliables, une ligne par véhicule                      |
 | **Dépenses** 💰     | G6      | deux blocs (Calculé / Saisi) + récap                              |
 | **Scénarios** 🧭    | G3 · G4 | liste → **détail**, le seul écran composite                       |
 | **Carte** 🗺️        | G2      | pleine page, filtres dont scénario                                |

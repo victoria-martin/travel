@@ -8,6 +8,7 @@ const LOCAL_KEY = 'voyage-toscane-local-data';
 const TRAVEL_COLLECTIONS = [
   'accommodations',
   'providers',
+  'rentals',
   'cars',
   'fixedCosts',
   'cities',
@@ -23,6 +24,7 @@ function emptyData() {
     travels: [],
     accommodations: [],
     providers: [],
+    rentals: [],
     cars: [],
     fixedCosts: [],
     cities: [],
@@ -49,6 +51,7 @@ function loadData() {
 function migrateData(data) {
   if (!data.travels) data.travels = [];
   if (!data.providers) data.providers = [];
+  if (!data.rentals) data.rentals = [];
   if (!data.cities) data.cities = [];
   if (!data.attractions) data.attractions = [];
   if (!data.transports) data.transports = [];
@@ -79,7 +82,13 @@ function migrateData(data) {
   (data.cars || []).forEach((c) => {
     if (c.pricePerDay === undefined) c.pricePerDay = c.price || '';
     if (c.priceTotal === undefined) c.priceTotal = '';
+    if (!Array.isArray(c.optionIds)) c.optionIds = [];
     delete c.price;
+  });
+  adoptRentals(data);
+  // La page Voitures est devenue Locations : une liste enregistrée la désigne par sa clé.
+  (data.todoLists || []).forEach((list) => {
+    if (list.kind === 'voitures') list.kind = 'locations';
   });
   (data.scenarios || []).forEach((s) => {
     if (s.startDate === undefined) s.startDate = '';
@@ -134,6 +143,52 @@ function adoptProviders(data) {
   data.providers.forEach((p) => {
     if (!Array.isArray(p.options)) p.options = [];
   });
+}
+
+/*
+  Le lieu et les dates d'une location vivaient sur chaque véhicule, recopiés d'une ligne à l'autre :
+  ils deviennent une entrée de `rentals` que les véhicules d'une même recherche partagent. Comme
+  pour les prestataires, l'identifiant se dérive de ce qui la distingue — un `uid()` neuf ferait
+  diverger les deux côtés de la synchro. Les dates d'avant étaient un texte libre qu'aucune date
+  réelle ne peut reprendre : elles rejoignent les notes de la location, et le prix par jour reste
+  sur le véhicule comme seul chiffre connu tant qu'aucun total n'est saisi.
+*/
+function rentalIdFromCar(car) {
+  const slug = [car.providerId, car.location, car.dates]
+    .filter(Boolean)
+    .join('-')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `rental-${car.travelId}-${slug}`;
+}
+
+function adoptRentals(data) {
+  const known = new Set(data.rentals.map((r) => r.id));
+  (data.cars || []).forEach((car) => {
+    if (car.rentalId === undefined) car.rentalId = '';
+    if (car.rentalId || (!car.providerId && !car.location && !car.dates)) return cleanCar(car);
+    const id = rentalIdFromCar(car);
+    if (!known.has(id)) {
+      known.add(id);
+      data.rentals.push({
+        ...emptyRental(),
+        id,
+        travelId: car.travelId,
+        providerId: car.providerId || '',
+        location: car.location || '',
+        notes: car.dates || '',
+      });
+    }
+    car.rentalId = id;
+    cleanCar(car);
+  });
+}
+
+function cleanCar(car) {
+  delete car.providerId;
+  delete car.location;
+  delete car.dates;
 }
 
 /*

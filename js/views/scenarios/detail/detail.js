@@ -17,14 +17,17 @@ function renderScenarioDetailView() {
   // sous <div class="scenario-detail-cols"> pour à gauche et au dessus pr dessus
   return /* HTML */ `
     ${scenarioDetailHeader(s)} ${trailShown() ? scenarioRouteTrail(s) + scenarioRouteStrip(s) : ''}
-    <div class="scenario-detail-cols">
+    <div
+      class="scenario-detail-cols"
+      style="${prefs.scenarioSidePanel ? scenarioSplitStyle() : ''}"
+    >
       <div class="scenario-detail-main view-scroller">
         ${stepList(s)}
         <div class="scenario-detail-money">
           ${scenarioCarBlock(s)} ${scenarioExpensesBlock(s)} ${scenarioTotalBlock(s)}
         </div>
       </div>
-      ${prefs.scenarioSidePanel ? scenarioSidePanel(s) : ''}
+      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''}
     </div>
   `;
 }
@@ -100,6 +103,7 @@ function toggleStepHidden(scenarioId, stepId) {
   proposerait rien. Le groupe qui n'a plus qu'une colonne se défait, comme au retrait d'une colonne.
 */
 function deleteStep(scenarioId, stepId) {
+  if (!confirm('Supprimer cette étape ?')) return;
   const scenario = getScenario(scenarioId);
   const step = getStep(scenarioId, stepId);
   scenario.steps = scenario.steps.filter((st) => st.id !== stepId);

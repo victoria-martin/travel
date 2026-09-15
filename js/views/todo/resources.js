@@ -6,7 +6,7 @@ const TODO_RESOURCES = [
   { kind: 'hebergements', label: 'Hébergements', emoji: '🏠', items: () => state.accommodations },
   { kind: 'attractions', label: 'Activités', emoji: '🏛️', items: () => state.attractions },
   { kind: 'transports', label: 'Transports', emoji: '✈️', items: () => state.transports },
-  { kind: 'voitures', label: 'Voitures', emoji: '🚗', items: () => state.cars },
+  { kind: 'locations', label: 'Locations', emoji: '🚗', items: () => state.cars },
   { kind: 'charges', label: 'Dépenses', emoji: EXPENSE_EMOJI, items: () => state.fixedCosts },
   { kind: 'villes', label: 'Villes', emoji: '📍', items: () => state.cities },
 ];

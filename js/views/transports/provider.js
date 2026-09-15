@@ -5,11 +5,11 @@
   Sans quoi les deux diraient chacun le sien et finiraient par diverger.
 */
 function transportProviderId(t) {
-  return isCarTransport(t) ? (getCar(t.carId) || {}).providerId : t.providerId;
+  return isCarTransport(t) ? vehicleRental(getCar(t.carId) || {}).providerId : t.providerId;
 }
 
 function transportCarLabel(car) {
-  return [providerName(car.providerId), car.model].filter(Boolean).join(' — ');
+  return [providerName(vehicleRental(car).providerId), car.model].filter(Boolean).join(' — ');
 }
 
 function transportProviderCell(t) {

@@ -30,6 +30,20 @@ function stepCardPaint(scenario, step) {
   return ` style="--step-color:${stepStatusInfo(stepStatus(scenario, step)).color}"`;
 }
 
+/*
+  Le statut de l'étape se lit, il ne se touche pas : il est déduit de l'hébergement retenu et de la
+  comparaison en cours, la pastille qui s'édite est celle de l'hébergement, sur la ligne du lieu.
+*/
+function stepStatusBadge(scenario, step) {
+  const status = stepStatusInfo(stepStatus(scenario, step));
+  return /* HTML */ `<span
+    class="step-status"
+    title="Statut déduit de celui de l’hébergement choisi"
+  >
+    ${status.emoji} ${escapeHtml(status.label)}
+  </span>`;
+}
+
 function stepCard(scenario, step, rank, arrival) {
   return /* HTML */ `
     <div
@@ -54,13 +68,16 @@ function stepCard(scenario, step, rank, arrival) {
             <span class="step-title-dates">${dateRangeLabel(arrival, stepNights(step))}</span>
           </div>
           ${stepDetailLine(step)}
-          <div class="step-acc">
-            ${stepLine(scenario, step)} ${step.groupId ? '' : makeGroupButton(scenario, step)}
+          <div class="step-stay">
+            <div class="step-acc">${stepLine(scenario, step)}</div>
+            ${extrasBlock(scenario, step)}
           </div>
-          ${extrasBlock(scenario, step)}
         </div>
       </div>
-      <div class="step-money">${stepMoney(scenario, step)}</div>
+      <div class="step-side">
+        ${stepStatusBadge(scenario, step)}
+        <div class="step-money">${stepMoney(scenario, step)}</div>
+      </div>
       <div class="step-actions">
         <button
           class="icon-btn"
@@ -79,6 +96,7 @@ function stepCard(scenario, step, rank, arrival) {
           🗑
         </button>
       </div>
+      ${step.groupId ? '' : makeGroupButton(scenario, step)}
     </div>
   `;
 }
@@ -102,14 +120,18 @@ function stepMoney(scenario, step) {
   </span>`;
 }
 
-// Comparer commence sur l'étape qu'on a : elle devient la première colonne, sa copie la seconde.
+/*
+  Comparer commence sur l'étape qu'on a : elle devient la première colonne, sa copie la seconde. Le
+  ＋ se pose à cheval sur la bordure droite, à mi-hauteur : l'option pousse la carte de côté, elle ne
+  s'ajoute pas dans son contenu.
+*/
 function makeGroupButton(scenario, step) {
   return /* HTML */ `<button
-    class="inline-tag step-add-option"
+    class="icon-btn step-fork-btn"
     title="Comparer une autre option"
     onclick="makeStepGroup('${scenario.id}','${step.id}')"
   >
-    ＋ option
+    ＋
   </button>`;
 }
 
