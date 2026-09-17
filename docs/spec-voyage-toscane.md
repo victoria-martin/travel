@@ -163,6 +163,12 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   que sa source remplit, là où une modale unique montrait les trois champs de lien à la fois et
   demandait de deviner lequel valait pour l'annonce en cours. Modifier, en revanche, rouvre toujours
   la fiche complète : une fois créée, une fiche n'a plus de source.
+- **Hors dispo se calcule, il ne se saisit pas.** Ni sur l'hébergement ni sur l'étape il n'y a de
+  case à cocher : la comparaison se refait à chaque rendu depuis les dates existantes (date de
+  recherche, dates de l'étape, disponible du · au), donc rien ne peut diverger si l'une d'elles
+  change ensuite. La date de recherche elle-même n'est lue que dans le lien Google Maps d'une
+  recherche d'hôtel (`!5mN!1s<date>`) — un format non documenté par Google, à confirmer si un lien
+  la porte autrement.
 
 ---
 
@@ -321,8 +327,11 @@ pastilles, avant même l'enregistrement.
 | coordonnées                      | latitude, longitude                                                                             |
 | prix/nuit                        | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
 | dates                            | texte libre (« 12–14 juin »)                                                                    |
+| disponible du · au               | deux dates, laissées vides à la création : la fenêtre que l'annonce propose                     |
 | lien                             | l'annonce ; un lien HomeExchange ou Airbnb collé pré-remplit la fiche                           |
 | lien de réservation              | Booking ; un lien collé pré-remplit la fiche                                                    |
+| lien Google Maps                 | colle-le et le nom, l'adresse et les coordonnées se remplissent                                 |
+| date de recherche                | pas un champ à saisir : posée par le lien Google Maps quand la fiche vient d'une recherche d'hôtel, elle ne sert qu'à l'indicateur hors dispo |
 | notes                            | éditables depuis la ligne                                                                       |
 | tags                             | liste libre, sans administration                                                                |
 | favori                           | ⭐, et un critère de tri                                                                        |
@@ -330,9 +339,9 @@ pastilles, avant même l'enregistrement.
 La vue principale, en **tableau ou en cartes**.
 
 - **Colonnes** : favori, nom (+ notes en dessous), type, statut, ville, province, région, pays,
-  tags, adresse, prix, dates, notes, lien, Booking, actions. Région, pays, adresse et notes sont masquées par
-  défaut ; nom, favori et actions ne sont jamais masquables. Le sélecteur « Colonnes » garde le
-  choix d'une session à l'autre.
+  tags, adresse, prix, dates, disponible du, disponible au, notes, lien, Booking, actions. Région,
+  pays, adresse et notes sont masquées par défaut ; nom, favori et actions ne sont jamais
+  masquables. Le sélecteur « Colonnes » garde le choix d'une session à l'autre.
 - **Tri** — panneau « Trier » : une liste ordonnée de critères (« statut, puis ville »),
   chacun avec son sens, réordonnable. Le clic sur un en-tête est le raccourci : il remplace tout
   par un tri simple et cycle croissant → décroissant → aucun. Tri de départ : favoris, puis type,
@@ -346,6 +355,10 @@ La vue principale, en **tableau ou en cartes**.
   « Filtrer », décrit dans les règles transverses.
 - **Édition en ligne** : type, statut, prix et notes se changent directement dans la ligne comme
   dans la carte, sans ouvrir la fiche. Le prix garde sa monnaie (€ ou GP) affichée à côté du champ.
+- **Hors dispo** : une pastille à côté du nom (ligne, carte et fiche) quand la date de recherche
+  tombe hors de « disponible du · au ». Le style de la pastille — pastille rouge, ambre, ou icône
+  seule — est un réglage du menu Affichage, pour comparer les trois sans coder. La même
+  comparaison vaut pour une étape de scénario, contre ses dates à elle.
 - **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
   saisis — un tag existe dès qu'il est tapé quelque part, et disparaît avec son dernier porteur.
   Un tag coché puis disparu est retiré du filtre tout seul.
@@ -378,6 +391,11 @@ La vue principale, en **tableau ou en cartes**.
   type, prix, adresse, pays, région et ville — **seuls les champs vides**,
   comme pour HomeExchange, et même dépendance à la synchro. Le nom et l'adresse viennent du JSON-LD
   de la page, le prix du bloc `data-testid` — il n'existe que si le lien porte des dates.
+- **Import d'un lien Google Maps** : coller le lien dans le champ « Lien Google Maps » pré-remplit
+  nom, adresse et coordonnées — **seuls les champs vides**, et même dépendance à la synchro. C'est
+  la voie pour une chambre d'hôtes ou un hôtel qui n'est sur aucune plateforme. Les niveaux — pays,
+  région, province, ville — ne viennent pas de là : Google ne les sert pas dans ses métadonnées de
+  partage, « Localiser » reste le chemin.
 - **Import depuis un tableau** : coller des lignes copiées d'un tableur crée les hébergements
   correspondants ; type et statut sont reconnus depuis le texte, sinon laissés non renseignés. Le bouton
   « Importer » n'apparaît que **tant qu'aucun Sheet n'est connecté** — la synchro est ensuite la voie

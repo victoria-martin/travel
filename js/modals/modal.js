@@ -36,6 +36,11 @@ const MODAL_TYPES = {
     body: (m) => airbnbAccommodationForm(m.payload),
     edits: true,
   },
+  'accommodation-google-maps': {
+    open: () => ({ payload: emptyAccommodation() }),
+    body: (m) => googleMapsAccommodationForm(m.payload),
+    edits: true,
+  },
   attraction: {
     open: (id) => ({ payload: id ? structuredClone(getAttraction(id)) : emptyAttraction() }),
     body: (m) => attractionForm(m.payload),

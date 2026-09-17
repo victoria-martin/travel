@@ -12,8 +12,10 @@ function emptyAccommodation() {
     dates: '',
     availableFrom: '',
     availableTo: '',
+    searchDate: '',
     link: '',
     bookingLink: '',
+    mapsLink: '',
     notes: '',
     tags: [],
     favorite: false,
@@ -23,6 +25,7 @@ function emptyAccommodation() {
 function accommodationForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un hébergement</h3>
+    ${outOfRangeBanner(accommodationSearchOutOfRange(p))}
     <div class="field-row">
       ${accommodationTypeField(p)}
       <div class="field">
@@ -92,6 +95,17 @@ function accommodationForm(p) {
         placeholder="https://www.booking.com/..."
         onpaste="importBookingPaste()"
         onchange="importBookingLink()"
+      />
+    </div>
+    <div class="field">
+      <label>Lien Google Maps</label
+      ><input
+        id="f-maps-link"
+        type="text"
+        value="${escapeHtml(p.mapsLink)}"
+        placeholder="https://maps.app.goo.gl/..."
+        onpaste="importGoogleMapsPaste(this, 'f-name')"
+        onchange="importGoogleMapsLink(this, 'f-name')"
       />
     </div>
     ${tagsField(p, { field: 'tags', label: 'Tags', options: allAccommodationTags })}

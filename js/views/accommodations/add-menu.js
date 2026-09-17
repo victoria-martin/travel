@@ -1,5 +1,5 @@
 /*
-  Les quatre portes d'ajout d'un hébergement : trois liens à coller, chacun avec son formulaire,
+  Les cinq portes d'ajout d'un hébergement : quatre liens à coller, chacun avec son formulaire,
   et la saisie à la main. Le panneau se referme en ouvrant la modale, sans quoi il se rouvrirait
   derrière elle au rendu suivant.
 */
@@ -18,6 +18,9 @@ function accommodationAddMenu() {
       </button>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation-airbnb')">
         ${svgIcon('bed')} Depuis un lien Airbnb
+      </button>
+      <button class="panel-action" onclick="openAccommodationDoor('accommodation-google-maps')">
+        ${svgIcon('map-pin')} Depuis un lien Google Maps
       </button>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation')">
         ${svgIcon('pencil-line')} À la main

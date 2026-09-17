@@ -98,8 +98,8 @@ function attractionForm(p) {
         type="text"
         value="${escapeHtml(p.mapsLink)}"
         placeholder="https://maps.app.goo.gl/..."
-        onpaste="importGoogleMapsPaste()"
-        onchange="importGoogleMapsLink()"
+        onpaste="importGoogleMapsPaste(this, 'a-name')"
+        onchange="importGoogleMapsLink(this, 'a-name')"
       />
     </div>
     <div class="field">

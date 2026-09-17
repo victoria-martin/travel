@@ -76,6 +76,20 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: accommodationAddressCell },
   { key: 'price', label: 'Prix', nowrap: true, cell: accommodationPriceCell },
   { key: 'dates', label: 'Dates', cell: accommodationDatesCell },
+  {
+    key: 'availableFrom',
+    label: 'Disponible du',
+    nowrap: true,
+    cell: accommodationAvailableFromCell,
+    sortValue: (a) => a.availableFrom || '',
+  },
+  {
+    key: 'availableTo',
+    label: 'Disponible au',
+    nowrap: true,
+    cell: accommodationAvailableToCell,
+    sortValue: (a) => a.availableTo || '',
+  },
   { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: accommodationNotesCell },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
@@ -96,7 +110,8 @@ function accommodationFavoriteCell(a) {
 
 function accommodationNameCell(a) {
   const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
-  return `<strong>${escapeHtml(a.name)}</strong>${notes}`;
+  const outOfRange = outOfRangeIndicator(accommodationSearchOutOfRange(a));
+  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${notes}`;
 }
 
 function accommodationTypeCell(a) {
@@ -133,6 +148,20 @@ function accommodationPriceCell(a) {
 
 function accommodationDatesCell(a) {
   return textCell(a.dates);
+}
+
+// Les deux dates sont écrites par un <input type="date">, donc en ISO : la cellule les rend lisibles.
+function availabilityDate(iso) {
+  const date = isoToDate(iso);
+  return date ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '';
+}
+
+function accommodationAvailableFromCell(a) {
+  return textCell(availabilityDate(a.availableFrom));
+}
+
+function accommodationAvailableToCell(a) {
+  return textCell(availabilityDate(a.availableTo));
 }
 
 function accommodationNotesCell(a) {

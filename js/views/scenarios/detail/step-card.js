@@ -69,7 +69,7 @@ function stepCard(scenario, step, rank, arrival) {
           </div>
           ${stepDetailLine(step)}
           <div class="step-stay">
-            <div class="step-acc">${stepLine(scenario, step)}</div>
+            <div class="step-acc">${stepLine(scenario, step, arrival)}</div>
             ${extrasBlock(scenario, step)}
           </div>
         </div>

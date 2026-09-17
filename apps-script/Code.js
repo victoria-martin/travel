@@ -41,6 +41,7 @@ const COLLECTIONS = {
     'availableTo',
     'link',
     'bookingLink',
+    'mapsLink',
     'notes',
     'tags',
     'favorite',

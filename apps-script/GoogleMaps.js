@@ -35,6 +35,7 @@ function scrapeGoogleMaps(url) {
   var point = googleMapsPoint(resolved.url);
   place.lat = point.lat;
   place.lng = point.lng;
+  place.searchDate = googleMapsSearchDate(resolved.url);
 
   if (!place.name && !place.lat) {
     return { error: 'Fiche illisible : le lien ne mène peut-être pas à un lieu précis.' };
@@ -85,6 +86,13 @@ function googleMapsPoint(url) {
   var view = url.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
   var found = exact || view;
   return found ? { lat: found[1], lng: found[2] } : { lat: '', lng: '' };
+}
+
+// Une fiche ouverte depuis une recherche d'hôtel porte la date cherchée dans le lien final,
+// `!5mN!1s<date>` — non documenté par Google, à confirmer si un lien la porte sans ce format.
+function googleMapsSearchDate(url) {
+  var found = url.match(/!5m\d+!1s(\d{4}-\d{2}-\d{2})/);
+  return found ? found[1] : '';
 }
 
 // La description de partage se lit « ★★★★☆ · Restaurant · Adresse » : l'adresse est le dernier morceau.

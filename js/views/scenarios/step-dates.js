@@ -1,8 +1,6 @@
 // Le départ du scénario donne la date de la première étape, les nuits des précédentes décalent les suivantes.
 function scenarioStart(scenario) {
-  if (!scenario.startDate) return null;
-  const [y, m, d] = scenario.startDate.split('-').map(Number);
-  return y && m && d ? new Date(y, m - 1, d) : null;
+  return isoToDate(scenario.startDate);
 }
 
 function dateAfter(date, nights) {

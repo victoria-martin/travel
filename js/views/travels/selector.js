@@ -65,9 +65,7 @@ function travelDateRange(travel) {
   return start || end || '';
 }
 
-// Dates are stored as YYYY-MM-DD: splitting them avoids the UTC shift of new Date(iso).
 function monthLabel(iso) {
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  const date = isoToDate(iso);
+  return date ? date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '';
 }

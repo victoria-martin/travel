@@ -60,6 +60,25 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-17** — un lien Google Maps de recherche d'hôtel porte sa **date de recherche** dans
+  l'URL finale, motif `!5mN!1s<date>` — non documenté par Google, à confirmer si un lien la porte
+  autrement. `googleMapsSearchDate` ([GoogleMaps.js](apps-script/GoogleMaps.js)) l'extrait à côté du
+  nom et des coordonnées ; côté front elle n'a pas de champ à elle, elle s'écrit directement dans
+  `modal.payload.searchDate` ([google-maps.js](js/google-maps.js)) sur le modèle des autres écritures
+  de payload sans `<input>` (`modal.payload.modelId = …` dans les modales voiture/transport) — un
+  champ visible aurait suggéré qu'on la corrige à la main, alors qu'elle ne sert qu'à comparer.
+  L'indicateur « hors dispo » qui en découle ([availability-check.js](js/views/availability-check.js))
+  se **calcule** à chaque rendu depuis les dates existantes plutôt que de se stocker, pour la même
+  raison qu'ailleurs dans l'app : rien ne doit pouvoir diverger si une des dates comparées change
+  ensuite. La même fonction sert l'hébergement (date de recherche vs disponible du·au) et l'étape
+  d'un scénario (ses propres dates vs la même fenêtre) — deux comparands, un seul calcul. Trois
+  peintures de la pastille cohabitent dans [availability-badge.js](js/views/availability-badge.js),
+  choisies depuis le menu Affichage ([settings/blocks.js](js/views/settings/blocks.js)) : c'est un
+  réglage à tester, pas une préférence a priori tranchée. `isoToDate`
+  ([dates.js](js/dates.js)) sort en primitive transverse à cette occasion — trois fichiers le
+  recalculaient déjà à la main (`split('-').map(Number)`), la comparaison en ajoutait un quatrième
+  usage.
+
 - **2026-09-16** — ce que coûte la **route** est une dérivation du tracé, pas une saisie : les
   kilomètres qu'OSRM rend déjà pour la gouttière chiffrent l'essence et les péages, et rien ne
   s'enregistre — déplacer une étape les refait. Le partage suit ce que chaque chiffre EST : la

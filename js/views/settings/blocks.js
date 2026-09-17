@@ -6,7 +6,7 @@
 function settingsBlocks() {
   return /* HTML */ `<div class="filter-block">
       <p class="filter-title">Réglages généraux</p>
-      ${buttonLabelsOption()}
+      ${buttonLabelsOption()} ${outOfRangeStyleOption()}
     </div>
     ${pageSettingsBlock()}`;
 }

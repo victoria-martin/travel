@@ -2491,6 +2491,58 @@ tr:hover td {
 .filter-option input {
   accent-color: var(--stone);
 }
+.filter-option select {
+  margin-left: auto;
+}
+
+/* ---------- Hors dispo ---------- */
+.oor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.oor-badge.oor-alert {
+  background: var(--rust);
+  color: var(--white);
+}
+.oor-badge.oor-warn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--ochre);
+}
+.oor-badge.oor-subtle {
+  background: transparent;
+  color: var(--ink-soft);
+  padding: 2px;
+}
+.oor-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin-bottom: 12px;
+}
+.oor-banner.oor-alert {
+  background: var(--rust);
+  color: var(--white);
+}
+.oor-banner.oor-warn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--ochre);
+}
+.oor-banner.oor-subtle {
+  background: var(--sage-pale);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
 
 /* ---------- Interrupteur ---------- */
 .switch-option {
