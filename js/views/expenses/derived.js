@@ -23,18 +23,18 @@ const DERIVED_EXPENSE_SOURCES = [
   {
     key: 'car',
     label: 'Voiture par défaut',
-    view: 'locations',
+    view: 'transports',
     lines: () => {
       const offer = defaultOffer();
       if (!offer) return [];
-      const total = offerTotal(offer);
+      const day = offerDayPrice(offer);
       return [
         {
           icon: '🚗',
           label: offerLabel(offer),
-          unit: '',
-          amount: total || null,
-          display: total ? formatEuros(total) : '—',
+          unit: day ? 'par jour' : '',
+          amount: null,
+          display: offerDayPriceLabel(offer),
         },
       ];
     },

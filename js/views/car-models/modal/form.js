@@ -1,5 +1,5 @@
 function emptyCarModel() {
-  return { id: null, name: '', fuel: '', gearbox: '' };
+  return { id: null, name: '', fuel: '', gearbox: '', consumption: '' };
 }
 
 function carModelForm(p) {
@@ -20,6 +20,15 @@ function carModelForm(p) {
         </select>
       </div>
       <div class="field">
+        <label>Consommation</label
+        ><input
+          id="model-consumption"
+          type="text"
+          value="${escapeHtml(p.consumption)}"
+          placeholder="6,5 L/100"
+        />
+      </div>
+      <div class="field">
         <label>Boîte</label>
         <select id="model-gearbox">
           <option value="" ${p.gearbox ? '' : 'selected'}>
@@ -29,6 +38,7 @@ function carModelForm(p) {
         </select>
       </div>
     </div>
+    ${carModelProvidersField(p)}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" id="f-save" onclick="saveCarModel('${p.id || ''}')">Enregistrer</button>

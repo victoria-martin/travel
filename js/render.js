@@ -25,7 +25,6 @@ function render() {
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()} ${navBtn('hebergements', svgIcon('house'), 'Hébergements')}
-      ${navBtn('locations', svgIcon('car'), 'Locations')}
       ${navBtn('depenses', EXPENSE_ICON, 'Dépenses')}
       ${navBtn('attractions', svgIcon('landmark'), 'Lieux & activités')}
       ${navBtn('transports', svgIcon('plane'), 'Transports')}
@@ -83,7 +82,6 @@ function trackViewHeaderHeight(main) {
 function renderMain() {
   const main = document.getElementById('main');
   if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
-  else if (view === 'locations') main.innerHTML = renderRentalsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
   else if (view === 'transports') main.innerHTML = renderTransportsView();

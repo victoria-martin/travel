@@ -6,7 +6,7 @@
 function scenarioOfferOptionsBlock(scenario) {
   const offer = getScenarioOffer(scenario);
   if (!offer) return '';
-  const provider = getProvider(offerRental(offer).providerId);
+  const provider = getProvider(offer.providerId);
   if (!provider || !provider.options.length) return '';
   const days = totalDays(scenario);
   return provider.options.map((option) => scenarioOfferOptionLine(scenario, option, days)).join('');

@@ -125,7 +125,11 @@ function scenarioChargesTotal(scenario) {
 function scenarioTotal(scenario) {
   const acc = accommodationTotals(scenario);
   return {
-    euros: acc.euros.amount + scenarioChargesTotal(scenario) + scenarioAttractionsTotal(scenario),
+    euros:
+      acc.euros.amount +
+      scenarioChargesTotal(scenario) +
+      scenarioRoadTotal(scenario) +
+      scenarioAttractionsTotal(scenario),
     guestPoints: acc.guestPoints.amount,
   };
 }

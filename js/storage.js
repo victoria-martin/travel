@@ -70,6 +70,8 @@ function migrateData(data) {
       a.region = '';
     }
     if (!Array.isArray(a.tags)) a.tags = [];
+    if (a.availableFrom === undefined) a.availableFrom = '';
+    if (a.availableTo === undefined) a.availableTo = '';
   });
   data.attractions.forEach((a) => {
     adoptPlace(a);
@@ -88,6 +90,7 @@ function migrateData(data) {
     delete c.price;
   });
   adoptRentals(data);
+  adoptOfferRentals(data);
   adoptCarModels(data);
   adoptProviderModels(data);
   // La page Voitures est devenue Locations : une liste enregistrée la désigne par sa clé.
@@ -250,11 +253,15 @@ function adoptRentals(data) {
     if (!known.has(id)) {
       known.add(id);
       data.rentals.push({
-        ...emptyRental(),
         id,
         travelId: offer.travelId,
         providerId: offer.providerId || '',
         location: offer.location || '',
+        pickupDate: '',
+        pickupTime: '',
+        dropoffDate: '',
+        dropoffTime: '',
+        link: '',
         notes: offer.dates || '',
       });
     }
@@ -267,6 +274,33 @@ function cleanOffer(offer) {
   delete offer.providerId;
   delete offer.location;
   delete offer.dates;
+}
+
+/*
+  Le loueur, le lieu et les dates d'une offre redescendent de sa location sur elle : une location
+  ne portait plus que ce qui distinguait un relevé, et le total qu'elle servait à ramener au jour
+  ne se saisit plus — la durée appartient au scénario qui lit l'offre. La collection `rentals`
+  reste dans les données le temps que sa page dorme : rien n'est effacé, l'offre se suffit.
+*/
+const RENTAL_FIELDS = ['location', 'pickupDate', 'pickupTime', 'dropoffDate', 'dropoffTime'];
+
+function adoptOfferRentals(data) {
+  (data.offers || []).forEach((offer) => {
+    const rental = (data.rentals || []).find((r) => r.id === offer.rentalId) || {};
+    if (offer.providerId === undefined) offer.providerId = rental.providerId || '';
+    RENTAL_FIELDS.forEach((field) => {
+      if (offer[field] === undefined) offer[field] = rental[field] || '';
+    });
+    if (!offer.pricePerDay) offer.pricePerDay = migratedDayPrice(offer, rental);
+  });
+}
+
+// Le total relevé chez le loueur valait pour les jours de sa location : c'est de là que vient le
+// prix par jour d'une offre qui n'en portait pas.
+function migratedDayPrice(offer, rental) {
+  const days = daysBetween(rental.pickupDate, rental.dropoffDate);
+  if (!days || !hasPriceValue(offer.priceTotal)) return '';
+  return String(Math.round((priceNumber(offer.priceTotal) / days) * 100) / 100);
 }
 
 /*

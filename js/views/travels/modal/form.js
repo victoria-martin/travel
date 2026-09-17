@@ -23,6 +23,8 @@ function emptyTravel() {
     region: '',
     accentColor: '',
     travelers: 0,
+    fuelPrice: '',
+    tollRate: '',
   };
 }
 
@@ -87,6 +89,26 @@ function travelForm(p) {
       <div class="field">
         <label>Voyageurs</label
         ><input id="travel-travelers" type="number" min="0" value="${p.travelers || 0}" />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Prix du litre</label
+        ><input
+          id="travel-fuel-price"
+          type="text"
+          value="${escapeHtml(p.fuelPrice)}"
+          placeholder="${formatRate(DEFAULT_FUEL_PRICE)} €"
+        />
+      </div>
+      <div class="field">
+        <label>Péage au km</label
+        ><input
+          id="travel-toll-rate"
+          type="text"
+          value="${escapeHtml(p.tollRate)}"
+          placeholder="${formatRate(DEFAULT_TOLL_RATE)} €"
+        />
       </div>
     </div>
     <div class="field">

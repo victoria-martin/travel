@@ -8,9 +8,12 @@ function renderMapView() {
         <p class="view-sub" id="route-notice">${ROUTE_HELP}</p>
       </div>
       <div class="view-header-actions">
-        ${mapScenarioSelect()} ${mapFilterButton()} ${toolbarMenu()}
+        ${mapScenarioSelect()} ${newCityPanel()} ${mapFilterButton()} ${toolbarMenu()}
       </div>
     </div>
-    <div id="map"></div>
+    <div class="map-layout">
+      <div class="map-filters">${mapFilterPanel()}</div>
+      <div id="map"></div>
+    </div>
   `;
 }

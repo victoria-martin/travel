@@ -20,6 +20,12 @@ function scenarioTotalBlock(scenario) {
       chargeDetailRows(scenario),
     )}
     ${recapGroup(
+      'road',
+      'Route',
+      formatEuros(scenarioRoadTotal(scenario)),
+      roadDetailRows(scenario),
+    )}
+    ${recapGroup(
       'attractions',
       'Attractions',
       formatEuros(scenarioAttractionsTotal(scenario)),

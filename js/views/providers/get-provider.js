@@ -17,17 +17,23 @@ function providerOptions(providerId, ids) {
   return (ids || []).map((id) => provider.options.find((o) => o.id === id)).filter(Boolean);
 }
 
-// Les modèles qu'un loueur propose. Le modèle reste du voyage : le loueur n'en tient que la
-// référence, sans quoi la même Golf relevée chez deux loueurs redeviendrait deux voitures.
+/*
+  Les modèles qu'un loueur propose : ceux qu'on a cochés dans sa fiche et ceux qu'on a relevés chez
+  lui. Une offre est une preuve plus forte qu'une case à cocher, donc elle compte aussi — les deux
+  ne peuvent plus se contredire, et rien n'a à réécrire la fiche quand une offre arrive. Le modèle
+  reste du voyage : le loueur n'en tient que la référence, sans quoi la même Golf relevée chez deux
+  loueurs redeviendrait deux voitures.
+*/
 function providerCarModels(providerId) {
   const provider = getProvider(providerId);
   if (!provider) return [];
-  return travelCarModels().filter((model) => provider.modelIds.includes(model.id));
+  const ids = new Set((provider.modelIds || []).concat(providerOfferModelIds(providerId)));
+  return travelCarModels().filter((model) => ids.has(model.id));
 }
 
-function addProviderModel(providerId, modelId) {
-  const provider = getProvider(providerId);
-  if (!provider || provider.modelIds.includes(modelId)) return;
-  provider.modelIds = provider.modelIds.concat(modelId);
-  upsertProvider(provider);
+function providerOfferModelIds(providerId) {
+  return ofCurrentTravel(state.offers)
+    .filter((offer) => offer.providerId === providerId)
+    .map((offer) => offer.modelId)
+    .filter(Boolean);
 }

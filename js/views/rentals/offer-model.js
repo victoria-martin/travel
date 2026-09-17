@@ -1,7 +1,7 @@
 /*
-  Ce qu'un véhicule est — son nom, sa motorisation, sa boîte — appartient au modèle du voyage ;
-  la ligne d'une location n'en garde que la référence, et c'est ce qui rapproche la même Golf prise
-  chez deux loueurs. Une voiture reprise d'avant le catalogue porte encore son nom à elle : il
+  Ce qu'une voiture est — son nom, sa motorisation, sa boîte — appartient au modèle du voyage ;
+  une offre n'en garde que la référence, et c'est ce qui rapproche la même Golf relevée chez deux
+  loueurs. Une voiture reprise d'avant le catalogue porte encore son nom à elle : il
   répond à défaut.
 */
 function offerCarModel(offer) {
@@ -17,10 +17,14 @@ function offerWords(offer) {
   return offerCarModel(offer) || offer;
 }
 
+// Motorisation et boîte étant du modèle, les changer depuis une offre change son modèle. Une offre
+// qui n'en a pas n'a rien à changer : elle ne porte que l'étiquette.
 function offerFuelTag(offer) {
-  return carFuelTag(offerWords(offer));
+  const model = offerCarModel(offer);
+  return model ? carFuelTag(model) : staticTag(UNSET_CAR_FUEL);
 }
 
 function offerGearboxTag(offer) {
-  return carGearboxTag(offerWords(offer));
+  const model = offerCarModel(offer);
+  return model ? carGearboxTag(model) : staticTag(UNSET_CAR_GEARBOX);
 }

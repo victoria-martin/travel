@@ -20,5 +20,5 @@ function getScenarioOffer(scenario) {
 // assurances sur la même voiture. Elles se lisent dans le catalogue du loueur qui la loue.
 function scenarioOfferOptions(scenario) {
   const offer = getScenarioOffer(scenario);
-  return offer ? providerOptions(offerRental(offer).providerId, scenario.offerOptionIds) : [];
+  return offer ? providerOptions(offer.providerId, scenario.offerOptionIds) : [];
 }

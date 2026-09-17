@@ -629,6 +629,15 @@ a.btn {
   border-color: var(--stone-dark);
 }
 
+.new-city {
+  min-width: 300px;
+}
+
+.new-city .geocode-status,
+.new-city .geocode-matches {
+  margin: 8px 0 0 0;
+}
+
 .toggle-group {
   display: inline-flex;
   border: 1px solid var(--line);
@@ -1791,6 +1800,12 @@ tr:hover td {
   background: var(--sage);
   color: var(--white);
 }
+.inline-tag-static,
+.inline-tag-static:hover {
+  cursor: default;
+  border-color: var(--line);
+  color: var(--ink-soft);
+}
 .inline-tag-empty {
   border-style: dashed;
   background: none;
@@ -2417,6 +2432,23 @@ tr:hover td {
 }
 
 /* ---------- Map ---------- */
+.map-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.map-filters {
+  width: 250px;
+  flex-shrink: 0;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+}
+.map-layout #map {
+  flex: 1;
+  min-width: 0;
+}
 .map-resource {
   font-weight: 700;
 }
@@ -2768,6 +2800,12 @@ tr:hover td {
     --main-pad-x: 20px;
     --main-pad-y: 20px;
   }
+  .map-layout {
+    flex-direction: column;
+  }
+  .map-filters {
+    width: 100%;
+  }
 }
 
 .editable {
@@ -2890,16 +2928,31 @@ tr:hover td {
   border-bottom: 1px solid var(--line);
 }
 
-.expense-section {
+/* Une page qui empile plusieurs listes les titre : chacune porte son nom et ses propres boutons. */
+.list-section {
   margin-bottom: 18px;
 }
-.expense-section-title {
-  margin: 0 0 8px;
+.list-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.list-section-title {
+  margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-soft);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.list-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 .expense-group {
   margin-bottom: 10px;
@@ -3179,57 +3232,4 @@ tr:hover td {
 }
 .rental-offer-draft input:first-child {
   flex: 1;
-}
-/* Un modèle et ses offres : le loueur, les dates et les options distinguent deux lignes voisines. */
-.car-model-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 96px 12px 14px;
-  font-size: 13.5px;
-}
-.offer-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-}
-.offer-row + .offer-row {
-  border-top: 1px solid var(--line);
-}
-.model-provider + .model-provider {
-  margin-top: 10px;
-  border-top: 1px solid var(--line);
-}
-.model-provider-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 8px 0 2px;
-  font-size: 13px;
-}
-.model-provider-name {
-  font-weight: 600;
-}
-.model-provider-rate {
-  margin-left: auto;
-  color: var(--ink-soft);
-  white-space: nowrap;
-}
-.model-provider .offer-row:first-of-type {
-  border-top: 0;
-}
-.offer-dates {
-  color: var(--ink-soft);
-  font-size: 12px;
-  min-width: 150px;
-}
-.offer-options {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-.offer-price {
-  margin-left: auto;
-  white-space: nowrap;
 }

@@ -63,7 +63,7 @@ Trois verdicts, rien d'autre :
   reste dans le backlog telle quelle.
 
 Une puce qui demande plusieurs choses ne se ferme que si elles y sont toutes : dans le doute, c'est
-*entamé*.
+_entamé_.
 
 ## 3. Fermer ce qui est fait
 

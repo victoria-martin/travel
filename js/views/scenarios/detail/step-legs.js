@@ -64,9 +64,13 @@ async function fillStepLegs(scenario) {
   if (!scenario) return;
   const points = visibleSteps(scenario).map(coordsFor).filter(Boolean);
   if (points.length < 2) return;
+  // Le récap chiffre l'essence et les péages sur cette distance, qu'il n'avait pas au rendu : la
+  // première route revenue le refait, le rendu suivant remplit les emplacements ci-dessous.
+  const chiffered = routeDistance(points) !== null;
 
   try {
     const { legs } = await fetchRoute(points);
+    if (!chiffered) return render();
     const longest = Math.max(...legs.map((leg) => leg.distance));
     legs.forEach((leg, i) => setStepLeg(scenario, i, leg, legHeight(leg.distance, longest)));
   } catch (e) {

@@ -55,6 +55,7 @@
     <script src="js/views/empty-state.js"></script>
     <script src="js/views/travels/get-travel.js"></script>
     <script src="js/views/travels/accent.js"></script>
+    <script src="js/views/travels/road-rates.js"></script>
     <script src="js/views/travels/tab.js"></script>
     <script src="js/views/travels/selector.js"></script>
     <script src="js/views/travels/modal/form.js"></script>
@@ -94,6 +95,7 @@
     <script src="js/views/delete-item.js"></script>
     <script src="js/views/duplicate.js"></script>
     <script src="js/views/inline-dropdown.js"></script>
+    <script src="js/views/inline-tag.js"></script>
     <script src="js/views/drag.js"></script>
     <script src="js/views/table.js"></script>
     <script src="js/views/filter-pills.js"></script>
@@ -141,36 +143,41 @@
     <script src="js/views/providers/modal/form.js"></script>
     <script src="js/views/providers/modal/save.js"></script>
     <script src="js/views/car-models/get-car-model.js"></script>
-    <script src="js/views/car-models/offer-row.js"></script>
-    <script src="js/views/car-models/provider-rate.js"></script>
-    <script src="js/views/car-models/provider-group.js"></script>
-    <script src="js/views/car-models/car-model-card.js"></script>
+    <script src="js/views/car-models/columns.js"></script>
+    <script src="js/views/car-models/offers-section.js"></script>
+    <script src="js/views/car-models/models-section.js"></script>
     <script src="js/views/car-models/car-models.js"></script>
+    <script src="js/views/car-models/modal/provider-rows.js"></script>
     <script src="js/views/car-models/modal/form.js"></script>
     <script src="js/views/car-models/modal/save.js"></script>
     <script src="js/views/rentals/get-offer.js"></script>
-    <script src="js/views/rentals/get-rental.js"></script>
-    <script src="js/views/rentals/rental-days.js"></script>
-    <script src="js/views/rentals/rental-label.js"></script>
+    <script src="js/views/rentals/offer-dates.js"></script>
     <script src="js/views/rentals/offer-model.js"></script>
     <script src="js/views/rentals/offer-price.js"></script>
-    <script src="js/views/rentals/price-labels.js"></script>
     <script src="js/views/rentals/default-offer.js"></script>
     <script src="js/views/rentals/notes.js"></script>
-    <script src="js/views/rentals/fold.js"></script>
-    <script src="js/views/rentals/rentals.js"></script>
-    <script src="js/views/rentals/header.js"></script>
     <script src="js/views/rentals/status-tag.js"></script>
     <script src="js/views/rentals/columns.js"></script>
-    <script src="js/views/rentals/rental-list.js"></script>
-    <script src="js/views/rentals/rental-card.js"></script>
-    <script src="js/views/rentals/offer-row.js"></script>
-    <script src="js/views/rentals/offer-draft.js"></script>
-    <script src="js/views/rentals/modal/rental-form.js"></script>
-    <script src="js/views/rentals/modal/rental-save.js"></script>
     <script src="js/views/rentals/modal/options-field.js"></script>
-    <script src="js/views/rentals/modal/form.js"></script>
-    <script src="js/views/rentals/modal/save.js"></script>
+    <script src="js/views/rentals/modal/offer-form.js"></script>
+    <script src="js/views/rentals/modal/offer-save.js"></script>
+    <!--
+      La page Locations dort : une offre porte son loueur, son lieu et ses dates, et le prix qu'on
+      saisit est celui du jour — une location n'avait plus rien à tenir que ces lignes-là ne
+      tiennent. Ses fichiers restent, comme sa collection `rentals` dans les données ; la rallumer
+      est l'affaire de ces balises, de son entrée de navigation et de sa modale.
+      <script src="js/views/rentals/get-rental.js"></script>
+      <script src="js/views/rentals/rental-label.js"></script>
+      <script src="js/views/rentals/fold.js"></script>
+      <script src="js/views/rentals/rentals.js"></script>
+      <script src="js/views/rentals/header.js"></script>
+      <script src="js/views/rentals/rental-list.js"></script>
+      <script src="js/views/rentals/rental-card.js"></script>
+      <script src="js/views/rentals/offer-row.js"></script>
+      <script src="js/views/rentals/offer-draft.js"></script>
+      <script src="js/views/rentals/modal/rental-form.js"></script>
+      <script src="js/views/rentals/modal/rental-save.js"></script>
+    -->
     <script src="js/views/price.js"></script>
     <script src="js/views/rentals/offer-label.js"></script>
     <script src="js/views/fixed-costs/get-fixed-cost.js"></script>
@@ -220,6 +227,7 @@
     <script src="js/views/scenarios/nights-by-place.js"></script>
     <script src="js/views/scenarios/step-dates.js"></script>
     <script src="js/views/scenarios/money.js"></script>
+    <script src="js/views/scenarios/road.js"></script>
     <script src="js/views/scenarios/scenarios.js"></script>
     <script src="js/views/scenarios/header.js"></script>
     <script src="js/views/scenarios/list/list.js"></script>
@@ -280,11 +288,13 @@
     <script src="js/views/scenarios/detail/recap-row.js"></script>
     <script src="js/views/scenarios/detail/attraction-rows.js"></script>
     <script src="js/views/scenarios/detail/charge-rows.js"></script>
+    <script src="js/views/scenarios/detail/road-rows.js"></script>
     <script src="js/views/scenarios/detail/side-tabs.js"></script>
     <script src="js/views/scenarios/detail/side-panel.js"></script>
     <script src="js/views/scenarios/detail/split.js"></script>
     <script src="js/views/map/filters.js"></script>
     <script src="js/views/map/filter-panel.js"></script>
+    <script src="js/views/map/new-city.js"></script>
     <script src="js/views/map/markers.js"></script>
     <script src="js/views/map/map.js"></script>
     <script src="js/views/notes.js"></script>

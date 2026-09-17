@@ -12,6 +12,8 @@ function readTravelForm(id) {
     region: document.getElementById('travel-region').value.trim(),
     accentColor: document.getElementById('travel-accent').value,
     travelers: parseInt(document.getElementById('travel-travelers').value, 10) || 0,
+    fuelPrice: document.getElementById('travel-fuel-price').value.trim(),
+    tollRate: document.getElementById('travel-toll-rate').value.trim(),
   };
 }
 

@@ -8,7 +8,7 @@ function scenarioOfferBlock(scenario) {
     ${
       ofCurrentTravel(state.offers).length === 0
         ? /* HTML */ `<div class="scenario-extra-empty">
-            Aucune voiture relevée — commence par une location sur la page Locations.
+            Aucune offre relevée — ajoute-en une depuis l'onglet Voitures.
           </div>`
         : `${scenarioOfferDropdown(scenario)}${scenarioOfferOptionsBlock(scenario)}`
     }

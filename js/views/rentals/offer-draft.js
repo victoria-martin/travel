@@ -69,7 +69,6 @@ function saveOfferDraft() {
     document.getElementById('draft-fuel').value,
     document.getElementById('draft-gearbox').value,
   );
-  addProviderModel(getRental(draftRentalId).providerId, model.id);
   state.offers.push({
     ...emptyOffer(),
     id: uid(),

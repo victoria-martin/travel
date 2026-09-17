@@ -59,11 +59,6 @@ const MODAL_TYPES = {
     body: (m) => carModelForm(m.payload),
     edits: true,
   },
-  location: {
-    open: (id) => ({ payload: id ? structuredClone(getRental(id)) : emptyRental() }),
-    body: (m) => rentalForm(m.payload),
-    edits: true,
-  },
   voiture: {
     open: (id, scenarioId) => ({
       scenarioId,

@@ -75,7 +75,7 @@ function transportScheduleFields(side, label, date, time) {
   </div>`;
 }
 
-// Une voiture référence une location, les autres modes leur compagnie : deux blocs exclusifs,
+// Une voiture référence une offre, les autres modes leur compagnie : deux blocs exclusifs,
 // repeints quand le mode change.
 function transportProviderFields(p) {
   if (p.mode === 'car') {
@@ -83,7 +83,7 @@ function transportProviderFields(p) {
       transportOfferLabel(a).localeCompare(transportOfferLabel(b)),
     );
     return /* HTML */ `<div class="field">
-      <label>Location</label>
+      <label>Voiture</label>
       <select id="t-car">
         <option value="" ${p.offerId ? '' : 'selected'}>Aucune voiture</option>
         ${offers

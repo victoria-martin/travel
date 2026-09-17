@@ -13,6 +13,7 @@ function scenarioCompareCard(s) {
         : ''
     }
     ${recapRow('Charges', formatEuros(scenarioChargesTotal(s)))}
+    ${recapRow('Route', formatEuros(scenarioRoadTotal(s)))}
     ${recapRow('Attractions', formatEuros(scenarioAttractionsTotal(s)))}
     <div class="acc-recap-row acc-recap-total">
       <span>Total</span>

@@ -21,9 +21,29 @@ function readProviderForm(id) {
   };
 }
 
+/*
+  Une option retirée du catalogue quitte les offres et les scénarios qui l'avaient cochée : sans ça
+  leur `optionIds` garderait une référence morte, que les totaux écarteraient en silence.
+*/
 function saveProvider(id) {
-  upsertProvider(readProviderForm(id));
+  const provider = readProviderForm(id);
+  forgetProviderOptions(removedOptionIds(id ? getProvider(id) : null, provider));
+  upsertProvider(provider);
   closeModal();
+}
+
+function removedOptionIds(before, after) {
+  const kept = new Set(after.options.map((option) => option.id));
+  return ((before && before.options) || [])
+    .map((option) => option.id)
+    .filter((optionId) => !kept.has(optionId));
+}
+
+function forgetProviderOptions(optionIds) {
+  if (!optionIds.length) return;
+  const without = (ids) => (ids || []).filter((id) => !optionIds.includes(id));
+  state.offers.forEach((offer) => (offer.optionIds = without(offer.optionIds)));
+  state.scenarios.forEach((s) => (s.offerOptionIds = without(s.offerOptionIds)));
 }
 
 // Créé depuis un trajet ou une voiture, un prestataire ne porte que son nom et son mode : le

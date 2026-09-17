@@ -1,7 +1,7 @@
 /*
-  La page Voitures écrit ses lignes en clair, sous la location qui les tient : ces colonnes sont
-  celles des listes filtrées de la page À faire, qui lisent la collection entière. D'où la colonne
-  location, que la page Voitures n'aurait pas à répéter sur chaque ligne.
+  Les colonnes d'une offre, lues par la liste de l'onglet Voitures et par les listes filtrées de la
+  page À faire. Le tri par défaut range les offres d'un même modèle ensemble, du moins cher au plus
+  cher par jour : c'est la lecture qu'on vient chercher, les autres sont un clic d'en-tête.
 */
 COLUMN_SETS.locations = [
   { key: 'default', label: '', locked: true, cell: defaultOfferCell },
@@ -13,10 +13,23 @@ COLUMN_SETS.locations = [
     sortValue: (c) => offerModelName(c).toLowerCase(),
   },
   {
-    key: 'rental',
-    label: 'Location',
-    cell: offerRentalCell,
-    sortValue: (c) => rentalLabel(offerRental(c)).toLowerCase(),
+    key: 'provider',
+    label: 'Loueur',
+    cell: offerProviderCell,
+    sortValue: (c) => providerName(c.providerId).toLowerCase(),
+  },
+  {
+    key: 'place',
+    label: 'Lieu',
+    cell: offerPlaceCell,
+    sortValue: (c) => (c.location || '').toLowerCase(),
+  },
+  {
+    key: 'dates',
+    label: 'Dates',
+    nowrap: true,
+    cell: offerDatesCell,
+    sortValue: (c) => c.pickupDate || '9999',
   },
   {
     key: 'fuel',
@@ -44,7 +57,7 @@ COLUMN_SETS.locations = [
     label: 'Prix',
     nowrap: true,
     cell: offerPriceCell,
-    sortValue: (c) => offerTotal(c),
+    sortValue: (c) => offerDayPrice(c),
   },
   { key: 'options', label: 'Options', cell: offerOptionsCell },
   { key: 'link', label: 'Lien', cell: linkCell },
@@ -52,18 +65,24 @@ COLUMN_SETS.locations = [
 ];
 
 SORT_DEFAULTS.locations = [
-  { key: 'rental', dir: 'asc' },
   { key: 'model', dir: 'asc' },
+  { key: 'price', dir: 'asc' },
 ];
 
 function offerModelCell(c) {
   return `${textCell(offerModelName(c))}<div class="row-notes">${offerNotesEditable(c)}</div>`;
 }
 
-function offerRentalCell(c) {
-  const rental = offerRental(c);
-  const dates = rentalDatesLabel(rental).join(' · ');
-  return `${escapeHtml(rentalLabel(rental))}${dates ? `<div class="row-notes">${escapeHtml(dates)}</div>` : ''}`;
+function offerProviderCell(c) {
+  return escapeHtml(providerName(c.providerId)) || '—';
+}
+
+function offerPlaceCell(c) {
+  return escapeHtml(c.location || '') || '—';
+}
+
+function offerDatesCell(c) {
+  return escapeHtml(offerDatesLabel(c).join(' · ')) || '—';
 }
 
 function offerFuelCell(c) {
@@ -79,7 +98,7 @@ function offerStatusCell(c) {
 }
 
 function offerPriceCell(c) {
-  return offerPriceLabels(c).join('<br/>');
+  return offerDayPriceLabel(c);
 }
 
 function offerOptionsCell(c) {

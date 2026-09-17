@@ -31,10 +31,10 @@ nom, les favoris en tête de leur groupe précédés d'une ★.
 
 ## Écrans
 
-| Écran | Rôle |
-| ----- | ---- |
-| Scénarios 🧭 — liste | nom, nombre d'étapes, total des nuits, ⭐ · ouvrir, dupliquer, supprimer |
-| Scénarios — **détail** | le seul écran composite de l'app |
+| Écran                  | Rôle                                                                     |
+| ---------------------- | ------------------------------------------------------------------------ |
+| Scénarios 🧭 — liste   | nom, nombre d'étapes, total des nuits, ⭐ · ouvrir, dupliquer, supprimer |
+| Scénarios — **détail** | le seul écran composite de l'app                                         |
 
 ```
 ┌──────────────────────────────┬─────────────────┐

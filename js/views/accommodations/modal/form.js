@@ -10,6 +10,8 @@ function emptyAccommodation() {
     lng: '',
     price: '',
     dates: '',
+    availableFrom: '',
+    availableTo: '',
     link: '',
     bookingLink: '',
     notes: '',
@@ -58,6 +60,16 @@ function accommodationForm(p) {
       <div class="field">
         <label>Dates</label
         ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" placeholder="12–14 juin" />
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Disponible du</label
+        ><input id="f-available-from" type="date" value="${escapeHtml(p.availableFrom)}" />
+      </div>
+      <div class="field">
+        <label>Disponible au</label
+        ><input id="f-available-to" type="date" value="${escapeHtml(p.availableTo)}" />
       </div>
     </div>
     <div class="field">

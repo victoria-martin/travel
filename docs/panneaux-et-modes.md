@@ -124,7 +124,7 @@ Une pile de niveaux ordonnée : le premier critère qui départage deux lignes g
 vocabulaire ne se renverse pas, elle se **range** : son second champ est le menu de ses mots,
 glissables ([sort-order-menu.js](../js/sort-order-menu.js)).
 
-### 3.2 Filtrer — [filters/](../js/views/filters/)  ⚠ refonte en cours
+### 3.2 Filtrer — [filters/](../js/views/filters/) ⚠ refonte en cours
 
 ```
   [⌕ Filtrer ▾] (2)
@@ -174,16 +174,16 @@ le détail d'un scénario, pour le fil du trajet.
 
 ## 4 — Ce que porte chaque en-tête
 
-| Page                                                       | Trier   | Filtrer | Colonnes | Bascules           | Autres boutons                          | ⋮   |
-| ---------------------------------------------------------- | ------- | ------- | -------- | ------------------ | --------------------------------------- | --- |
-| [Hébergements](../js/views/accommodations/header.js)       | table   | ✅      | table    | Tableau / Cartes   | Favoris · Importer¹ · **Ajouter** (4 portes) | ✅  |
-| [Locations](../js/views/rentals/header.js)                 | —       | —       | —        | —                  | Nouvelle recherche                      | ✅  |
-| [Dépenses](../js/views/expenses/header.js)                 | table   | —       | table    | Tableau / Cartes   | Ajouter                                 | ✅  |
-| [Lieux & activités](../js/views/attractions/header.js)     | ✅      | —       | ✅       | —                  | Ajouter                                 | ✅  |
-| [Transports](../js/views/transports/header.js)             | onglet² | —       | onglet²  | **3 onglets**      | Ajouter (de l'onglet)                   | ✅  |
-| [Scénarios](../js/views/scenarios/header.js)               | —       | —       | —        | —                  | Nouveau · Comparer · Archivés           | —   |
-| [Détail scénario](../js/views/scenarios/detail/header.js)  | —       | —       | —        | **2 onglets côté** | identité + total                        | ✅  |
-| Carte · Notes · [À faire](../js/views/todo/header.js)      | —       | —       | —        | —                  | —                                       | —   |
+| Page                                                      | Trier   | Filtrer | Colonnes | Bascules           | Autres boutons                               | ⋮   |
+| --------------------------------------------------------- | ------- | ------- | -------- | ------------------ | -------------------------------------------- | --- |
+| [Hébergements](../js/views/accommodations/header.js)      | table   | ✅      | table    | Tableau / Cartes   | Favoris · Importer¹ · **Ajouter** (4 portes) | ✅  |
+| [Locations](../js/views/rentals/header.js)                | —       | —       | —        | —                  | Nouvelle recherche                           | ✅  |
+| [Dépenses](../js/views/expenses/header.js)                | table   | —       | table    | Tableau / Cartes   | Ajouter                                      | ✅  |
+| [Lieux & activités](../js/views/attractions/header.js)    | ✅      | —       | ✅       | —                  | Ajouter                                      | ✅  |
+| [Transports](../js/views/transports/header.js)            | onglet² | —       | onglet²  | **3 onglets**      | Ajouter (de l'onglet)                        | ✅  |
+| [Scénarios](../js/views/scenarios/header.js)              | —       | —       | —        | —                  | Nouveau · Comparer · Archivés                | —   |
+| [Détail scénario](../js/views/scenarios/detail/header.js) | —       | —       | —        | **2 onglets côté** | identité + total                             | ✅  |
+| Carte · Notes · [À faire](../js/views/todo/header.js)     | —       | —       | —        | —                  | —                                            | —   |
 
 ¹ disparaît dès qu'un Sheet est connecté — la synchro devient la voie d'entrée.
 ² chaque onglet déclare ses propres actions dans `TRANSPORT_TABS`
@@ -202,20 +202,20 @@ Un état d'écran
          le tri, les colonnes, la largeur du panneau, les replis du récap
 ```
 
-| Mode                                                        | Valeurs                            | Où       | Retrouvé |
-| ----------------------------------------------------------- | ---------------------------------- | -------- | -------- |
-| [listViewMode](../js/views/list-mode.js)                    | `table` / `card`, par liste        | globale  | non      |
-| [transportsTab](../js/views/transports/tab.js)              | trajets / prestataires / voitures  | globale  | non      |
-| [compareMode](../js/views/scenarios/compare/mode.js)        | bool + ids cochés                  | globale  | non      |
-| [showArchivedScenarios](../js/views/scenarios/archive.js)   | bool                               | globale  | non      |
-| [openRentalIds](../js/views/rentals/fold.js)                | locations dépliées                 | globale  | non      |
-| [filters](../js/views/filters/levels.js)                    | niveaux, par écran                 | globale  | non      |
-| [favOnly](../js/views/accommodations/fav-only.js)           | bool                               | globale  | non      |
-| [mapFilters](../js/views/map/filters.js)                    | 2 listes de types, province, …     | globale  | non      |
-| [todoDraft](../js/views/todo/draft.js)                      | ressource / colonne / mots         | globale  | non      |
-| `prefs.scenarioSidePanel`                                   | `map` / `money` / `null`           | prefs    | **oui**  |
-| `prefs.scenarioSideWidth`                                   | un % **par onglet**                | prefs    | **oui**  |
-| `prefs.sort` · `hiddenColumns` · `recapFolds` · `showButtonLabels` | par liste                  | prefs    | **oui**  |
+| Mode                                                               | Valeurs                           | Où      | Retrouvé |
+| ------------------------------------------------------------------ | --------------------------------- | ------- | -------- |
+| [listViewMode](../js/views/list-mode.js)                           | `table` / `card`, par liste       | globale | non      |
+| [transportsTab](../js/views/transports/tab.js)                     | trajets / prestataires / voitures | globale | non      |
+| [compareMode](../js/views/scenarios/compare/mode.js)               | bool + ids cochés                 | globale | non      |
+| [showArchivedScenarios](../js/views/scenarios/archive.js)          | bool                              | globale | non      |
+| [openRentalIds](../js/views/rentals/fold.js)                       | locations dépliées                | globale | non      |
+| [filters](../js/views/filters/levels.js)                           | niveaux, par écran                | globale | non      |
+| [favOnly](../js/views/accommodations/fav-only.js)                  | bool                              | globale | non      |
+| [mapFilters](../js/views/map/filters.js)                           | 2 listes de types, province, …    | globale | non      |
+| [todoDraft](../js/views/todo/draft.js)                             | ressource / colonne / mots        | globale | non      |
+| `prefs.scenarioSidePanel`                                          | `map` / `money` / `null`          | prefs   | **oui**  |
+| `prefs.scenarioSideWidth`                                          | un % **par onglet**               | prefs   | **oui**  |
+| `prefs.sort` · `hiddenColumns` · `recapFolds` · `showButtonLabels` | par liste                         | prefs   | **oui**  |
 
 Les `prefs` vivent dans leur propre clé de `localStorage` ([prefs.js](../js/prefs.js)) : la synchro
 reconstruit `state` depuis les seules collections de données, tout ce qui traîne ailleurs serait
@@ -325,13 +325,13 @@ son tableau et ses colonnes valent ici sans rien réécrire.
 
 ## 8 — Les menus inline, par famille
 
-| Famille                     | Forme                                        | Où                                                                                                     |
-| --------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Pastille de vocabulaire     | `[🏨 hôtel ⌄]` → la liste des mots           | statut (hébergement, lieu, location, transport) · type (hébergement, lieu) · mode (transport)          |
-| Menu **avec recherche**     | champ + liste repeinte à la frappe            | [lieu d'une étape](../js/views/scenarios/detail/step-place-dropdown.js) · [rattacher une ligne](../js/views/scenarios/detail/extras/add.js) · [valeurs d'un filtre](../js/views/filters/values-menu.js) |
-| Menu d'action               | des boutons, pas des valeurs                  | [alternatives d'une ligne](../js/views/scenarios/detail/extras/line-menu.js) · [insérer une étape](../js/views/scenarios/detail/step-list.js) |
-| Choix de valeur             | un nombre, une référence                      | nuits · nombre d'extras · voiture · dépenses du scénario                                                |
-| Rangement d'un vocabulaire  | glissable                                     | [sort-order-menu.js](../js/sort-order-menu.js), dans le panneau Trier                                   |
+| Famille                    | Forme                              | Où                                                                                                                                                                                                      |
+| -------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pastille de vocabulaire    | `[🏨 hôtel ⌄]` → la liste des mots | statut (hébergement, lieu, location, transport) · type (hébergement, lieu) · mode (transport)                                                                                                           |
+| Menu **avec recherche**    | champ + liste repeinte à la frappe | [lieu d'une étape](../js/views/scenarios/detail/step-place-dropdown.js) · [rattacher une ligne](../js/views/scenarios/detail/extras/add.js) · [valeurs d'un filtre](../js/views/filters/values-menu.js) |
+| Menu d'action              | des boutons, pas des valeurs       | [alternatives d'une ligne](../js/views/scenarios/detail/extras/line-menu.js) · [insérer une étape](../js/views/scenarios/detail/step-list.js)                                                           |
+| Choix de valeur            | un nombre, une référence           | nuits · nombre d'extras · voiture · dépenses du scénario                                                                                                                                                |
+| Rangement d'un vocabulaire | glissable                          | [sort-order-menu.js](../js/sort-order-menu.js), dans le panneau Trier                                                                                                                                   |
 
 Deux traits communs aux menus qui cherchent : la frappe **ne repeint que la liste** — un render
 arracherait la saisie — et un nom sans correspondance **se crée sur place**, l'entrée neuve ne

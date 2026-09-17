@@ -1,7 +1,7 @@
 /*
-  On choisit une voiture comme on l'a relevée : chez un loueur, à des dates. Le menu se range donc
-  par location et non à plat, et chaque offre porte ce qu'elle coûtera sur les jours de ce
-  scénario — options exclues, elles se cochent après.
+  On choisit une voiture comme on l'a relevée : chez un loueur. Le menu se range donc par loueur et
+  non à plat, et chaque offre porte ce qu'elle coûtera sur les jours de ce scénario — options
+  exclues, elles se cochent après.
 */
 function pickScenarioOffer(scenarioId, offerId) {
   openInlineMenu = null;
@@ -9,9 +9,7 @@ function pickScenarioOffer(scenarioId, offerId) {
 }
 
 function scenarioOfferDropdown(scenario) {
-  const rentals = ofCurrentTravel(state.rentals).sort((a, b) =>
-    rentalLabel(a).localeCompare(rentalLabel(b)),
-  );
+  const providers = providersOfMode('car');
   const current = getScenarioOffer(scenario);
   return inlineDropdown(
     `offer:${scenario.id}`,
@@ -21,7 +19,7 @@ function scenarioOfferDropdown(scenario) {
       </summary>
       <div class="inline-menu">
         ${scenarioOfferNoneItem(scenario)}
-        ${rentals.map((rental) => scenarioOfferRentalGroup(scenario, rental)).join('')}
+        ${providers.map((provider) => scenarioOfferProviderGroup(scenario, provider)).join('')}
         ${scenarioOfferCreateItem(scenario)}
       </div>`,
   );
@@ -52,23 +50,23 @@ function scenarioOfferNoneItem(scenario) {
   </button>`;
 }
 
-function scenarioOfferRentalGroup(scenario, rental) {
-  const offers = rentalOffers(rental.id);
+function scenarioOfferProviderGroup(scenario, provider) {
+  const offers = ofCurrentTravel(state.offers).filter((offer) => offer.providerId === provider.id);
   if (!offers.length) return '';
-  const dates = rentalDatesLabel(rental).join(' · ');
-  return /* HTML */ `<div class="inline-menu-group">
-      ${escapeHtml(rentalLabel(rental))}${dates ? ` — ${escapeHtml(dates)}` : ''}
-    </div>
+  return /* HTML */ `<div class="inline-menu-group">${escapeHtml(provider.name)}</div>
     ${offers.map((offer) => scenarioOfferItem(scenario, offer)).join('')}`;
 }
 
 function scenarioOfferItem(scenario, offer) {
   const cost = offerDayPrice(offer) * totalDays(scenario);
+  const dates = offerDatesLabel(offer).join(' · ');
   return /* HTML */ `<button
     class="inline-menu-item ${scenario.offerId === offer.id ? 'selected' : ''}"
     onclick="pickScenarioOffer('${scenario.id}','${offer.id}')"
   >
-    <span class="inline-label">${escapeHtml(offerModelName(offer) || 'Sans modèle')}</span>
+    <span class="inline-label">
+      ${escapeHtml(offerModelName(offer) || 'Sans modèle')}${dates ? ` — ${escapeHtml(dates)}` : ''}
+    </span>
     ${cost ? `<span class="inline-menu-aside">${formatEuros(cost)}</span>` : ''}
   </button>`;
 }

@@ -2,10 +2,8 @@
 // de nuits.
 function stepLine(scenario, step) {
   return /* HTML */ `${stepTypeDropdown(scenario, step)}
-  <div class="step-place">
-    ${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}
-  </div>
-  ${stepStatusTag(step)} ${stepNightsDropdown(scenario, step)}`;
+    <div class="step-place">${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}</div>
+    ${stepStatusTag(step)} ${stepNightsDropdown(scenario, step)}`;
 }
 
 // Le ↗ ouvre la fiche du lieu retenu, sans rouvrir le menu pour aller la chercher. Une étape

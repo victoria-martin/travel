@@ -1,27 +1,17 @@
 /*
-  Le seul prix saisi est le total du loueur pour ce véhicule sur toute la location ; le prix par
-  jour s'en déduit, il ne se tape jamais. Une voiture reprise d'avant les locations n'a parfois que
-  son prix par jour et aucune date : il reste alors le seul chiffre connu, et c'est lui qui répond.
+  Le seul prix qui se saisit est le prix par jour que le loueur affiche : un total n'a de sens que
+  sur une durée, et la durée appartient au scénario qui lit l'offre. Les options sont celles du
+  catalogue de son loueur — leur montant ne vit qu'à cet endroit.
 */
 function offerDayPrice(offer) {
-  const days = rentalDays(offerRental(offer));
-  if (days && hasPriceValue(offer.priceTotal)) return priceNumber(offer.priceTotal) / days;
   return priceNumber(offer.pricePerDay);
 }
 
-function offerPrice(offer) {
-  if (hasPriceValue(offer.priceTotal)) return priceNumber(offer.priceTotal);
-  return priceNumber(offer.pricePerDay) * (rentalDays(offerRental(offer)) || 1);
+function offerDayPriceLabel(offer) {
+  const day = offerDayPrice(offer);
+  return day ? `${formatEuros(day)} / jour` : '—';
 }
 
 function offerOptions(offer) {
-  return providerOptions(offerRental(offer).providerId, offer.optionIds);
-}
-
-function offerOptionsTotal(offer) {
-  return optionsTotal(offerOptions(offer), rentalDays(offerRental(offer)));
-}
-
-function offerTotal(offer) {
-  return offerPrice(offer) + offerOptionsTotal(offer);
+  return providerOptions(offer.providerId, offer.optionIds);
 }

@@ -22,7 +22,12 @@ const LIST_RESOURCES = [
     icon: svgIcon('plane'),
     items: () => state.transports,
   },
-  { kind: 'locations', label: 'Locations', icon: svgIcon('car'), items: () => state.offers },
+  {
+    kind: 'locations',
+    label: 'Offres de voiture',
+    icon: svgIcon('car'),
+    items: () => state.offers,
+  },
   { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
 ];
 

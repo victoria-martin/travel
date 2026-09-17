@@ -40,9 +40,6 @@ les types.
 
 ### Plus tard
 
-- **Estimation de l'essence** <!--t:q7aw--> — 🧮 calcul · 🌙 plus tard
-- **Estimation des péages** <!--t:dlde--> — 🧮 calcul · 🌙 plus tard
-
 ### Step
 
 - **stepForm** <!--t:zfop--> — 🧩 ui · 💾 données · 🪟 modal · ⏳ à faire :
@@ -267,8 +264,15 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## 🚗 Locations
 
-La page existe : les locations, leurs véhicules, la grille de saisie, les options et la voiture par
-défaut sont décrits dans [la spec](docs/spec-voyage-toscane.md). Rien en attente.
+La page dort : une offre porte son loueur, son lieu et ses dates, et le prix qui se saisit est celui
+du jour — une location n'avait plus rien à tenir. Ses fichiers et sa collection `rentals` restent en
+place ; le sommeil est décrit dans [la spec](docs/spec-voyage-toscane.md).
+
+- **La saisie en série d'offres** <!--t:m3qp--> — 🧩 ui · ⏳ à faire : la grille qui se tapait sous
+  une location ([offer-draft.js](js/views/rentals/offer-draft.js)) s'est endormie avec elle, et la
+  modale d'une offre ne la remplace pas — on recopiait l'écran d'un loueur ligne à ligne, `Entrée`
+  enregistrant et rouvrant une ligne vide. À reposer en pied de la liste Offres de l'onglet
+  Voitures, le loueur étant une colonne comme les autres.
 
 ## 💰 Dépenses
 
@@ -380,15 +384,10 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   tranche. Deux points restent ouverts : **Notes** n'est pas une lecture, on y écrit — soit elle
   remonte dans COLLECTER, soit le troisième bloc se nomme autrement ; et **Dépenses** est de la
   collecte (des charges saisies) dont le bloc Calculé est une lecture logée dans sa propre page.
-- **Transports devient « Se déplacer », Locations devient son onglet** <!--t:w2dn--> — 🖼️ écran ·
-  ⏳ à faire : loueur → location → offre → modèle est **une** chaîne, coupée sur deux niveaux — deux
-  de ses maillons sont des onglets de Transports, les deux autres une entrée de barre latérale.
-  Comparer deux loueurs demande donc de changer de page. La page prend les quatre onglets — Trajets
-  · Locations · Loueurs · Voitures ([tab.js](js/views/transports/tab.js)) — et `locations` sort de
-  `VIEWS` ([router.js](js/router.js)). `rentals` reste ce qu'il est : on pose le loueur, le lieu et
-  les dates une fois, puis on liste. Suppose **Un onglet dans l'adresse** fait, sinon la page perd
-  une adresse qu'elle avait ; et le bloc Calculé de Dépenses, qui renvoie vers `view: 'locations'`
-  ([derived.js](js/views/expenses/derived.js)), doit viser la page **et** son onglet.
+- **Transports devient « Se déplacer »** <!--t:w2dn--> — 🖼️ écran · ⏳ à faire : la chaîne loueur →
+  offre → modèle tient maintenant dans les trois onglets de la page, il ne reste que son nom à
+  changer — « Transports » nomme une de ses listes, pas ce que la page range. Suppose **Un onglet
+  dans l'adresse** fait, sinon les onglets restent sans lien direct.
 - **Un onglet dans l'adresse** <!--t:f1rq--> — 🧩 ui · ⏳ à faire : l'onglet ouvert d'une page vit
   dans une globale, hors du hash et des préférences ([tab.js](js/views/transports/tab.js)) — c'est
   le geste en cours, pas un état qu'on retrouve. Mais dès qu'un écran qui avait son adresse devient
@@ -398,11 +397,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Budget et prix : étendre la règle** <!--t:u6zh--> — 🗃️ modèle · ⏳ à faire : la règle est actée
   dans [la spec](docs/spec-voyage-toscane.md) et implémentée sur les transports, les briques
   communes vivant dans [price.js](js/views/price.js). Restent les hébergements (`price`), les
-  voitures (`priceTotal`) et les charges fixes (`amount`), qui gardent chacune leur champ de prix
+  offres (`pricePerDay`) et les charges fixes (`amount`), qui gardent chacune leur champ de prix
   unique.
 
 - **Le panneau de filtre sur les autres listes** <!--t:qz4r--> — 🧩 ui · ⏳ à faire : seuls les
-  hébergements le portent. Reste Lieux & activités, Transports, Locations et Dépenses — un appel à
+  hébergements le portent. Reste Lieux & activités, Transports et Dépenses — un appel à
   `filterPanel('<liste>')` dans l'en-tête et le filtre dans le render de la vue.
 - **Renommer `notes` en `userNotes`** <!--t:f4k6--> — 🗃️ modèle · 🧹 refacto · ⏳ à faire : sur
   toutes les entités, Sheet compris — donc une colonne renommée dans chaque liste de `COLLECTIONS`
@@ -446,18 +445,17 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   les dépenses, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à trancher ce que
   devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
-- **La saisie en ligne sur les autres listes** <!--t:d9ce--> — 🧩 ui · 📥 à trier : seules les
-  offres se tapent dans le tableau ([offer-draft.js](js/views/rentals/offer-draft.js)), `Entrée`
-  enregistrant la ligne et en rouvrant une vide — on recopie l'écran du loueur sans changer de
-  fenêtre. Partout ailleurs, ajouter une entrée ouvre la modale. Reste à trancher où le geste a du
-  sens : il vaut pour ce qu'on relève en série — les lieux, les dépenses — et beaucoup moins pour
-  un hébergement, qui porte vingt champs.
+- **La saisie en ligne sur les autres listes** <!--t:d9ce--> — 🧩 ui · 📥 à trier : plus aucune
+  liste ne se tape dans son tableau depuis que la grille des offres dort — voir **La saisie en
+  série d'offres**. Reste à trancher où le geste a du sens : il vaut pour ce qu'on relève en série
+  — les lieux, les dépenses — et beaucoup moins pour un hébergement, qui porte vingt champs.
 - **Ce qui s'édite en place : une règle plutôt qu'un coup par coup** <!--t:v2ar--> — 🧩 ui ·
   📥 à trier : chaque liste édite en place ce que quelqu'un y a posé au fil de l'eau — hébergements
   type, statut, prix, notes, tags et favori ; lieux type, statut, tags et favori ; transports mode,
-  statut et favori ; offres statut et notes ; dépenses notes et catégories ; locations,
-  prestataires et modèles rien du tout. Reste à dire ce qui s'édite en place partout — le mot d'une
-  pastille de vocabulaire, le favori, les notes — et ce qui n'appartient qu'à la fiche.
+  statut et favori ; offres statut, notes, motorisation et boîte — ces deux-là écrivent sur le
+  modèle ; modèles motorisation et boîte ; dépenses notes et catégories ; prestataires rien du
+  tout. Reste à dire ce qui s'édite en place partout — le mot d'une pastille de vocabulaire, le
+  favori, les notes — et ce qui n'appartient qu'à la fiche.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un
   service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
   puisque tout est déjà dans `localStorage`, et l'URL reste partageable. React Native est écarté :

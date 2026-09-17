@@ -60,6 +60,77 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-16** — ce que coûte la **route** est une dérivation du tracé, pas une saisie : les
+  kilomètres qu'OSRM rend déjà pour la gouttière chiffrent l'essence et les péages, et rien ne
+  s'enregistre — déplacer une étape les refait. Le partage suit ce que chaque chiffre EST : la
+  consommation vit sur le **modèle** ([columns.js](js/views/car-models/columns.js)), au même titre
+  que sa boîte, tandis que le prix du litre et le péage au kilomètre sont **du voyage**
+  ([road-rates.js](js/views/travels/road-rates.js)) — on y compare des itinéraires, pas des
+  carburants. Le péage porte sur toute la distance faute qu'OSRM dise quelle part est à barrière :
+  c'est un ordre de grandeur, donc chaque ligne du récap redit le taux dont vient son montant
+  ([road-rows.js](js/views/scenarios/detail/road-rows.js)). Le point dur est que le récap se rend
+  **synchrone** alors que la distance vient d'un fetch : [routing.js](js/routing.js) garde donc,
+  à côté du cache de promesses, la distance **résolue** (`routeDistance`, `null` tant qu'elle ne
+  l'est pas), et `fillStepLegs` rend la vue une fois de plus la première fois qu'une route revient
+  — le tour d'après, tout le récap la lit comme n'importe quel autre montant. Les emplacements
+  différés des tronçons ne pouvaient pas servir : un total ne se remplit pas case par case.
+
+- **2026-09-16** — l'onglet **Voitures** empile deux listes titrées plutôt qu'une carte par modèle
+  portant ses offres : `Offres` d'abord, `Modèles` dessous, sur le motif de la page Dépenses
+  ([expenses.js](js/views/expenses/expenses.js)), dont les classes remontent en `.list-section*`
+  puisqu'elles ont maintenant deux consommateurs. Le groupement par modèle imposait une seule
+  lecture et interdisait à la table d'être une liste ordinaire de l'app ; à plat, les deux listes
+  reprennent `listTable` avec leur panneau de tri et leur sélecteur de colonnes, et on range par ce
+  qu'on vient comparer. Le tri par défaut des offres — modèle puis prix par jour — recolle les
+  offres d'une même voiture, ce que le groupement faisait d'office. Chaque section porte son propre
+  bouton d'ajout, donc l'onglet n'a plus d'actions dans l'en-tête de la page. C'est aussi ce qui
+  sort « offre » et « modèle » de l'implicite : jusque-là aucun titre à l'écran ne nommait ce que
+  les lignes étaient. `car-model-card.js`, `offers-table.js` et l'`offer-row.js` du dossier
+  disparaissent avec le tableau imbriqué ; `columns.js` ([car-models](js/views/car-models/columns.js))
+  déclare `COLUMN_SETS.modeles` comme les autres écrans déclarent les leurs.
+
+- **2026-09-16** — une **offre** porte son loueur, et la page Locations s'endort. Une location —
+  loueur, lieu, dates — ne servait qu'à ramener au jour le total qu'un loueur affiche ; le prix qui
+  se saisit devenant celui du **jour**, il ne lui restait rien que l'offre ne porte elle-même, et
+  la durée appartient au scénario qui lit l'offre. La migration fait donc **redescendre** loueur,
+  lieu et dates de la location sur l'offre au lieu de les déplacer : la collection `rentals` reste
+  dans l'état et dans la synchro, les fichiers de la page restent sur le disque, et son sommeil
+  tient à trois endroits nommés dans le commentaire d'[index.html](index.html) — ses balises
+  `<script>`, son entrée de navigation ([render.js](js/render.js)) et sa modale
+  ([modal.js](js/modals/modal.js)). Rien n'est effacé, la rallumer est mécanique. La saisie d'une
+  offre vit désormais dans l'onglet Modèles de voiture, dont l'en-tête ouvre les deux portes —
+  « Modèle » pour compléter le catalogue, « Offre » quand on a un tarif sous les yeux — et sa
+  modale sait créer le modèle qui manque, ce que seule la grille de saisie savait faire. Cette
+  grille, elle, s'endort avec la page : PLAN.md la garde. `providerSelectField`
+  ([select-field.js](js/views/providers/select-field.js)) prend un rappel, parce que créer un
+  prestataire par son item ＋ n'est pas un `change` : sans lui la modale d'une offre ne repeindrait
+  ni ses modèles ni ses options. `rental-days.js` devient
+  [offer-dates.js](js/views/rentals/offer-dates.js), `price-labels.js` se replie dans
+  [offer-price.js](js/views/rentals/offer-price.js) — il n'y restait qu'un libellé. Le dossier
+  garde le nom `rentals/` alors que son domaine vivant est l'offre : il se renommera quand la page
+  sera réveillée ou supprimée, pas tant que les deux cohabitent.
+
+- **2026-09-16** — un fait qui s'écrirait à deux endroits se **dérive** plutôt qu'il ne se
+  synchronise : « ce loueur propose ce modèle » vivait dans les cases de sa fiche **et** dans toute
+  offre relevée chez lui, et rien n'écrivait chez l'autre — décocher un modèle laissait une offre
+  qui le contredisait à l'écran d'à côté. `providerCarModels`
+  ([get-provider.js](js/views/providers/get-provider.js)) rend l'union des deux, une offre valant
+  une case ; `addProviderModel` disparaît, il réécrivait un fait déjà porté. Symétriquement, ce qui
+  n'a qu'un seul foyer doit nettoyer ce qui le référence : une option retirée du catalogue d'un
+  loueur quitte les offres et les scénarios qui l'avaient cochée
+  ([providers/modal/save.js](js/views/providers/modal/save.js)) — la référence morte disparaissait
+  des totaux sans le dire.
+
+- **2026-09-16** — une ville se crée depuis la carte
+  ([new-city.js](js/views/map/new-city.js)) : c'est là qu'on voit le trou, et une ville n'est plus
+  qu'une attraction de type ville depuis la fusion. Le panneau ne reprend pas `locateFields` : ses
+  ids sont ceux de la modale ouverte (`geo-address`…), deux jeux dans le même document iraient au
+  premier venu, et un panneau d'en-tête n'a de toute façon que la recherche à porter — les
+  coordonnées à la main et le reste de la fiche restent la modale. Le brouillon vit donc dans une
+  globale du module et non dans le DOM : chaque étape rend la page, et un champ y perdrait ce qu'on
+  y a tapé. Le nom posé est celui du résultat et non ce qu'on a tapé — « sienne » devient
+  « Siena » —, les quatre niveaux venant du même résultat.
+
 - **2026-09-15** — un loueur porte les **modèles qu'il propose**
   ([model-rows.js](js/views/providers/modal/model-rows.js)) : le menu Modèle d'une offre listait
   tout le catalogue du voyage, donc on ne pouvait pas dire « chez Europcar il y a une BMW ». C'est

@@ -11,16 +11,15 @@ const ATTRACTION_TYPES = {
   restaurant: { label: 'Restaurant', emoji: '🍝', color: '#7A5C3E' },
 };
 
-
 const ATTRACTION_TYPES_SIMPLE = {
-  nature: { label: 'Nature'  },
-  heritage: { label: 'Patrimoine'  },
-  museum: { label: 'Musée'  },
-  city: { label: 'Ville'  },
-  village: { label: 'Village'  },
-  beach: { label: 'Plage'  },
-  activity: { label: 'Activité'  },
-  restaurant: { label: 'Restaurant'  },
+  nature: { label: 'Nature' },
+  heritage: { label: 'Patrimoine' },
+  museum: { label: 'Musée' },
+  city: { label: 'Ville' },
+  village: { label: 'Village' },
+  beach: { label: 'Plage' },
+  activity: { label: 'Activité' },
+  restaurant: { label: 'Restaurant' },
 };
 
 function attractionType(type) {

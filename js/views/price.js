@@ -18,6 +18,11 @@ function formatEuros(amount) {
   return `${Math.round(amount).toLocaleString('fr-FR')} €`;
 }
 
+// Un taux se lit à ses décimales près — 1,85 €/L, 0,08 €/km — là où un montant s'arrondit à l'euro.
+function formatRate(value) {
+  return String(Math.round(value * 100) / 100).replace('.', ',');
+}
+
 function hasPriceValue(value) {
   return String(value == null ? '' : value).trim() !== '';
 }

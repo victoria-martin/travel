@@ -1,28 +1,30 @@
 /*
-  Le même bouton « Filtrer » que les listes, avec un bloc par collection tracée : la case qui la met
-  à l'écran, et sous elle sa propre pile de niveaux. Décocher la collection cache aussi ses
+  Les mêmes filtres à deux endroits : la colonne à gauche de la carte, et le bouton « Filtrer » de
+  l'en-tête, qui les discloses comme sur les listes. Un bloc par collection tracée, avec la case qui
+  la met à l'écran et sous elle sa propre pile de niveaux. Décocher la collection cache aussi ses
   niveaux — ils ne filtrent plus rien.
-  Le scénario, lui, reste dans l'en-tête : il trace le trajet et porte son message d'état, qu'un
-  panneau fermé rendrait invisible.
+  Le scénario, lui, reste dans l'en-tête : il trace le trajet et porte son message d'état.
 */
+function mapFilterPanel() {
+  return /* HTML */ `${MAP_KINDS.map(mapResourceBlock).join('')}
+    <div class="filter-block">
+      <label class="filter-option"
+        ><input
+          type="checkbox"
+          ${mapFilters.favOnly ? 'checked' : ''}
+          onchange="toggleMapFavOnly()"
+        />${svgIcon('star', { fill: true })} Favoris uniquement</label
+      >
+    </div>`;
+}
+
 function mapFilterButton() {
   return toolbarPanel({
     key: 'filter',
     icon: svgIcon('funnel'),
     label: 'Filtrer',
     count: mapFilterCount(),
-    body: /* HTML */ `<div class="filter-panel">
-      ${MAP_KINDS.map(mapResourceBlock).join('')}
-      <div class="filter-block">
-        <label class="filter-option"
-          ><input
-            type="checkbox"
-            ${mapFilters.favOnly ? 'checked' : ''}
-            onchange="toggleMapFavOnly()"
-          />${svgIcon('star', { fill: true })} Favoris uniquement</label
-        >
-      </div>
-    </div>`,
+    body: `<div class="filter-panel">${mapFilterPanel()}</div>`,
   });
 }
 

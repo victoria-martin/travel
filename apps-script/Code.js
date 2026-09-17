@@ -19,6 +19,8 @@ const COLLECTIONS = {
     'region',
     'accentColor',
     'travelers',
+    'fuelPrice',
+    'tollRate',
   ],
   accommodations: [
     'travelId',
@@ -35,6 +37,8 @@ const COLLECTIONS = {
     'lng',
     'price',
     'dates',
+    'availableFrom',
+    'availableTo',
     'link',
     'bookingLink',
     'notes',
@@ -56,7 +60,7 @@ const COLLECTIONS = {
     'modelIds',
   ],
   // Un modèle est du voyage et non d'un loueur : la même Golf se compare chez deux loueurs.
-  carModels: ['travelId', 'id', 'name', 'fuel', 'gearbox'],
+  carModels: ['travelId', 'id', 'name', 'fuel', 'gearbox', 'consumption'],
   // Le lieu, les dates et le loueur sont à la location ; le véhicule n'en porte que la référence.
   rentals: [
     'travelId',

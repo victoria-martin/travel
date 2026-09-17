@@ -1,6 +1,6 @@
 /*
-  La page Transports porte trois listes : les trajets, les loueurs et compagnies chez qui on les
-  prend, et les modèles de voiture qu'ils proposent. L'onglet ouvert est le geste en cours et non
+  La page Transports porte trois onglets : les trajets, les loueurs et compagnies chez qui on les
+  prend, et les voitures — offres relevées et catalogue des modèles, l'un sous l'autre. L'onglet ouvert est le geste en cours et non
   une préférence qu'on retrouve, comme le mode comparer des scénarios : il vit dans une globale,
   hors du hash et hors des prefs.
 */
@@ -25,8 +25,8 @@ const TRANSPORT_TABS = [
     key: 'voitures',
     icon: svgIcon('car'),
     label: 'Voitures',
-    count: () => carModelsCount(),
-    actions: () => carModelsHeaderActions(),
+    count: () => offersCount(),
+    actions: () => '',
     body: () => renderCarModelsTab(),
   },
 ];

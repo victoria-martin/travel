@@ -23,10 +23,10 @@ composant, en colonne collante.
 
 Aucune entité propre — c'est le seul écran de l'app dans ce cas. Il lit :
 
-| Entité | Champs lus |
-| ------ | ---------- |
-| Hébergement | coordonnées, type, province, favori |
-| Scénario | étapes (choisi en filtre, il donne le tracé) |
+| Entité      | Champs lus                                   |
+| ----------- | -------------------------------------------- |
+| Hébergement | coordonnées, type, province, favori          |
+| Scénario    | étapes (choisi en filtre, il donne le tracé) |
 
 Sans coordonnées, pas de marqueur. Le tracé routier réel vient d'OSRM, mis en cache par liste de
 points — il ne se recalcule que si une étape bouge.

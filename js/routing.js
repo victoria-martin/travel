@@ -11,8 +11,21 @@ const ROUTE_HELP =
 
 const routeCache = new Map();
 
+/*
+  Ce que coûte la route — l'essence, les péages — se chiffre au rendu, qui est synchrone, alors que
+  la distance vient d'un fetch. Elle se relit donc ici une fois la route revenue, et vaut `null`
+  tant qu'elle ne l'est pas : c'est au lecteur de dire ce qu'il affiche en attendant.
+*/
+const routeDistances = new Map();
+
 function routeKey(points) {
   return points.map(([lat, lng]) => `${lat.toFixed(5)},${lng.toFixed(5)}`).join(';');
+}
+
+// En mètres, comme les `legs`.
+function routeDistance(points) {
+  const metres = routeDistances.get(routeKey(points));
+  return metres === undefined ? null : metres;
 }
 
 // { line: [[lat, lng]…], legs: [{ distance (m), duration (s) }…] }, one leg per pair of waypoints.
@@ -40,6 +53,7 @@ async function requestRoute(points) {
   }
 
   const route = data.routes[0];
+  routeDistances.set(routeKey(points), route.distance || 0);
   return {
     line: route.geometry.coordinates.map(([lng, lat]) => [lat, lng]),
     legs: (route.legs || []).map(({ distance, duration }) => ({ distance, duration })),

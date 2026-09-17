@@ -27,13 +27,13 @@ Aucun écran propre : le geste vit dans les lignes et les cartes de
 
 Un statut par table, ordonné par le workflow — et cet ordre **est** l'ordre de tri :
 
-| Table | Statuts |
-| ----- | ------- |
-| Voyage | Idée 💭 · En préparation 🧭 · Réservé 🔒 · En cours ✈️ · Passé 📦 |
+| Table       | Statuts                                                                                                           |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- |
+| Voyage      | Idée 💭 · En préparation 🧭 · Réservé 🔒 · En cours ✈️ · Passé 📦                                                 |
 | Hébergement | Réservé 🔒 · Contacté ✉️ · Attente ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎 |
-| Transport | Réservé 🔒 · À réserver 💳 · Go ✅ · À voir 👀 · Écarté 👎 |
-| Voiture | Réservé 🔒 · À réserver 💳 · Go ✅ · À voir 👀 · Écarté 👎 |
-| Attraction | À voir 👀 · Go ✅ · Vu ☑️ · Écarté 👎 |
+| Transport   | Réservé 🔒 · À réserver 💳 · Go ✅ · À voir 👀 · Écarté 👎                                                        |
+| Voiture     | Réservé 🔒 · À réserver 💳 · Go ✅ · À voir 👀 · Écarté 👎                                                        |
+| Attraction  | À voir 👀 · Go ✅ · Vu ☑️ · Écarté 👎                                                                             |
 
 Les statuts d'hébergement ne s'appliquent pas à une attraction : **on ne réserve pas un point de
 vue**. « Non renseigné ❔ » est un état à part entière, affiché tel quel et trié après tout le reste.
