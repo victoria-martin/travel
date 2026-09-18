@@ -6,7 +6,7 @@ function carOffersSection() {
     <div class="list-section-head">
       <h3 class="list-section-title">Offres</h3>
       <div class="list-section-actions">
-        ${sortPanel('locations')} ${columnPicker('locations')}
+        ${sortPanel('locations')} ${columnPicker('locations')} ${toolbarSeparator()}
         ${toolbarButton({ icon: svgIcon('plus'), label: 'Offre', onclick: "openModal('voiture')" })}
       </div>
     </div>

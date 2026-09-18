@@ -8,7 +8,8 @@ function renderMapView() {
         <p class="view-sub" id="route-notice">${ROUTE_HELP}</p>
       </div>
       <div class="view-header-actions">
-        ${mapScenarioSelect()} ${newCityPanel()} ${mapFilterButton()} ${toolbarMenu()}
+        ${mapFilterButton()} ${toolbarSeparator()} ${mapScenarioSelect()} ${toolbarSeparator()}
+        ${newCityPanel()} ${toolbarSeparator()} ${toolbarMenu()}
       </div>
     </div>
     <div class="map-layout">

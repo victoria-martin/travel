@@ -9,10 +9,14 @@ function fixedCostsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${mode === 'table' ? sortPanel('charges') : ''}
-      ${mode === 'table' ? columnPicker('charges') : ''} ${listModeToggle('charges', mode)}
+      ${
+        mode === 'table'
+          ? `${sortPanel('charges')} ${columnPicker('charges')} ${toolbarSeparator()}`
+          : ''
+      }
+      ${listModeToggle('charges', mode)} ${toolbarSeparator()}
       ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('charge')" })}
-      ${toolbarMenu()}
+      ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;
 }

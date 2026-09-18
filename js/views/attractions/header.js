@@ -10,9 +10,9 @@ function attractionsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${sortPanel('attractions')} ${columnPicker('attractions')}
+      ${sortPanel('attractions')} ${columnPicker('attractions')} ${toolbarSeparator()}
       ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('attraction')" })}
-      ${toolbarMenu()}
+      ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;
 }

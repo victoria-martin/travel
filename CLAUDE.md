@@ -60,6 +60,18 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-17** — la barre d'outils d'un en-tête (`.view-header-actions` / `.list-section-actions`)
+  se lit en **4 groupes fixes**, séparés par `toolbarSeparator()`
+  ([separator.js](js/views/toolbar/separator.js)) : lire la vue (tri, filtre, colonnes) → garder/
+  filtrer ce qui reste (favoris, tableau/cartes, comparer, archivés) → agir (importer, ＋) → régler
+  (⋮, toujours seul en dernier). Un groupe absent d'un écran ne laisse pas de séparateur orphelin —
+  quand le groupe 1 est conditionnel (`mode === 'table'`), le séparateur qui le ferme est dans la
+  même condition que lui, pas à côté. `.toolbar-separator` est un simple trait vertical de 1px sur
+  `--line`, posé en `<span>` dans le flux — pas de sous-conteneurs par groupe, le fichier reste un
+  header écrit en clair. A fait remonter deux en-têtes qui violaient déjà l'ordre : Scénarios
+  mêlait `+ Nouveau` (une action) avec Comparer/Archivés (des filtres) dans le désordre, et la Carte
+  écrivait sélecteur de scénario avant le bouton Filtrer alors que les deux façonnent la vue.
+
 - **2026-09-17** — un lien Google Maps de recherche d'hôtel porte sa **date de recherche** dans
   l'URL finale, motif `!5mN!1s<date>` — non documenté par Google, à confirmer si un lien la porte
   autrement. `googleMapsSearchDate` ([GoogleMaps.js](apps-script/GoogleMaps.js)) l'extrait à côté du

@@ -649,6 +649,15 @@ a.btn {
   border-radius: 0;
 }
 
+/* Marks a group boundary in .view-header-actions / .list-section-actions: lire la vue,
+   garder/filtrer, agir, régler — dans cet ordre. */
+.toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  flex: none;
+}
+
 /* ---------- Table ---------- */
 .table-wrap {
   background: var(--paper-raised);

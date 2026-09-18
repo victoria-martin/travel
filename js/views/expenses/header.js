@@ -6,10 +6,14 @@ function expensesHeader() {
       <p class="view-sub">Ce que le voyage coûte — calculé depuis les pages, et saisi à la main</p>
     </div>
     <div class="view-header-actions">
-      ${mode === 'table' ? sortPanel('charges') : ''}
-      ${mode === 'table' ? columnPicker('charges') : ''} ${listModeToggle('charges', mode)}
+      ${
+        mode === 'table'
+          ? `${sortPanel('charges')} ${columnPicker('charges')} ${toolbarSeparator()}`
+          : ''
+      }
+      ${listModeToggle('charges', mode)} ${toolbarSeparator()}
       ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('charge')" })}
-      ${toolbarMenu()}
+      ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;
 }

@@ -14,7 +14,7 @@ function rentalsHeader(rentals) {
         label: 'Nouvelle recherche',
         onclick: "openModal('location')",
       })}
-      ${toolbarMenu()}
+      ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;
 }

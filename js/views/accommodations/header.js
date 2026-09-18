@@ -12,14 +12,14 @@ function accommodationsHeader(items) {
     </div>
     <div class="view-header-actions">
       ${mode === 'table' ? sortPanel('hebergements') : ''} ${filterPanel('hebergements')}
-      ${mode === 'table' ? columnPicker('hebergements') : ''}
+      ${mode === 'table' ? columnPicker('hebergements') : ''} ${toolbarSeparator()}
       ${toolbarButton({
         icon: svgIcon('star', { fill: true }),
         label: 'Favoris',
         onclick: 'toggleFavOnly()',
         active: favOnly,
       })}
-      ${listModeToggle('hebergements', mode)}
+      ${listModeToggle('hebergements', mode)} ${toolbarSeparator()}
       ${
         syncActive()
           ? ''
@@ -29,7 +29,7 @@ function accommodationsHeader(items) {
               onclick: "openModal('paste-import')",
             })
       }
-      ${accommodationAddMenu()} ${toolbarMenu()}
+      ${accommodationAddMenu()} ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;
 }
