@@ -21,6 +21,12 @@ const SCENARIO_SIDE_TABS = [
       scenarioExpensesBlock(s) +
       scenarioTotalBlock(s),
   },
+  {
+    key: 'valise',
+    icon: svgIcon('luggage'),
+    label: 'Valise',
+    body: () => scenarioPackingBlock(),
+  },
 ];
 
 function activeSideTab() {

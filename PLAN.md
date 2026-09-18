@@ -188,43 +188,23 @@ les types.
 
 ## 🧳 Valise
 
-La liste de ce qu'on emporte et de ce qu'on prépare, cochable. Remplace l'idée « Todo list de
-voyage ». Tout est à trancher, rien n'est commencé.
+La page, le catalogue et la valise du voyage sont en place — décrit dans
+[la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
-- **Créer la page** <!--t:ejih--> — 🖼️ écran · ⏳ à faire : `navBtn('valise', '🧳', 'Valise')` dans
-  la barre latérale, après Notes ([render.js:11](js/render.js#L11)), et `js/views/packing/` pour le
-  domaine — un dossier par domaine, comme `cars/` ou `cities/`.
-- **Entité `packingItems`** <!--t:1zre--> — 🗃️ modèle · 💡 idée : une collection de plus dans
-  `COLLECTIONS` ([Code.js:8](apps-script/Code.js#L8)) et dans `emptyData()`
-  ([storage.js:17](js/storage.js#L17)), avec son `travelId` en première colonne comme les autres.
-  Modèle proposé : libellé, catégorie, quantité, coché, `travelerId` plus tard, notes.
-- **Catégories** <!--t:fjcp--> — 🗃️ modèle · 🔍 à étudier : une liste figée sur le modèle d'
-  [accommodation-types.js](js/accommodation-types.js) (vêtements, papiers, santé, électronique,
-  bagage cabine, voiture, à faire avant de partir) ou des tags libres comme
-  [tags.js:5](js/views/tags.js#L5). Les deux existent déjà dans l'app, il faut choisir lequel.
-- **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 🔍 à étudier : un bouton « Partir d'une liste
-  type » qui crée les items d'un coup, versus une liste vide. Si modèle il y a, il vit à côté de la
-  vue, comme [default-car.js](js/views/rentals/default-offer.js).
-- **Cocher** <!--t:30rq--> — 🧩 ui · 💡 idée : une case par ligne, écrite directement en base comme
-  les inline-edits existants, et un compteur « 12 / 30 » dans l'en-tête.
-
-### Intégration aux scénarios
-
-- **Quantités déduites des nuits** <!--t:19lc--> — 🧮 calcul · 🔍 à étudier : le scénario connaît
-  déjà ses nuits ([nights.js](js/views/scenarios/nights.js)). Une quantité peut valoir « 1 par
-  nuit » plutôt qu'un nombre fixe, et se recalculer quand le scénario retenu change. Suppose un
-  scénario « retenu » sur le voyage — même prérequis que les chiffres des cartes Voyages.
+- **Modèle par défaut** <!--t:l13t--> — 🧩 ui · 💡 idée : la page démarre sur un catalogue vide.
+  Garder l'idée d'un bouton « Partir d'une liste type » qui crée plusieurs items d'un coup —
+  distinct de composer la valise du voyage depuis le catalogue, qui pioche un item à la fois. Si
+  liste type il y a, elle vit à côté de la vue, comme
+  [default-offer.js](js/views/rentals/default-offer.js).
 - **Items rattachés à une étape** <!--t:q8pc--> — 🗃️ modèle · 🔍 à étudier : un `stepId` optionnel
   sur l'item (maillot pour l'étape mer, chaussures de rando pour l'étape Chianti), sur le modèle
   d'une étape qui référence un hébergement. La page Valise les grouperait alors par étape, dans
   l'ordre du scénario.
-- **Bloc « Valise » dans le détail d'un scénario** <!--t:t5g5--> — 🧩 ui · 💡 idée : sous les
-  étapes, à côté du bloc Charges fixes, une ligne par catégorie avec son compteur et un lien vers la
-  page. Lecture seule : on coche depuis la page Valise, pas depuis le scénario.
-- **Ce qui dépend de la voiture** <!--t:u7x0--> — 🗃️ modèle · 💡 idée : le scénario porte déjà une
-  voiture ([car-block.js](js/views/scenarios/detail/offer-block.js)). Des items « coffre de toit »,
-  « siège enfant » n'ont de sens que s'il y a une voiture — à voir si la valise s'en sert ou si
-  c'est une complication inutile.
+- **Maquette d'une composition plus agréable** <!--t:ujzd--> — 🧩 ui · 💡 idée : le picker actuel
+  (dropdown, sur le modèle de `scenarioExpenseDropdown`) est fonctionnel mais basique. Une
+  proposition de design plus travaillée existe en artifact (catalogue groupé par catégorie,
+  panneau de composition, onglet scénario avec badges catalogue/voyage) — à relire et éventuellement
+  reprendre.
 
 ## 🗺️ Voyages
 
@@ -246,8 +226,9 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
   ([current-travel.js](js/current-travel.js)) et bascule sur Hébergements. Le sélecteur reste, les
   deux points d'entrée partagent le même chemin.
 - **Chiffres de la carte** <!--t:aqpf--> — 🗃️ modèle · 🧮 calcul · 🔍 à étudier : ce qu'une carte
-  de voyage résume — nombre d'hébergements et de scénarios, budget du scénario retenu — et donc s'il
-  faut un scénario « retenu » sur le voyage, ce qui n'existe pas aujourd'hui.
+  de voyage résume — nombre d'hébergements et de scénarios, budget du scénario retenu. Le scénario
+  « retenu » existe déjà (`chosenScenario()` dans
+  [chosen.js](js/views/scenarios/chosen.js)) : reste à savoir quels chiffres afficher sur la carte.
 - **Supprimer un voyage** <!--t:kgci--> — 🧩 ui · 🗃️ modèle · 🌙 plus tard : avec la page Voyages,
   puisque c'est de là qu'on supprime. Confirmation obligatoire, et les données rattachées partent
   avec.

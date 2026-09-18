@@ -17,8 +17,11 @@ const TRAVEL_COLLECTIONS = [
   'scenarios',
   'tripNotes',
   'todoLists',
+  'packingListItems',
 ];
 
+// Le catalogue de valise n'est pas du voyage : il ne vit ni dans TRAVEL_COLLECTIONS ni derrière
+// ofCurrentTravel(), il reste le même quel que soit le voyage ouvert.
 function emptyData() {
   return {
     travels: [],
@@ -33,6 +36,8 @@ function emptyData() {
     scenarios: [],
     tripNotes: [],
     todoLists: [],
+    packingItems: [],
+    packingListItems: [],
   };
 }
 
@@ -59,6 +64,8 @@ function migrateData(data) {
   if (!data.transports) data.transports = [];
   if (!data.tripNotes) data.tripNotes = [];
   if (!data.todoLists) data.todoLists = [];
+  if (!data.packingItems) data.packingItems = [];
+  if (!data.packingListItems) data.packingListItems = [];
   data.todoLists.forEach((l) => {
     if (!Array.isArray(l.filterValues)) l.filterValues = [];
   });

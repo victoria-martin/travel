@@ -209,12 +209,18 @@ function mergeStates(remote, local, base) {
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
     tripNotes: mergeCollections(remote.tripNotes, local.tripNotes, base.tripNotes),
     todoLists: mergeCollections(remote.todoLists, local.todoLists, base.todoLists),
+    packingItems: mergeCollections(remote.packingItems, local.packingItems, base.packingItems),
+    packingListItems: mergeCollections(
+      remote.packingListItems,
+      local.packingListItems,
+      base.packingListItems,
+    ),
   };
 }
 
 function isEmptyState(data) {
   if (!data) return true;
-  return ['travels', ...TRAVEL_COLLECTIONS].every((k) => !(data[k] || []).length);
+  return ['travels', ...TRAVEL_COLLECTIONS, 'packingItems'].every((k) => !(data[k] || []).length);
 }
 
 /* ------------------------------ pull / push ------------------------------ */

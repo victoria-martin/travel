@@ -80,6 +80,18 @@ const MODAL_TYPES = {
     body: (m) => fixedCostForm(m.payload),
     edits: true,
   },
+  'valise-catalogue': {
+    open: (id) => ({ payload: id ? structuredClone(getPackingItem(id)) : emptyPackingItem() }),
+    body: (m) => packingCatalogForm(m.payload),
+    edits: true,
+  },
+  'valise-item': {
+    open: (id) => ({
+      payload: id ? structuredClone(getPackingListItem(id)) : emptyPackingListItem(),
+    }),
+    body: (m) => packingTravelItemForm(m.payload),
+    edits: true,
+  },
   step: {
     // Une étape neuve naît seule ou déjà ouverte en options : c'est le bouton qui l'a dit.
     open: (scenarioId, stepId, options = 1) => ({

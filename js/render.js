@@ -31,6 +31,7 @@ function render() {
       ${navBtn('scenarios', svgIcon('compass'), 'Scénarios')}
       ${navBtn('carte', svgIcon('map'), 'Carte')}
       ${navBtn('notes', svgIcon('notebook-pen'), 'Notes')}
+      ${navBtn('valise', svgIcon('luggage'), 'Valise')}
       ${navBtn('a-faire', svgIcon('list-checks'), 'À faire')}
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
@@ -97,6 +98,7 @@ function renderMain() {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);
   } else if (view === 'notes') main.innerHTML = renderNotesView();
+  else if (view === 'valise') main.innerHTML = renderPackingView();
   else if (view === 'a-faire') main.innerHTML = renderTodoView();
   trackViewHeaderHeight(main);
 }

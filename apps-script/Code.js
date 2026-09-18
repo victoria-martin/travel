@@ -178,6 +178,20 @@ const COLLECTIONS = {
   ],
   tripNotes: ['travelId', 'id', 'text'],
   todoLists: ['travelId', 'id', 'kind', 'columnKey', 'filterValues'],
+  // Le catalogue est personnel, pas du voyage : pas de travelId, seule collection de l'app dans ce cas.
+  packingItems: ['id', 'label', 'categories', 'notes'],
+  // La valise d'un voyage : `packingItemId` référence une entrée du catalogue si l'item en vient,
+  // vide s'il est propre à ce voyage — auquel cas il porte son propre libellé et ses catégories.
+  packingListItems: [
+    'travelId',
+    'id',
+    'packingItemId',
+    'label',
+    'categories',
+    'quantity',
+    'perNight',
+    'checked',
+  ],
   // Le lieu, les nuits et le budget sont à l'étape ; `groupId` et `optionId` disent la colonne à
   // laquelle elle appartient, vides si elle n'est comparée à rien.
   steps: [
@@ -242,8 +256,8 @@ const COLLECTIONS = {
 };
 const STEP_CHILDREN = { options: 'stepOptions', extras: 'stepAttractions' };
 const GROUP_CHILDREN = { options: 'groupOptions', extras: 'groupAttractions' };
-const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected'];
-const NUM_FIELDS = ['nights', 'travelers', 'count'];
+const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected', 'checked', 'perNight'];
+const NUM_FIELDS = ['nights', 'travelers', 'count', 'quantity'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = [
   'costIds',
@@ -346,6 +360,8 @@ function readState() {
       return scenario;
     }),
     tripNotes: rows.tripNotes,
+    packingItems: rows.packingItems,
+    packingListItems: rows.packingListItems,
   };
   return { rev: fingerprint(data), data: data };
 }
@@ -554,6 +570,8 @@ function normalizeState(data) {
     transports: normalizeCollection('transports', data.transports),
     scenarios: scenarios,
     tripNotes: normalizeCollection('tripNotes', data.tripNotes),
+    packingItems: normalizeCollection('packingItems', data.packingItems),
+    packingListItems: normalizeCollection('packingListItems', data.packingListItems),
   };
 }
 

@@ -232,6 +232,8 @@ coup par coup.
 | **Option d'étape**  | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                        | appartient à une étape ; une seule est retenue                         |
 | **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                                     |
 | **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »           |
+| **Item du catalogue** | libellé, catégories, notes                                                                                                                                        | pas de `travelId` : le seul catalogue commun à tous les voyages        |
+| **Item de valise**  | référence catalogue optionnelle, libellé, catégories, quantité, coché                                                                                              | appartient au voyage ; sans référence, propre à ce voyage seul         |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -768,13 +770,14 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Détail**, en deux colonnes : les étapes à gauche, le panneau latéral à droite. Sous les étapes,
   un pied partage la largeur — voiture, dépenses et total général à gauche, la carte du trajet à
   droite, collante à la hauteur du défilement.
-- **Le panneau latéral** montre une chose à la fois, ou rien : la carte du trajet, ou l'argent
-  (voiture, dépenses, total général) ; son pied porte les nuits et le total quel que soit l'onglet.
-  Ses deux boutons « 🗺 Carte » et « 💶 Argent » vivent dans la barre de l'en-tête et sont aussi sa
-  bascule — recliquer celui qui est allumé referme le panneau, et les étapes prennent toute la
-  largeur. Le passage d'un mode à l'autre est animé : les deux colonnes glissent vers leur nouvelle
-  largeur au lieu de sauter. L'onglet ouvert, ou l'absence de panneau, est retenu d'une session à
-  l'autre. Sous 1100 px, le panneau repasse sous les étapes.
+- **Le panneau latéral** montre une chose à la fois, ou rien : la carte du trajet, l'argent
+  (voiture, dépenses, total général), ou la valise du voyage ; son pied porte les nuits et le total
+  quel que soit l'onglet. Ses trois boutons « 🗺 Carte », « 💶 Argent » et « 🧳 Valise » vivent dans
+  la barre de l'en-tête et sont aussi sa bascule — recliquer celui qui est allumé referme le
+  panneau, et les étapes prennent toute la largeur. Le passage d'un mode à l'autre est animé : les
+  deux colonnes glissent vers leur nouvelle largeur au lieu de sauter. L'onglet ouvert, ou
+  l'absence de panneau, est retenu d'une session à l'autre. Sous 1100 px, le panneau repasse sous
+  les étapes.
 - **Le partage des deux colonnes se glisse** : la poignée entre elles se tire à la souris, chaque
   colonne gardant au moins 280 px. La largeur est retenue **par onglet** — la carte se lit large,
   l'argent tient en une colonne étroite — et d'une session à l'autre.
@@ -1026,6 +1029,44 @@ lieu où le trajet repasse empile ses étapes dans le même popup.
 | texte | un bloc par voyage |
 
 Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
+
+### Valise
+
+Deux entités : un **catalogue** personnel (`packingItems`), sans `travelId` — seule collection de
+l'app qui n'est pas scopée par voyage — et la **valise du voyage** (`packingListItems`), scopée par
+`travelId`. Un item de la valise référence un item du catalogue (`packingItemId`) ou porte son
+propre libellé et ses catégories s'il est né dans ce voyage (maillot de bain) ; quand il référence
+le catalogue, le libellé et les catégories se lisent là-bas et ne sont jamais recopiés — les
+modifier au catalogue les change partout où l'item est utilisé.
+
+| Champ (catalogue)  | Détail                          |
+| ------------------- | -------------------------------- |
+| libellé, catégories | catégories en tags libres        |
+| notes                | libre                            |
+
+| Champ (valise du voyage) | Détail                                                          |
+| -------------------------- | ---------------------------------------------------------------- |
+| référence catalogue        | optionnelle ; vide pour un item propre au voyage                 |
+| libellé, catégories        | seulement si pas de référence catalogue                          |
+| quantité                   | un nombre fixe, ou « 1 par nuit » (déduite du scénario retenu)   |
+| coché                      | emballé ou non                                                   |
+
+La page **Valise** (nav, après Notes) empile deux listes, comme l'onglet Voitures empile Offres et
+Modèles : la valise du voyage ouvert en premier — table éditable, case à cocher et compteur
+« X / Y » en tête, un panneau « Ajouter depuis le catalogue » (dropdown des items pas encore dans
+cette valise) et un bouton « + Item du voyage » pour un item propre — puis le catalogue dessous, en
+référence, avec son propre `+ Item`. Supprimer un item du catalogue référencé ailleurs détache les
+lignes qui le référençaient : elles gardent son libellé et ses catégories, figés sur elles.
+
+Le détail d'un scénario porte un troisième onglet dans son panneau latéral, à côté de Carte et
+Argent (voir plus haut) : **Valise**, compact comme le bloc Dépenses — case à cocher, libellé,
+quantité, retirer — avec le même panneau « Ajouter depuis le catalogue » et le même « + Item ». La
+valise y montrée est celle du voyage ouvert, pas une valise propre à ce scénario : elle est donc
+identique quel que soit le scénario dont on regarde le détail.
+
+Une maquette d'une composition plus travaillée (catalogue groupé par catégorie, panneau de
+composition, badges catalogue/voyage) existe en artifact — voir PLAN.md — à reprendre si le picker
+actuel (une simple liste déroulante) ne suffit pas.
 
 ### À faire
 
