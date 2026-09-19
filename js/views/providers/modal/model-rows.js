@@ -17,15 +17,14 @@ function providerModelsBody(p) {
     <label>Modèles proposés</label>
     ${
       models.length
-        ? models
-            .map(
-              (model) => `<label class="filter-option">
-              <input type="checkbox" ${p.modelIds.includes(model.id) ? 'checked' : ''}
-                onchange="toggleProviderModel('${model.id}')" />
-              ${escapeHtml(model.name)}
-            </label>`,
-            )
-            .join('')
+        ? `<select id="provider-model-select" multiple size="${Math.min(models.length, 6)}" onchange="setProviderModels(this)">
+            ${models
+              .map(
+                (model) =>
+                  `<option value="${model.id}" ${p.modelIds.includes(model.id) ? 'selected' : ''}>${escapeHtml(model.name)}</option>`,
+              )
+              .join('')}
+          </select>`
         : '<p class="filter-hint">Aucun modèle au catalogue du voyage.</p>'
     }
     <div class="provider-option-row">
@@ -37,11 +36,8 @@ function providerModelsBody(p) {
   </div>`;
 }
 
-function toggleProviderModel(modelId) {
-  const ids = modal.payload.modelIds;
-  modal.payload.modelIds = ids.includes(modelId)
-    ? ids.filter((id) => id !== modelId)
-    : ids.concat(modelId);
+function setProviderModels(select) {
+  modal.payload.modelIds = Array.from(select.selectedOptions).map((option) => option.value);
 }
 
 // Le modèle tapé rejoint le catalogue du voyage et se coche ici : on le retrouvera chez le loueur

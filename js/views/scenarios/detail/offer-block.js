@@ -2,7 +2,7 @@ function scenarioOfferBlock(scenario) {
   const offer = getScenarioOffer(scenario);
   return /* HTML */ `<div class="scenario-extra">
     <div class="scenario-extra-head">
-      <div class="acc-recap-title">Voiture</div>
+      <div class="acc-recap-title">Voiture${offer ? offerSheetButton(offer.id) : ''}</div>
       ${offer ? `<strong>${formatEuros(scenarioOfferTotal(scenario))}</strong>` : ''}
     </div>
     ${

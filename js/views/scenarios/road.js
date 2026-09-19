@@ -55,3 +55,18 @@ function scenarioTollCost(scenario) {
 function scenarioRoadTotal(scenario) {
   return scenarioFuelCost(scenario) + scenarioTollCost(scenario);
 }
+
+// La voiture retenue et ce qu'il en coûte de s'en servir : une seule famille, la route sous elle.
+function scenarioTransportTotal(scenario) {
+  return scenarioOfferTotal(scenario) + scenarioRoadTotal(scenario);
+}
+
+// Le tronçon entre deux étapes prend le même calcul que le scénario entier, sur sa propre
+// distance OSRM — jamais le budget saisi à la main, qui ne porte que sur le total du voyage.
+function legFuelCost(scenario, leg) {
+  return (leg.distance / 1000 / 100) * scenarioFuelConsumption(scenario) * travelFuelPrice();
+}
+
+function legTollCost(leg) {
+  return (leg.distance / 1000) * travelTollRate();
+}

@@ -1,6 +1,9 @@
 /*
-  Un hébergement est un disque de la couleur de son type, une attraction une pastille portant
-  l'emoji du sien : la couleur dit la famille, la forme dit la collection.
+  Une pastille par collection — 🏠 pour un hébergement, 🏛 pour une attraction, les mêmes icônes
+  que leur entrée de filtre — teintée de la couleur de son type : la forme dit la collection, la
+  couleur dit le type, un seul glyph par collection évite d'en inventer un par type.
+  Le popup s'ouvre au survol et se referme en quittant le point ; un clic l'épingle, il reste alors
+  à l'écran jusqu'à ce qu'on le ferme (sa croix, ou un clic ailleurs sur la carte).
 */
 function initMap() {
   const el = document.getElementById('map');
@@ -13,37 +16,32 @@ function initMap() {
   leafletMap = createLeafletMap('map');
   const scenario = mapFilters.scenarioId ? getScenario(mapFilters.scenarioId) : null;
   if (scenario) drawScenarioOnMap(leafletMap, scenario, 'route-notice', ROUTE_HELP);
-  const chosen = scenario && mapFilters.scenarioOnly ? scenarioSelection(scenario) : null;
+  const chosenAccommodationIds =
+    scenario && mapFilters.scenarioOnly ? scenarioAccommodationIds(scenario) : null;
   const bounds = [];
 
   ofCurrentTravel(state.accommodations).forEach((a) => {
     if (!keptOnMap('hebergements', a)) return;
-    if (chosen && !chosen.accommodationIds.has(a.id)) return;
-    addAccommodationMarker(a, bounds);
+    if (chosenAccommodationIds && !chosenAccommodationIds.has(a.id)) return;
+    addAccommodationMarker(leafletMap, a, bounds);
   });
 
   ofCurrentTravel(state.attractions).forEach((a) => {
     if (!keptOnMap('attractions', a)) return;
-    if (chosen && !chosen.attractionIds.has(a.id)) return;
-    addAttractionMarker(a, bounds);
+    addAttractionMarker(leafletMap, a, bounds);
   });
 
   fitToPoints(leafletMap, bounds);
 }
 
-// Only the retained itinerary is drawn: its steps carry the stays, and their lines the attractions.
-function scenarioSelection(scenario) {
-  const accommodationIds = new Set(
+// « Lieux du scénario » ne restreint que les hébergements : les attractions/villes du voyage
+// s'affichent toujours, comme dans « Tous les lieux ».
+function scenarioAccommodationIds(scenario) {
+  return new Set(
     visibleSteps(scenario)
       .map((step) => step.accommodationId)
       .filter(Boolean),
   );
-  const attractionIds = new Set(
-    scenarioAttractionLines(scenario)
-      .map((line) => line.attractionId)
-      .filter(Boolean),
-  );
-  return { accommodationIds, attractionIds };
 }
 
 function markerPoint(item, bounds) {
@@ -53,35 +51,48 @@ function markerPoint(item, bounds) {
   return point;
 }
 
-function addAccommodationMarker(a, bounds) {
+function addAccommodationMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  L.circleMarker(point, {
-    radius: 8,
-    color: '#24312B',
-    weight: 1,
-    fillColor: accType(a.type).color,
-    fillOpacity: 0.9,
-  })
-    .bindPopup(accommodationPopup(a))
-    .addTo(leafletMap);
+  addTypePinMarker(map, point, 'house', accType(a.type).color, accommodationPopup(a));
 }
 
-function addAttractionMarker(a, bounds) {
+function addAttractionMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  const type = attractionType(a.type);
-  L.marker(point, {
-    icon: L.divIcon({
-      className: '',
-      html: `<span class="map-pin" style="background:${type.color};">${type.emoji}</span>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12],
-      popupAnchor: [0, -12],
-    }),
-  })
-    .bindPopup(attractionPopup(a))
-    .addTo(leafletMap);
+  addTypePinMarker(map, point, 'landmark', attractionType(a.type).color, attractionPopup(a));
+}
+
+function mapTypePinIcon(icon, color) {
+  return L.divIcon({
+    className: 'map-type-pin',
+    html: `<span style="background:${color}">${svgIcon(icon)}</span>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -14],
+  });
+}
+
+function addTypePinMarker(map, point, icon, color, popupHtml) {
+  const marker = L.marker(point, { icon: mapTypePinIcon(icon, color) }).addTo(map);
+  marker.bindPopup(popupHtml);
+  // bindPopup attache son propre clic « toggle » : un clic fermerait ce que le survol vient
+  // d'ouvrir. On le retire pour ne garder que nos trois gestes (survol, clic, croix du popup).
+  marker.off('click');
+  let pinned = false;
+  marker.on('mouseover', () => {
+    if (!pinned) marker.openPopup();
+  });
+  marker.on('mouseout', () => {
+    if (!pinned) marker.closePopup();
+  });
+  marker.on('click', () => {
+    pinned = true;
+    marker.openPopup();
+  });
+  marker.on('popupclose', () => {
+    pinned = false;
+  });
 }
 
 function accommodationPopup(a) {

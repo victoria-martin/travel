@@ -34,7 +34,8 @@ function stepLegRank(scenario, step) {
 
 const LEG_LABELS = {
   full: (leg) => `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
-  time: (leg) => durationLabel(leg.duration),
+  recap: (leg, scenario) =>
+    `${durationLabel(leg.duration)} · ⛽ ${formatEuros(legFuelCost(scenario, leg))} · 🛣️ ${formatEuros(legTollCost(leg))}`,
   road: (leg) => `${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`,
 };
 
@@ -48,8 +49,8 @@ function stepLegSlot(scenario, step) {
   return legSlot(scenario, step, 'full');
 }
 
-function stepLegTimeSlot(scenario, step) {
-  return legSlot(scenario, step, 'time');
+function stepLegRecapSlot(scenario, step) {
+  return legSlot(scenario, step, 'recap');
 }
 
 function stepLegRoadSlot(scenario, step) {
@@ -97,7 +98,7 @@ function legHeight(distance, longest) {
 // garde sa hauteur naturelle et n'affiche que le chiffre.
 function setStepLeg(scenario, index, leg, height) {
   stepLegSlots(scenario, index).forEach((slot) => {
-    slot.textContent = LEG_LABELS[slot.dataset.legLabel](leg);
+    slot.textContent = LEG_LABELS[slot.dataset.legLabel](leg, scenario);
     const gap = slot.closest('.step-list > .step-gap');
     if (gap) gap.style.height = `${height}px`;
   });

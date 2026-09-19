@@ -33,7 +33,7 @@ function roadTollCostRow(scenario) {
 
 function roadRow(label, note, amount) {
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
-    <span>${recapIconLabel('', label)}</span>
+    <span>${label}</span>
     <span class="acc-recap-nights">${escapeHtml(note)}</span>
     <strong>${amount}</strong>
   </div>`;
@@ -44,7 +44,7 @@ function roadRow(label, note, amount) {
 function roadCostRow(scenario, field, label, note, calculated) {
   const budget = scenario[field];
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub acc-recap-row-cost">
-    <span>${recapIconLabel('', label)}</span>
+    <span>${label}</span>
     <span class="acc-recap-nights">${escapeHtml(note)}</span>
     <span class="step-total">
       ${

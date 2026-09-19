@@ -22,7 +22,7 @@ function providerForm(p) {
           <option value="" ${p.mode ? '' : 'selected'}>
             ${UNSET_TRANSPORT_MODE.emoji} ${UNSET_TRANSPORT_MODE.label}
           </option>
-          ${Object.entries(TRANSPORT_MODES)
+          ${Object.entries(PROVIDER_MODES)
             .map(
               ([key, m]) =>
                 `<option value="${key}" ${p.mode === key ? 'selected' : ''}>${m.emoji} ${m.label}</option>`,

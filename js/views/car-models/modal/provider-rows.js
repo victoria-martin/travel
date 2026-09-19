@@ -17,16 +17,15 @@ function carModelProvidersBody(p) {
   const offered = new Set(carModelOffers(p.id).map((offer) => offer.providerId));
   return /* HTML */ `${
       providers.length
-        ? providers
-            .map(
-              (provider) => `<label class="filter-option">
-              <input type="checkbox" ${p.providerIds.includes(provider.id) ? 'checked' : ''}
-                ${offered.has(provider.id) ? 'disabled title="Une offre est relevée chez lui"' : ''}
-                onchange="toggleCarModelProvider('${provider.id}')" />
-              ${escapeHtml(provider.name)}
-            </label>`,
-            )
-            .join('')
+        ? `<select id="model-provider-select" multiple size="${Math.min(providers.length, 6)}" onchange="setCarModelProviders(this)">
+            ${providers
+              .map(
+                (provider) =>
+                  `<option value="${provider.id}" ${p.providerIds.includes(provider.id) ? 'selected' : ''}
+                    ${offered.has(provider.id) ? 'disabled title="Une offre est relevée chez lui"' : ''}>${escapeHtml(provider.name)}</option>`,
+              )
+              .join('')}
+          </select>`
         : '<p class="filter-hint">Aucun loueur dans le voyage.</p>'
     }
     <div class="provider-option-row">
@@ -37,11 +36,10 @@ function carModelProvidersBody(p) {
     </div>`;
 }
 
-function toggleCarModelProvider(providerId) {
-  const ids = modal.payload.providerIds;
-  modal.payload.providerIds = ids.includes(providerId)
-    ? ids.filter((id) => id !== providerId)
-    : ids.concat(providerId);
+// Un loueur avec une offre relevée reste sélectionné et non désélectionnable : l'option se rend
+// disabled, ce que `selectedOptions` respecte sans intervention JS.
+function setCarModelProviders(select) {
+  modal.payload.providerIds = Array.from(select.selectedOptions).map((option) => option.value);
 }
 
 function addCarModelProviderNamed() {

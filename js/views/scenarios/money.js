@@ -119,7 +119,7 @@ function scenarioExpensesTotal(scenario) {
 }
 
 function scenarioChargesTotal(scenario) {
-  return scenarioOfferTotal(scenario) + scenarioExpensesTotal(scenario);
+  return scenarioExpensesTotal(scenario);
 }
 
 function scenarioTotal(scenario) {
@@ -128,7 +128,7 @@ function scenarioTotal(scenario) {
     euros:
       acc.euros.amount +
       scenarioChargesTotal(scenario) +
-      scenarioRoadTotal(scenario) +
+      scenarioTransportTotal(scenario) +
       scenarioAttractionsTotal(scenario),
     guestPoints: acc.guestPoints.amount,
   };

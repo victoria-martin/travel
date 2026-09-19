@@ -17,6 +17,7 @@ let prefs = {
   trailColorByType: false,
   outOfRangeStyle: 'alert',
   mobileNavOrder: null,
+  filters: {},
 };
 
 function loadPrefs() {

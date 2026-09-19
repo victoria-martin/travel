@@ -27,6 +27,8 @@ function initScenarioDetailMaps() {
   document.querySelectorAll('.scenario-map-canvas').forEach((el) => {
     const map = createLeafletMap(el.id);
     scenarioDetailMaps.push(map);
-    fitToPoints(map, drawScenarioOnMap(map, scenario, `${el.id}-notice`, ''));
+    const bounds = drawScenarioOnMap(map, scenario, `${el.id}-notice`, '');
+    ofCurrentTravel(state.attractions).forEach((a) => addAttractionMarker(map, a, bounds));
+    fitToPoints(map, bounds);
   });
 }

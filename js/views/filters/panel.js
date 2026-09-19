@@ -1,8 +1,8 @@
 /*
-  Le panneau de filtre d'une liste : une ligne par niveau, sur la forme du panneau Trier — un
-  libellé de rang, la colonne, ce qu'on y garde. Rien à filtrer, pas de bouton.
-  La pile se rend aussi seule, pour un écran qui en compose plusieurs dans le même bouton — la
-  carte en a une par collection tracée.
+  Le panneau de filtre d'une liste : une seule ligne — « Filtrer par », le menu des colonnes, le
+  menu de leurs valeurs. Rien à filtrer, pas de bouton.
+  Il se rend aussi seul, pour un écran qui en compose plusieurs dans le même bouton — la carte en a
+  un par collection tracée.
 */
 function filterPanel(scope) {
   if (!filterableColumns(filterKind(scope)).length) return '';
@@ -18,41 +18,55 @@ function filterPanel(scope) {
 
 function filterLevelsBlock(scope) {
   const kind = filterKind(scope);
-  const levels = filterLevels(scope);
   if (!filterableColumns(kind).length) {
     return `<p class="filter-empty">Rien à filtrer sur cette liste.</p>`;
   }
-  return /* HTML */ `${
-    levels.length
-      ? levels.map((level, i) => filterLevelRow(scope, level, i)).join('')
-      : `<p class="filter-empty">Aucun filtre — la liste montre tout.</p>`
-  }
-  ${
-    levels.length < filterableColumns(kind).length
-      ? `<button class="btn btn-text filter-add" onclick="addFilterLevel('${scope}')">+ Ajouter un niveau</button>`
-      : ''
-  }`;
+  return /* HTML */ `<div class="filter-row">
+    <span class="filter-rank">Filtrer par</span>
+    ${filterColumnsMenu(scope)} ${filterValuesMenu(scope)}
+  </div>`;
 }
 
-function filterLevelRow(scope, level, index) {
+// Le menu des colonnes : une checkbox par colonne filtrable, « Tout cocher » en tête.
+function filterColumnsMenu(scope) {
   const kind = filterKind(scope);
-  const used = filterLevels(scope).map((l) => l.key);
-  const columns = filterableColumns(kind).filter(
-    (c) => c.key === level.key || !used.includes(c.key),
+  const columns = filterableColumns(kind);
+  const levels = filterLevels(scope);
+  const allChecked = columns.length > 0 && levels.length === columns.length;
+  return inlineDropdown(
+    `filter-columns:${scope}`,
+    'filter-values-menu',
+    /* HTML */ `<summary class="inline-select filter-values-summary">
+        ${filterColumnsSummary(kind, levels)}<span class="filter-values-caret">⌄</span>
+      </summary>
+      <div class="inline-menu">
+        <label class="filter-option filter-select-all">
+          <input
+            type="checkbox"
+            ${allChecked ? 'checked' : ''}
+            onchange="setAllFilterLevels('${scope}',this.checked)"
+          />
+          Tout cocher
+        </label>
+        ${columns.map((c) => filterColumnOption(scope, levels, c)).join('')}
+      </div>`,
   );
-  return /* HTML */ `<div class="filter-row">
-    <span class="filter-rank">${index === 0 ? 'Filtrer par' : 'et'}</span>
-    <select class="inline-select" onchange="setFilterLevelColumn('${scope}',${index},this.value)">
-      ${columns
-        .map(
-          (c) =>
-            `<option value="${c.key}" ${c.key === level.key ? 'selected' : ''}>${escapeHtml(columnLabel(c))}</option>`,
-        )
-        .join('')}
-    </select>
-    ${filterValuesMenu(scope, level, index)}
-    <button class="icon-btn" onclick="removeFilterLevel('${scope}',${index})" title="Retirer">
-      ${svgIcon('x')}
-    </button>
-  </div>`;
+}
+
+function filterColumnsSummary(kind, levels) {
+  if (!levels.length) return '<span class="filter-values-all">Aucune</span>';
+  if (levels.length > 2) return `${levels.length} colonnes`;
+  return levels.map((level) => escapeHtml(columnLabel(filterColumn(kind, level.key)))).join(', ');
+}
+
+function filterColumnOption(scope, levels, column) {
+  const checked = levels.some((l) => l.key === column.key);
+  return /* HTML */ `<label class="filter-option">
+    <input
+      type="checkbox"
+      ${checked ? 'checked' : ''}
+      onchange="toggleFilterLevel('${scope}','${column.key}')"
+    />
+    ${escapeHtml(columnLabel(column))}
+  </label>`;
 }

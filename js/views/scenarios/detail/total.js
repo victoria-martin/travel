@@ -20,10 +20,10 @@ function scenarioTotalBlock(scenario) {
       chargeDetailRows(scenario),
     )}
     ${recapGroup(
-      'road',
-      'Route',
-      formatEuros(scenarioRoadTotal(scenario)),
-      roadDetailRows(scenario),
+      'transport',
+      'Transport',
+      formatEuros(scenarioTransportTotal(scenario)),
+      transportDetailRows(scenario),
     )}
     ${recapGroup(
       'attractions',
@@ -52,7 +52,7 @@ function recapGroup(key, title, total, rows) {
       <span></span>
       <strong>${total}</strong>
     </summary>
-    ${rows} ${recapRow('Total', total, 'acc-recap-sub acc-recap-subtotal')}
+    ${rows} ${recapRow(`Total ${title.toLowerCase()}`, total, 'acc-recap-sub acc-recap-subtotal')}
   </details>`;
 }
 

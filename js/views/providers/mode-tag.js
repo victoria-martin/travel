@@ -1,4 +1,4 @@
 function providerModeTag(p) {
-  const mode = transportMode(p.mode);
+  const mode = providerMode(p.mode);
   return staticTag(mode);
 }

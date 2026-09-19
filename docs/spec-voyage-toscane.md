@@ -963,14 +963,16 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   nuits en home exchange y figurent avec leur montant en GuestPoints.
   Toutes les lignes s'ouvrent sur la même gouttière d'icône — le type de l'hébergement, celui du
   lieu quand l'étape s'y pose, rien pour une étape de passage — d'une largeur fixe : les noms s'alignent, qu'une ligne
-  porte une icône ou non. Chaque arrêt est précédé du temps de conduite pour y arriver — « 🚗 1 h
-  11 », sur sa propre ligne, l'icône dans la même gouttière et le chiffre aligné sur les noms, sans
-  la distance : le récap dit combien de route il y a d'un lieu au suivant, les
-  kilomètres se lisent dans la gouttière de la liste d'étapes. Le filet passe au-dessus de ce temps
-  et non sous lui : on arrive quelque part, donc la route et le lieu où elle mène se lisent d'un
-  bloc. Il vient
+  porte une icône ou non. Chaque arrêt est précédé du temps de conduite pour y arriver, suivi de ce
+  que ce tronçon coûte — « 🚗 1 h 11 · ⛽ 4 € · 🛣️ 2 € », sur sa propre ligne, l'icône dans la même
+  gouttière et le chiffre aligné sur les noms, sans la distance : le récap dit combien de route il y
+  a d'un lieu au suivant, les kilomètres se lisent dans la gouttière de la liste d'étapes. Essence et
+  péage du tronçon reprennent les mêmes taux que « Le détail de la route » ci-dessous, appliqués à sa
+  seule distance — jamais le budget saisi à la main, qui ne porte que sur le total du voyage. Le
+  filet passe au-dessus de cette ligne et non sous elle : on arrive quelque part, donc la route et le
+  lieu où elle mène se lisent d'un bloc. Elle vient
   du même itinéraire que le tracé et n'apparaît qu'une fois la réponse revenue ; seules deux étapes
-  voisines et géolocalisées en portent un — la toute première étape du trajet n'ayant rien avant
+  voisines et géolocalisées en portent une — la toute première étape du trajet n'ayant rien avant
   elle, sa ligne n'en porte pas.
 - **Le détail des charges** : la voiture, puis **une ligne par dépense** — celles rattachées au
   scénario d'abord, puis celles posées sur ses étapes et ses groupes, avec leur nombre quand il
@@ -1004,9 +1006,12 @@ Aucune entité propre — l'écran lit :
 | **Lieu**        | coordonnées, favori, ses colonnes | sans coordonnées, pas de marqueur   |
 | **Scénario**    | étapes                            | choisi en filtre, il donne le tracé |
 
-Les deux collections géolocalisées, chacune en couleur par type : un hébergement est un disque,
-une attraction une pastille portant l'emoji de son type — la couleur dit la famille, la forme dit
-la collection.
+Les deux collections géolocalisées, chacune en couleur par type : un hébergement porte l'icône 🏠,
+une attraction l'icône 🏛 — même icône que leur entrée du panneau Filtrer — teintée de la couleur
+de son type. La forme (l'icône) dit la collection, la couleur dit le type ; une **légende**, sous
+le panneau Filtrer, rappelle les deux en un coup d'œil. Survoler un marqueur ouvre sa fiche, la
+quitter la referme ; cliquer l'épingle à l'écran jusqu'à ce qu'on la ferme (sa croix, ou un clic
+ailleurs sur la carte).
 
 Les filtres se lisent **dans une colonne à gauche de la carte**, toujours ouverte : on coche et on
 voit le tracé changer sans rien déplier. Le bouton « Filtrer » de l'en-tête, celui des listes, porte
@@ -1117,32 +1122,35 @@ appareil.
 
 ### Filtrer
 
-Le même panneau sur toutes les listes, sur la forme de « Trier » : une **pile de niveaux**, un
-niveau étant une colonne et les mots qu'on y garde.
+Une seule ligne, deux menus déroulants à checkboxes — les colonnes actives, puis leurs valeurs —
+tous deux cochés à fond par défaut : rien n'est encore exclu. Un niveau reste une colonne et les
+mots qu'on y garde, mais ce n'est plus une pile de lignes : les colonnes cochées à gauche
+deviennent les groupes du menu de droite.
 
 ```
-Filtrer par [ Type   ▾ ] [ Airbnb, Hôtel ▾ ] ✕
-et          [ Région ▾ ] [ Toscane       ▾ ] ✕
-＋ Ajouter un niveau
+Filtrer par [ Type, Région ▾ ]  [ Type: Airbnb, Hôtel — Région: Toscane ▾ ]
 ```
 
-- **OU dans un niveau, ET entre niveaux** — « les Airbnb et les hôtels, en Toscane ». L'ordre des
-  niveaux ne change rien au résultat : ils se cumulent tous, et il n'y a donc rien à y ranger.
+- **OU dans un niveau (une colonne), ET entre niveaux** — « les Airbnb et les hôtels, en Toscane ».
+  L'ordre des niveaux ne change rien au résultat : ils se cumulent tous, rien à y ranger.
 - **Une colonne se propose dès qu'elle porte des mots** : son vocabulaire (statut, type, mode), ou
   ceux que ses lignes tiennent (ville, tag, catégorie). Un prix, une date, un favori n'en portent
   pas. Une colonne qui tient une **liste** — les tags, les catégories d'une dépense — donne ses
   mots un à un : on filtre sur un tag, pas sur la suite de tags d'une ligne.
 - **Seules les valeurs qu'une ligne porte vraiment** sont proposées, et une colonne qui n'en a
-  qu'une disparaît : un statut que personne n'a ne filtrerait rien. Une valeur cochée puis retirée
-  de sa dernière ligne sort du filtre toute seule.
-- **Les mots se cochent dans un menu déroulant**, pas dans une rangée à plat : un `<select>` ne sait
-  ni en garder plusieurs ni porter une pastille. Le menu ne fait que cocher — ranger l'ordre des
-  mots reste au panneau « Trier », qui est le seul endroit d'où cet ordre se règle. Au-delà de huit
-  valeurs, un champ de recherche réduit la liste sans masquer ce qui est déjà coché.
-- **Le filtre est le geste en cours**, pas une préférence : il ne survit pas au rechargement,
-  contrairement au tri et aux colonnes masquées. Il vit par **écran** — filtrer la carte ne filtre
-  pas la page —, et là où l'écran ne désigne pas une seule liste (la carte, « À faire »), un
-  premier menu dit laquelle.
+  qu'une disparaît : un statut que personne n'a ne filtrerait rien.
+- **Le premier menu coche les colonnes actives** — « Tout cocher » en tête, une checkbox par
+  colonne filtrable. Cocher une colonne l'ouvre dans le second menu, la décocher l'y retire.
+- **Le second menu regroupe les valeurs de toutes les colonnes cochées**, un groupe par colonne,
+  dans le même menu — pas un menu par colonne. « Tout cocher » en tête porte sur l'ensemble. Une
+  colonne fraîchement ouverte part toutes valeurs cochées (une valeur qui apparaît plus tard dans
+  les données y reste incluse), et ne se fige sur une liste explicite qu'au premier décochage.
+  Tout décocher exclut tout : ce n'est plus un niveau sans effet, c'est un niveau qui ne garde
+  rien. Au-delà de huit valeurs cumulées, un champ de recherche réduit la liste sans masquer ce qui
+  est déjà coché.
+- **Le filtre est une préférence, comme le tri** : il survit au rechargement, dans les préférences
+  utilisatrice. Il vit par **écran** — filtrer la carte ne filtre pas la page —, et là où l'écran ne
+  désigne pas une seule liste (la carte, « À faire »), un premier menu dit laquelle.
 
 - **Adresse d'une page** : le `#` de l'URL dit où on est — `#carte`, `#hebergements`,
   `#scenario/<id>` pour le détail d'un scénario. Recharger revient au même endroit, et les flèches

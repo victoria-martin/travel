@@ -60,6 +60,110 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-19** — les marqueurs de la carte générale passent du disque plat (`L.circleMarker`, sans
+  glyph malgré ce que disait le commentaire d'en-tête du fichier — resté d'une intention jamais
+  posée) à une pastille `L.divIcon` portant l'icône Lucide de sa collection — 🏠 `house` pour un
+  hébergement, 🏛 `landmark` pour une attraction, les mêmes que leur entrée du panneau Filtrer —
+  teintée de la couleur de son type (`mapTypePinIcon`, [markers.js](js/views/map/markers.js)). Un
+  seul glyph par collection plutôt qu'un par type : huit icônes distinctes à cette taille ne se
+  distingueraient plus, la couleur porte déjà la distinction de type ailleurs dans l'app. Une
+  **légende** reprend les deux tables sous le panneau Filtrer
+  ([legend.js](js/views/map/legend.js)) — rien à tenir à jour à part, elle relit
+  `ACCOMMODATION_TYPES` / `ATTRACTION_TYPES`.
+
+  Le popup d'un marqueur s'ouvre désormais au survol et se referme en quittant le point ; un clic
+  l'épingle, il reste alors à l'écran jusqu'à sa croix ou un clic ailleurs sur la carte
+  (`addTypePinMarker`). `bindPopup` attache son propre clic « toggle » : sans le retirer
+  (`marker.off('click')`), cliquer sur un marqueur déjà ouvert par survol l'aurait refermé au lieu
+  de l'épingler.
+
+- **2026-09-19** — le panneau Filtrer (carte + listes) tient sur **une seule ligne** : deux menus
+  déroulants à vraies checkboxes (`<input type="checkbox">` dans un `<label class="filter-option">`,
+  pas un bouton avec une icône de coche — un `<select>` natif ni l'un ni l'autre ne savent porter
+  plusieurs coches). Le premier coche les colonnes actives (« Tout cocher » en tête,
+  `filterColumnsMenu`) ; le second regroupe les valeurs de toutes les colonnes cochées **dans le
+  même menu**, un groupe (`.inline-menu-group`) par colonne, plutôt qu'un menu par colonne
+  (`filterValuesMenu`, [values-menu.js](js/views/filters/values-menu.js)). Ni pile de lignes ni
+  ligne par niveau : `toggleFilterLevel` / `setAllFilterLevels` / `setAllFilterValuesEverywhere`
+  ([levels.js](js/views/filters/levels.js)) remplacent `addFilterLevel` / `setFilterLevelColumn` /
+  `removeFilterLevel`, devenus inutiles puisqu'une colonne ne se choisit ni ne se retire plus ligne
+  par ligne — décocher sa case dans le premier menu suffit.
+
+  Les deux checklists partent **toutes cochées** — colonnes et valeurs — plutôt que vides : un
+  niveau neuf porte `values: 'all'`, un sentinel plutôt que la liste énumérée, pour qu'une valeur
+  apparue plus tard dans les données reste incluse sans qu'on ait à la recocher ; il ne se fige en
+  tableau explicite qu'au premier décochage. Tout décocher un niveau exclut désormais tout — avant,
+  un niveau sans valeur cochée était lu comme « pas de filtre » ; `keptByFilters` perd ce
+  court-circuit sur `values.length === 0`, qui contredirait maintenant un décochage volontaire.
+
+  Le filtre devient une **préférence** et non plus le geste en cours : il vit dans
+  `prefs.filters[scope]` ([prefs.js](js/prefs.js)) et survit au rechargement, comme le tri.
+  `filterState` le crée à la demande avec toutes les colonnes actives par défaut ; la carte, dont le
+  `scope` (`carte:hebergements`) diffère du `kind` qu'il lit, enregistre ce mapping à part
+  (`registerFilterScope`, [map/filters.js](js/views/map/filters.js)) plutôt que d'écrire dans l'état
+  directement comme avant — `filterState` est désormais le seul point d'écriture.
+
+- **2026-09-19** — la pastille d'attraction sur la carte perd son emoji : `addAttractionMarker`
+  ([markers.js](js/views/map/markers.js)) dessine désormais un disque coloré, sur le même patron
+  que `addAccommodationMarker` — seule la couleur du type distingue une ville d'une activité et les
+  types d'activité entre eux, comme c'était déjà le cas pour les hébergements. `.map-pin`
+  (styles.css) devient mort avec le `divIcon` qui le portait, et disparaît.
+
+- **2026-09-19** — la carte, générale ou du détail d'un scénario, montre toujours les pastilles
+  d'attractions et de villes. Sur la carte générale, sélectionner un scénario avec « Lieux du
+  scénario » ne filtrait pas que les hébergements aux étapes retenues : `scenarioSelection`
+  ([markers.js](js/views/map/markers.js)) restreignait aussi les attractions à celles ajoutées
+  comme extras payants du scénario — les villes, qui n'en sont presque jamais, disparaissaient de
+  fait. Ce filtre ne porte donc plus que sur les hébergements
+  (`scenarioAccommodationIds`) ; attractions et villes du voyage s'affichent dans les deux modes.
+  Le détail d'un scénario, lui, ne dessinait que les pastilles d'étape (lettres) et le tracé,
+  aucune attraction : `addAccommodationMarker` / `addAttractionMarker` étaient câblées en dur sur
+  `leafletMap`, la globale de la page Carte — inutilisables ailleurs. Elles prennent désormais la
+  carte Leaflet en argument, ce qui laisse `initScenarioDetailMaps`
+  ([detail-map.js](js/views/scenarios/detail/detail-map.js)) leur ajouter les attractions du
+  voyage sur sa propre instance.
+
+- **2026-09-19** — le bloc Voiture d'un scénario affichait un total (offre + options) sans jamais
+  montrer le prix de base : `scenarioOfferTotal` ([money.js](js/views/scenarios/money.js)) l'incluait
+  déjà dans son calcul, mais aucune ligne ne le disait — seules les options apparaissaient, rendant
+  un scénario sans prix/jour renseigné indiscernable d'un scénario dont le prix était bien compté.
+  `scenarioOfferBaseLine` ([offer-block.js](js/views/scenarios/detail/offer-block.js)) ajoute la
+  ligne manquante entre le sélecteur d'offre et les options, sur le modèle des lignes `.expense-line`
+  déjà en place ; sans prix par jour renseigné sur l'offre, elle l'affiche en toutes lettres au lieu
+  d'un silencieux 0 €.
+
+  Le même trou existait tronçon par tronçon dans le récap : la ligne « 🚗 1 h 11 » entre deux étapes
+  ne portait que la durée, alors que l'essence et le péage du voyage entier se lisent déjà plus bas
+  dans « Le détail de la route ». `legFuelCost` / `legTollCost` ([road.js](js/views/scenarios/road.js))
+  reprennent le même calcul que `scenarioFuelCost` / `scenarioTollCost`, appliqué à la seule distance
+  du tronçon OSRM plutôt qu'au total du scénario — jamais le budget saisi à la main, qui ne porte que
+  sur le voyage entier. Le label `time` de `LEG_LABELS` ([step-legs.js](js/views/scenarios/detail/step-legs.js))
+  devient `recap`, seul consommateur de ce label (`stepLegRecapSlot`, utilisé uniquement par
+  `recapLegRow`) ; les deux autres labels (`full` pour la gouttière, `road` pour la bande de route)
+  restent inchangés, chacun avec ses propres consommateurs.
+
+- **2026-09-19** — les deux checklists loueur ↔ modèle (« Modèles proposés » du loueur,
+  « Proposé par » du modèle) deviennent des `<select multiple>` natifs plutôt qu'une liste de
+  cases à cocher — même donnée, plus compact. `onchange` lit `select.selectedOptions` en une
+  fois (`setProviderModels`, `setCarModelProviders`,
+  [model-rows.js](js/views/providers/modal/model-rows.js),
+  [provider-rows.js](js/views/car-models/modal/provider-rows.js)), ce qui remplace le toggle
+  unitaire par item d'avant. Le loueur dont une offre est déjà relevée reste verrouillé
+  sélectionné via `<option disabled>` — `selectedOptions` le respecte sans code dédié, comme le
+  `disabled` du checkbox avant lui.
+
+- **2026-09-19** — un loueur peut de nouveau se créer en mode Voiture : le retrait de `car` dans
+  `TRANSPORT_MODES` (`234bd68`, décision correcte pour les trajets — une location n'est pas un
+  trajet daté) avait aussi vidé le select Mode du formulaire loueur, qui partageait cette même
+  liste. Repéré en lançant l'app (Playwright) plutôt qu'à la lecture du code, sur une demande
+  ambiguë (« il faut pouvoir créer une voiture qd je créé un loueur ») qui décrivait en fait ce
+  bug — le champ « Nouveau modèle » existait déjà dans `model-rows.js`, mais restait gated
+  derrière un `mode === 'car'` devenu inatteignable. `PROVIDER_MODES`
+  ([transport-modes.js](js/transport-modes.js)), superset de `TRANSPORT_MODES` + `car`, sert
+  désormais le seul domaine loueur (`modal/form.js`, `columns.js`, `mode-tag.js`,
+  `quick-create.js`) ; `TRANSPORT_MODES` reste inchangé pour les trajets, où la voiture n'a pas à
+  revenir.
+
 - **2026-09-19** — la motorisation, la boîte et la consommation d'un modèle de voiture se
   suggèrent depuis un catalogue embarqué plutôt que de rester à taper à la main : 178 couples
   marque/modèle agrégés du jeu de données officiel ADEME Car Labelling (data.gouv.fr, licence

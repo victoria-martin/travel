@@ -54,6 +54,6 @@ function extraRecapRow(line) {
 // hors de la rangée à trois colonnes. Le chiffre vient d'OSRM après le rendu, comme dans la
 // gouttière.
 function recapLegRow(scenario, step) {
-  const slot = stepLegTimeSlot(scenario, step);
+  const slot = stepLegRecapSlot(scenario, step);
   return slot ? `<div class="acc-recap-leg">${recapIconLabel('🚗', slot)}</div>` : '';
 }

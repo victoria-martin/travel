@@ -9,3 +9,9 @@ function openOfferSheet(id) {
 }
 
 ROW_CLICKS.locations = openOfferSheet;
+
+function offerSheetButton(id) {
+  return /* HTML */ `<button class="sheet-btn" title="Ouvrir la fiche" onclick="openOfferSheet('${id}')">
+    ${svgIcon('arrow-up-right')}
+  </button>`;
+}

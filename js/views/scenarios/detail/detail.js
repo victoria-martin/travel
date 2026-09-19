@@ -25,7 +25,7 @@ function renderScenarioDetailView() {
           ${scenarioTotalBlock(s)}
         </div>
       </div>
-      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''}
+      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''} ${scenarioSideTabsRail(s.id)}
     </div>
   `;
 }

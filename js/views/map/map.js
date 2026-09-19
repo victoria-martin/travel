@@ -14,7 +14,7 @@ function renderMapView() {
     </div>
     <div class="map-layout">
       <div class="map-side" style="width:${prefs.mapSideWidth}px">
-        ${mapScenarioPanel()} ${mapFilterPanel()}
+        ${mapScenarioPanel()} ${mapFilterPanel()} ${mapLegendPanel()}
       </div>
       ${mapSplitHandle()}
       <div id="map"></div>

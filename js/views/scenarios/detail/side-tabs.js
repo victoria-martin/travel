@@ -55,6 +55,24 @@ function scenarioSideTabsButtons(scenarioId) {
   ).join('');
 }
 
+// Rail vertical, dupliqué du toggle-group du header pour comparer les deux emplacements à l'usage
+// — bord droit de la page, toujours visible, sur le même state que le header.
+function scenarioSideTabsRail(scenarioId) {
+  return /* HTML */ `<nav class="scenario-side-rail">
+    ${SCENARIO_SIDE_TABS.map(
+      (tab) =>
+        /* HTML */ `<button
+          class="toolbar-btn ${tab.key === prefs.scenarioSidePanel ? 'active' : ''}"
+          onclick="onScenarioPanelToggle('${scenarioId}','${tab.key}')"
+          title="${escapeHtml(tab.label)}"
+          aria-label="${escapeHtml(tab.label)}"
+        >
+          <span class="toolbar-icon">${tab.icon}</span>
+        </button>`,
+    ).join('')}
+  </nav>`;
+}
+
 // En dessous de 640px, la grille du détail n'a plus de colonne de droite (elle repasse à une
 // seule colonne) : le même bouton ouvre alors le panneau en sheet plutôt que de le pousser sous
 // les étapes.

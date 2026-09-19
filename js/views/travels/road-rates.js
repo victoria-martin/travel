@@ -3,7 +3,7 @@
   itinéraires, pas des carburants. Laissés vides, ils retombent sur un ordre de grandeur — la route
   se chiffre avant qu'on ait rien relevé, et le champ dit lequel en placeholder.
 */
-const DEFAULT_FUEL_PRICE = 1.85;
+const DEFAULT_FUEL_PRICE = 2.3;
 const DEFAULT_TOLL_RATE = 0.08;
 
 function travelFuelPrice() {

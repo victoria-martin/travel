@@ -10,7 +10,7 @@ let providerAsk = null;
 function askNewProvider(selectId, mode) {
   if (providerAsk) return;
   const noun = providerNoun(mode);
-  const current = transportMode(mode);
+  const current = providerMode(mode);
   providerAsk = document.createElement('div');
   providerAsk.className = 'overlay overlay-ask';
   providerAsk.onclick = (e) => {

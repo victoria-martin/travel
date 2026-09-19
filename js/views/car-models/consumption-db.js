@@ -1,14 +1,34 @@
 /*
-  Catalogue de consommation moyenne par modèle, dérivé du jeu de données officiel ADEME Car
-  Labelling (data.gouv.fr, licence ouverte), agrégé aux 178 couples marque/modèle du
-  trimestre en cours. Ne couvre que les modèles commercialisés neufs aujourd'hui — ni les
-  générations précédentes (Golf 7, Clio 4…) ni les modèles retirés du catalogue ce
-  trimestre (Golf, Polo actuelles). lookupCarConsumption sert de suggestion, jamais de
-  vérité : le champ Consommation reste éditable, rien n'est réécrit si une valeur y est déjà.
+  Catalogue de consommation moyenne par modèle, dérivé du jeu de données officiel
+  ADEME Car Labelling (data.gouv.fr, licence ouverte), agrégé aux couples marque/modèle
+  disponibles dans le catalogue.
+
+  IMPORTANT :
+  - La DB ADEME ne couvre que les modèles présents dans le catalogue courant.
+  - Certains modèles retirés du catalogue courant sont donc ajoutés séparément
+    dans ADDITIONAL_CAR_CONSUMPTION_DB.
+  - Les valeurs de ADDITIONAL_CAR_CONSUMPTION_DB ne sont PAS des valeurs ADEME.
+    Elles proviennent de données constructeur Volkswagen et servent uniquement
+    de valeurs moyennes de suggestion.
+  - lookupCarConsumption sert de suggestion, jamais de vérité :
+    le champ Consommation reste éditable, rien n'est réécrit si une valeur y est déjà.
 */
+
 const CAR_CONSUMPTION_DB = [
-  { brand: 'Alfa Romeo', model: 'Giulia', fuel: 'petrol', gearbox: 'automatic', consumption: '6,5' },
-  { brand: 'Alfa Romeo', model: 'Stelvio', fuel: 'diesel', gearbox: 'automatic', consumption: '6,7' },
+  {
+    brand: 'Alfa Romeo',
+    model: 'Giulia',
+    fuel: 'petrol',
+    gearbox: 'automatic',
+    consumption: '6,5',
+  },
+  {
+    brand: 'Alfa Romeo',
+    model: 'Stelvio',
+    fuel: 'diesel',
+    gearbox: 'automatic',
+    consumption: '6,7',
+  },
   { brand: 'Alpine', model: 'A110', fuel: 'petrol', gearbox: 'automatic', consumption: '6,9' },
   { brand: 'Audi', model: 'A3', fuel: 'hybrid', gearbox: 'automatic', consumption: '4,9' },
   { brand: 'Audi', model: 'E-Tron Gt', fuel: 'electric', gearbox: 'automatic', consumption: '' },
@@ -49,12 +69,30 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'BMW', model: 'Z4', fuel: 'petrol', gearbox: 'automatic', consumption: '7,1' },
   { brand: 'Citroen', model: 'Berlingo', fuel: 'diesel', gearbox: 'manual', consumption: '5,4' },
   { brand: 'Citroen', model: 'C3', fuel: 'petrol', gearbox: 'manual', consumption: '5,5' },
-  { brand: 'Citroen', model: 'C3 Aircross', fuel: 'diesel', gearbox: 'automatic', consumption: '5,1' },
+  {
+    brand: 'Citroen',
+    model: 'C3 Aircross',
+    fuel: 'diesel',
+    gearbox: 'automatic',
+    consumption: '5,1',
+  },
   { brand: 'Citroen', model: 'C4', fuel: 'diesel', gearbox: 'manual', consumption: '4,4' },
   { brand: 'Citroen', model: 'C4 X', fuel: 'diesel', gearbox: 'automatic', consumption: '5,0' },
-  { brand: 'Citroen', model: 'C5 Aircross', fuel: 'hybrid', gearbox: 'automatic', consumption: '1,5' },
+  {
+    brand: 'Citroen',
+    model: 'C5 Aircross',
+    fuel: 'hybrid',
+    gearbox: 'automatic',
+    consumption: '1,5',
+  },
   { brand: 'Citroen', model: 'C5 X', fuel: 'petrol', gearbox: 'automatic', consumption: '6,9' },
-  { brand: 'Citroen', model: 'Space Tourer', fuel: 'electric', gearbox: 'automatic', consumption: '' },
+  {
+    brand: 'Citroen',
+    model: 'Space Tourer',
+    fuel: 'electric',
+    gearbox: 'automatic',
+    consumption: '',
+  },
   { brand: 'Cupra', model: 'Formentor', fuel: 'petrol', gearbox: 'automatic', consumption: '7,7' },
   { brand: 'DS', model: '3 Crossback', fuel: 'diesel', gearbox: 'automatic', consumption: '5,1' },
   { brand: 'DS', model: '4', fuel: 'petrol', gearbox: 'automatic', consumption: '6,9' },
@@ -78,7 +116,13 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Ford', model: 'Kuga', fuel: 'hybrid', gearbox: 'automatic', consumption: '4,9' },
   { brand: 'Ford', model: 'Mustang', fuel: 'petrol', gearbox: 'automatic', consumption: '11,4' },
   { brand: 'Ford', model: 'S-Max', fuel: 'hybrid', gearbox: 'automatic', consumption: '6,5' },
-  { brand: 'Ford', model: 'Tourneo Connect', fuel: 'diesel', gearbox: 'manual', consumption: '5,5' },
+  {
+    brand: 'Ford',
+    model: 'Tourneo Connect',
+    fuel: 'diesel',
+    gearbox: 'manual',
+    consumption: '5,5',
+  },
   { brand: 'Ford', model: 'Transit Custom', fuel: 'diesel', gearbox: 'manual', consumption: '8,2' },
   { brand: 'Honda', model: 'Civic', fuel: 'hybrid', gearbox: 'automatic', consumption: '5,0' },
   { brand: 'Honda', model: 'Cr-V', fuel: 'hybrid', gearbox: 'automatic', consumption: '6,8' },
@@ -102,9 +146,27 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Kia', model: 'Sportage', fuel: 'hybrid', gearbox: 'automatic', consumption: '5,6' },
   { brand: 'Kia', model: 'Stonic', fuel: 'hybrid', gearbox: 'manual', consumption: '5,5' },
   { brand: 'Kia', model: 'Xceed', fuel: 'hybrid', gearbox: 'automatic', consumption: '4,6' },
-  { brand: 'Lamborghini', model: 'Aventador', fuel: 'petrol', gearbox: 'automatic', consumption: '18,4' },
-  { brand: 'Lamborghini', model: 'Urus', fuel: 'petrol', gearbox: 'automatic', consumption: '12,7' },
-  { brand: 'Land Rover', model: 'Defender', fuel: 'hybrid', gearbox: 'automatic', consumption: '2,8' },
+  {
+    brand: 'Lamborghini',
+    model: 'Aventador',
+    fuel: 'petrol',
+    gearbox: 'automatic',
+    consumption: '18,4',
+  },
+  {
+    brand: 'Lamborghini',
+    model: 'Urus',
+    fuel: 'petrol',
+    gearbox: 'automatic',
+    consumption: '12,7',
+  },
+  {
+    brand: 'Land Rover',
+    model: 'Defender',
+    fuel: 'hybrid',
+    gearbox: 'automatic',
+    consumption: '2,8',
+  },
   { brand: 'Lexus', model: 'Nx', fuel: 'hybrid', gearbox: 'automatic', consumption: '7,3' },
   { brand: 'Lexus', model: 'Rx', fuel: 'hybrid', gearbox: 'automatic', consumption: '7,9' },
   { brand: 'MG', model: 'Marvel', fuel: 'electric', gearbox: 'automatic', consumption: '' },
@@ -117,7 +179,13 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Mercedes', model: 'E 200', fuel: 'hybrid', gearbox: 'automatic', consumption: '5,5' },
   { brand: 'Mercedes', model: 'E 300', fuel: 'hybrid', gearbox: 'automatic', consumption: '1,4' },
   { brand: 'Mercedes', model: 'E 400', fuel: 'diesel', gearbox: 'automatic', consumption: '6,8' },
-  { brand: 'Mercedes', model: 'E 53 Amg', fuel: 'hybrid', gearbox: 'automatic', consumption: '9,4' },
+  {
+    brand: 'Mercedes',
+    model: 'E 53 Amg',
+    fuel: 'hybrid',
+    gearbox: 'automatic',
+    consumption: '9,4',
+  },
   { brand: 'Mercedes', model: 'Eqa 250', fuel: 'electric', gearbox: 'automatic', consumption: '' },
   { brand: 'Mercedes', model: 'Eqa 350', fuel: 'electric', gearbox: 'automatic', consumption: '' },
   { brand: 'Mercedes', model: 'Eqb 350', fuel: 'electric', gearbox: 'automatic', consumption: '' },
@@ -125,7 +193,13 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Mini', model: 'Clubman', fuel: 'petrol', gearbox: 'automatic', consumption: '6,4' },
   { brand: 'Mini', model: 'Countryman', fuel: 'petrol', gearbox: 'automatic', consumption: '6,3' },
   { brand: 'Mini', model: 'Mini', fuel: 'petrol', gearbox: 'automatic', consumption: '6,1' },
-  { brand: 'Mitsubishi', model: 'Space Star', fuel: 'petrol', gearbox: 'manual', consumption: '5,2' },
+  {
+    brand: 'Mitsubishi',
+    model: 'Space Star',
+    fuel: 'petrol',
+    gearbox: 'manual',
+    consumption: '5,2',
+  },
   { brand: 'Nissan', model: 'Ariya', fuel: 'electric', gearbox: 'automatic', consumption: '' },
   { brand: 'Nissan', model: 'Juke', fuel: 'petrol', gearbox: 'automatic', consumption: '6,0' },
   { brand: 'Nissan', model: 'Leaf', fuel: 'electric', gearbox: 'automatic', consumption: '' },
@@ -161,8 +235,20 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Renault', model: 'Trafic', fuel: 'diesel', gearbox: 'manual', consumption: '7,3' },
   { brand: 'Renault', model: 'Twingo', fuel: 'petrol', gearbox: 'manual', consumption: '5,2' },
   { brand: 'Renault', model: 'Zoe', fuel: 'electric', gearbox: 'automatic', consumption: '' },
-  { brand: 'Rolls-Royce', model: 'Cullinan', fuel: 'petrol', gearbox: 'automatic', consumption: '16,5' },
-  { brand: 'Rolls-Royce', model: 'Dawn', fuel: 'petrol', gearbox: 'automatic', consumption: '16,0' },
+  {
+    brand: 'Rolls-Royce',
+    model: 'Cullinan',
+    fuel: 'petrol',
+    gearbox: 'automatic',
+    consumption: '16,5',
+  },
+  {
+    brand: 'Rolls-Royce',
+    model: 'Dawn',
+    fuel: 'petrol',
+    gearbox: 'automatic',
+    consumption: '16,0',
+  },
   { brand: 'Skoda', model: 'Kamiq', fuel: 'petrol', gearbox: 'automatic', consumption: '6,1' },
   { brand: 'Skoda', model: 'Karoq', fuel: 'petrol', gearbox: 'automatic', consumption: '6,0' },
   { brand: 'Skoda', model: 'Kodiaq', fuel: 'diesel', gearbox: 'automatic', consumption: '6,6' },
@@ -179,13 +265,56 @@ const CAR_CONSUMPTION_DB = [
   { brand: 'Toyota', model: 'C-Hr', fuel: 'hybrid', gearbox: 'automatic', consumption: '5,2' },
   { brand: 'Toyota', model: 'Camry', fuel: 'hybrid', gearbox: 'automatic', consumption: '5,4' },
   { brand: 'Toyota', model: 'Yaris', fuel: 'hybrid', gearbox: 'automatic', consumption: '4,9' },
-  { brand: 'Toyota', model: 'Yaris Cross', fuel: 'hybrid', gearbox: 'automatic', consumption: '4,8' },
+  {
+    brand: 'Toyota',
+    model: 'Yaris Cross',
+    fuel: 'hybrid',
+    gearbox: 'automatic',
+    consumption: '4,8',
+  },
   { brand: 'Volkswagen', model: 'Caddy', fuel: 'diesel', gearbox: 'automatic', consumption: '5,9' },
   { brand: 'Volkswagen', model: 'T-Roc', fuel: 'petrol', gearbox: 'automatic', consumption: '6,0' },
-  { brand: 'Volkswagen', model: 'Touran', fuel: 'diesel', gearbox: 'automatic', consumption: '5,9' },
+  {
+    brand: 'Volkswagen',
+    model: 'Touran',
+    fuel: 'diesel',
+    gearbox: 'automatic',
+    consumption: '5,9',
+  },
   { brand: 'Volvo', model: 'XC60', fuel: 'hybrid', gearbox: 'automatic', consumption: '6,3' },
   { brand: 'Volvo', model: 'XC90', fuel: 'hybrid', gearbox: 'automatic', consumption: '7,1' },
 ];
+
+/*
+  Modèles supplémentaires ne figurant pas dans le catalogue ADEME courant.
+
+  Source : Volkswagen France, données WLTP constructeur.
+  Valeur "consumption" = moyenne simplifiée utilisée uniquement pour
+  préremplir/suggérer une consommation générique pour le modèle.
+*/
+
+const ADDITIONAL_CAR_CONSUMPTION_DB = [
+  {
+    brand: 'Volkswagen',
+    model: 'Golf',
+    aliases: ['VW'],
+    fuel: 'petrol',
+    gearbox: 'manual',
+    consumption: '5,4',
+    source: 'Volkswagen France - WLTP',
+  },
+  {
+    brand: 'Volkswagen',
+    model: 'Polo',
+    aliases: ['VW'],
+    fuel: 'petrol',
+    gearbox: 'manual',
+    consumption: '5,4',
+    source: 'Volkswagen France - WLTP',
+  },
+];
+
+const ALL_CAR_CONSUMPTION_DB = [...CAR_CONSUMPTION_DB, ...ADDITIONAL_CAR_CONSUMPTION_DB];
 
 function normalizeCarText(text) {
   return ` ${(text || '')
@@ -196,20 +325,56 @@ function normalizeCarText(text) {
     .trim()} `;
 }
 
-// Le modèle dont le nom normalisé le plus long apparaît dans le texte tapé l'emporte :
-// "Yaris Cross" doit matcher Yaris Cross, pas juste Yaris.
+/*
+  Recherche dans la marque ET le modèle.
+
+  Priorités :
+  1. Le modèle exact/long est prioritaire.
+  2. La marque apporte un bonus si elle est présente.
+  3. Les alias permettent notamment "VW Golf".
+  4. Le modèle le plus long gagne : "Yaris Cross" > "Yaris".
+*/
+
 function lookupCarConsumption(name) {
   const haystack = normalizeCarText(name);
+
   if (!haystack.trim()) return null;
+
   let best = null;
-  let bestLength = 0;
-  CAR_CONSUMPTION_DB.forEach((entry) => {
-    const needle = normalizeCarText(entry.model);
-    if (!needle.trim() || !haystack.includes(needle)) return;
-    if (needle.length > bestLength) {
+  let bestScore = 0;
+
+  ALL_CAR_CONSUMPTION_DB.forEach((entry) => {
+    const model = normalizeCarText(entry.model);
+    const brand = normalizeCarText(entry.brand);
+    const aliases = (entry.aliases || []).map(normalizeCarText);
+
+    if (!model) return;
+
+    let score = 0;
+
+    // Le modèle est le critère principal.
+    if (haystack.includes(model)) {
+      score += model.trim().length * 100;
+    } else {
+      // Si le modèle n'est même pas présent, on ignore l'entrée.
+      return;
+    }
+
+    // Bonus si la marque est également présente.
+    if (brand && haystack.includes(brand)) {
+      score += brand.trim().length * 10;
+    }
+
+    // Bonus si un alias de marque est présent.
+    if (aliases.some((alias) => alias && haystack.includes(alias))) {
+      score += 50;
+    }
+
+    if (score > bestScore) {
       best = entry;
-      bestLength = needle.length;
+      bestScore = score;
     }
   });
+
   return best;
 }
