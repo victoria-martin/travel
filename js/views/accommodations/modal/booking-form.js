@@ -11,7 +11,7 @@ function bookingAccommodationForm(p) {
         id="f-booking-link"
         type="text"
         value="${escapeHtml(p.bookingLink)}"
-        placeholder="https://www.booking.com/..."
+        placeholder="https://..."
         onpaste="importBookingPaste()"
         onchange="importBookingLink()"
       />
@@ -20,7 +20,7 @@ function bookingAccommodationForm(p) {
       ${accommodationTypeField(p)}
       <div class="field">
         <label>Nom</label
-        ><input id="f-name" type="text" value="${escapeHtml(p.name)}" placeholder="Antico Casale" />
+        ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
       </div>
     </div>
     ${locateFields(p)}
@@ -31,14 +31,14 @@ function bookingAccommodationForm(p) {
           id="f-price"
           type="text"
           value="${escapeHtml(p.price)}"
-          placeholder="120"
           title="Un calcul marche aussi : =625/4"
           onblur="applyPriceFormula(this)"
         />
       </div>
       <div class="field">
         <label>Dates</label
-        ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" placeholder="12–14 juin" />
+        ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" />
+        <small class="field-hint">ex. 12–14 juin</small>
       </div>
     </div>
     <div class="field">

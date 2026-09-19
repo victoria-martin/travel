@@ -60,6 +60,34 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-19** — les tables trop larges pour se lire en ligne (Hébergements et Lieux &
+  activités, 23 colonnes ; Offres de voiture, 17) s'ouvrent en sheet plutôt qu'en repli carte :
+  le mécanisme existait déjà pour Hébergements et Prestataires (`ROW_CLICKS` + `openSheet(type,
+  id)`, [table.js](js/views/table.js) / [modal.js](js/modals/modal.js)) — la même modale d'édition,
+  posée en panneau de droite au lieu du centre — et `.modal-sheet{max-width:100%}` la fait déjà
+  passer plein écran sous 440px, desktop et mobile compris, sans media query dédiée. Étendre à deux
+  entités de plus n'a donc été que les brancher sur le patron existant
+  ([attractions/sheet.js](js/views/attractions/sheet.js), [rentals/sheet.js](js/views/rentals/sheet.js))
+  — pas une nouvelle brique. Les colonnes retenues (23/23/17) viennent d'un comptage réel des
+  `COLUMN_SETS`, pas d'une impression ; Transports (16) et les tables plus légères (Villes,
+  Charges fixes, 6-10 colonnes) restent posées dans [PLAN.md](PLAN.md).
+
+- **2026-09-19** — le mode voiture disparaît des Transports : la décision « une location de
+  voiture n'est pas un transport » (docs/spec-voyage-toscane.md, Décisions actées) était déjà
+  écrite, mais le mode `car` de `TRANSPORT_MODES` ([transport-modes.js](js/transport-modes.js))
+  la contredisait — un trajet pouvait référencer une offre avec ses propres dates, en doublon du
+  bloc Voiture d'un scénario (`scenario.offerId`, sans dates à lui, dont le coût se calcule déjà
+  sur les jours du scénario). Grep à l'appui : rien ne lisait le duo de points A→B d'un trajet
+  voiture ni son `offerId` en dehors de ce doublon — un trajet non rattaché à un scénario ne
+  servait qu'à s'afficher dans l'onglet Trajets et à compter dans le budget une fois réservé, deux
+  choses qu'une offre fait déjà toute seule. Le mode est donc retiré partout, pas seulement du
+  picker de scénario. `providerNoun` ([provider-label.js](js/views/providers/provider-label.js))
+  passe d'une lecture de `TRANSPORT_MODES.car.carrier` (un champ devenu uniformément vrai une fois
+  la voiture partie) à un `mode === 'car'` explicite. La migration
+  (`adoptCarTransports`, [storage.js](js/storage.js)) redescend l'offre d'un trajet voiture déjà
+  rattaché sur `scenario.offerId` avant de le détacher — le trajet n'est pas supprimé, il reste sur
+  la page Transports, juste sans mode reconnu (`❔ Non renseigné`) si on veut le rouvrir.
+
 - **2026-09-18** — première passe mobile : sous 640px, une barre du bas dédiée
   (`.mobile-nav-bar`, [mobile-nav/](js/views/mobile-nav/)) remplace la sidebar — 4 pages
   principales + un onglet **Plus** qui ouvre un tiroir listant le reste, choisi parmi trois pistes

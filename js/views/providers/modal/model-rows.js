@@ -29,7 +29,7 @@ function providerModelsBody(p) {
         : '<p class="filter-hint">Aucun modèle au catalogue du voyage.</p>'
     }
     <div class="provider-option-row">
-      <input id="provider-model-name" type="text" placeholder="BMW Série 1" />
+      <input id="provider-model-name" type="text" placeholder="Nouveau modèle" />
       <button type="button" class="btn btn-small" onclick="addProviderModelNamed()">
         ${svgIcon('plus')}
       </button>

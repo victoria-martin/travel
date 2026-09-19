@@ -21,7 +21,7 @@ function stepForm(p) {
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
     <div class="field">
       <label>Nom</label
-      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" placeholder="Arrivée à Pise" />
+      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" />
     </div>
     <div class="field-row">
       <div class="field">
@@ -39,7 +39,8 @@ function stepForm(p) {
     </div>
     <div class="field">
       <label>Date d'arrivée</label
-      ><input id="s-date" type="text" value="${escapeHtml(p.arrivalDate)}" placeholder="12 juin" />
+      ><input id="s-date" type="text" value="${escapeHtml(p.arrivalDate)}" />
+      <small class="field-hint">ex. 12 juin</small>
     </div>
     ${stepAttractionsField(p)}
     <div class="field">

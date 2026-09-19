@@ -30,7 +30,7 @@ function carModelProvidersBody(p) {
         : '<p class="filter-hint">Aucun loueur dans le voyage.</p>'
     }
     <div class="provider-option-row">
-      <input id="model-provider-name" type="text" placeholder="Hertz" />
+      <input id="model-provider-name" type="text" placeholder="Nouveau loueur" />
       <button type="button" class="btn btn-small" onclick="addCarModelProviderNamed()">
         ${svgIcon('plus')}
       </button>

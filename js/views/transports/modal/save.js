@@ -1,14 +1,9 @@
-/*
-  Le bloc compagnie / voiture dépend du mode : le champ de l'autre mode n'est pas dans le DOM,
-  et sa valeur déjà enregistrée se garde plutôt que de s'effacer.
-*/
-function transportFieldValue(id, kept) {
+function transportFieldValue(id) {
   const field = document.getElementById(id);
-  return field ? field.value.trim() : kept || '';
+  return field ? field.value.trim() : '';
 }
 
 function readTransportForm(id) {
-  const p = modal.payload;
   return {
     id: id || uid(),
     travelId: currentTravelId(),
@@ -22,9 +17,8 @@ function readTransportForm(id) {
     departTime: transportFieldValue('t-depart-time'),
     arriveDate: transportFieldValue('t-arrive-date'),
     arriveTime: transportFieldValue('t-arrive-time'),
-    providerId: transportFieldValue('t-provider', p.providerId),
-    reference: transportFieldValue('t-reference', p.reference),
-    offerId: transportFieldValue('t-car', p.offerId),
+    providerId: transportFieldValue('t-provider'),
+    reference: transportFieldValue('t-reference'),
     budget: transportFieldValue('t-budget'),
     amountMin: transportFieldValue('t-amount-min'),
     amountMax: transportFieldValue('t-amount-max'),

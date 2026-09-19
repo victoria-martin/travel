@@ -22,7 +22,6 @@ function rentalForm(p) {
         id="rental-location"
         type="text"
         value="${escapeHtml(p.location)}"
-        placeholder="Aéroport de Pise"
       />
     </div>
     <div class="field-row">

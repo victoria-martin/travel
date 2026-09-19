@@ -13,7 +13,6 @@ function emptyTransport() {
     arriveTime: '',
     providerId: '',
     reference: '',
-    offerId: '',
     budget: '',
     amountMin: '',
     amountMax: '',
@@ -58,7 +57,6 @@ function transportEndpointFields(side, label, placeId, precision) {
         id="t-${side}-precision"
         type="text"
         value="${escapeHtml(precision)}"
-        placeholder="Aéroport de Pise"
       />
     </div>
   </div>`;
@@ -75,26 +73,7 @@ function transportScheduleFields(side, label, date, time) {
   </div>`;
 }
 
-// Une voiture référence une offre, les autres modes leur compagnie : deux blocs exclusifs,
-// repeints quand le mode change.
 function transportProviderFields(p) {
-  if (p.mode === 'car') {
-    const offers = ofCurrentTravel(state.offers).sort((a, b) =>
-      transportOfferLabel(a).localeCompare(transportOfferLabel(b)),
-    );
-    return /* HTML */ `<div class="field">
-      <label>Voiture</label>
-      <select id="t-car">
-        <option value="" ${p.offerId ? '' : 'selected'}>Aucune voiture</option>
-        ${offers
-          .map(
-            (c) =>
-              `<option value="${c.id}" ${p.offerId === c.id ? 'selected' : ''}>${escapeHtml(transportOfferLabel(c))}</option>`,
-          )
-          .join('')}
-      </select>
-    </div>`;
-  }
   return /* HTML */ `<div class="field-row">
     ${providerSelectField('t-provider', p.mode, p.providerId)}
     <div class="field">
@@ -113,7 +92,7 @@ function transportPriceFields(p) {
   return /* HTML */ `<div class="field-row">
     <div class="field">
       <label>Budget</label
-      ><input id="t-budget" type="text" value="${escapeHtml(p.budget)}" placeholder="150" />
+      ><input id="t-budget" type="text" value="${escapeHtml(p.budget)}" />
     </div>
     <div class="field">
       <label>Prix mini</label

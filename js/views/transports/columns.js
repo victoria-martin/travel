@@ -47,7 +47,7 @@ COLUMN_SETS.transports = [
     key: 'provider',
     label: 'Compagnie / loueur',
     cell: transportProviderCell,
-    sortValue: (t) => providerName(transportProviderId(t)).toLowerCase(),
+    sortValue: (t) => providerName(t.providerId).toLowerCase(),
   },
   {
     key: 'price',
@@ -111,6 +111,12 @@ function transportStatusCell(t) {
 
 function transportNotesCell(t) {
   return textCell(t.notes);
+}
+
+function transportProviderCell(t) {
+  const lead = providerName(t.providerId);
+  if (!lead) return textCell(t.reference);
+  return `${escapeHtml(lead)}${t.reference ? `<div class="row-notes">${escapeHtml(t.reference)}</div>` : ''}`;
 }
 
 function transportActionsCell(t) {

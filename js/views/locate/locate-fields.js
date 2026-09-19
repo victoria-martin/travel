@@ -12,7 +12,6 @@ function locateFields(p) {
           id="geo-address"
           type="text"
           value="${escapeHtml(p.address || '')}"
-          placeholder="Piazza del Campo, Siena"
         />
         <button type="button" class="btn btn-ghost btn-small" onclick="locateAddress()">
           Localiser
@@ -24,11 +23,11 @@ function locateFields(p) {
     <div class="field-row">
       <div class="field">
         <label>Latitude</label
-        ><input id="geo-lat" type="text" value="${escapeHtml(p.lat)}" placeholder="43.3188" />
+        ><input id="geo-lat" type="text" value="${escapeHtml(p.lat)}" />
       </div>
       <div class="field">
         <label>Longitude</label
-        ><input id="geo-lng" type="text" value="${escapeHtml(p.lng)}" placeholder="11.3308" />
+        ><input id="geo-lng" type="text" value="${escapeHtml(p.lng)}" />
       </div>
     </div>
     ${placeLevelRows(p)}
@@ -55,7 +54,6 @@ function placeLevelField(p, level) {
       type="text"
       list="${listId}"
       value="${escapeHtml(p[level.key] || '')}"
-      placeholder="${level.placeholder}"
     />
     ${locateOptions(listId, level.key)}
   </div>`;

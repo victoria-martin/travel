@@ -1,5 +1,5 @@
 /*
-  Le mode dit le mot : les modes à compagnie en portent une, la voiture se loue. L'article vit ici
+  Le mode dit le mot : une voiture se loue, les autres modes ont une compagnie. L'article vit ici
   avec le nom — les écrans écrivent « Ajouter une compagnie » aussi bien que « un loueur ».
 */
 const PROVIDER_NOUNS = {
@@ -8,7 +8,7 @@ const PROVIDER_NOUNS = {
 };
 
 function providerNoun(mode) {
-  return transportMode(mode).carrier ? PROVIDER_NOUNS.carrier : PROVIDER_NOUNS.rental;
+  return mode === 'car' ? PROVIDER_NOUNS.rental : PROVIDER_NOUNS.carrier;
 }
 
 function providerName(id) {

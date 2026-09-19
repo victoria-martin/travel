@@ -42,7 +42,6 @@ function offerForm(p) {
         id="offer-location"
         type="text"
         value="${escapeHtml(p.location)}"
-        placeholder="Aéroport de Pise"
       />
     </div>
     ${offerScheduleFields('pickup', 'Prise en charge', p.pickupDate, p.pickupTime)}
@@ -54,7 +53,6 @@ function offerForm(p) {
         id="offer-price-day"
         type="text"
         value="${escapeHtml(p.pricePerDay)}"
-        placeholder="38"
       />
     </div>
     <div class="field">
@@ -105,7 +103,7 @@ function offerModelSelect(p) {
         .join('')}
     </select>
     <div class="provider-option-row">
-      <input id="offer-model-name" type="text" placeholder="BMW Série 1" />
+      <input id="offer-model-name" type="text" placeholder="Nouveau modèle" />
       <button type="button" class="btn btn-small" onclick="addOfferModelNamed()">
         ${svgIcon('plus')}
       </button>

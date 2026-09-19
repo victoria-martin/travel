@@ -42,14 +42,14 @@ function providerOptionRow(option, index) {
     <input
       type="text"
       list="provider-option-labels"
-      placeholder="Deuxième conducteur"
+      placeholder="Nom de l'option"
       value="${escapeHtml(option.label)}"
       oninput="setProviderOptionField(${index},'label',this.value)"
     />
     <input
       type="text"
       class="provider-option-amount"
-      placeholder="12"
+      placeholder="Montant"
       value="${escapeHtml(option.amount)}"
       oninput="setProviderOptionField(${index},'amount',this.value)"
     />

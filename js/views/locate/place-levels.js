@@ -6,10 +6,10 @@
   celui de la lecture : « Italie · Ligurie · Savone · Castelbianco ».
 */
 const PLACE_LEVELS = [
-  { key: 'country', label: 'Pays', placeholder: 'Italie' },
-  { key: 'region', label: 'Région', placeholder: 'Toscane' },
-  { key: 'county', label: 'Province', placeholder: 'Sienne' },
-  { key: 'city', label: 'Ville', placeholder: 'Sienne' },
+  { key: 'country', label: 'Pays' },
+  { key: 'region', label: 'Région' },
+  { key: 'county', label: 'Province' },
+  { key: 'city', label: 'Ville' },
 ];
 
 const PLACE_LEVEL_KEYS = PLACE_LEVELS.map((level) => level.key);

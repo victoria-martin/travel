@@ -73,10 +73,13 @@ function pasteImportForm() {
       <textarea
         id="paste-area"
         rows="10"
-        placeholder="Type	Nom	Ville	Province	Prix	Dates	Lien	Notes
-hotel	Antico Casale	Sarzana	Ligurie	152	21/09	https://...	Super, pack remboursable"
+        placeholder="${PASTE_COLUMN_ORDER.map(fieldLabel).join('\t')}"
         style="font-family:monospace; font-size:12px;"
       ></textarea>
+      <small class="field-hint"
+        >ex. hotel&nbsp;&nbsp;Antico Casale&nbsp;&nbsp;Sarzana&nbsp;&nbsp;Ligurie&nbsp;&nbsp;152&nbsp;&nbsp;21/09&nbsp;&nbsp;https://...&nbsp;&nbsp;Super,
+        pack remboursable</small
+      >
     </div>
     <div id="paste-preview" style="font-size:12.5px; color:var(--ink-soft);"></div>
     <div class="modal-actions">

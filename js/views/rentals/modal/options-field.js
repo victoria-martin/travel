@@ -26,8 +26,8 @@ function offerOptionsBody(p) {
       )
       .join('')}
     <div class="provider-option-row">
-      <input id="offer-option-label" type="text" placeholder="Deuxième conducteur" />
-      <input id="offer-option-amount" class="provider-option-amount" type="text" placeholder="12" />
+      <input id="offer-option-label" type="text" placeholder="Nom de l'option" />
+      <input id="offer-option-amount" class="provider-option-amount" type="text" placeholder="Montant" />
       <select id="offer-option-unit">
         ${wordUnitOptions()}
       </select>

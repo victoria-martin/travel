@@ -129,6 +129,7 @@ function sortPanel(kind) {
     icon: svgIcon('arrow-up-down'),
     label: 'Trier',
     count: criteria.length,
+    align: 'left',
     body: /* HTML */ `<div class="sort-panel">
       ${
         criteria.length

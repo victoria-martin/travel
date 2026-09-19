@@ -49,21 +49,11 @@ function travelForm(p) {
     <div class="field-row">
       <div class="field">
         <label>Pays</label
-        ><input
-          id="travel-country"
-          type="text"
-          value="${escapeHtml(p.country)}"
-          placeholder="Italie"
-        />
+        ><input id="travel-country" type="text" value="${escapeHtml(p.country)}" />
       </div>
       <div class="field">
         <label>Région</label
-        ><input
-          id="travel-region"
-          type="text"
-          value="${escapeHtml(p.region)}"
-          placeholder="Toscane"
-        />
+        ><input id="travel-region" type="text" value="${escapeHtml(p.region)}" />
       </div>
     </div>
     <div class="field-row">

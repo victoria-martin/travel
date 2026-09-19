@@ -291,11 +291,10 @@ table et leur modale.
 
 ## ✈️ Transports
 
-Les trajets d'un voyage — avion, train, bus, ferry, voiture. La page existe : modèle, modes,
-statuts, départ / arrivée, prix et tableau sont décrits dans
-[la spec](docs/spec-voyage-toscane.md). La voiture garde sa propre entrée de barre latérale :
-`offers` reste la table des offres de location, et un transport de mode voiture la **référence** plutôt que de
-la recopier.
+Les trajets d'un voyage — avion, train, bus, ferry. La page existe : modèle, modes, statuts,
+départ / arrivée, prix et tableau sont décrits dans [la spec](docs/spec-voyage-toscane.md). La
+voiture n'en est pas un : elle garde sa propre entrée de barre latérale, `offers` reste la table
+des offres de location, référencée par le bloc Voiture d'un scénario — jamais par un transport.
 
 - **Prix dans le total d'un scénario** <!--t:8suc--> — 🧮 calcul · ⏳ à faire : les transports
   rattachés à un scénario s'ajoutent au total général
@@ -304,14 +303,6 @@ la recopier.
 
 ### Intégration aux scénarios
 
-- **Retirer l'`offerId` d'un transport** <!--t:kq3v--> — 🗃️ modèle · ⏳ à faire : un scénario porte
-  déjà sa voiture et ses options ([offer-block.js](js/views/scenarios/detail/offer-block.js)) ; un
-  trajet de mode voiture qui en désigne une autre dit le contraire du scénario qui le porte. Le
-  champ peut disparaître maintenant qu'un trajet se rattache à un scénario : reste à décider ce que
-  montre un trajet voiture **hors** d'un scénario, où il n'aura plus aucun loueur —
-  `transportProviderId` et `transportProviderCell`
-  ([provider.js](js/views/transports/provider.js)) passent par lui, et `transportOfferLabel` meurt
-  avec.
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
   ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
   et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
@@ -497,10 +488,12 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 
 - **fix scroll in page** <!--t:epip--> — 📐 layout · ⏳ à faire : make thinkgs sticky and other
   scrollables
-- **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : la nav se redocke déjà
-  en bas sous 640px, mais les tables (Transports, Locations, Villes, Charges fixes…) débordent
-  encore à l'horizontale ; leur donner un repli carte comme Hébergements et Charges fixes l'ont
-  déjà via `listModeToggle`, ou un équivalent CSS générique.
+- **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : Hébergements, Lieux &
+  activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
+  ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23
+  colonnes. Transports (16 colonnes) n'a pas encore le sien — décidé lors de la réflexion mobile,
+  à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et Charges fixes,
+  plus légères (6-10 colonnes), restent des tables classiques.
 
 ## 📝 Données à saisir
 

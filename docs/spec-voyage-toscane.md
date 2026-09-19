@@ -224,7 +224,7 @@ coup par coup.
 | **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs, prix du litre, péage au km              | possède tout le reste ; un seul est ouvert à la fois                   |
 | **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix                   |
 | **Lieu**            | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
-| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, voiture, budget, prix mini / maxi, lien, notes, favori             | un trajet du voyage ; en mode voiture il référence une offre           |
+| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, budget, prix mini / maxi, lien, notes, favori                      | un trajet du voyage                                                    |
 | **Offre**           | le loueur, le modèle, statut, lieu et dates de prise en charge, prix par jour, options cochées chez le loueur, lien, notes, **par défaut**                          | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
 | **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                           |
 | **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                                 |
@@ -242,9 +242,9 @@ En cours ✈️ · Passé 📦.
 **Statuts**, dans l'ordre du workflow, qui est aussi l'ordre de tri : Réservé 🔒 · Contacté ✉️ ·
 Attente réponse ⏳ · À booker 💳 · Go ✅ · Intéressé 👍 · À voir 👀 · Pas dispo 🚫 · Écarté 👎.
 
-**Mode de transport** — Avion ✈️ · Train 🚆 · Bus 🚌 · Ferry ⛴️ · Voiture 🚗. C'est le mode qui
-décide des champs utiles : les quatre premiers portent une compagnie et une référence de
-réservation, la voiture référence une entrée de la table des locations.
+**Mode de transport** — Avion ✈️ · Train 🚆 · Bus 🚌 · Ferry ⛴️, chacun avec sa compagnie et sa
+référence de réservation. La voiture n'en est pas un : une location se compte en jours, pas en
+trajet ; elle vit dans le bloc Voiture du scénario, en référence à la table des offres.
 **Statuts d'un transport**, dans l'ordre du workflow et du tri : Réservé 🔒 · À réserver 💳 ·
 Go ✅ · À voir 👀 · Écarté 👎.
 
@@ -472,12 +472,11 @@ localisation que les hébergements.
 
 | Champ                | Détail                                                                                                     |
 | -------------------- | ---------------------------------------------------------------------------------------------------------- |
-| mode                 | liste figée ; décide des champs utiles                                                                     |
+| mode                 | liste figée : Avion, Train, Bus, Ferry                                                                     |
 | statut               | liste propre, courte                                                                                       |
 | départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté                                     |
 | dates et heures      | date et heure de départ, date et heure d'arrivée                                                           |
-| compagnie, référence | pour l'avion, le train, le bus et le ferry : la compagnie référence un prestataire, la référence est libre |
-| voiture              | en mode voiture seulement : référence une offre, dont le loueur et le modèle s'affichent                   |
+| compagnie, référence | la compagnie référence un prestataire, la référence est libre                                              |
 | budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                             |
 | lien                 |                                                                                                            |
 | notes                |                                                                                                            |
@@ -492,17 +491,10 @@ défaut par date de départ, puis par mode.
   select ouvre sur les villes et les villages, les autres lieux suivent — et la précision
   (« Aéroport de Pise », « Santa Maria Novella ») se saisit dans un champ libre à côté. Le tableau
   affiche le lieu, la précision en dessous.
-- **La voiture se référence, jamais ne se recopie** : un transport de mode voiture pointe sur une
-  entrée de la table des locations. Le loueur y tient la place de la compagnie et le modèle celle de
-  la référence — la colonne affiche « Hertz » avec « Fiat 500 » en dessous, comme elle affiche
-  « Trenitalia » avec son numéro de billet. Changer de mode dans la modale échange le bloc compagnie
-  et le bloc loueur ; la valeur de l'autre mode reste enregistrée et n'est pas effacée.
-- **Le loueur d'une voiture ne se saisit qu'une fois** : un transport de mode voiture ne porte pas
-  de prestataire à lui — il référence une voiture, qui référence son loueur. Deux chemins vers le
-  même nom finiraient par diverger.
-- **Un transport de mode voiture porte quand même son prix** : la location et le trajet sont deux
-  coûts distincts — le prix de la location vit sur la voiture, celui du trajet (péages, essence, un
-  aller ponctuel) sur le transport. Le transport ne lit jamais le prix de la location.
+- **La voiture n'est pas un transport** : une location se compte en jours du scénario, pas en
+  trajet daté ; elle se choisit dans le bloc Voiture du scénario, en référence à une offre.
+  Changer de mode dans la modale repeint le bloc compagnie, chaque mode ayant ses propres
+  prestataires ; la valeur d'un mode quitté reste enregistrée et n'est pas effacée.
 
 **Loueur ou compagnie** — chez qui on prend un trajet. La page Transports porte trois onglets : les
 trajets, « Loueurs & compagnies », et « Voitures » — les offres relevées et le catalogue des
@@ -1149,6 +1141,12 @@ et          [ Région ▾ ] [ Toscane       ▾ ] ✕
   du navigateur parcourent les pages visitées. Une adresse inconnue laisse la page courante ; un
   scénario supprimé retombe sur la liste. Sans `#`, l'app ouvre le scénario **TEST** comme avant.
 - **Suppression** : toujours confirmée, jamais de corbeille.
+- **Fiche en sheet** : une ligne d'une table trop large pour se lire d'un coup (Hébergements et
+  Lieux & activités — 23 colonnes, Offres de voiture — 17) s'ouvre au clic dans un panneau plein
+  bord droit, le même formulaire que sa modale d'édition. Il passe plein écran sous 440px, desktop
+  et mobile confondus — pas de version dédiée au téléphone. L'ajout garde la modale centrée ; seule
+  l'édition d'une ligne existante ouvre le sheet. Une table plus légère (Villes, Charges fixes)
+  reste une table classique, éditée en place.
 - **Fermer un formulaire sur une saisie non enregistrée** pose la question dans l'app, jamais dans
   le `confirm` du navigateur : « Enregistrer les modifications ? », avec le choix d'enregistrer, de
   fermer sans enregistrer, ou de revenir au formulaire. La question se pose par-dessus les champs

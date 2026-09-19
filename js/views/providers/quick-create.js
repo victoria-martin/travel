@@ -21,7 +21,7 @@ function askNewProvider(selectId, mode) {
     <h3>Ajouter ${noun.indefinite}</h3>
     <div class="field">
       <label>${tagLabel(current.emoji, current.label)}</label>
-      <input id="new-provider-name" type="text" placeholder="Ryanair" />
+      <input id="new-provider-name" type="text" />
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeProviderAsk()">Annuler</button>

@@ -25,7 +25,7 @@ function newCityPanel() {
           id="new-city-address"
           type="text"
           value="${escapeHtml(cityDraft.address)}"
-          placeholder="Sienne"
+          placeholder="Nom de la ville"
           onkeydown="newCityKeydown(event)"
         />
         <button type="button" class="btn btn-ghost btn-small" onclick="locateNewCity()">

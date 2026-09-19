@@ -98,6 +98,7 @@ function migrateData(data) {
   });
   adoptRentals(data);
   adoptOfferRentals(data);
+  adoptCarTransports(data);
   adoptCarModels(data);
   adoptProviderModels(data);
   // La page Voitures est devenue Locations : une liste enregistrée la désigne par sa clé.
@@ -308,6 +309,29 @@ function migratedDayPrice(offer, rental) {
   const days = daysBetween(rental.pickupDate, rental.dropoffDate);
   if (!days || !hasPriceValue(offer.priceTotal)) return '';
   return String(Math.round((priceNumber(offer.priceTotal) / days) * 100) / 100);
+}
+
+/*
+  Le mode voiture d'un trajet doublait le bloc Voiture du scénario, qui référence déjà l'offre sur
+  les dates du scénario lui-même. Un trajet voiture rattaché à un scénario y redescend son offre
+  avant de s'en détacher — le trajet n'est pas supprimé, il reste éditable sur la page Transports.
+*/
+function adoptCarTransports(data) {
+  (data.scenarios || []).forEach((s) => {
+    const carTransport = (data.transports || []).find(
+      (t) => t.mode === 'car' && (s.transportIds || []).includes(t.id),
+    );
+    if (!carTransport) return;
+    if (!s.offerId && carTransport.offerId) {
+      s.offerId = carTransport.offerId;
+      s.offerOptionIds = [
+        ...((data.offers || []).find((o) => o.id === s.offerId)?.optionIds || []),
+      ];
+    }
+    s.transportIds = (s.transportIds || []).filter(
+      (id) => !(data.transports || []).some((t) => t.id === id && t.mode === 'car'),
+    );
+  });
 }
 
 /*

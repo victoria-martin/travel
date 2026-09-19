@@ -83,7 +83,7 @@ function scenarioPackingAddForm() {
   return /* HTML */ `<div class="add-item-form">
     <div class="field">
       <label>Libellé</label>
-      <input id="packing-add-label" type="text" placeholder="Maillot de bain" />
+      <input id="packing-add-label" type="text" />
     </div>
     <div class="add-item-form-row">
       ${packingCategoryField('packing-add-category', '')}

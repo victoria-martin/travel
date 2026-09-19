@@ -4,7 +4,7 @@
 */
 let openToolbarPanel = null;
 
-function toolbarPanel({ key, icon, label, count, body }) {
+function toolbarPanel({ key, icon, label, count, body, align }) {
   return /* HTML */ `<details
     class="toolbar-panel"
     ${openToolbarPanel === key ? 'open' : ''}
@@ -13,6 +13,8 @@ function toolbarPanel({ key, icon, label, count, body }) {
     <summary class="toolbar-btn" title="${escapeHtml(label)}">
       ${toolbarFace(icon, label)}${count ? `<span class="toolbar-count">${count}</span>` : ''}
     </summary>
-    <div class="toolbar-panel-body">${body}</div>
+    <div class="toolbar-panel-body ${align === 'left' ? 'toolbar-panel-body-left' : ''}">
+      ${body}
+    </div>
   </details>`;
 }

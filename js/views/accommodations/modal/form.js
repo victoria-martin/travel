@@ -30,7 +30,7 @@ function accommodationForm(p) {
       ${accommodationTypeField(p)}
       <div class="field">
         <label>Nom</label
-        ><input id="f-name" type="text" value="${escapeHtml(p.name)}" placeholder="Antico Casale" />
+        ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
       </div>
     </div>
     <div class="field">
@@ -55,14 +55,14 @@ function accommodationForm(p) {
           id="f-price"
           type="text"
           value="${escapeHtml(p.price)}"
-          placeholder="120"
           title="Un calcul marche aussi : =625/4"
           onblur="applyPriceFormula(this)"
         />
       </div>
       <div class="field">
         <label>Dates</label
-        ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" placeholder="12–14 juin" />
+        ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" />
+        <small class="field-hint">ex. 12–14 juin</small>
       </div>
     </div>
     <div class="field-row">
@@ -92,7 +92,7 @@ function accommodationForm(p) {
         id="f-booking-link"
         type="text"
         value="${escapeHtml(p.bookingLink)}"
-        placeholder="https://www.booking.com/..."
+        placeholder="https://..."
         onpaste="importBookingPaste()"
         onchange="importBookingLink()"
       />
@@ -103,7 +103,7 @@ function accommodationForm(p) {
         id="f-maps-link"
         type="text"
         value="${escapeHtml(p.mapsLink)}"
-        placeholder="https://maps.app.goo.gl/..."
+        placeholder="https://..."
         onpaste="importGoogleMapsPaste(this, 'f-name')"
         onchange="importGoogleMapsLink(this, 'f-name')"
       />

@@ -11,6 +11,7 @@ function filterPanel(scope) {
     icon: svgIcon('funnel'),
     label: 'Filtrer',
     count: activeFilterCount(scope),
+    align: 'left',
     body: `<div class="filter-panel">${filterLevelsBlock(scope)}</div>`,
   });
 }

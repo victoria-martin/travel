@@ -7,12 +7,7 @@ function packingCatalogForm(p) {
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un item du catalogue</h3>
     <div class="field">
       <label>Libellé</label>
-      <input
-        id="packing-item-label"
-        type="text"
-        value="${escapeHtml(p.label)}"
-        placeholder="Trousse de toilette"
-      />
+      <input id="packing-item-label" type="text" value="${escapeHtml(p.label)}" />
     </div>
     ${packingCategoryField('packing-item-category', p.category)}
     <div class="field">

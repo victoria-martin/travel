@@ -33,7 +33,7 @@ function offerDraftRow(rentalId) {
     class="rental-offer rental-offer-draft"
     onkeydown="offerDraftKeydown(event)"
   >
-    <input id="draft-model" type="text" placeholder="Golf" list="draft-models" />
+    <input id="draft-model" type="text" placeholder="Modèle" list="draft-models" />
     <datalist id="draft-models">
       ${providerCarModels(getRental(rentalId).providerId)
         .map((model) => `<option value="${escapeHtml(model.name)}"></option>`)
@@ -47,7 +47,7 @@ function offerDraftRow(rentalId) {
       <option value="">${UNSET_CAR_GEARBOX.emoji} Boîte</option>
       ${wordOptions(CAR_GEARBOXES)}
     </select>
-    <input id="draft-price" type="text" placeholder="420 € au total" />
+    <input id="draft-price" type="text" placeholder="Prix total" />
     <button class="btn btn-small" onclick="saveOfferDraft()">${svgIcon('check')}</button>
     <button class="icon-btn" onclick="closeOfferDraft()" title="Fermer">${svgIcon('x')}</button>
   </div>`;

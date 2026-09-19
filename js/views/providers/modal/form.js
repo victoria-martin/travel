@@ -32,7 +32,7 @@ function providerForm(p) {
       </div>
       <div class="field">
         <label>Nom</label
-        ><input id="prov-name" type="text" value="${escapeHtml(p.name)}" placeholder="Hertz" />
+        ><input id="prov-name" type="text" value="${escapeHtml(p.name)}" />
       </div>
     </div>
     <div class="field">

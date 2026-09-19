@@ -46,7 +46,6 @@ function attractionForm(p) {
           id="a-name"
           type="text"
           value="${escapeHtml(p.name)}"
-          placeholder="Torre del Palacio Guinigi"
         />
       </div>
     </div>
@@ -80,7 +79,7 @@ function attractionForm(p) {
     <div class="field-row">
       <div class="field">
         <label>Budget</label
-        ><input id="a-budget" type="text" value="${escapeHtml(p.budget)}" placeholder="25" />
+        ><input id="a-budget" type="text" value="${escapeHtml(p.budget)}" />
       </div>
       <div class="field">
         <label>Prix mini</label
@@ -97,7 +96,7 @@ function attractionForm(p) {
         id="a-maps-link"
         type="text"
         value="${escapeHtml(p.mapsLink)}"
-        placeholder="https://maps.app.goo.gl/..."
+        placeholder="https://..."
         onpaste="importGoogleMapsPaste(this, 'a-name')"
         onchange="importGoogleMapsLink(this, 'a-name')"
       />
@@ -109,21 +108,12 @@ function attractionForm(p) {
     <div class="field-row">
       <div class="field">
         <label>Horaires</label
-        ><input
-          id="a-hours"
-          type="text"
-          value="${escapeHtml(p.hours)}"
-          placeholder="Mar.-dim. 12h-15h"
-        />
+        ><input id="a-hours" type="text" value="${escapeHtml(p.hours)}" />
+        <small class="field-hint">ex. Mar.-dim. 12h-15h</small>
       </div>
       <div class="field">
         <label>Téléphone</label
-        ><input
-          id="a-phone"
-          type="text"
-          value="${escapeHtml(p.phone)}"
-          placeholder="338 119 52 75"
-        />
+        ><input id="a-phone" type="text" value="${escapeHtml(p.phone)}" />
       </div>
     </div>
     ${tagsField(p, { field: 'tags', label: 'Tags', options: allAttractionTags })}

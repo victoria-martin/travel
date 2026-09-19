@@ -7,7 +7,7 @@ function carModelForm(p) {
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un modèle</h3>
     <div class="field">
       <label>Modèle</label
-      ><input id="model-name" type="text" value="${escapeHtml(p.name)}" placeholder="Golf" />
+      ><input id="model-name" type="text" value="${escapeHtml(p.name)}" />
     </div>
     <div class="field-row">
       <div class="field">
@@ -21,12 +21,8 @@ function carModelForm(p) {
       </div>
       <div class="field">
         <label>Consommation</label
-        ><input
-          id="model-consumption"
-          type="text"
-          value="${escapeHtml(p.consumption)}"
-          placeholder="6,5 L/100"
-        />
+        ><input id="model-consumption" type="text" value="${escapeHtml(p.consumption)}" />
+        <small class="field-hint">ex. 6,5 L/100</small>
       </div>
       <div class="field">
         <label>Boîte</label>
