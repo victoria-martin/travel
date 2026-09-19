@@ -1,0 +1,263 @@
+{
+  "objets": [
+    {
+      "id": "travel",
+      "nom": "Travel",
+      "champs": "id\nname\nemoji\nimage\ndescription\nstatus\nstartDate\nendDate\ncountry\nregion\naccentColor\ntravelers\nfuelPrice\ntollRate",
+      "relations": []
+    },
+    {
+      "id": "accommodation",
+      "nom": "Accommodation",
+      "champs": "travelId\nid\ntype\nstatus\nname\naddress\ncountry\nregion\ncounty\ncity\nlat\nlng\nprice\ndates\navailableFrom\navailableTo\nlink\nbookingLink\nnotes\ntags (liste)\nfavorite",
+      "relations": []
+    },
+    {
+      "id": "provider",
+      "nom": "Provider",
+      "champs": "travelId\nid\nmode\nname\nlogo\nsite\nbookingUrl\nnotes\noptions (json)\nmodelIds (liste)",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "carmodel",
+          "champ": "modelIds (liste)"
+        }
+      ]
+    },
+    {
+      "id": "carmodel",
+      "nom": "CarModel",
+      "champs": "travelId\nid\nname\nfuel\ngearbox\nconsumption",
+      "relations": []
+    },
+    {
+      "id": "rental",
+      "nom": "Rental",
+      "champs": "travelId\nid\nproviderId\nlocation\npickupDate\npickupTime\ndropoffDate\ndropoffTime\nlink\nnotes",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "provider",
+          "champ": "providerId"
+        },
+        {
+          "type": "contient",
+          "vers": "offer"
+        }
+      ]
+    },
+    {
+      "id": "offer",
+      "nom": "Offer",
+      "champs": "travelId\nid\nrentalId\nmodelId\nstatus\npriceTotal\npricePerDay (calculé)\noptionIds (liste)\nlink\nnotes\nisDefault\nname\nproviderId (calculé)\nlocation (calculé)\ndates\nmodel\nfuel\ngearbox",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "carmodel",
+          "champ": "modelId"
+        },
+        {
+          "type": "référence",
+          "vers": "provider",
+          "champ": "providerId (calculé)"
+        }
+      ]
+    },
+    {
+      "id": "fixedcost",
+      "nom": "FixedCost",
+      "champs": "travelId\nid\nlabel\namount\ncategories (liste)\nrecurrence\nnotes",
+      "relations": []
+    },
+    {
+      "id": "attraction",
+      "nom": "Attraction",
+      "champs": "travelId\nid\nname\ntype\nstatus\ndescription\naddress\ncountry\nregion\ncounty\ncity\nlat\nlng\naccommodationId\nmapsLink\nlink\nhours\nphone\nbudget\namountMin\namountMax\ntags (liste)\nfavorite",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "accommodation",
+          "champ": "accommodationId"
+        }
+      ]
+    },
+    {
+      "id": "transport",
+      "nom": "Transport",
+      "champs": "travelId\nid\nmode\nstatus\nfromAttractionId\nfromPrecision\ntoAttractionId\ntoPrecision\ndepartDate\ndepartTime\narriveDate\narriveTime\nproviderId\nreference\nofferId\nbudget\namountMin\namountMax\nlink\nnotes\nfavorite\ncarrier",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "fromAttractionId"
+        },
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "toAttractionId"
+        },
+        {
+          "type": "référence",
+          "vers": "provider",
+          "champ": "providerId"
+        },
+        {
+          "type": "référence",
+          "vers": "offer",
+          "champ": "offerId"
+        }
+      ]
+    },
+    {
+      "id": "scenario",
+      "nom": "Scenario",
+      "champs": "travelId\nid\nname\nstartDate\nofferId\nofferOptionIds (liste)\ncostIds (liste)\ntransportIds (liste)\nfavorite\nisChosen",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "offer",
+          "champ": "offerId"
+        },
+        {
+          "type": "référence",
+          "vers": "fixedcost",
+          "champ": "costIds (liste)"
+        },
+        {
+          "type": "référence",
+          "vers": "transport",
+          "champ": "transportIds (liste)"
+        },
+        {
+          "type": "contient",
+          "vers": "step"
+        },
+        {
+          "type": "contient",
+          "vers": "stepgroup"
+        }
+      ]
+    },
+    {
+      "id": "tripnote",
+      "nom": "TripNote",
+      "champs": "travelId\nid\ntext",
+      "relations": []
+    },
+    {
+      "id": "todolist",
+      "nom": "TodoList",
+      "champs": "travelId\nid\nkind\ncolumnKey\nfilterValues (liste)",
+      "relations": []
+    },
+    {
+      "id": "step",
+      "nom": "Step",
+      "champs": "travelId\nid\nscenarioId\nname\narrivalDate\nnotes\nhidden\ngroupId\noptionId\nnights\nattractionId\naccommodationId\naccommodationType\nbudget\ncity",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "attractionId"
+        },
+        {
+          "type": "référence",
+          "vers": "accommodation",
+          "champ": "accommodationId"
+        },
+        {
+          "type": "référence",
+          "vers": "groupoption",
+          "champ": "optionId"
+        },
+        {
+          "type": "contient",
+          "vers": "stepattraction"
+        },
+        {
+          "type": "contient",
+          "vers": "stepoption"
+        }
+      ]
+    },
+    {
+      "id": "stepgroup",
+      "nom": "StepGroup",
+      "champs": "travelId\nid\nscenarioId\nhidden",
+      "relations": [
+        {
+          "type": "contient",
+          "vers": "step"
+        },
+        {
+          "type": "contient",
+          "vers": "groupoption"
+        },
+        {
+          "type": "contient",
+          "vers": "groupattraction"
+        }
+      ]
+    },
+    {
+      "id": "groupoption",
+      "nom": "GroupOption",
+      "champs": "travelId\nid\nscenarioId\ngroupId\nname\nisSelected",
+      "relations": []
+    },
+    {
+      "id": "groupattraction",
+      "nom": "GroupAttraction",
+      "champs": "travelId\nid\nscenarioId\ngroupId\nattractionId\ncostId\ncount\nbudget",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "attractionId"
+        },
+        {
+          "type": "référence",
+          "vers": "fixedcost",
+          "champ": "costId"
+        }
+      ]
+    },
+    {
+      "id": "stepattraction",
+      "nom": "StepAttraction",
+      "champs": "travelId\nid\nscenarioId\nstepId\nattractionId\ncostId\ncount\nbudget",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "attractionId"
+        },
+        {
+          "type": "référence",
+          "vers": "fixedcost",
+          "champ": "costId"
+        }
+      ]
+    },
+    {
+      "id": "stepoption",
+      "nom": "StepOption",
+      "champs": "travelId\nid\nscenarioId\nstepId\nname\ncityId\naccommodationId\naccommodationType\nnights\nbudget\nisSelected",
+      "relations": [
+        {
+          "type": "référence",
+          "vers": "attraction",
+          "champ": "cityId"
+        },
+        {
+          "type": "référence",
+          "vers": "accommodation",
+          "champ": "accommodationId"
+        }
+      ]
+    }
+  ],
+  "roles": [],
+  "droits": {},
+  "porte": []
+}

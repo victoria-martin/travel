@@ -1,0 +1,21 @@
+{
+  "plusTard": [
+    "CLAUDE.md",
+    "PLAN.md",
+    "README.md",
+    "apps-script/",
+    "docs/flows/",
+    "docs/map-user-flows.md",
+    "docs/panneaux-et-modes.md",
+    "docs/protocole-sync-sheet.md",
+    "docs/spec-voyage-toscane.md",
+    "index.html",
+    "js/",
+    "jsconfig.json",
+    "package.json",
+    "pnpm-lock.yaml",
+    "styles.css",
+    "tools/"
+  ],
+  "vuLe": "2026-09-17"
+}

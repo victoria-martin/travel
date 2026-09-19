@@ -1,0 +1,138 @@
+{
+  "flows": [
+    {
+      "id": "ouvrir-voyage",
+      "nom": "Ouvrir le voyage sur lequel je travaille",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand le sélecteur de la barre latérale affiche le voyage voulu et que toutes les pages ne montrent plus que ses données.",
+      "prioritaire": false
+    },
+    {
+      "id": "comparer-hebergements",
+      "nom": "Collecter et comparer des hébergements",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand chaque logement repéré est dans la liste avec son type, son statut, son prix et son lieu, et que je peux le trier, le filtrer et ouvrir sa fiche sans quitter l'écran.",
+      "prioritaire": false
+    },
+    {
+      "id": "recenser-lieux",
+      "nom": "Recenser les lieux et activités à voir",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand chaque lieu ou activité est dans la liste avec son type, son statut, ses tags et ses coordonnées, et qu'un favori marque ceux qu'on veut vraiment.",
+      "prioritaire": false
+    },
+    {
+      "id": "organiser-deplacements",
+      "nom": "Organiser mes déplacements",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand chaque trajet est dans la liste avec son mode, son statut, ses dates, son prix et ses deux extrémités, et que je peux le rattacher à une étape.",
+      "prioritaire": false
+    },
+    {
+      "id": "comparer-locations",
+      "nom": "Comparer des locations de voiture",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand chaque voiture relevée chez un loueur est dans la liste avec son modèle, ses dates, son prix et son statut, et que les offres d'une même location se comparent entre elles.",
+      "prioritaire": false
+    },
+    {
+      "id": "suivre-budget",
+      "nom": "Suivre le budget du voyage",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand l'écran des dépenses montre le bloc Calculé, le bloc Saisi et le total du voyage, chaque charge portant son montant et sa récurrence.",
+      "prioritaire": false
+    },
+    {
+      "id": "monter-scenario",
+      "nom": "Monter un scénario de séjour",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand le scénario a ses étapes dans l'ordre, chacune avec son lieu, ses nuits, son hébergement et ses lieux à voir, et que ses dates se déduisent de la date de départ.",
+      "prioritaire": false
+    },
+    {
+      "id": "chiffrer-scenario",
+      "nom": "Chiffrer un scénario et voir ce qu'il coûte",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand le panneau Argent affiche la voiture, les transports, les dépenses rattachées et le total général du scénario.",
+      "prioritaire": false
+    },
+    {
+      "id": "comparer-scenarios",
+      "nom": "Comparer plusieurs scénarios entre eux",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand les scénarios cochés sont posés côte à côte en cartes, avec leur trajet, leurs nuits et leur montant lisibles d'un coup d'œil.",
+      "prioritaire": false
+    },
+    {
+      "id": "trancher-scenario",
+      "nom": "Trancher quel scénario on retient",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand un scénario est marqué comme retenu, remonte en tête de la liste, et que les scénarios écartés sont archivés hors de la liste.",
+      "prioritaire": false
+    },
+    {
+      "id": "situer-carte",
+      "nom": "Situer tout sur la carte et tracer le trajet",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand la carte montre les hébergements, lieux et étapes filtrés à volonté, et que choisir un scénario dessine sa route entre ses étapes.",
+      "prioritaire": false
+    },
+    {
+      "id": "regler-liste",
+      "nom": "Régler ce que montre une liste",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand la liste affiche les colonnes choisies, dans le tri et l'ordre de vocabulaire voulus, avec les filtres et la recherche appliqués, et que ces réglages sont retrouvés à la réouverture.",
+      "prioritaire": false
+    },
+    {
+      "id": "noter-idees",
+      "nom": "Noter des idées en vrac sur le voyage",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand le bloc-notes du voyage contient le texte saisi et qu'il est enregistré sans autre geste.",
+      "prioritaire": false
+    },
+    {
+      "id": "suivre-a-faire",
+      "nom": "Suivre ce qu'il reste à trancher",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand chaque liste à faire est construite depuis une ressource et une colonne, et que les valeurs suivies sont cochables ligne à ligne.",
+      "prioritaire": false
+    },
+    {
+      "id": "travailler-a-plusieurs",
+      "nom": "Travailler à plusieurs sur les mêmes données",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand le Sheet est branché, que l'indicateur de la barre latérale dit la synchro à jour, et que mes modifications faites hors ligne sont reparties sans écraser celles de l'autre.",
+      "prioritaire": false
+    },
+    {
+      "id": "preparer-valise",
+      "nom": "Préparer ma valise",
+      "phrase": "",
+      "liens": {},
+      "fini": "C'est fini quand la liste de ce qu'on emporte est cochée item par item, avec son compteur d'avancement dans l'en-tête.",
+      "prioritaire": false
+    }
+  ],
+  "porte": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

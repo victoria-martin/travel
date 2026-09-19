@@ -1,0 +1,8 @@
+{
+  "slug": "travel-analyzed",
+  "nom": "travel-analyzed",
+  "type": "app-web",
+  "chemin": "/Users/victoriamartin/dev/travel",
+  "board": "http://localhost:4321",
+  "cree": "2026-09-16"
+}

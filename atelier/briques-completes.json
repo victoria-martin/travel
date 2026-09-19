@@ -1,0 +1,2172 @@
+{
+  "briques": [
+    {
+      "nom": "escapeHtml",
+      "quoi": "Échappe les cinq caractères dangereux avant interpolation dans un template HTML.",
+      "io": "valeur quelconque → chaîne HTML sûre",
+      "langage": "js",
+      "fichier": "js/escape-html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "uid",
+      "quoi": "Fabrique un identifiant court aléatoire + horodaté pour toute entité créée côté client.",
+      "io": "rien → id (chaîne)",
+      "langage": "js",
+      "fichier": "js/uid.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "svgIcon",
+      "quoi": "Rend une icône Lucide embarquée, à la couleur et à la taille du texte porteur.",
+      "io": "nom d'icône + { fill, className } → markup SVG",
+      "langage": "js",
+      "fichier": "js/icons.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "ICON_BODIES",
+      "quoi": "Table des corps SVG Lucide copiés dans le dépôt pour fonctionner hors ligne.",
+      "io": "nom d'icône → corps SVG (chaîne)",
+      "langage": "js",
+      "fichier": "js/icons.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "state",
+      "quoi": "Unique global portant les douze collections de données de l'app.",
+      "io": "rien → state (objet de collections) ou null avant chargement",
+      "langage": "js",
+      "fichier": "js/state.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "readStore",
+      "quoi": "Lit une clé localStorage en JSON, en dégradant sur null au moindre échec.",
+      "io": "clé de stockage → objet ou null",
+      "langage": "js",
+      "fichier": "js/local-store.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "writeStore",
+      "quoi": "Écrit une valeur JSON dans localStorage et journalise l'échec de quota.",
+      "io": "clé de stockage + valeur → rien (effet localStorage)",
+      "langage": "js",
+      "fichier": "js/local-store.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "readStoreString",
+      "quoi": "Lit une clé localStorage comme texte brut, vide en cas d'échec.",
+      "io": "clé de stockage → chaîne",
+      "langage": "js",
+      "fichier": "js/local-store.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "writeStoreString",
+      "quoi": "Écrit une chaîne brute dans localStorage (URL de synchro).",
+      "io": "clé de stockage + chaîne → rien (effet localStorage)",
+      "langage": "js",
+      "fichier": "js/local-store.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "removeStore",
+      "quoi": "Supprime une clé localStorage sans jamais lever.",
+      "io": "clé de stockage → rien (effet localStorage)",
+      "langage": "js",
+      "fichier": "js/local-store.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "prefs",
+      "quoi": "Préférences d'affichage locales (colonnes masquées, tri, voyage ouvert, replis).",
+      "io": "rien → prefs (objet)",
+      "langage": "js",
+      "fichier": "js/prefs.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "loadPrefs",
+      "quoi": "Charge les préférences du navigateur en les fusionnant sur les valeurs par défaut.",
+      "io": "clé de stockage → prefs hydraté",
+      "langage": "js",
+      "fichier": "js/prefs.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "persistPrefs",
+      "quoi": "Écrit les préférences courantes dans leur clé localStorage dédiée.",
+      "io": "prefs → rien (effet localStorage)",
+      "langage": "js",
+      "fichier": "js/prefs.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "renamePref",
+      "quoi": "Reporte les préférences d'une page renommée sous la nouvelle clé de liste.",
+      "io": "ancien kind + nouveau kind → prefs migré",
+      "langage": "js",
+      "fichier": "js/prefs.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "loadData",
+      "quoi": "Amorce l'app : préférences, cache local migré, route, premier rendu.",
+      "io": "cache localStorage → state + écran rendu",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "migrateData",
+      "quoi": "Fait passer un instantané de données par toutes les reprises de schéma avant usage.",
+      "io": "state brut (local ou Sheet) → state au schéma courant",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "emptyData",
+      "quoi": "Forme vide des douze collections, point de départ d'un navigateur neuf.",
+      "io": "rien → state vide",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "saveNow",
+      "quoi": "Point d'écriture unique : persiste en local et programme l'envoi au Sheet.",
+      "io": "state muté → rien (effets localStorage + push différé)",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "persistState",
+      "quoi": "Écrit le state courant dans le cache local.",
+      "io": "state → rien (effet localStorage)",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "renameKey",
+      "quoi": "Renomme un champ d'une entité sans écraser la nouvelle valeur si elle existe.",
+      "io": "item + ancien champ + nouveau champ → item muté",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "providerIdFromName",
+      "quoi": "Dérive l'id d'un prestataire de son nom pour que les deux côtés de la synchro trouvent le même.",
+      "io": "travelId + mode + nom → id stable",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "carModelIdFromName",
+      "quoi": "Dérive l'id d'un modèle de voiture de son nom, même logique de slug que les prestataires.",
+      "io": "travelId + nom → id stable",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "adoptScenarioSteps",
+      "quoi": "Reprend les étapes à options d'avant les colonnes en étapes + groupes, à identifiants dérivés.",
+      "io": "scenario ancien format → scenario à steps/groups",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "absorbCities",
+      "quoi": "Fusionne l'ancienne collection villes dans les activités et suit les références.",
+      "io": "state avec cities → state sans cities",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "adoptPlace",
+      "quoi": "Normalise une chose localisée : une seule adresse et les quatre niveaux administratifs présents.",
+      "io": "place → place aux champs de lieu complets",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "syncActive",
+      "quoi": "Dit si une URL de Sheet est configurée, condition de tout appel réseau.",
+      "io": "sync.url → booléen",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "mergeCollections",
+      "quoi": "Fusion 3 voies d'une collection par id : ajouts, suppressions et éditions des deux côtés.",
+      "io": "collection distante + locale + base → collection fusionnée",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "mergeStates",
+      "quoi": "Applique la fusion 3 voies aux douze collections, les scénarios par leurs listes filles.",
+      "io": "state distant + local + base → state fusionné",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "mergeScenario",
+      "quoi": "Fusionne un scénario en séparant ses champs propres de ses étapes et groupes.",
+      "io": "scenario distant + local + base → scenario fusionné",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "sheetGet",
+      "quoi": "Lit l'état complet publié par l'Apps Script.",
+      "io": "sync.url → { rev, state }",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "sheetPost",
+      "quoi": "Envoie un payload au Sheet en text/plain pour éviter le préflight CORS.",
+      "io": "payload de push → { rev, state } ou { conflict }",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "parseSheetResponse",
+      "quoi": "Décode et valide une réponse Apps Script, et migre le state qu'elle porte.",
+      "io": "texte de réponse → payload (state migré) ou erreur levée",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "pullFromSheet",
+      "quoi": "Relit le Sheet et n'applique que si la révision a bougé.",
+      "io": "sync.rev → state fusionné + statut de synchro",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "pushToSheet",
+      "quoi": "Envoie le state, refusionne en cas de conflit, réessaie sur erreur.",
+      "io": "state + sync.rev → nouvelle base de synchro + statut",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "schedulePush",
+      "quoi": "Débounce l'envoi au Sheet pour qu'une rafale de gestes ne fasse qu'un push.",
+      "io": "rien → push différé",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "syncStatusHtml",
+      "quoi": "Bouton de la sidebar peignant l'état de synchro (off, lecture, envoi, ok, conflit, erreur).",
+      "io": "sync.status + message → markup HTML",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "deepClone",
+      "quoi": "Clone profond par JSON, utilisé partout où un instantané ne doit rien partager.",
+      "io": "valeur → copie indépendante",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "sameJson",
+      "quoi": "Égalité structurelle par sérialisation, pour éviter un rendu ou un push inutile.",
+      "io": "deux valeurs → booléen",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "render",
+      "quoi": "Rebâtit toute l'app (sidebar + vue + modale) en conservant le scroll de l'écran.",
+      "io": "state + view + prefs → DOM complet",
+      "langage": "js",
+      "fichier": "js/render.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "renderWithTransition",
+      "quoi": "Enveloppe un rendu dans une View Transition quand le navigateur sait animer.",
+      "io": "rien → DOM complet animé",
+      "langage": "js",
+      "fichier": "js/render.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "renderMain",
+      "quoi": "Aiguille la vue courante vers son render…View et suit la hauteur de l'en-tête collant.",
+      "io": "view → markup de la vue dans #main",
+      "langage": "js",
+      "fichier": "js/render.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "navBtn",
+      "quoi": "Bouton de navigation de la sidebar, actif selon la vue courante.",
+      "io": "clé de vue + icône + libellé → markup HTML",
+      "langage": "js",
+      "fichier": "js/render.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "applyRoute",
+      "quoi": "Lit le hash et en déduit la vue, en retombant sur la liste si le scénario est inconnu.",
+      "io": "location.hash → view (+ activeScenarioId)",
+      "langage": "js",
+      "fichier": "js/router.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "goTo",
+      "quoi": "Change de vue en passant par le hash, seule source de vérité de la navigation.",
+      "io": "clé de vue → hash + rendu",
+      "langage": "js",
+      "fichier": "js/router.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "routeHash",
+      "quoi": "Calcule le hash qui représente l'état de navigation courant.",
+      "io": "view + activeScenarioId → hash (chaîne)",
+      "langage": "js",
+      "fichier": "js/router.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "currentTravelId",
+      "quoi": "Id du voyage ouvert, avec repli sur le premier si la préférence pointe un voyage disparu.",
+      "io": "prefs.travelId + state.travels → travelId ou null",
+      "langage": "js",
+      "fichier": "js/current-travel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "ofCurrentTravel",
+      "quoi": "Filtre n'importe quelle collection sur le voyage ouvert — porte d'entrée de toutes les vues.",
+      "io": "items → items du voyage courant",
+      "langage": "js",
+      "fichier": "js/current-travel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "openTravel",
+      "quoi": "Enregistre le voyage ouvert comme préférence locale (rien ne part au Sheet).",
+      "io": "travelId → prefs persisté",
+      "langage": "js",
+      "fichier": "js/current-travel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "travelerCount",
+      "quoi": "Nombre de voyageurs du voyage ouvert, multiplicateur des montants par personne.",
+      "io": "travel → entier",
+      "langage": "js",
+      "fichier": "js/current-travel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "flashOnNextRender",
+      "quoi": "Marque le nœud à allumer et à ramener sous les yeux au prochain rendu.",
+      "io": "id de nœud DOM → demande consommée par applyFlash",
+      "langage": "js",
+      "fichier": "js/flash.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "applyFlash",
+      "quoi": "Allume et scrolle vers le nœud demandé, une seule fois par rendu.",
+      "io": "id de nœud DOM → effet visuel",
+      "langage": "js",
+      "fichier": "js/flash.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "collapseThen",
+      "quoi": "Replie des nœuds avant d'appliquer la mutation qui les fait disparaître.",
+      "io": "liste d'ids + mutation → mutation différée après l'animation",
+      "langage": "js",
+      "fichier": "js/flash.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "FLOATING_PANELS",
+      "quoi": "Sélecteur des panneaux flottants que l'écouteur global de clic referme en capture.",
+      "io": "clic document → details fermé + globale d'ouverture remise",
+      "langage": "js",
+      "fichier": "js/close-on-outside-click.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "COLUMN_SETS",
+      "quoi": "Registre des descripteurs de colonnes par kind de liste, alimenté par chaque domaine.",
+      "io": "kind → liste de descripteurs de colonnes",
+      "langage": "js",
+      "fichier": "js/columns.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "columnsFor",
+      "quoi": "Rend les colonnes déclarées pour un kind, liste vide si le kind est inconnu.",
+      "io": "kind → liste de descripteurs de colonnes",
+      "langage": "js",
+      "fichier": "js/columns.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "visibleColumns",
+      "quoi": "Colonnes réellement affichées : les verrouillées plus celles que les préférences ne masquent pas.",
+      "io": "kind + prefs.hiddenColumns → liste de descripteurs de colonnes",
+      "langage": "js",
+      "fichier": "js/columns.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toggleColumn",
+      "quoi": "Masque ou remontre une colonne et persiste le choix par kind.",
+      "io": "kind + clé de colonne → prefs persisté + rendu",
+      "langage": "js",
+      "fichier": "js/columns.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "columnPicker",
+      "quoi": "Panneau de barre listant les colonnes masquables d'une liste avec leur case.",
+      "io": "kind → markup HTML (toolbarPanel)",
+      "langage": "js",
+      "fichier": "js/columns.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "sortCriteria",
+      "quoi": "Niveaux de tri effectifs d'une liste : préférence, sinon défaut, les niveaux dictionnaires forcés en croissant.",
+      "io": "kind → liste de critères { clé de colonne, sens }",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "sortItems",
+      "quoi": "Trie des items sur les niveaux configurés, le premier critère qui sépare l'emportant.",
+      "io": "kind + items → items triés",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "columnSortValue",
+      "quoi": "Valeur de tri d'une cellule, remplacée par le rang du mot pour une colonne dictionnaire.",
+      "io": "descripteur de colonne + item → nombre ou chaîne comparable",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "compareValues",
+      "quoi": "Comparateur unique : numérique entre nombres, localeCompare français sinon.",
+      "io": "deux valeurs de tri → entier de comparaison",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "columnHeader",
+      "quoi": "Cellule d'en-tête de tableau, cliquable et fléchée quand la colonne est triable.",
+      "io": "kind + descripteur de colonne → markup <th>",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "sortPanel",
+      "quoi": "Panneau de barre où s'empilent, s'ordonnent et se retirent les niveaux de tri.",
+      "io": "kind → markup HTML (toolbarPanel)",
+      "langage": "js",
+      "fichier": "js/sort.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "sortOrderWords",
+      "quoi": "Vocabulaire d'une colonne dictionnaire dans l'ordre choisi par le lecteur, les mots neufs en fin.",
+      "io": "descripteur d'ordre { clé, dict } → liste de mots",
+      "langage": "js",
+      "fichier": "js/sort-order.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "sortOrderIndex",
+      "quoi": "Rang d'un mot dans l'ordre choisi, le mot inconnu passant en dernier.",
+      "io": "descripteur d'ordre + mot → entier",
+      "langage": "js",
+      "fichier": "js/sort-order.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "moveSortOrderWord",
+      "quoi": "Déplace un mot avant ou après un autre dans l'ordre de tri et persiste.",
+      "io": "descripteur d'ordre + mot déplacé + mot cible + avant → prefs persisté + rendu",
+      "langage": "js",
+      "fichier": "js/sort-order.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "sortOrderMenu",
+      "quoi": "Menu où l'on réarrange par glisser-déposer les mots d'un niveau dictionnaire.",
+      "io": "kind + descripteur de colonne → markup HTML (inlineDropdown)",
+      "langage": "js",
+      "fichier": "js/sort-order-menu.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "listTable",
+      "quoi": "Rend le tableau commun à toutes les listes depuis les colonnes visibles du kind.",
+      "io": "kind + items → markup de table",
+      "langage": "js",
+      "fichier": "js/views/table.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "listRow",
+      "quoi": "Rend une ligne, cliquable-ouvrable si le kind a enregistré son ROW_CLICKS.",
+      "io": "kind + item + colonnes → markup <tr>",
+      "langage": "js",
+      "fichier": "js/views/table.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "openListRow",
+      "quoi": "Ouvre la fiche d'une ligne, sauf si le clic a atterri sur une cellule qui agit d'elle-même.",
+      "io": "évènement + kind + id → ouverture de fiche ou rien",
+      "langage": "js",
+      "fichier": "js/views/table.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "ROW_CLICKS",
+      "quoi": "Registre du geste d'ouverture d'une ligne, déclaré par le domaine qui en a un.",
+      "io": "kind → fonction (id → ouverture)",
+      "langage": "js",
+      "fichier": "js/views/table.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "inlineDropdown",
+      "quoi": "Disclosure commune à tous les menus inline, son ouverture tenue dans une globale.",
+      "io": "clé de menu + classe + markup interne → markup <details>",
+      "langage": "js",
+      "fichier": "js/views/inline-dropdown.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "placeInlineMenu",
+      "quoi": "Positionne un menu en coordonnées viewport pour qu'aucun conteneur scrollable ne le rogne.",
+      "io": "nœud de menu + nœud déclencheur → styles top/left/maxHeight",
+      "langage": "js",
+      "fichier": "js/views/inline-dropdown.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "placeOpenInlineMenu",
+      "quoi": "Replace tous les menus ouverts après un rendu ou un redimensionnement.",
+      "io": "DOM → menus repositionnés",
+      "langage": "js",
+      "fichier": "js/views/inline-dropdown.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "closeOpenInlineMenu",
+      "quoi": "Ferme les menus inline ouverts et oublie l'ancre placée.",
+      "io": "rien → details fermés + globale remise",
+      "langage": "js",
+      "fichier": "js/views/inline-dropdown.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "tagLabel",
+      "quoi": "Couple emoji + libellé d'un mot de vocabulaire, forme unique de toutes les pastilles.",
+      "io": "emoji + libellé → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/inline-dropdown.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "staticTag",
+      "quoi": "Pastille d'un mot non modifiable ici, sans le geste du menu.",
+      "io": "mot { emoji, label } → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/inline-tag.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toolbarButton",
+      "quoi": "Bouton de barre d'outils, icône seule ou icône + libellé selon la préférence.",
+      "io": "{ icône, libellé, onclick, actif } → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/toolbar/button.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toolbarFace",
+      "quoi": "Face d'un bouton de barre : l'icône, et le libellé si la préférence le veut.",
+      "io": "icône + libellé → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/toolbar/button.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toolbarPanel",
+      "quoi": "Bouton de barre qui déploie son propre panneau, l'ouverture tenue dans une globale par clé.",
+      "io": "{ clé, icône, libellé, compte, corps } → markup <details>",
+      "langage": "js",
+      "fichier": "js/views/toolbar/panel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toolbarToggleGroup",
+      "quoi": "Groupe de boutons exclusifs d'une barre (tableau / cartes).",
+      "io": "liste d'options { icône, libellé, onclick, actif } → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/toolbar/toggle-group.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "toolbarMenu",
+      "quoi": "Le ⋮ d'une liste, qui rouvre les réglages d'affichage sans quitter l'écran.",
+      "io": "rien → markup HTML (toolbarPanel)",
+      "langage": "js",
+      "fichier": "js/views/toolbar/menu.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "settingsBlocks",
+      "quoi": "Blocs de réglages d'affichage partagés par la sidebar et le ⋮ des listes.",
+      "io": "prefs → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/settings/blocks.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "switchField",
+      "quoi": "Interrupteur d'une préférence à deux états, case à cocher repeinte.",
+      "io": "libellé + état + onChange → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/switch-field.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "showButtonLabels",
+      "quoi": "Dit si les boutons de barre affichent leur libellé (préférence globale).",
+      "io": "prefs → booléen",
+      "langage": "js",
+      "fichier": "js/views/button-labels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "emptyState",
+      "quoi": "Bloc « rien à afficher » commun à toutes les listes et blocs vides.",
+      "io": "titre + sous-titre → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/empty-state.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "externalLink",
+      "quoi": "Lien sortant d'une cellule ou d'une popup, ouvert dans un nouvel onglet.",
+      "io": "url + libellé HTML → markup <a>",
+      "langage": "js",
+      "fichier": "js/views/external-link.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "linkButton",
+      "quoi": "Même lien sortant, peint en bouton pour une carte.",
+      "io": "url + libellé HTML → markup <a>",
+      "langage": "js",
+      "fichier": "js/views/external-link.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "favoriteStar",
+      "quoi": "Étoile de favori, pleine ou vide, avec son geste de bascule.",
+      "io": "booléen favori + onclick → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/favorite-star.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterPill",
+      "quoi": "Pastille cliquable qui garde ou lâche une valeur de filtre.",
+      "io": "{ libellé, actif, onclick } → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/filter-pills.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "tagChips",
+      "quoi": "Rend une liste de tags libres en pastilles non modifiables.",
+      "io": "liste de tags → markup HTML ou chaîne vide",
+      "langage": "js",
+      "fichier": "js/views/tags.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "tagsField",
+      "quoi": "Champ tags d'une modale : écrit dans le payload et ne repeint que son bloc.",
+      "io": "payload + { champ, libellé, vocabulaire } → markup HTML + payload muté",
+      "langage": "js",
+      "fichier": "js/views/tags-field.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "tagsCell",
+      "quoi": "Cellule tags éditable sur place, une seule en édition à la fois, sans rendu global.",
+      "io": "item + { champ, getter, vocabulaire, libellé d'ajout } → markup HTML + item muté",
+      "langage": "js",
+      "fichier": "js/views/tags-cell.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "editableText",
+      "quoi": "Span contenteditable qui enregistre au blur, sans re-rendre l'écran.",
+      "io": "valeur + handler + { clé, placeholder } → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/inline-edit.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "syncEditable",
+      "quoi": "Resynchronise à la main les champs éditables qui partagent une même clé.",
+      "io": "clé d'éditable + valeur → nœuds DOM mis à jour",
+      "langage": "js",
+      "fichier": "js/views/inline-edit.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "commitOnEnter",
+      "quoi": "Entrée valide une édition inline en sortant du champ.",
+      "io": "évènement clavier → blur du champ",
+      "langage": "js",
+      "fichier": "js/views/inline-edit.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "wordOptions",
+      "quoi": "Les <option> d'un vocabulaire figé, pour tous les selects de dictionnaire.",
+      "io": "dict de mots + clé sélectionnée → markup d'options",
+      "langage": "js",
+      "fichier": "js/views/word-options.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "deleteItem",
+      "quoi": "Supprime une entité d'une collection après confirmation, puis enregistre.",
+      "io": "nom de collection + id → state muté + rendu",
+      "langage": "js",
+      "fichier": "js/views/delete-item.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "editButton",
+      "quoi": "Bouton crayon d'une cellule d'actions, qui ouvre la modale du domaine.",
+      "io": "type de modale + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cells/actions/edit-button.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "deleteButton",
+      "quoi": "Bouton corbeille d'une cellule d'actions, branché sur deleteItem.",
+      "io": "nom de collection + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cells/actions/delete-button.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "duplicateButton",
+      "quoi": "Bouton ⧉ d'une cellule d'actions, le geste étant fourni par l'appelant.",
+      "io": "onclick → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cells/actions/duplicate-button.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "cardEditButton",
+      "quoi": "Bouton Modifier d'une carte, équivalent carte de editButton.",
+      "io": "type de modale + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cards/actions/edit-button.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "cardDeleteButton",
+      "quoi": "Bouton Suppr. d'une carte, équivalent carte de deleteButton.",
+      "io": "nom de collection + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cards/actions/delete-button.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "textCell",
+      "quoi": "Cellule de texte échappé, tiret quand la valeur est vide.",
+      "io": "valeur → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cells/text-cell.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "overTopHalf",
+      "quoi": "Dit si le curseur est dans la moitié haute d'un élément, pour choisir avant/après au drop.",
+      "io": "nœud DOM + ordonnée du curseur → booléen",
+      "langage": "js",
+      "fichier": "js/views/drag.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "markDrop",
+      "quoi": "Peint sur l'élément survolé la ligne où la chose glissée va atterrir.",
+      "io": "nœud DOM + ordonnée + classes avant/après → classes DOM",
+      "langage": "js",
+      "fichier": "js/views/drag.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "priceNumber",
+      "quoi": "Extrait le nombre d'un prix saisi à la main (« 1 200,50 € »).",
+      "io": "prix saisi → nombre",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "hasPriceValue",
+      "quoi": "Dit si un montant a été saisi, zéro compris, là où 0 et vide diffèrent.",
+      "io": "prix saisi → booléen",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "formatEuros",
+      "quoi": "Formate un montant en euros arrondis à la française.",
+      "io": "nombre → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "formatRate",
+      "quoi": "Formate un taux à ses décimales près (essence au litre, péage au km).",
+      "io": "nombre → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "priceRange",
+      "quoi": "Fourchette de prix d'une entité, réduite à un montant si les bornes se rejoignent.",
+      "io": "entité { amountMin, amountMax } → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "priceLabel",
+      "quoi": "Ce qu'une entité affiche comme prix : sa fourchette, sinon son budget, sinon un tiret.",
+      "io": "entité { amountMin, amountMax, budget } → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "firmPrice",
+      "quoi": "Montant unique d'une entité, null quand la fourchette reste ouverte — ce qui entre dans un total.",
+      "io": "entité { amountMin, amountMax, budget } → nombre ou null",
+      "langage": "js",
+      "fichier": "js/views/price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "EXPENSE_RECURRENCES",
+      "quoi": "Vocabulaire de ce qu'une dépense multiplie, chaque entrée portant sa fonction de compte.",
+      "io": "clé de récurrence → mot { label, emoji, unit, count(span) }",
+      "langage": "js",
+      "fichier": "js/expense-recurrences.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "expenseAmount",
+      "quoi": "Montant d'une dépense compté sur une durée : le montant unitaire fois sa récurrence.",
+      "io": "dépense + span { nights, days, travelers } → nombre",
+      "langage": "js",
+      "fichier": "js/expense-recurrences.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "expenseAmountLabel",
+      "quoi": "Montant d'une dépense hors scénario, gardant son unité faute de durée.",
+      "io": "dépense → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/expense-recurrences.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "PROVIDER_OPTION_UNITS",
+      "quoi": "Vocabulaire de ce qu'une option de loueur se compte, et de ce qui la répète.",
+      "io": "clé d'unité → mot { label, suffix, per }",
+      "langage": "js",
+      "fichier": "js/provider-option-units.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "optionAmount",
+      "quoi": "Ce qu'une option de loueur coûte sur une durée, forfait ou prix répété.",
+      "io": "option + nombre de jours → nombre",
+      "langage": "js",
+      "fichier": "js/views/option-amount.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "optionsTotal",
+      "quoi": "Somme d'un panier d'options de loueur sur une durée.",
+      "io": "liste d'options + nombre de jours → nombre",
+      "langage": "js",
+      "fichier": "js/views/option-amount.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accStatus",
+      "quoi": "Mot du statut d'un hébergement, avec repli sur « non renseigné ».",
+      "io": "clé de statut → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/accommodation-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accStatusFromText",
+      "quoi": "Retrouve une clé de statut depuis un texte collé (import presse-papier).",
+      "io": "texte libre → clé de statut ou vide",
+      "langage": "js",
+      "fichier": "js/accommodation-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "isBookedAccommodation",
+      "quoi": "Dit si un hébergement est réservé, seul statut que l'écran marque de lui-même.",
+      "io": "acc → booléen",
+      "langage": "js",
+      "fichier": "js/accommodation-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accType",
+      "quoi": "Mot du type d'hébergement, avec sa couleur de carte et ses alias d'import.",
+      "io": "clé de type → mot { label, emoji, color, aliases }",
+      "langage": "js",
+      "fichier": "js/accommodation-types.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accTypeFromText",
+      "quoi": "Devine le type d'hébergement d'un texte collé par ses alias.",
+      "io": "texte libre → clé de type ou vide",
+      "langage": "js",
+      "fichier": "js/accommodation-types.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "attractionType",
+      "quoi": "Mot du type d'un lieu ou d'une activité, couleur de carte comprise.",
+      "io": "clé de type → mot { label, emoji, color }",
+      "langage": "js",
+      "fichier": "js/attraction-types.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "attractionStatus",
+      "quoi": "Mot du statut d'une activité (à trier → vu), repli compris.",
+      "io": "clé de statut → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/attraction-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "transportMode",
+      "quoi": "Mot du mode d'un trajet, portant sa couleur et s'il a une compagnie.",
+      "io": "clé de mode → mot { label, emoji, color, carrier }",
+      "langage": "js",
+      "fichier": "js/transport-modes.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "transportStatus",
+      "quoi": "Mot du statut d'un trajet, repli compris.",
+      "io": "clé de statut → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/transport-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "carStatus",
+      "quoi": "Mot du statut d'une offre de voiture, repli compris.",
+      "io": "clé de statut → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/car-statuses.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "carFuel",
+      "quoi": "Mot de la motorisation d'un modèle, repli compris.",
+      "io": "clé de carburant → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/car-fuels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "carGearbox",
+      "quoi": "Mot de la boîte de vitesses d'un modèle, repli compris.",
+      "io": "clé de boîte → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/car-gearboxes.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "travelStatus",
+      "quoi": "Mot du statut d'un voyage (idée → passé), repli compris.",
+      "io": "clé de statut → mot { label, emoji }",
+      "langage": "js",
+      "fichier": "js/travel-statuses.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "<dict>Key",
+      "quoi": "Valide une clé de vocabulaire et rend vide si le mot est inconnu — même fonction écrite dans chaque dictionnaire.",
+      "io": "clé supposée → clé de vocabulaire ou vide",
+      "langage": "js",
+      "fichier": "js/accommodation-statuses.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "PLACE_LEVELS",
+      "quoi": "Les quatre niveaux administratifs d'un lieu, du plus large au plus fin, avec leurs libellés.",
+      "io": "rien → liste de niveaux { key, label, placeholder }",
+      "langage": "js",
+      "fichier": "js/views/locate/place-levels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "placeLevelsOf",
+      "quoi": "Extrait les quatre niveaux d'une source quelconque en les normalisant à vide.",
+      "io": "source localisée → place { country, region, county, city }",
+      "langage": "js",
+      "fichier": "js/views/locate/place-levels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "placeLevelsLabel",
+      "quoi": "Fil d'Ariane lisible d'un lieu, du plus fin au plus large.",
+      "io": "place → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-labels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "coordsLabel",
+      "quoi": "Coordonnées d'un lieu affichées à quatre décimales, tiret sans position.",
+      "io": "place { lat, lng } → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-labels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "locateFields",
+      "quoi": "Bloc de localisation partagé par les modales hébergement et activité (adresse, coordonnées, niveaux).",
+      "io": "payload localisé → markup HTML à ids fixes",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-fields.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "readLocateFields",
+      "quoi": "Relit le bloc de localisation depuis le DOM au moment d'enregistrer.",
+      "io": "DOM de la modale → place { address, lat, lng, niveaux }",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-actions.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "locateAddress",
+      "quoi": "Géocode l'adresse saisie et propose les résultats à choisir.",
+      "io": "adresse saisie → liste de candidats affichée + statut",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-actions.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "applyGeocodeMatch",
+      "quoi": "Verse le candidat choisi dans le bloc de localisation et enregistre la fiche aussitôt.",
+      "io": "rang du candidat → champs remplis + item écrit",
+      "langage": "js",
+      "fichier": "js/views/locate/locate-actions.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "geocodeCandidates",
+      "quoi": "Interroge Nominatim et rend les candidats normalisés en places.",
+      "io": "adresse → liste de places { label, lat, lng, niveaux }",
+      "langage": "js",
+      "fichier": "js/geocode.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "locationFromNominatim",
+      "quoi": "Traduit un résultat Nominatim en place aux quatre niveaux de l'app.",
+      "io": "résultat Nominatim → place",
+      "langage": "js",
+      "fichier": "js/geocode.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "setGeocodeStatus",
+      "quoi": "Écrit la ligne d'état d'une modale et bloque son bouton d'enregistrement pendant un appel.",
+      "io": "message + occupé → DOM de la modale",
+      "langage": "js",
+      "fichier": "js/modals/geocode-status.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "fetchRoute",
+      "quoi": "Trace la route OSRM d'une suite de points, une seule requête partagée par appelant grâce au cache.",
+      "io": "liste de points [lat, lng] → { line, legs }",
+      "langage": "js",
+      "fichier": "js/routing.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "routeDistance",
+      "quoi": "Distance de la dernière route calculée pour ces points, null tant qu'elle n'est pas revenue.",
+      "io": "liste de points → mètres ou null",
+      "langage": "js",
+      "fichier": "js/routing.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "routeKey",
+      "quoi": "Clé de cache d'une route : ses points arrondis à cinq décimales.",
+      "io": "liste de points → clé (chaîne)",
+      "langage": "js",
+      "fichier": "js/routing.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "createLeafletMap",
+      "quoi": "Crée une carte Leaflet centrée par défaut avec la couche OpenStreetMap.",
+      "io": "id d'élément → instance de carte",
+      "langage": "js",
+      "fichier": "js/views/leaflet-base.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "fitToPoints",
+      "quoi": "Cadre une carte sur ses points, ou la centre quand il n'y en a qu'un.",
+      "io": "carte + liste de points → vue cadrée",
+      "langage": "js",
+      "fichier": "js/views/leaflet-base.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "MODAL_TYPES",
+      "quoi": "Registre des modales : comment naît leur payload, comment se rend leur corps, si elles éditent.",
+      "io": "type de modale → { open, body, after, edits, width }",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "openModal",
+      "quoi": "Ouvre une modale centrée sur un payload cloné en profondeur.",
+      "io": "type de modale + arguments → modal + rendu",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "openSheet",
+      "quoi": "Ouvre le même formulaire en panneau de droite, décidé à l'ouverture et non par le type.",
+      "io": "type de modale + arguments → modal en panneau + rendu",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "closeModal",
+      "quoi": "Ferme la modale et oublie son instantané de champs.",
+      "io": "rien → modal null + rendu",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "dismissModal",
+      "quoi": "Sur saisie non enregistrée, demande quoi en faire par-dessus le formulaire sans le re-rendre.",
+      "io": "état des champs → question DOM ou fermeture",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "modalIsDirty",
+      "quoi": "Compare l'état courant des champs à l'instantané d'ouverture pour savoir si on a tapé.",
+      "io": "DOM de la modale + payload → booléen",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "submitModal",
+      "quoi": "Presse le bouton d'enregistrement du formulaire, seul point d'écriture d'une modale.",
+      "io": "rien → clic sur #f-save",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "renderModal",
+      "quoi": "Pose la modale ou le panneau par-dessus l'app depuis son type, et prend l'instantané des champs.",
+      "io": "modal → DOM ajouté à #app",
+      "langage": "js",
+      "fichier": "js/modals/modal.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "LIST_RESOURCES",
+      "quoi": "Les cinq ressources filtrables : leur collection et la clé de colonnes de leur page.",
+      "io": "kind → ressource { label, icon, items() }",
+      "langage": "js",
+      "fichier": "js/views/filters/resources.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "resourceItems",
+      "quoi": "Items d'une ressource, ramenés au voyage courant et triés comme sa page.",
+      "io": "kind → items triés",
+      "langage": "js",
+      "fichier": "js/views/filters/resources.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterableColumns",
+      "quoi": "Colonnes d'un kind sur lesquelles filtrer a un sens (elles portent des mots, plusieurs valeurs en usage).",
+      "io": "kind → liste de descripteurs de colonnes",
+      "langage": "js",
+      "fichier": "js/views/filters/filterable.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterValues",
+      "quoi": "Valeurs réellement portées par les lignes sur une colonne, dans l'ordre de son vocabulaire.",
+      "io": "kind + descripteur de colonne → liste de valeurs",
+      "langage": "js",
+      "fichier": "js/views/filters/filterable.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "itemFilterValues",
+      "quoi": "Ce qu'une ligne porte sur une colonne : un mot, ou plusieurs si la colonne tient une liste.",
+      "io": "item + descripteur de colonne → liste de valeurs",
+      "langage": "js",
+      "fichier": "js/views/filters/filterable.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterValueLabel",
+      "quoi": "Libellé d'une valeur de filtre : sa pastille si la colonne a un vocabulaire, son texte sinon.",
+      "io": "descripteur de colonne + valeur → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/filters/filterable.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterState",
+      "quoi": "Pile de filtres d'un écran : la ressource lue et ses niveaux, par scope et non par collection.",
+      "io": "scope → { kind, levels }",
+      "langage": "js",
+      "fichier": "js/views/filters/levels.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "keptByFilters",
+      "quoi": "Dit si une ligne passe la pile de filtres d'un écran (OU dans un niveau, ET entre niveaux).",
+      "io": "scope + item → booléen",
+      "langage": "js",
+      "fichier": "js/views/filters/levels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "pruneFilterLevels",
+      "quoi": "Élague les niveaux et valeurs qui ne désignent plus rien après un changement de données.",
+      "io": "scope → niveaux nettoyés",
+      "langage": "js",
+      "fichier": "js/views/filters/levels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "activeFilterCount",
+      "quoi": "Nombre de niveaux qui filtrent vraiment, pour le compteur du bouton.",
+      "io": "scope → entier",
+      "langage": "js",
+      "fichier": "js/views/filters/levels.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterPanel",
+      "quoi": "Panneau de barre où s'empilent les niveaux de filtre d'un écran.",
+      "io": "scope → markup HTML (toolbarPanel)",
+      "langage": "js",
+      "fichier": "js/views/filters/panel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterLevelsBlock",
+      "quoi": "La pile de niveaux rendue seule, pour un écran qui en compose plusieurs dans un même bouton.",
+      "io": "scope → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/filters/panel.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterValuesMenu",
+      "quoi": "Menu multi-cases des mots d'un niveau, là où un select ne saurait ni cocher plusieurs ni porter une pastille.",
+      "io": "scope + niveau + rang → markup HTML (inlineDropdown)",
+      "langage": "js",
+      "fichier": "js/views/filters/values-menu.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "filterSearchField",
+      "quoi": "Champ de recherche qui masque les options à la main, sans re-rendre l'écran.",
+      "io": "placeholder → markup HTML + options masquées",
+      "langage": "js",
+      "fichier": "js/views/filters/search.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "listModeToggle",
+      "quoi": "Bascule tableau / cartes d'une liste, mode tenu en mémoire de session par kind.",
+      "io": "kind + mode → markup HTML (toolbarToggleGroup)",
+      "langage": "js",
+      "fichier": "js/views/list-mode.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "get<Entité>",
+      "quoi": "Getter par id d'une collection — la même recherche find(id) est réécrite dans quatorze fichiers de domaine.",
+      "io": "id → item ou undefined",
+      "langage": "js",
+      "fichier": "js/views/attractions/get-attraction.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "empty<Entité>",
+      "quoi": "Forme vide d'une entité, servie au payload d'une modale de création — un par domaine.",
+      "io": "rien → item vierge",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/form.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "upsert<Entité>",
+      "quoi": "Insère ou remplace une entité dans sa collection puis enregistre — recopié à l'identique dans six domaines, inliné dans trois autres.",
+      "io": "item → state muté + enregistrement",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "read<Entité>Form",
+      "quoi": "Relit les champs du DOM et rend l'entité à écrire — un par modale, neuf copies de la même mécanique.",
+      "io": "id + DOM de la modale + payload → item",
+      "langage": "js",
+      "fichier": "js/views/transports/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "save<Entité>",
+      "quoi": "Bouton d'enregistrement d'une modale : lire, upsert, fermer (+ rattachement au scénario ouvrant).",
+      "io": "id → state muté + modale fermée",
+      "langage": "js",
+      "fichier": "js/views/rentals/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "<entité>FieldValue",
+      "quoi": "Lit un champ absent du DOM en gardant la valeur déjà enregistrée — écrit deux fois, pour les hébergements et les trajets.",
+      "io": "id de champ + valeur gardée → chaîne",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "<entité>StatusTag",
+      "quoi": "Pastille-menu qui change un mot de vocabulaire sur une ligne — même corps réécrit pour hébergement, activité, trajet, offre, carburant, boîte.",
+      "io": "item + dict de mots → markup HTML (inlineDropdown) + item muté",
+      "langage": "js",
+      "fichier": "js/views/accommodations/status-tag.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "set<Entité><Champ>",
+      "quoi": "Setter d'un champ sur une entité : écrire, enregistrer, re-rendre — une vingtaine de copies d'une même triade.",
+      "io": "id + valeur → state muté + rendu",
+      "langage": "js",
+      "fichier": "js/views/attractions/status-tag.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "pick<Entité><Champ>",
+      "quoi": "Ferme le menu inline ouvert puis appelle le setter — recopié à côté de chaque pastille-menu.",
+      "io": "id + valeur → menu fermé + state muté",
+      "langage": "js",
+      "fichier": "js/views/attractions/type-dropdown.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "duplicate<Entité>",
+      "quoi": "Duplique une entité en lui donnant un id neuf et un nom suffixé (copie) — cinq copies, plus le cas profond du scénario.",
+      "io": "id → nouvel item dans state + rendu",
+      "langage": "js",
+      "fichier": "js/views/duplicate.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "<domaine>Header",
+      "quoi": "En-tête de page : titre, sous-titre compté, panneaux de tri/filtre/colonnes et boutons — écrit en clair dans dix domaines.",
+      "io": "items → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/accommodations/header.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "repaint<Bloc>",
+      "quoi": "Repeint le seul bloc d'un champ composite sans rendu global, puis rend le focus — sept copies (tags, options, modèles, loueurs).",
+      "io": "payload → innerHTML du bloc + focus",
+      "langage": "js",
+      "fichier": "js/views/providers/modal/option-rows.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "<relation>Field",
+      "quoi": "Champ de mise en relation à cases : lister le catalogue, cocher, créer un mot au vol, repeindre — providerModels, carModelProviders, offerOptions.",
+      "io": "payload + catalogue → markup HTML + payload muté",
+      "langage": "js",
+      "fichier": "js/views/providers/modal/model-rows.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "providerSelectField",
+      "quoi": "Select de prestataire partagé par les modales trajet et offre, avec sa porte « nouveau loueur ».",
+      "io": "id de champ + mode + providerId + callback → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/providers/select-field.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "askNewProvider",
+      "quoi": "Crée un prestataire depuis la saisie en cours sans quitter le formulaire.",
+      "io": "id de select + mode → provider créé + select repeint",
+      "langage": "js",
+      "fichier": "js/views/providers/quick-create.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "providerOptions",
+      "quoi": "Les options d'un catalogue de loueur restreintes à celles qu'on a cochées.",
+      "io": "providerId + liste d'ids d'options → liste d'options",
+      "langage": "js",
+      "fichier": "js/views/providers/get-provider.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "providerName",
+      "quoi": "Nom affichable d'un prestataire depuis son id, partout où une ligne le cite.",
+      "io": "providerId → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/providers/provider-label.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "offerDayPrice",
+      "quoi": "Prix au jour d'une offre de voiture, seul chiffre commun à toutes les comparaisons.",
+      "io": "offer → nombre",
+      "langage": "js",
+      "fichier": "js/views/rentals/offer-price.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "daysBetween",
+      "quoi": "Jours facturés entre deux dates, deux jours entamés comptant pour deux.",
+      "io": "date de début + date de fin → entier",
+      "langage": "js",
+      "fichier": "js/views/rentals/offer-dates.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "offerLabel",
+      "quoi": "Libellé court d'une offre (modèle + loueur), repris par les dépenses dérivées et les scénarios.",
+      "io": "offer → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/rentals/offer-label.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "travelCarModels",
+      "quoi": "Les modèles de voiture du voyage, triés par nom — catalogue de tous les selects de modèle.",
+      "io": "state.carModels → liste de modèles",
+      "langage": "js",
+      "fichier": "js/views/car-models/get-car-model.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "transportEndpointLabel",
+      "quoi": "Libellé d'une extrémité de trajet : le lieu et sa précision.",
+      "io": "attractionId + précision → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/transports/endpoints.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "visibleSteps",
+      "quoi": "Les étapes qui comptent d'un scénario : ni masquées, ni d'un groupe masqué, ni d'une colonne écartée.",
+      "io": "scenario → liste d'étapes",
+      "langage": "js",
+      "fichier": "js/views/scenarios/visible-steps.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stepNights",
+      "quoi": "Nuits d'une étape, lues comme un entier quelle que soit la saisie.",
+      "io": "step → entier",
+      "langage": "js",
+      "fichier": "js/views/scenarios/nights.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "totalNights",
+      "quoi": "Nuits d'un scénario, somme de ses étapes visibles.",
+      "io": "scenario → entier",
+      "langage": "js",
+      "fichier": "js/views/scenarios/nights.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "totalDays",
+      "quoi": "Jours d'un scénario : ses nuits plus un, zéro s'il n'y a pas de nuit.",
+      "io": "scenario → entier",
+      "langage": "js",
+      "fichier": "js/views/scenarios/nights.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "nightsLabel",
+      "quoi": "Libellé accordé d'un nombre de nuits.",
+      "io": "nombre de nuits → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/nights.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scenarioGroups",
+      "quoi": "Les groupes de colonnes d'un scénario, créés à vide si absents.",
+      "io": "scenario → liste de groupes",
+      "langage": "js",
+      "fichier": "js/views/scenarios/groups.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "isStepRetained",
+      "quoi": "Dit si une étape est celle que son groupe retient, ou si elle n'appartient à aucune colonne.",
+      "io": "scenario + step → booléen",
+      "langage": "js",
+      "fichier": "js/views/scenarios/groups.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "optionSteps",
+      "quoi": "Les étapes d'une colonne, dans l'ordre du scénario.",
+      "io": "scenario + optionId → liste d'étapes",
+      "langage": "js",
+      "fichier": "js/views/scenarios/groups.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stepStatus",
+      "quoi": "Où en est une étape, dérivé de son hébergement et de son groupe, jamais écrit.",
+      "io": "scenario + step → clé de statut d'étape",
+      "langage": "js",
+      "fichier": "js/views/scenarios/step-status.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stepStatusBackground",
+      "quoi": "Fond d'un segment de statut d'étape, rayé quand il attend un geste.",
+      "io": "clé de statut d'étape → valeur CSS",
+      "langage": "js",
+      "fichier": "js/views/scenarios/step-status.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stepCost",
+      "quoi": "Ce que coûte une étape : son budget saisi, sinon son hébergement à la nuit, en euros ou en GuestPoints.",
+      "io": "step → cost { euros, guestPoints }",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "addCosts",
+      "quoi": "Additionne deux montants en gardant les deux monnaies séparées.",
+      "io": "deux cost → cost",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "formatCosts",
+      "quoi": "Affiche un montant à deux monnaies (« 420 € + 180 GP »), tiret si rien.",
+      "io": "cost → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scenarioSpan",
+      "quoi": "Sur quoi une dépense rattachée à un scénario se multiplie.",
+      "io": "scenario → span { nights, days, travelers }",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scenarioTotal",
+      "quoi": "Total d'un scénario : hébergements, charges, route et activités, par monnaie.",
+      "io": "scenario → cost { euros, guestPoints }",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accommodationTotals",
+      "quoi": "Nuits et montant des hébergements d'un scénario, une entrée par monnaie.",
+      "io": "scenario → { euros: { amount, nights }, guestPoints: { amount, nights } }",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "accommodationPriceUnit",
+      "quoi": "Monnaie d'un prix d'hébergement (€ ou GP) selon son type.",
+      "io": "acc → chaîne d'unité",
+      "langage": "js",
+      "fichier": "js/views/scenarios/money.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scenarioRoadKm",
+      "quoi": "Kilomètres conduits d'un scénario, null tant que la route OSRM n'est pas revenue.",
+      "io": "scenario → nombre, 0 ou null",
+      "langage": "js",
+      "fichier": "js/views/scenarios/road.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scenarioRoadTotal",
+      "quoi": "Ce que coûte la route : l'essence du modèle retenu plus un péage au kilomètre.",
+      "io": "scenario + tarifs du voyage → nombre",
+      "langage": "js",
+      "fichier": "js/views/scenarios/road.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "coordsFor",
+      "quoi": "Coordonnées d'une étape, prises sur le lieu qu'elle pose, null sans position.",
+      "io": "step → [lat, lng] ou null",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/step-coords.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stepArrival",
+      "quoi": "Date d'arrivée d'une étape, déduite du départ du scénario et des nuits qui précèdent.",
+      "io": "scenario + rang d'étape visible → Date ou null",
+      "langage": "js",
+      "fichier": "js/views/scenarios/step-dates.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "dateRangeLabel",
+      "quoi": "Libellé d'un séjour d'une date à l'autre, ou de la seule arrivée sans nuit.",
+      "io": "Date d'arrivée + nuits → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/step-dates.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "stayRangeLabel",
+      "quoi": "Même séjour écrit court, le mois ne se répétant que s'il est enjambé.",
+      "io": "Date d'arrivée + nuits → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/step-dates.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "nightsByPlace",
+      "quoi": "Regroupe les étapes visibles par lieu revisité, nuits additionnées et séjours listés.",
+      "io": "scenario → liste de lignes { place, acc, nights, steps, dates }",
+      "langage": "js",
+      "fichier": "js/views/scenarios/nights-by-place.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "holderExtras",
+      "quoi": "Les lignes (activités et dépenses) d'une étape ou d'un groupe, créées à vide si absentes.",
+      "io": "holder (step ou group) → liste de lignes",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/extras/get-extras.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "getExtraHolder",
+      "quoi": "Retrouve le porteur d'une ligne, étape ou groupe, dans un scénario.",
+      "io": "scenarioId + holderId → step, group ou null",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/extras/get-extras.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "fillStepLegs",
+      "quoi": "Remplit après rendu les emplacements de tronçons routiers d'un scénario, et met leur hauteur à l'échelle.",
+      "io": "scenario → texte des emplacements + hauteurs",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/step-legs.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "legSlot",
+      "quoi": "Emplacement vide d'un tronçon, rempli quand la route revient, portant le scénario et ce qu'il montre.",
+      "io": "scenario + step + forme de libellé → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/step-legs.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "distanceLabel",
+      "quoi": "Distance affichable en kilomètres, décimale sous dix km.",
+      "io": "mètres → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/step-legs.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "durationLabel",
+      "quoi": "Durée affichable en minutes ou en heures.",
+      "io": "secondes → chaîne affichable",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/step-legs.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "recapRow",
+      "quoi": "Rangée à trois colonnes du récap d'un scénario (libellé, note, montant).",
+      "io": "libellé + montant + classe → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/recap-row.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "recapGroup",
+      "quoi": "Famille repliable du récap, portant son total sur son titre, repli persisté en préférence.",
+      "io": "clé de repli + titre + total + rangées → markup <details>",
+      "langage": "js",
+      "fichier": "js/views/scenarios/detail/total.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "DERIVED_EXPENSE_SOURCES",
+      "quoi": "Les quatre sources de dépenses dérivées d'un voyage, chacune sachant produire ses lignes.",
+      "io": "state → liste de sources { label, view, lines() }",
+      "langage": "js",
+      "fichier": "js/views/expenses/derived.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "derivedExpensesTotal",
+      "quoi": "Somme des dépenses dérivées, les montants ouverts restant dehors.",
+      "io": "state → nombre",
+      "langage": "js",
+      "fichier": "js/views/expenses/derived.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "compareMode",
+      "quoi": "Mode comparer de la liste de scénarios et la sélection en cours, transitoires par nature.",
+      "io": "gestes de la liste → booléen + liste de scenarioId",
+      "langage": "js",
+      "fichier": "js/views/scenarios/compare/mode.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "chosenScenario",
+      "quoi": "Le scénario retenu du voyage, au plus un, démarquant les autres quand on le choisit.",
+      "io": "state.scenarios → scenario ou null",
+      "langage": "js",
+      "fichier": "js/views/scenarios/chosen.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "archivedScenarios",
+      "quoi": "Partage la liste entre scénarios archivés et actifs selon le geste en cours.",
+      "io": "items + globale d'affichage → items",
+      "langage": "js",
+      "fichier": "js/views/scenarios/archive.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "keptOnMap",
+      "quoi": "Dit si un point passe les filtres de la carte (sa pile par collection, les favoris, le scénario tracé).",
+      "io": "kind + item → booléen",
+      "langage": "js",
+      "fichier": "js/views/map/filters.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "markerPoint",
+      "quoi": "Coordonnées d'un item pour la carte, en nourrissant les bornes du cadrage.",
+      "io": "item + bornes → [lat, lng] ou null",
+      "langage": "js",
+      "fichier": "js/views/map/markers.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "popupName",
+      "quoi": "Titre d'une popup de carte, cliquable quand l'item porte un lien.",
+      "io": "item + url → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/map/markers.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "todoListItems",
+      "quoi": "Les lignes d'une liste enregistrée : celles qui portent l'un des mots gardés sur sa colonne.",
+      "io": "liste enregistrée { kind, columnKey, filterValues } → items",
+      "langage": "js",
+      "fichier": "js/views/todo/get-todo-list.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "applyTravelAccent",
+      "quoi": "Peint l'app de la couleur d'accent du voyage ouvert à chaque rendu.",
+      "io": "travel.accentColor → variables CSS du document",
+      "langage": "js",
+      "fichier": "js/views/travels/accent.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "applyTravelTab",
+      "quoi": "Met l'emoji du voyage en favicon et son nom en titre d'onglet.",
+      "io": "travel { emoji, name } → titre + favicon",
+      "langage": "js",
+      "fichier": "js/views/travels/tab.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "travelSelector",
+      "quoi": "Sélecteur de voyage de la sidebar, avec son menu et son sous-titre de dates.",
+      "io": "state.travels + prefs.travelId → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/travels/selector.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "travelFuelPrice",
+      "quoi": "Prix de l'essence du voyage, avec un défaut quand rien n'est saisi.",
+      "io": "travel.fuelPrice → nombre",
+      "langage": "js",
+      "fichier": "js/views/travels/road-rates.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "mixAccent",
+      "quoi": "Mélange une couleur d'accent avec du blanc ou du noir pour dériver ses nuances.",
+      "io": "couleur + pourcentage + couleur de fond → couleur CSS",
+      "langage": "js",
+      "fichier": "js/views/travels/modal/form.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "is<Fournisseur>Url",
+      "quoi": "Reconnaît un lien d'annonce à son domaine avant tout appel — même regex écrite côté front et côté Apps Script.",
+      "io": "url → booléen",
+      "langage": "js",
+      "fichier": "js/booking.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "import<Fournisseur>Link",
+      "quoi": "Flux d'import d'un lien collé : garde anti-double-lecture, appel au Sheet, remplissage, résumé — quatre copies (Booking, Airbnb, HomeExchange, Google Maps).",
+      "io": "url du champ → champs du formulaire remplis + statut",
+      "langage": "js",
+      "fichier": "js/airbnb.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "apply<Fournisseur>",
+      "quoi": "Verse une annonce lue dans les champs encore vides du formulaire et compte ce qui a été rempli.",
+      "io": "annonce lue + table de champs → champs remplis + compte",
+      "langage": "js",
+      "fichier": "js/homeexchange.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "doGet",
+      "quoi": "Point d'entrée GET : aiguille vers un scraper si un paramètre le nomme, sinon publie l'état du Sheet.",
+      "io": "paramètres de requête → JSON { rev, data } ou annonce lue",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "doPost",
+      "quoi": "Point d'entrée POST : sous verrou, refuse en conflit si la révision a bougé, sinon écrit et rend ce qui a été écrit.",
+      "io": "payload { action, baseRev, data } → JSON { rev, data } ou { conflict }",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "COLLECTIONS",
+      "quoi": "Colonnes de chaque onglet du Sheet : source unique de la lecture et de l'écriture.",
+      "io": "nom de collection → liste de noms de colonnes",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "readSheet",
+      "quoi": "Lit un onglet par nom d'en-tête (jamais par index), en rattrapant les en-têtes renommés.",
+      "io": "nom de collection → liste d'items décodés",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "writeSheet",
+      "quoi": "Réécrit un onglet entier en texte brut, en nettoyant les colonnes retirées du schéma.",
+      "io": "nom de collection + items → onglet réécrit",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "encodeCell",
+      "quoi": "Encode une valeur pour une cellule : JSON, booléen, liste jointe ou texte.",
+      "io": "nom de colonne + valeur → chaîne de cellule",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "decodeCell",
+      "quoi": "Décode une cellule dans le type que la colonne annonce (liste, booléen, entier, id nullable).",
+      "io": "nom de colonne + cellule → valeur typée",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "normalizeState",
+      "quoi": "Fait passer le state poussé par l'encodage puis le décodage, pour que le client reçoive exactement ce qu'une relecture donnerait.",
+      "io": "state poussé → state normalisé",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "flattenChild",
+      "quoi": "Aplatit une ligne fille en y posant son rattachement et son voyage, pour son onglet.",
+      "io": "parent + enfant + colonne de rattachement → ligne plate",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "groupByParent",
+      "quoi": "Regroupe des lignes filles par parent et retire les colonnes de rattachement.",
+      "io": "lignes + colonne de rattachement → { parentId: lignes }",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "attachChildren",
+      "quoi": "Rend à chaque étape ou groupe ses listes filles, un onglet par liste.",
+      "io": "parents par scénario + lignes + champs fils → parents imbriqués",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "ensureSheet",
+      "quoi": "Rend l'onglet d'une collection, en reprenant son ancien nom ou en le créant en-têtes compris.",
+      "io": "nom de collection → feuille",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "fingerprint",
+      "quoi": "Empreinte MD5 de l'état, révision comparée à chaque push pour détecter un conflit.",
+      "io": "state → rev (chaîne hexadécimale)",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "externe"
+    },
+    {
+      "nom": "uid",
+      "quoi": "Même générateur d'identifiants que le front, réécrit côté Apps Script pour les lignes sans id.",
+      "io": "rien → id (chaîne)",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "BROWSER_HEADERS",
+      "quoi": "En-têtes de navigateur sans lesquels les sites servent une page réduite sans données structurées.",
+      "io": "rien → en-têtes de requête",
+      "langage": "apps-script",
+      "fichier": "apps-script/Html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "matchOne",
+      "quoi": "Première capture d'une regex dans du HTML, balises retirées et entités décodées.",
+      "io": "html + regex → chaîne nettoyée",
+      "langage": "apps-script",
+      "fichier": "apps-script/Html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "matchFirst",
+      "quoi": "Première capture qui donne quelque chose parmi plusieurs motifs, une page nommant un bloc de plusieurs façons.",
+      "io": "html + liste de regex → chaîne nettoyée",
+      "langage": "apps-script",
+      "fichier": "apps-script/Html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "decodeEntities",
+      "quoi": "Décode les entités HTML numériques et les nommées connues.",
+      "io": "texte → texte",
+      "langage": "apps-script",
+      "fichier": "apps-script/Html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "jsonLdNodes",
+      "quoi": "Rend tous les nœuds JSON-LD d'une page, @graph aplati, chaque scraper reconnaissant le sien.",
+      "io": "html → liste de nœuds JSON-LD",
+      "langage": "apps-script",
+      "fichier": "apps-script/Html.js",
+      "etat": "brique"
+    },
+    {
+      "nom": "scrape<Fournisseur>",
+      "quoi": "Lit une annonce : garde de domaine, fetch, deux sources de la plus stable à la moins stable, erreur lisible — quatre copies d'un même squelette.",
+      "io": "url → annonce lue { name, niveaux, prix… } ou { error }",
+      "langage": "apps-script",
+      "fichier": "apps-script/Booking.js",
+      "etat": "dupliquée"
+    },
+    {
+      "nom": "resolveGoogleMapsUrl",
+      "quoi": "Suit les redirections à la main, UrlFetchApp n'exposant pas l'URL finale d'un lien court.",
+      "io": "url courte → { url finale, html } ou { error }",
+      "langage": "apps-script",
+      "fichier": "apps-script/GoogleMaps.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "googleMapsPoint",
+      "quoi": "Lit la position d'une fiche dans l'URL, le point exact d'abord et le centre de vue à défaut.",
+      "io": "url finale → { lat, lng }",
+      "langage": "apps-script",
+      "fichier": "apps-script/GoogleMaps.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "breadcrumbLevel",
+      "quoi": "Lit un niveau administratif dans le fil d'Ariane HomeExchange (country, admin1..3).",
+      "io": "html + niveau → chaîne",
+      "langage": "apps-script",
+      "fichier": "apps-script/HomeExchange.js",
+      "etat": "inline"
+    },
+    {
+      "nom": "vocabularyDropdown",
+      "quoi": "La pastille-menu générique dont les six <entité>StatusTag sont des copies : un dict, la clé courante, un setter.",
+      "io": "clé de menu + dict de mots + clé courante + setter → markup HTML (inlineDropdown)",
+      "langage": "js",
+      "fichier": "js/views/inline-tag.js",
+      "etat": "à écrire"
+    },
+    {
+      "nom": "getById",
+      "quoi": "Le getter unique que les quatorze get<Entité> réécrivent.",
+      "io": "nom de collection + id → item ou undefined",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "à écrire"
+    },
+    {
+      "nom": "upsertItem",
+      "quoi": "L'insertion-ou-remplacement unique que les neuf save<Entité> réécrivent ou inlinent.",
+      "io": "nom de collection + item → state muté + enregistrement",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "à écrire"
+    },
+    {
+      "nom": "repaintBlock",
+      "quoi": "Le repeint d'un bloc de formulaire avec focus rendu, dont les sept repaint<Bloc> sont des copies.",
+      "io": "id de bloc + markup + id de champ à focus → innerHTML + focus",
+      "langage": "js",
+      "fichier": "js/views/inline-edit.js",
+      "etat": "à écrire"
+    }
+  ]
+}

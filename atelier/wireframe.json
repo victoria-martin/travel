@@ -1,0 +1,9 @@
+{
+  "ecran": "",
+  "espacement": "Aucune échelle nommée : tout en px ad hoc (docs/design-system.md § Ce qui manque pour un vrai design system).",
+  "couleur": ":root, styles.css:4-17 — --paper / --paper-raised (fonds), --ink / --ink-soft (texte), --line (bordures), --stone / --stone-dark (accent primaire), --ochre / --gold (accent secondaire), --rust (danger/suppression), --sage / --sage-pale / --sage-line (accent tertiaire), --white.",
+  "typo": "Non documenté : docs/design-system.md n'a pas de section typographie. Même constat que l'espacement, probablement ad hoc.",
+  "densite": ".card (styles.css:752, fond --paper-raised) · .map-side-panel (styles.css:2475, border-radius 12px, même fond) · deux gabarits de modale .modal / .modal-sheet (styles.css:954/975) — centrée vs panneau latéral plein écran sous 440px.",
+  "etats": "Non documenté : docs/design-system.md audite couleurs/boutons/interrupteur/tags/cartes existants, pas les états vide/chargement/erreur/succès.",
+  "porte": []
+}

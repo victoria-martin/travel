@@ -1,0 +1,497 @@
+{
+  "briques": [
+    {
+      "id": "provideridfromname",
+      "nom": "providerIdFromName",
+      "quoi": "Dérive l'id d'un prestataire de son nom pour que les deux côtés de la synchro trouvent le même.",
+      "io": "travelId + mode + nom → id stable",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "carmodelidfromname",
+      "nom": "carModelIdFromName",
+      "quoi": "Dérive l'id d'un modèle de voiture de son nom, même logique de slug que les prestataires.",
+      "io": "travelId + nom → id stable",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "adoptscenariosteps",
+      "nom": "adoptScenarioSteps",
+      "quoi": "Reprend les étapes à options d'avant les colonnes en étapes + groupes, à identifiants dérivés.",
+      "io": "scenario ancien format → scenario à steps/groups",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "sheetget",
+      "nom": "sheetGet",
+      "quoi": "Lit l'état complet publié par l'Apps Script.",
+      "io": "sync.url → { rev, state }",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "externe"
+    },
+    {
+      "id": "sheetpost",
+      "nom": "sheetPost",
+      "quoi": "Envoie un payload au Sheet en text/plain pour éviter le préflight CORS.",
+      "io": "payload de push → { rev, state } ou { conflict }",
+      "langage": "js",
+      "fichier": "js/sync.js",
+      "etat": "externe"
+    },
+    {
+      "id": "cardeditbutton",
+      "nom": "cardEditButton",
+      "quoi": "Bouton Modifier d'une carte, équivalent carte de editButton.",
+      "io": "type de modale + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cards/actions/edit-button.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "carddeletebutton",
+      "nom": "cardDeleteButton",
+      "quoi": "Bouton Suppr. d'une carte, équivalent carte de deleteButton.",
+      "io": "nom de collection + id → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/cards/actions/delete-button.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "dict-key",
+      "nom": "<dict>Key",
+      "quoi": "Valide une clé de vocabulaire et rend vide si le mot est inconnu — même fonction écrite dans chaque dictionnaire.",
+      "io": "clé supposée → clé de vocabulaire ou vide",
+      "langage": "js",
+      "fichier": "js/accommodation-statuses.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "geocodecandidates",
+      "nom": "geocodeCandidates",
+      "quoi": "Interroge Nominatim et rend les candidats normalisés en places.",
+      "io": "adresse → liste de places { label, lat, lng, niveaux }",
+      "langage": "js",
+      "fichier": "js/geocode.js",
+      "etat": "externe"
+    },
+    {
+      "id": "fetchroute",
+      "nom": "fetchRoute",
+      "quoi": "Trace la route OSRM d'une suite de points, une seule requête partagée par appelant grâce au cache.",
+      "io": "liste de points [lat, lng] → { line, legs }",
+      "langage": "js",
+      "fichier": "js/routing.js",
+      "etat": "externe"
+    },
+    {
+      "id": "createleafletmap",
+      "nom": "createLeafletMap",
+      "quoi": "Crée une carte Leaflet centrée par défaut avec la couche OpenStreetMap.",
+      "io": "id d'élément → instance de carte",
+      "langage": "js",
+      "fichier": "js/views/leaflet-base.js",
+      "etat": "externe"
+    },
+    {
+      "id": "get-entite",
+      "nom": "get<Entité>",
+      "quoi": "Getter par id d'une collection — la même recherche find(id) est réécrite dans quatorze fichiers de domaine.",
+      "io": "id → item ou undefined",
+      "langage": "js",
+      "fichier": "js/views/attractions/get-attraction.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "empty-entite",
+      "nom": "empty<Entité>",
+      "quoi": "Forme vide d'une entité, servie au payload d'une modale de création — un par domaine.",
+      "io": "rien → item vierge",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/form.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "upsert-entite",
+      "nom": "upsert<Entité>",
+      "quoi": "Insère ou remplace une entité dans sa collection puis enregistre — recopié à l'identique dans six domaines, inliné dans trois autres.",
+      "io": "item → state muté + enregistrement",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "read-entite-form",
+      "nom": "read<Entité>Form",
+      "quoi": "Relit les champs du DOM et rend l'entité à écrire — un par modale, neuf copies de la même mécanique.",
+      "io": "id + DOM de la modale + payload → item",
+      "langage": "js",
+      "fichier": "js/views/transports/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "save-entite",
+      "nom": "save<Entité>",
+      "quoi": "Bouton d'enregistrement d'une modale : lire, upsert, fermer (+ rattachement au scénario ouvrant).",
+      "io": "id → state muté + modale fermée",
+      "langage": "js",
+      "fichier": "js/views/rentals/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "entite-fieldvalue",
+      "nom": "<entité>FieldValue",
+      "quoi": "Lit un champ absent du DOM en gardant la valeur déjà enregistrée — écrit deux fois, pour les hébergements et les trajets.",
+      "io": "id de champ + valeur gardée → chaîne",
+      "langage": "js",
+      "fichier": "js/views/accommodations/modal/save.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "entite-statustag",
+      "nom": "<entité>StatusTag",
+      "quoi": "Pastille-menu qui change un mot de vocabulaire sur une ligne — même corps réécrit pour hébergement, activité, trajet, offre, carburant, boîte.",
+      "io": "item + dict de mots → markup HTML (inlineDropdown) + item muté",
+      "langage": "js",
+      "fichier": "js/views/accommodations/status-tag.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "set-entite-champ",
+      "nom": "set<Entité><Champ>",
+      "quoi": "Setter d'un champ sur une entité : écrire, enregistrer, re-rendre — une vingtaine de copies d'une même triade.",
+      "io": "id + valeur → state muté + rendu",
+      "langage": "js",
+      "fichier": "js/views/attractions/status-tag.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "pick-entite-champ",
+      "nom": "pick<Entité><Champ>",
+      "quoi": "Ferme le menu inline ouvert puis appelle le setter — recopié à côté de chaque pastille-menu.",
+      "io": "id + valeur → menu fermé + state muté",
+      "langage": "js",
+      "fichier": "js/views/attractions/type-dropdown.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "duplicate-entite",
+      "nom": "duplicate<Entité>",
+      "quoi": "Duplique une entité en lui donnant un id neuf et un nom suffixé (copie) — cinq copies, plus le cas profond du scénario.",
+      "io": "id → nouvel item dans state + rendu",
+      "langage": "js",
+      "fichier": "js/views/duplicate.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "domaine-header",
+      "nom": "<domaine>Header",
+      "quoi": "En-tête de page : titre, sous-titre compté, panneaux de tri/filtre/colonnes et boutons — écrit en clair dans dix domaines.",
+      "io": "items → markup HTML",
+      "langage": "js",
+      "fichier": "js/views/accommodations/header.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "repaint-bloc",
+      "nom": "repaint<Bloc>",
+      "quoi": "Repeint le seul bloc d'un champ composite sans rendu global, puis rend le focus — sept copies (tags, options, modèles, loueurs).",
+      "io": "payload → innerHTML du bloc + focus",
+      "langage": "js",
+      "fichier": "js/views/providers/modal/option-rows.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "relation-field",
+      "nom": "<relation>Field",
+      "quoi": "Champ de mise en relation à cases : lister le catalogue, cocher, créer un mot au vol, repeindre — providerModels, carModelProviders, offerOptions.",
+      "io": "payload + catalogue → markup HTML + payload muté",
+      "langage": "js",
+      "fichier": "js/views/providers/modal/model-rows.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "is-fournisseur-url",
+      "nom": "is<Fournisseur>Url",
+      "quoi": "Reconnaît un lien d'annonce à son domaine avant tout appel — même regex écrite côté front et côté Apps Script.",
+      "io": "url → booléen",
+      "langage": "js",
+      "fichier": "js/booking.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "import-fournisseur-link",
+      "nom": "import<Fournisseur>Link",
+      "quoi": "Flux d'import d'un lien collé : garde anti-double-lecture, appel au Sheet, remplissage, résumé — quatre copies (Booking, Airbnb, HomeExchange, Google Maps).",
+      "io": "url du champ → champs du formulaire remplis + statut",
+      "langage": "js",
+      "fichier": "js/airbnb.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "apply-fournisseur",
+      "nom": "apply<Fournisseur>",
+      "quoi": "Verse une annonce lue dans les champs encore vides du formulaire et compte ce qui a été rempli.",
+      "io": "annonce lue + table de champs → champs remplis + compte",
+      "langage": "js",
+      "fichier": "js/homeexchange.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "fingerprint",
+      "nom": "fingerprint",
+      "quoi": "Empreinte MD5 de l'état, révision comparée à chaque push pour détecter un conflit.",
+      "io": "state → rev (chaîne hexadécimale)",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "externe"
+    },
+    {
+      "id": "uid",
+      "nom": "uid",
+      "quoi": "Même générateur d'identifiants que le front, réécrit côté Apps Script pour les lignes sans id.",
+      "io": "rien → id (chaîne)",
+      "langage": "apps-script",
+      "fichier": "apps-script/Code.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "scrape-fournisseur",
+      "nom": "scrape<Fournisseur>",
+      "quoi": "Lit une annonce : garde de domaine, fetch, deux sources de la plus stable à la moins stable, erreur lisible — quatre copies d'un même squelette.",
+      "io": "url → annonce lue { name, niveaux, prix… } ou { error }",
+      "langage": "apps-script",
+      "fichier": "apps-script/Booking.js",
+      "etat": "dupliquée"
+    },
+    {
+      "id": "vocabularydropdown",
+      "nom": "vocabularyDropdown",
+      "quoi": "La pastille-menu générique dont les six <entité>StatusTag sont des copies : un dict, la clé courante, un setter.",
+      "io": "clé de menu + dict de mots + clé courante + setter → markup HTML (inlineDropdown)",
+      "langage": "js",
+      "fichier": "js/views/inline-tag.js",
+      "etat": "à écrire"
+    },
+    {
+      "id": "getbyid",
+      "nom": "getById",
+      "quoi": "Le getter unique que les quatorze get<Entité> réécrivent.",
+      "io": "nom de collection + id → item ou undefined",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "à écrire"
+    },
+    {
+      "id": "upsertitem",
+      "nom": "upsertItem",
+      "quoi": "L'insertion-ou-remplacement unique que les neuf save<Entité> réécrivent ou inlinent.",
+      "io": "nom de collection + item → state muté + enregistrement",
+      "langage": "js",
+      "fichier": "js/storage.js",
+      "etat": "à écrire"
+    },
+    {
+      "id": "repaintblock",
+      "nom": "repaintBlock",
+      "quoi": "Le repeint d'un bloc de formulaire avec focus rendu, dont les sept repaint<Bloc> sont des copies.",
+      "io": "id de bloc + markup + id de champ à focus → innerHTML + focus",
+      "langage": "js",
+      "fichier": "js/views/inline-edit.js",
+      "etat": "à écrire"
+    }
+  ],
+  "suites": {
+    "ouvrir-voyage": [
+      "empty-entite",
+      "get-entite",
+      "getbyid",
+      "read-entite-form",
+      "save-entite",
+      "upsert-entite",
+      "upsertitem"
+    ],
+    "comparer-hebergements": [
+      "apply-fournisseur",
+      "carddeletebutton",
+      "cardeditbutton",
+      "dict-key",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "entite-fieldvalue",
+      "entite-statustag",
+      "geocodecandidates",
+      "get-entite",
+      "getbyid",
+      "import-fournisseur-link",
+      "is-fournisseur-url",
+      "pick-entite-champ",
+      "read-entite-form",
+      "repaint-bloc",
+      "repaintblock",
+      "save-entite",
+      "scrape-fournisseur",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem",
+      "vocabularydropdown"
+    ],
+    "recenser-lieux": [
+      "apply-fournisseur",
+      "carddeletebutton",
+      "cardeditbutton",
+      "dict-key",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "entite-fieldvalue",
+      "entite-statustag",
+      "geocodecandidates",
+      "get-entite",
+      "getbyid",
+      "import-fournisseur-link",
+      "is-fournisseur-url",
+      "pick-entite-champ",
+      "read-entite-form",
+      "save-entite",
+      "scrape-fournisseur",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem",
+      "vocabularydropdown"
+    ],
+    "organiser-deplacements": [
+      "carddeletebutton",
+      "cardeditbutton",
+      "dict-key",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "entite-fieldvalue",
+      "entite-statustag",
+      "get-entite",
+      "getbyid",
+      "pick-entite-champ",
+      "read-entite-form",
+      "save-entite",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem",
+      "vocabularydropdown"
+    ],
+    "comparer-locations": [
+      "carddeletebutton",
+      "cardeditbutton",
+      "carmodelidfromname",
+      "dict-key",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "entite-fieldvalue",
+      "entite-statustag",
+      "get-entite",
+      "getbyid",
+      "pick-entite-champ",
+      "provideridfromname",
+      "read-entite-form",
+      "relation-field",
+      "repaint-bloc",
+      "repaintblock",
+      "save-entite",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem",
+      "vocabularydropdown"
+    ],
+    "suivre-budget": [
+      "carddeletebutton",
+      "cardeditbutton",
+      "dict-key",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "get-entite",
+      "getbyid",
+      "pick-entite-champ",
+      "read-entite-form",
+      "save-entite",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem",
+      "vocabularydropdown"
+    ],
+    "monter-scenario": [
+      "adoptscenariosteps",
+      "carddeletebutton",
+      "cardeditbutton",
+      "domaine-header",
+      "duplicate-entite",
+      "empty-entite",
+      "get-entite",
+      "getbyid",
+      "read-entite-form",
+      "relation-field",
+      "repaint-bloc",
+      "repaintblock",
+      "save-entite",
+      "upsert-entite",
+      "upsertitem"
+    ],
+    "chiffrer-scenario": [
+      "get-entite",
+      "getbyid"
+    ],
+    "comparer-scenarios": [
+      "domaine-header",
+      "get-entite",
+      "getbyid"
+    ],
+    "trancher-scenario": [
+      "getbyid",
+      "save-entite",
+      "set-entite-champ",
+      "upsert-entite",
+      "upsertitem"
+    ],
+    "situer-carte": [
+      "createleafletmap",
+      "fetchroute",
+      "geocodecandidates",
+      "get-entite",
+      "getbyid"
+    ],
+    "regler-liste": [
+      "dict-key",
+      "vocabularydropdown"
+    ],
+    "noter-idees": [
+      "getbyid",
+      "save-entite",
+      "upsert-entite",
+      "upsertitem"
+    ],
+    "suivre-a-faire": [
+      "dict-key",
+      "get-entite",
+      "getbyid",
+      "save-entite",
+      "upsert-entite",
+      "upsertitem"
+    ],
+    "travailler-a-plusieurs": [
+      "fingerprint",
+      "sheetget",
+      "sheetpost",
+      "uid"
+    ],
+    "preparer-valise": []
+  },
+  "porte": []
+}

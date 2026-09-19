@@ -567,6 +567,13 @@ tête.
 - **Le catalogue se remplit en saisissant** : un modèle tapé dans la modale d'une offre rejoint le
   voyage, et le loueur le proposera puisqu'on l'aura relevé chez lui. On peut aussi l'ajouter
   depuis le bouton de sa liste ou depuis la fiche du loueur, avant d'avoir cherché quoi que ce soit.
+- **Motorisation, boîte et consommation se suggèrent au nom tapé**, sur les 178 modèles du
+  catalogue ADEME Car Labelling (data.gouv.fr, licence ouverte) embarqué dans le projet
+  ([consumption-db.js](../js/views/car-models/consumption-db.js)) — une suggestion, jamais une
+  valeur imposée : elle ne complète que des champs encore vides, à la création comme en tapant
+  dans la modale dédiée. Le catalogue ne couvre que les modèles commercialisés neufs au trimestre
+  de sa génération, ni les générations précédentes ni les modèles temporairement absents du
+  catalogue (Golf, Polo au moment de l'écrire) — ceux-là restent en saisie manuelle.
 
 **Offre** — ce qu'un loueur demande pour un modèle.
 

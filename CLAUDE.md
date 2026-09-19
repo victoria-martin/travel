@@ -60,6 +60,23 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-19** — la motorisation, la boîte et la consommation d'un modèle de voiture se
+  suggèrent depuis un catalogue embarqué plutôt que de rester à taper à la main : 178 couples
+  marque/modèle agrégés du jeu de données officiel ADEME Car Labelling (data.gouv.fr, licence
+  ouverte) dans [consumption-db.js](js/views/car-models/consumption-db.js), généré une fois hors
+  ligne — pas d'appel réseau au runtime, l'app doit tourner sans. `lookupCarConsumption` matche le
+  nom du modèle le plus long apparaissant dans le texte tapé (« Yaris Cross » l'emporte sur
+  « Yaris »), et ne complète jamais un champ déjà rempli — une suggestion, pas une réécriture. Elle
+  s'applique aux deux points d'entrée : en direct sur le champ Modèle de la modale dédiée
+  ([consumption-suggest.js](js/views/car-models/modal/consumption-suggest.js)), et dans
+  `createCarModelNamed` lui-même pour les trois créations rapides par nom (offre, brouillon
+  d'offre, modèle tapé depuis la fiche d'un loueur) — centraliser là plutôt que de dupliquer
+  l'appel dans les trois fichiers, puisque c'était déjà le seul point d'entrée commun. La base ne
+  couvre que le catalogue neuf du trimestre de sa génération : ni les générations précédentes
+  (Clio 4, Golf 7…) ni les modèles temporairement hors gamme (Golf, Polo au moment de l'écrire) —
+  décision assumée plutôt que d'agréger plusieurs trimestres pour une couverture plus large, plus
+  lourde et aux valeurs moins homogènes.
+
 - **2026-09-19** — les 3 boutons Carte/Argent/Valise du détail scénario quittent leur rail
   vertical (bord droit, `.scenario-side-rail`, supprimé) pour le header
   ([side-tabs.js](js/views/scenarios/detail/side-tabs.js)), groupe « lire la vue » comme

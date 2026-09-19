@@ -7,7 +7,12 @@ function carModelForm(p) {
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un modèle</h3>
     <div class="field">
       <label>Modèle</label
-      ><input id="model-name" type="text" value="${escapeHtml(p.name)}" />
+      ><input
+        id="model-name"
+        type="text"
+        value="${escapeHtml(p.name)}"
+        oninput="suggestCarConsumption()"
+      />
     </div>
     <div class="field-row">
       <div class="field">
@@ -22,7 +27,7 @@ function carModelForm(p) {
       <div class="field">
         <label>Consommation</label
         ><input id="model-consumption" type="text" value="${escapeHtml(p.consumption)}" />
-        <small class="field-hint">ex. 6,5 L/100</small>
+        <small id="model-consumption-hint" class="field-hint">ex. 6,5 L/100</small>
       </div>
       <div class="field">
         <label>Boîte</label>

@@ -28,15 +28,28 @@ function linkCarModelProviders(modelId, providerIds) {
 }
 
 // Un modèle tapé en relevant une offre rejoint le catalogue : on ne quitte pas la saisie pour ça.
+// Motorisation, boîte et consommation absentes se complètent depuis le catalogue ADEME.
 function createCarModelNamed(name, fuel, gearbox) {
+  const suggestion = lookupCarConsumption(name) || {};
+  fuel = fuel || suggestion.fuel || '';
+  gearbox = gearbox || suggestion.gearbox || '';
   const existing = findCarModelNamed(name);
   if (existing) {
     existing.fuel = existing.fuel || fuel;
     existing.gearbox = existing.gearbox || gearbox;
+    existing.consumption = existing.consumption || suggestion.consumption || '';
     upsertCarModel(existing);
     return existing;
   }
-  const model = { ...emptyCarModel(), id: uid(), travelId: currentTravelId(), name, fuel, gearbox };
+  const model = {
+    ...emptyCarModel(),
+    id: uid(),
+    travelId: currentTravelId(),
+    name,
+    fuel,
+    gearbox,
+    consumption: suggestion.consumption || '',
+  };
   upsertCarModel(model);
   return model;
 }

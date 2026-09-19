@@ -1,0 +1,146 @@
+{
+  "langages": [
+    {
+      "nom": "JavaScript (scripts classiques, ES2022)",
+      "part": "toute l'app navigateur : état, vues, synchro — pas de modules ES, tout est global et appelé en onclick",
+      "fichier": "js/sync.js"
+    },
+    {
+      "nom": "JavaScript Apps Script (V8, style ES5)",
+      "part": "le backend Web App : lecture/écriture du Google Sheet et le scraping des annonces",
+      "fichier": "apps-script/Code.js"
+    },
+    {
+      "nom": "JavaScript Node.js",
+      "part": "le board du backlog servi en local (serveur HTTP maison, SSE de live-reload)",
+      "fichier": "tools/plan-board/server.js"
+    },
+    {
+      "nom": "HTML",
+      "part": "la coquille de l'app et l'ordre de chargement des scripts, une balise par fichier",
+      "fichier": "index.html"
+    },
+    {
+      "nom": "CSS",
+      "part": "tout le style de l'app, sans préprocesseur",
+      "fichier": "styles.css"
+    },
+    {
+      "nom": "Shell (sh)",
+      "part": "le hook pre-push : garde-fou docs et déploiement Apps Script",
+      "fichier": ".githooks/pre-push"
+    },
+    {
+      "nom": "Markdown",
+      "part": "le backlog, la spec et les règles de découpage",
+      "fichier": "CLAUDE.md"
+    },
+    {
+      "nom": "JSON",
+      "part": "configuration : clasp, jsconfig, prettier, manifeste Apps Script",
+      "fichier": "apps-script/appsscript.json"
+    }
+  ],
+  "dependances": [
+    {
+      "nom": "pnpm 12.3.4",
+      "role": "gestionnaire de paquets imposé par le champ packageManager"
+    },
+    {
+      "nom": "Node.js",
+      "role": "fait tourner le board du backlog (node --watch)"
+    },
+    {
+      "nom": "@google/clasp ^3.4.1",
+      "role": "pousse apps-script/ vers le projet Apps Script et met à jour le déploiement"
+    },
+    {
+      "nom": "prettier ^3.9.6",
+      "role": "formatage du dépôt (semi, single quote, 100 colonnes)"
+    },
+    {
+      "nom": "Compte Google + Google Sheet",
+      "role": "seule base de données : un onglet par collection, une ligne par entrée"
+    },
+    {
+      "nom": "Déploiement Web App Apps Script",
+      "role": "l'URL /exec que le navigateur interroge ; exécutée en tant que le déployeur, accès anonyme"
+    },
+    {
+      "nom": "API Apps Script activée (script.google.com/home/usersettings)",
+      "role": "requise pour que clasp push/pull fonctionne"
+    },
+    {
+      "nom": ".clasp-deployment (non versionné)",
+      "role": "identifiant du déploiement à mettre à jour ; partie secrète de l'URL /exec"
+    },
+    {
+      "nom": "Leaflet 1.9.4 via cdnjs",
+      "role": "la vue Carte (CSS + JS chargés depuis le CDN)"
+    },
+    {
+      "nom": "Nominatim (OpenStreetMap)",
+      "role": "géocodage d'une adresse"
+    },
+    {
+      "nom": "OSRM (router.project-osrm.org)",
+      "role": "distances et tracés routiers entre étapes"
+    },
+    {
+      "nom": "localStorage du navigateur",
+      "role": "cache local des données, des préférences et de la config de synchro"
+    },
+    {
+      "nom": "iTerm + CLI claude (macOS)",
+      "role": "le board ouvre une session Claude par tâche"
+    },
+    {
+      "nom": "GitHub Pages (ou tout hébergement statique)",
+      "role": "sert l'app telle quelle, sans build"
+    }
+  ],
+  "entrees": [
+    {
+      "commande": "pnpm install",
+      "quoi": "installe clasp et prettier"
+    },
+    {
+      "commande": "open index.html",
+      "quoi": "lance l'app : aucun build, chaque fichier est chargé tel quel"
+    },
+    {
+      "commande": "pnpm plan",
+      "quoi": "board du backlog de PLAN.md sur http://localhost:4321 (PLAN_PORT=4399 pour un autre port)"
+    },
+    {
+      "commande": "pnpm format",
+      "quoi": "formate tout le dépôt avec prettier"
+    },
+    {
+      "commande": "pnpm format:check",
+      "quoi": "vérifie le formatage sans écrire"
+    },
+    {
+      "commande": "pnpm exec clasp login",
+      "quoi": "authentifie clasp sur la machine, une fois"
+    },
+    {
+      "commande": "pnpm exec clasp pull",
+      "quoi": "récupère le manifeste appsscript.json — écrase aussi le code local, vérifier avec git diff"
+    },
+    {
+      "commande": "pnpm run push-script",
+      "quoi": "pousse apps-script/ et met à jour le déploiement : l'URL /exec ne change pas"
+    },
+    {
+      "commande": "pnpm exec clasp list-deployments",
+      "quoi": "retrouve l'identifiant à remettre dans .clasp-deployment sur une nouvelle machine"
+    },
+    {
+      "commande": "git config core.hooksPath .githooks",
+      "quoi": "active le hook pre-push (garde-fou docs + déploiement automatique)"
+    }
+  ],
+  "notes": "Trois pièces : un navigateur qui charge une app statique, un Web App Apps Script derrière une URL /exec, et un Google Sheet qui est la seule base de données — rien n'est embarqué dans l'app, elle est vide tant qu'aucune URL de Sheet n'est renseignée. Le navigateur fait un GET sur /exec pour lire l'état (doGet rend {rev, data}) et un POST {action:'push', baseRev, data} pour écrire ; doPost prend un LockService, compare baseRev à l'empreinte courante et répond {conflict:true, data} si le Sheet a bougé. Le même /exec sert aussi de proxy de scraping (?homeExchange=, ?airbnb=, ?booking=, ?googleMaps=), uniquement parce que ces sites ne renvoient pas d'en-tête CORS. Le POST est envoyé en Content-Type text/plain pour éviter le préflight OPTIONS qu'Apps Script ne gère pas. L'état vit à deux endroits : la globale `state` en mémoire, persistée dans localStorage (cache hors ligne), et `sync.base` — le dernier état reçu du Sheet — qui permet une fusion trois voies entrée par entrée (dernier qui enregistre gagne sur la même entrée). Le routage est par hash, assumé : un vrai chemin demanderait un serveur qui réécrit vers index.html, ce que ni file:// ni GitHub Pages ne font. Points fragiles : les onglets du Sheet ont des colonnes figées dans COLLECTIONS, un champ ajouté dans l'app et oublié là est perdu côté Sheet ; les scrapers reposent sur des regex sur le HTML de sites tiers et un faux User-Agent ; le Sheet est ouvert à qui a l'URL /exec (accès ANYONE_ANONYMOUS), et cette URL vit dans .clasp-deployment non versionné parce que le repo est public ; `clasp pull`, nécessaire pour le manifeste, peut écraser le code local. Surprenant : le README annonce une relecture du Sheet toutes les 5 secondes, mais js/init.js ne déclenche un pull que sur `visibilitychange` et `focus` — il n'y a pas d'intervalle dans le code lu. Le pre-push refuse un push qui touche l'app sans toucher PLAN.md ni docs/, et déploie apps-script/ tout seul.",
+  "porte": []
+}
