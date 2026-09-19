@@ -2869,6 +2869,207 @@ tr:hover td {
   }
 }
 
+/*
+  Sous 640px, la nav de vue quitte `.sidebar` pour une barre du bas dédiée à 4 principales + Plus
+  (`.mobile-nav-bar` / `.mobile-nav-sheet`, [mobile-nav/](js/views/mobile-nav/)) — 8 boutons de
+  taille égale au pouce, ça ne rentre pas. `.sidebar` elle-même s'effondre à taille nulle (position:
+  fixed, ce qui la sort aussi du flux flex de #app et laisse .main seul enfant prendre toute la
+  place) : ses 8 `.nav-btn` disparaissent, mais le sélecteur de voyage et le bloc synchro/réglages,
+  ses seuls enfants qui sortent en position: fixed à eux, restent épinglés en haut — inchangés.
+  Rendue par render.js à toutes les largeurs (elle lit `mobileNavPlusOpen` comme le reste du DOM),
+  la barre mobile doit donc être cachée par défaut ici et seulement réaffichée dans le media query.
+*/
+.mobile-nav-bar,
+.mobile-nav-backdrop,
+.mobile-nav-sheet {
+  display: none;
+}
+@media (max-width: 640px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: visible;
+    z-index: 25;
+  }
+  .sidebar > .nav-btn {
+    display: none;
+  }
+  .travel-selector {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    height: 48px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 96px 0 4px;
+    background: var(--stone-dark);
+    z-index: 25;
+  }
+  .travel-current {
+    justify-content: flex-start;
+    padding: 4px 8px;
+  }
+  .travel-identity {
+    display: flex;
+  }
+  .travel-name {
+    font-size: 13.5px;
+    line-height: 1.15;
+  }
+  .travel-sub {
+    font-size: 9.5px;
+  }
+  .sidebar-footer {
+    position: fixed;
+    top: 0;
+    right: 4px;
+    bottom: auto;
+    height: 48px;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    flex-direction: row;
+    align-items: center;
+    z-index: 26;
+  }
+  .main {
+    padding-top: 52px;
+    padding-bottom: 58px;
+  }
+
+  .mobile-nav-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 58px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: var(--stone-dark);
+    z-index: 25;
+  }
+  .mobile-nav-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: #d8e2dc;
+    font-family: inherit;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+  .mobile-nav-tab .nav-icon {
+    font-size: 18px;
+  }
+  .mobile-nav-tab-label {
+    font-size: 10px;
+  }
+  .mobile-nav-tab.active {
+    color: var(--paper-raised);
+  }
+  .mobile-nav-tab.active .mobile-nav-tab-label {
+    font-weight: 600;
+  }
+
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0 0 58px;
+    background: rgba(36, 49, 43, 0.35);
+    z-index: 24;
+  }
+  .mobile-nav-sheet {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 58px;
+    background: var(--paper-raised);
+    border-top: 1px solid var(--line);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -8px 24px rgba(36, 49, 43, 0.18);
+    z-index: 25;
+    padding: 6px 0 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .mobile-nav-sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px 6px;
+  }
+  .mobile-nav-sheet-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .mobile-nav-sheet-close {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    padding: 4px;
+  }
+  .mobile-nav-sheet-done {
+    background: none;
+    border: none;
+    color: var(--stone-dark);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 4px 6px;
+  }
+  .mobile-nav-sheet-row,
+  .mobile-nav-reorder-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    font-size: 14.5px;
+    color: var(--ink);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+  }
+  .mobile-nav-sheet-sep {
+    height: 1px;
+    background: var(--line);
+    margin: 6px 16px;
+  }
+  .mobile-nav-reorder-hint {
+    padding: 0 16px 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .mobile-nav-drag-handle {
+    cursor: grab;
+    color: var(--ink-soft);
+    touch-action: none;
+  }
+  .mobile-nav-row-dragging {
+    opacity: 0.4;
+  }
+  .mobile-nav-drop-before {
+    box-shadow: inset 0 2px 0 var(--stone);
+  }
+  .mobile-nav-drop-after {
+    box-shadow: inset 0 -2px 0 var(--stone);
+  }
+}
+
 .editable {
   border-radius: 4px;
   padding: 0 2px;
@@ -3293,4 +3494,214 @@ tr:hover td {
 }
 .rental-offer-draft input:first-child {
   flex: 1;
+}
+
+/* ---------- Valise ---------- */
+.packing-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+.packing-toolbar-spacer {
+  flex: 1;
+}
+.packing-list {
+  display: flex;
+  flex-direction: column;
+}
+.packing-group {
+  border-top: 1px solid var(--line);
+}
+.packing-group:first-child {
+  border-top: none;
+}
+.packing-group > summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.packing-group > summary::-webkit-details-marker {
+  display: none;
+}
+.packing-group > summary::before {
+  content: '\203A';
+  display: inline-block;
+  width: 12px;
+  color: var(--ink-soft);
+  transition: transform 0.15s;
+}
+.packing-group[open] > summary::before {
+  transform: rotate(90deg);
+}
+.packing-group-count {
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.packing-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 0 7px 20px;
+  border-top: 1px solid var(--line);
+}
+.packing-row-label {
+  flex: 0 0 auto;
+  min-width: 180px;
+}
+.packing-row-notes {
+  flex: 1;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.packing-row-actions {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+/* Composer la valise : panneau (sheet) qui coche/décoche des items du catalogue pour le voyage. */
+.modal-actions-split {
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Onglet Valise du détail scénario. */
+.packing-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 2px;
+}
+.packing-progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sage-pale);
+  overflow: hidden;
+}
+.packing-progress-fill {
+  height: 100%;
+  background: var(--stone);
+  border-radius: 999px;
+}
+.packing-progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.add-item-form {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.add-item-form-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.add-item-form-row > .field:first-child {
+  flex: 1;
+}
+.packing-add-qty {
+  width: 64px;
+}
+.pack-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0 6px 20px;
+  border-top: 1px solid var(--line);
+}
+.pack-row input[type='checkbox'] {
+  accent-color: var(--stone);
+}
+.pack-row.unpacked .pack-label {
+  color: var(--ink-soft);
+}
+.pack-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+.pack-link-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+.pack-link-icon .icon {
+  width: 12px;
+  height: 12px;
+}
+.pack-voyage-badge {
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  background: var(--sage-pale);
+  border-radius: 4px;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+/* Rail vertical des onglets du panneau latéral d'un scénario — toujours visible, bascule le
+   panneau comme avant (recliquer l'actif referme). */
+.scenario-side-rail {
+  flex-shrink: 0;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+.scenario-side-rail-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-family: inherit;
+  border-left: 3px solid transparent;
+}
+.scenario-side-rail-btn:hover {
+  background: var(--paper-raised);
+}
+.scenario-side-rail-btn.active {
+  background: var(--sage-pale);
+  color: var(--stone-dark);
+  border-left-color: var(--stone);
+}
+.scenario-side-rail-icon {
+  display: flex;
+}
+.scenario-side-rail-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.15;
 }

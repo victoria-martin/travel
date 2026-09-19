@@ -1,7 +1,7 @@
 /*
-  Un item de valise référence une entrée du catalogue, ou porte son libellé et ses catégories en
+  Un item de valise référence une entrée du catalogue, ou porte son libellé et sa catégorie en
   propre s'il est né dans ce voyage (maillot de bain). Un fait qui vivrait aux deux endroits se
-  dérive plutôt qu'il ne se synchronise : le libellé et les catégories se lisent donc ici, jamais
+  dérive plutôt qu'il ne se synchronise : le libellé et la catégorie se lisent donc ici, jamais
   recopiés sur l'item de valise tant qu'il référence le catalogue.
 */
 function packingLineSource(item) {
@@ -13,9 +13,9 @@ function packingLineLabel(item) {
   return (source ? source.label : item.label) || 'Sans nom';
 }
 
-function packingLineCategories(item) {
+function packingLineCategory(item) {
   const source = packingLineSource(item);
-  return (source ? source.categories : item.categories) || [];
+  return (source ? source.category : item.category) || '';
 }
 
 const MAX_PACKING_QUANTITY = 20;

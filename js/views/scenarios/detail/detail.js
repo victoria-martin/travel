@@ -17,10 +17,7 @@ function renderScenarioDetailView() {
   // sous <div class="scenario-detail-cols"> pour à gauche et au dessus pr dessus
   return /* HTML */ `
     ${scenarioDetailHeader(s)} ${trailShown() ? scenarioRouteTrail(s) + scenarioRouteStrip(s) : ''}
-    <div
-      class="scenario-detail-cols"
-      style="${prefs.scenarioSidePanel ? scenarioSplitStyle() : ''}"
-    >
+    <div class="scenario-detail-cols" style="${scenarioSplitStyle()}">
       <div class="scenario-detail-main view-scroller">
         ${stepList(s)}
         <div class="scenario-detail-money">
@@ -28,7 +25,7 @@ function renderScenarioDetailView() {
           ${scenarioTotalBlock(s)}
         </div>
       </div>
-      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''}
+      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''} ${scenarioSideTabsRail()}
     </div>
   `;
 }

@@ -200,11 +200,6 @@ La page, le catalogue et la valise du voyage sont en place — décrit dans
   sur l'item (maillot pour l'étape mer, chaussures de rando pour l'étape Chianti), sur le modèle
   d'une étape qui référence un hébergement. La page Valise les grouperait alors par étape, dans
   l'ordre du scénario.
-- **Maquette d'une composition plus agréable** <!--t:ujzd--> — 🧩 ui · 💡 idée : le picker actuel
-  (dropdown, sur le modèle de `scenarioExpenseDropdown`) est fonctionnel mais basique. Une
-  proposition de design plus travaillée existe en artifact (catalogue groupé par catégorie,
-  panneau de composition, onglet scénario avec badges catalogue/voyage) — à relire et éventuellement
-  reprendre.
 
 ## 🗺️ Voyages
 
@@ -502,6 +497,10 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 
 - **fix scroll in page** <!--t:epip--> — 📐 layout · ⏳ à faire : make thinkgs sticky and other
   scrollables
+- **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : la nav se redocke déjà
+  en bas sous 640px, mais les tables (Transports, Locations, Villes, Charges fixes…) débordent
+  encore à l'horizontale ; leur donner un repli carte comme Hébergements et Charges fixes l'ont
+  déjà via `listModeToggle`, ou un équivalent CSS générique.
 
 ## 📝 Données à saisir
 

@@ -15,6 +15,7 @@ let prefs = {
   showButtonLabels: true,
   trailColorByType: false,
   outOfRangeStyle: 'alert',
+  mobileNavOrder: null,
 };
 
 function loadPrefs() {

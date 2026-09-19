@@ -2,7 +2,7 @@ function savePackingItem(id) {
   const item = {
     id: id || uid(),
     label: document.getElementById('packing-item-label').value.trim(),
-    categories: [...modal.payload.categories],
+    category: document.getElementById('packing-item-category').value.trim(),
     notes: document.getElementById('packing-item-notes').value.trim(),
   };
   if (id) {

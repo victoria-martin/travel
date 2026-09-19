@@ -25,9 +25,7 @@ function scenarioDetailHeader(s) {
         </div>
       </div>
     </div>
-    <div class="view-header-actions">
-      ${count > 0 ? `${scenarioSideTabsToggle()} ${toolbarSeparator()}` : ''} ${toolbarMenu()}
-    </div>
+    <div class="view-header-actions">${toolbarMenu()}</div>
     ${scenarioHeaderMoney(s)}
   </div>`;
 }

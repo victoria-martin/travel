@@ -1,5 +1,5 @@
 function emptyPackingItem() {
-  return { id: null, label: '', categories: [], notes: '' };
+  return { id: null, label: '', category: '', notes: '' };
 }
 
 function packingCatalogForm(p) {
@@ -14,7 +14,7 @@ function packingCatalogForm(p) {
         placeholder="Trousse de toilette"
       />
     </div>
-    ${tagsField(p, { field: 'categories', label: 'Catégories', options: allPackingCategories })}
+    ${packingCategoryField('packing-item-category', p.category)}
     <div class="field">
       <label>Notes</label>
       <textarea id="packing-item-notes" rows="2">${escapeHtml(p.notes)}</textarea>

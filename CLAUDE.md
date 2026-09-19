@@ -60,6 +60,36 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-18** — première passe mobile : sous 640px, une barre du bas dédiée
+  (`.mobile-nav-bar`, [mobile-nav/](js/views/mobile-nav/)) remplace la sidebar — 4 pages
+  principales + un onglet **Plus** qui ouvre un tiroir listant le reste, choisi parmi trois pistes
+  dessinées dans un artifact et comparées côte à côte avant de trancher (une quatrième option,
+  redocker les 8 icônes du rail telles quelles en bas, a été codée puis abandonnée : trop serré,
+  pas ce qui avait été validé). L'ordre — quelles pages sont dans la barre, lesquelles dans Plus —
+  est une préférence locale (`prefs.mobileNavOrder`, jamais synchronisée) qu'on réorganise depuis
+  un bouton du tiroir, en glissant les lignes sur le patron déjà établi par `step-drag.js` (poignée
+  `⠿`, ligne de dépôt via `markDrop`/`overTopHalf` de [drag.js](js/views/drag.js)) — donc pas de
+  support tactile réel, comme les autres glissers de l'app. `NAV_ITEMS`
+  ([nav-items.js](js/views/nav-items.js)) devient la table unique des huit pages, partagée par la
+  sidebar desktop (ordre fixe, boucle plutôt que huit appels à la main) et la barre mobile (ordre
+  personnalisable) — une neuvième, Valise, rejoint la liste au passage puisqu'elle venait d'arriver
+  dans la sidebar. `.sidebar` elle-même s'effondre à taille nulle sous 640px (`position: fixed`,
+  ce qui la sort du flux flex de `#app` et laisse `.main` seul enfant prendre toute la place) : ses
+  `.nav-btn` disparaissent, mais le sélecteur de voyage et le bloc synchro/réglages, ses seuls
+  enfants à sortir eux-mêmes en `position: fixed`, restent épinglés en haut, à gauche et à droite —
+  le sélecteur y garde nom et sous-titre du voyage sur deux lignes (`.travel-identity` remise à
+  `display: flex`, la règle à 900px qui ne garde que l'emoji ne s'appliquant qu'au rail vertical) :
+  au pouce, l'icône seule ne suffisait pas à dire quel voyage est ouvert. Piège rencontré en route
+  sur le `.view-header` sticky, repéré par l'utilisatrice en testant en vrai plutôt qu'à la
+  relecture du CSS : son `top: 0` de base se cale déjà sur le bord intérieur du padding de `.main`,
+  donc une fois `.main { padding-top: 52px }` posé pour dégager la barre fixe, `top: 0` suffit — y
+  ajouter `top: 52px` cumulait les deux et décalait le sticky de 104px, avec un bout de carte
+  scrollée visible dans l'écart. Vérifié en Playwright (chromium déjà en cache local, screenshots
+  dans `~/Downloads/mobile-nav-*`) plutôt que sur un raisonnement CSS seul. Les tables (Transports,
+  Locations, Villes, Charges fixes…) débordent encore à l'horizontale sous cette largeur — pas dans
+  ce lot, gardé dans [PLAN.md](PLAN.md) (« Adapter le contenu au mobile »), et probablement voué à
+  devenir un sheet plutôt qu'un simple repli carte, à trancher dans ce chantier-là.
+
 - **2026-09-17** — la barre d'outils d'un en-tête (`.view-header-actions` / `.list-section-actions`)
   se lit en **4 groupes fixes**, séparés par `toolbarSeparator()`
   ([separator.js](js/views/toolbar/separator.js)) : lire la vue (tri, filtre, colonnes) → garder/

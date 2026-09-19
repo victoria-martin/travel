@@ -179,15 +179,17 @@ const COLLECTIONS = {
   tripNotes: ['travelId', 'id', 'text'],
   todoLists: ['travelId', 'id', 'kind', 'columnKey', 'filterValues'],
   // Le catalogue est personnel, pas du voyage : pas de travelId, seule collection de l'app dans ce cas.
-  packingItems: ['id', 'label', 'categories', 'notes'],
+  // Une seule catégorie par item : la page Valise groupe par catégorie, un item dans deux groupes
+  // à la fois n'aurait pas de rangée unique.
+  packingItems: ['id', 'label', 'category', 'notes'],
   // La valise d'un voyage : `packingItemId` référence une entrée du catalogue si l'item en vient,
-  // vide s'il est propre à ce voyage — auquel cas il porte son propre libellé et ses catégories.
+  // vide s'il est propre à ce voyage — auquel cas il porte son propre libellé et sa catégorie.
   packingListItems: [
     'travelId',
     'id',
     'packingItemId',
     'label',
-    'categories',
+    'category',
     'quantity',
     'perNight',
     'checked',

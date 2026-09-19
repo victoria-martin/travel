@@ -287,6 +287,15 @@ saisies, sinon la destination) ouvre le menu des voyages : les autres voyages, �
 voyage » et « Nouveau voyage ». Les deux derniers ouvrent la même modale. En barre latérale
 réduite, il ne reste que l'emoji.
 
+Sous 640px de large, la barre latérale disparaît au profit d'une barre du bas à 4 pages
+principales + un onglet **Plus**, qui ouvre un tiroir listant les autres pages. Un bouton
+**Réorganiser** en pied de ce tiroir permet de glisser les pages pour choisir lesquelles vivent
+dans la barre et lesquelles dans Plus — une préférence propre à l'appareil, jamais synchronisée.
+Le sélecteur de voyage et le pied (état du Sheet + ⚙️ Réglages) s'épinglent chacun en haut de
+l'écran, en `position: fixed`, l'un à gauche l'autre à droite. Le sélecteur y réaffiche nom et
+sous-titre du voyage, sur deux lignes sous l'emoji — plus large que le rail réduit, cette barre du
+haut a la place de dire quel voyage est ouvert.
+
 Au pied de la barre, sous l'état du Sheet, un bouton **⚙️ Réglages** ouvre les préférences
 d'affichage **en modale** : la barre défile, un panneau déplié dedans se rognait. Le **⋮** de
 n'importe quel écran ouvre exactement le même contenu, sans quitter la page — la préférence se
@@ -1035,38 +1044,46 @@ Une zone de texte libre, partagée. Enregistrée à la frappe, sans re-render.
 Deux entités : un **catalogue** personnel (`packingItems`), sans `travelId` — seule collection de
 l'app qui n'est pas scopée par voyage — et la **valise du voyage** (`packingListItems`), scopée par
 `travelId`. Un item de la valise référence un item du catalogue (`packingItemId`) ou porte son
-propre libellé et ses catégories s'il est né dans ce voyage (maillot de bain) ; quand il référence
-le catalogue, le libellé et les catégories se lisent là-bas et ne sont jamais recopiés — les
-modifier au catalogue les change partout où l'item est utilisé.
+propre libellé et sa catégorie s'il est né dans ce voyage (maillot de bain) ; quand il référence le
+catalogue, le libellé et la catégorie se lisent là-bas et ne sont jamais recopiés — les modifier au
+catalogue les change partout où l'item est utilisé. Une seule catégorie par item, texte libre
+(datalist, pas de vocabulaire figé) : les deux écrans groupent dessus, un item dans deux groupes à
+la fois n'aurait pas de rangée unique.
 
-| Champ (catalogue)  | Détail                          |
-| ------------------- | -------------------------------- |
-| libellé, catégories | catégories en tags libres        |
-| notes                | libre                            |
+| Champ (catalogue) | Détail                                                        |
+| ------------------ | -------------------------------------------------------------- |
+| libellé, catégorie | une seule catégorie                                            |
+| notes               | libre, éditable en ligne                                       |
 
-| Champ (valise du voyage) | Détail                                                          |
-| -------------------------- | ---------------------------------------------------------------- |
-| référence catalogue        | optionnelle ; vide pour un item propre au voyage                 |
-| libellé, catégories        | seulement si pas de référence catalogue                          |
-| quantité                   | un nombre fixe, ou « 1 par nuit » (déduite du scénario retenu)   |
-| coché                      | emballé ou non                                                   |
+| Champ (valise du voyage) | Détail                                                        |
+| -------------------------- | -------------------------------------------------------------- |
+| référence catalogue        | optionnelle ; vide pour un item propre au voyage                |
+| libellé, catégorie         | seulement si pas de référence catalogue                        |
+| quantité                   | un nombre fixe, ou « 1 par nuit » (déduite du scénario retenu) |
+| coché                      | emballé ou non                                                 |
 
-La page **Valise** (nav, après Notes) empile deux listes, comme l'onglet Voitures empile Offres et
-Modèles : la valise du voyage ouvert en premier — table éditable, case à cocher et compteur
-« X / Y » en tête, un panneau « Ajouter depuis le catalogue » (dropdown des items pas encore dans
-cette valise) et un bouton « + Item du voyage » pour un item propre — puis le catalogue dessous, en
-référence, avec son propre `+ Item`. Supprimer un item du catalogue référencé ailleurs détache les
-lignes qui le référençaient : elles gardent son libellé et ses catégories, figés sur elles.
+La page **Valise** (nav, après Notes) ne gère que le catalogue, groupé par catégorie
+(`<details>` repliables, un compteur par groupe) : recherche, chips de catégorie pour filtrer,
+notes éditables en ligne, `+ Nouvel item`. Composer la valise du voyage ouvert se fait depuis le
+bouton **Composer la valise**, qui ouvre un panneau (sheet, plein bord droit) : le même catalogue
+groupé, une case à cocher par item — cochée si déjà dans cette valise, décocher retire — et un pied
+qui compte « X sur Y ajoutés ». Supprimer un item du catalogue référencé ailleurs détache les
+lignes qui le référençaient : elles gardent son libellé et sa catégorie, figés sur elles.
 
 Le détail d'un scénario porte un troisième onglet dans son panneau latéral, à côté de Carte et
-Argent (voir plus haut) : **Valise**, compact comme le bloc Dépenses — case à cocher, libellé,
-quantité, retirer — avec le même panneau « Ajouter depuis le catalogue » et le même « + Item ». La
-valise y montrée est celle du voyage ouvert, pas une valise propre à ce scénario : elle est donc
-identique quel que soit le scénario dont on regarde le détail.
+Argent (voir plus haut) : **Valise** — seul endroit où on édite la valise du voyage au jour le
+jour, et le seul où on ajoute un item propre au voyage, dans un formulaire en ligne (pas une
+modale, pour rester dans la colonne étroite) avec la case « aussi ajouter au catalogue ». Une barre
+de progression (« X / Y emballés ») en tête, puis la liste groupée par catégorie : case à cocher,
+libellé, une icône lien si l'item vient du catalogue sinon un badge « voyage », un sélecteur de
+quantité (dropdown, nombre fixe ou « 1 par nuit »), retirer. La valise y montrée est celle du
+voyage ouvert, pas une valise propre à ce scénario : elle est donc identique quel que soit le
+scénario dont on regarde le détail.
 
-Une maquette d'une composition plus travaillée (catalogue groupé par catégorie, panneau de
-composition, badges catalogue/voyage) existe en artifact — voir PLAN.md — à reprendre si le picker
-actuel (une simple liste déroulante) ne suffit pas.
+Les trois onglets du panneau (Carte, Argent, Valise) vivent en **rail vertical**, contre le bord
+droit de la colonne — toujours visible, y compris panneau fermé, où il reste seul avec sa largeur
+fixe. Recliquer l'onglet allumé referme le panneau, comme avant ; c'est la bascule qui a bougé de
+la barre d'en-tête vers ce rail, pas le mécanisme.
 
 ### À faire
 

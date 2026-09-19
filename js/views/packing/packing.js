@@ -1,4 +1,8 @@
-// La valise du voyage d'abord — c'est ce qu'on vient préparer — le catalogue dessous, en référence.
+// Le catalogue, groupé par catégorie ; composer la valise du voyage se fait depuis le panneau
+// « Composer la valise », l'édition au jour le jour depuis l'onglet Valise d'un scénario.
 function renderPackingView() {
-  return /* HTML */ `${packingPageHeader()} ${travelPackingSection()} ${packingCatalogSection()}`;
+  return /* HTML */ `
+    ${packingPageHeader()} ${packingCatalogToolbar()}
+    <div id="packing-catalog-body" class="packing-list">${packingCatalogBody()}</div>
+  `;
 }

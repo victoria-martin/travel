@@ -24,17 +24,11 @@ function render() {
   const app = document.getElementById('app');
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
-      ${travelSelector()} ${navBtn('hebergements', svgIcon('house'), 'Hébergements')}
-      ${navBtn('depenses', EXPENSE_ICON, 'Dépenses')}
-      ${navBtn('attractions', svgIcon('landmark'), 'Lieux & activités')}
-      ${navBtn('transports', svgIcon('plane'), 'Transports')}
-      ${navBtn('scenarios', svgIcon('compass'), 'Scénarios')}
-      ${navBtn('carte', svgIcon('map'), 'Carte')}
-      ${navBtn('notes', svgIcon('notebook-pen'), 'Notes')}
-      ${navBtn('valise', svgIcon('luggage'), 'Valise')}
-      ${navBtn('a-faire', svgIcon('list-checks'), 'À faire')}
+      ${travelSelector()}
+      ${NAV_ITEMS.map((item) => navBtn(item.key, item.icon, item.label)).join('')}
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
+    ${mobileNavBar()} ${mobileNavPlusOpen ? mobileNavPlusSheet() : ''}
     <div class="main" id="main"></div>
   `;
   renderMain();
