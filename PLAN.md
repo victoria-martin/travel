@@ -351,6 +351,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   tranche. Deux points restent ouverts : **Notes** n'est pas une lecture, on y écrit — soit elle
   remonte dans COLLECTER, soit le troisième bloc se nomme autrement ; et **Dépenses** est de la
   collecte (des charges saisies) dont le bloc Calculé est une lecture logée dans sa propre page.
+- **Réordonner la barre latérale desktop** <!--t:n7wq--> — 🖼️ écran · ⏳ à faire : le tiroir mobile
+  laisse déjà glisser l'ordre des pages (`prefs.mobileNavOrder`, [mobile-nav/](js/views/mobile-nav/)),
+  pas la sidebar desktop qui boucle sur `NAV_ITEMS` dans un ordre fixe
+  ([nav-items.js](js/views/nav-items.js)). Vouloir composer sa propre barre latérale — même geste,
+  autre préférence locale.
 - **Transports devient « Se déplacer »** <!--t:w2dn--> — 🖼️ écran · ⏳ à faire : la chaîne loueur →
   offre → modèle tient maintenant dans les trois onglets de la page, il ne reste que son nom à
   changer — « Transports » nomme une de ses listes, pas ce que la page range. Suppose **Un onglet

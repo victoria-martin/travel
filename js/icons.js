@@ -58,6 +58,7 @@ const ICON_BODIES = {
   'chevron-down': `<path d="m6 9 6 6 6-6" />`,
   'chevron-right': `<path d="m9 18 6-6-6-6" />`,
   play: `<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />`,
+  'layout-dashboard': `<rect width="7" height="9" x="3" y="3" rx="1" /> <rect width="7" height="5" x="14" y="3" rx="1" /> <rect width="7" height="9" x="14" y="12" rx="1" /> <rect width="7" height="5" x="3" y="16" rx="1" />`,
 };
 
 /*

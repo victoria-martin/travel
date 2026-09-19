@@ -60,6 +60,30 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-19** — les 3 boutons Carte/Argent/Valise du détail scénario quittent leur rail
+  vertical (bord droit, `.scenario-side-rail`, supprimé) pour le header
+  ([side-tabs.js](js/views/scenarios/detail/side-tabs.js)), groupe « lire la vue » comme
+  Tableau/Cartes ailleurs — recliquer l'actif referme le panneau, comportement inchangé. D'abord
+  posés en `toolbarToggleGroup` (la pilule soudée de Tableau/Cartes), puis repassés en trois
+  `toolbarButton` séparés : la pilule dit « un seul choix parmi N, toujours actif », alors qu'ici
+  on peut aussi tout refermer — un état qu'un toggle-group ne sait pas montrer, repéré à l'écran
+  par l'utilisatrice. Sous 640px, où `.scenario-detail-cols` n'a plus de colonne de droite, le
+  même bouton ouvre le
+  contenu en sheet plutôt que de le pousser sous les étapes (`onScenarioPanelToggle`,
+  `window.matchMedia('(max-width: 639px)')` — première branche JS sur la largeur de l'app, tout le
+  reste jusqu'ici passait par du CSS pur). Le sheet réutilise le mécanisme `openSheet`/`MODAL_TYPES`
+  déjà en place pour les fiches d'entité, avec une entrée `scenario-panel` générique dont le
+  `body` retrouve l'onglet demandé dans `SCENARIO_SIDE_TABS` et rend son bloc existant tel quel —
+  sur le patron du `valise-composer` déjà non-formulaire (pas de `edits`, un bouton Fermer en pied
+  plutôt qu'Enregistrer). `.scenario-detail-side` et `.scenario-split` sont masqués sous 640px pour
+  qu'une préférence posée sur desktop (`prefs.scenarioSidePanel`, ouvert sur `'map'` par défaut) ne
+  s'affiche pas en double sous le sheet. A aussi fait remonter une régression du même geste : les 3
+  boutons + séparateur + ⋮ ne rentraient plus à côté du titre sur 390px et l'écrasaient à zéro
+  (le titre entier passait lettre par lettre) — `.scenario-header` repasse en une colonne sous
+  640px, identité au-dessus des actions. Repéré en testant à l'écran plutôt qu'en relisant le CSS.
+  Une régression preexistante et sans rapport, la même casse lettre par lettre sur le nom d'une
+  étape dans sa carte, reste ouverte — pas touchée ici.
+
 - **2026-09-19** — les tables trop larges pour se lire en ligne (Hébergements et Lieux &
   activités, 23 colonnes ; Offres de voiture, 17) s'ouvrent en sheet plutôt qu'en repli carte :
   le mécanisme existait déjà pour Hébergements et Prestataires (`ROW_CLICKS` + `openSheet(type,

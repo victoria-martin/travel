@@ -771,14 +771,18 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Détail**, en deux colonnes : les étapes à gauche, le panneau latéral à droite. Sous les étapes,
   un pied partage la largeur — voiture, dépenses et total général à gauche, la carte du trajet à
   droite, collante à la hauteur du défilement.
-- **Le panneau latéral** montre une chose à la fois, ou rien : la carte du trajet, l'argent
-  (voiture, dépenses, total général), ou la valise du voyage ; son pied porte les nuits et le total
-  quel que soit l'onglet. Ses trois boutons « 🗺 Carte », « 💶 Argent » et « 🧳 Valise » vivent dans
-  la barre de l'en-tête et sont aussi sa bascule — recliquer celui qui est allumé referme le
-  panneau, et les étapes prennent toute la largeur. Le passage d'un mode à l'autre est animé : les
+- **Le panneau latéral** montre une chose à la fois, ou rien : la carte du trajet, le récap
+  Transports (voiture et ce qu'elle coûte à rouler), l'argent (voiture, dépenses, total général), ou
+  la valise du voyage ; son pied porte les nuits et le total quel que soit l'onglet. Ses quatre
+  boutons « 🗺 Carte », « ✈️ Transports », « 💶 Argent » et « 🧳 Valise » vivent dans la barre de
+  l'en-tête et sont aussi sa bascule — recliquer celui qui est allumé referme le panneau, et les
+  étapes prennent toute la largeur. Le récap Transports reprend le bloc Voiture tel quel, puis les
+  lignes essence et péages du détail de la route (voir plus bas) : chacune y porte, comme sur une
+  étape, un budget qui remplace le calcul dès qu'il est saisi à la main. Le passage d'un mode à l'autre est animé : les
   deux colonnes glissent vers leur nouvelle largeur au lieu de sauter. L'onglet ouvert, ou
   l'absence de panneau, est retenu d'une session à l'autre. Sous 1100 px, le panneau repasse sous
-  les étapes.
+  les étapes ; sous 640 px, où il n'y a plus la place pour une colonne de droite, le même bouton
+  ouvre son contenu en sheet plein écran plutôt que de le pousser sous les étapes.
 - **Le partage des deux colonnes se glisse** : la poignée entre elles se tire à la souris, chaque
   colonne gardant au moins 280 px. La largeur est retenue **par onglet** — la carte se lit large,
   l'argent tient en une colonne étroite — et d'une session à l'autre.
@@ -971,7 +975,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   quoi elle repose. L'essence tient à la consommation du modèle loué par le scénario : sans offre
   retenue, ou sans consommation relevée sur le modèle, la ligne le dit et ne chiffre rien. Les
   kilomètres viennent du même itinéraire que le tracé, donc la famille ne chiffre rien tant que la
-  réponse n'est pas revenue.
+  réponse n'est pas revenue. Essence et péages portent chacun un budget, comme celui d'une étape :
+  la saisie remplace le calcul dès qu'elle n'est pas vide, et le calcul reste affiché en gris tant
+  que rien n'est saisi.
 - **Le détail des attractions** : une ligne par activité rattachée aux étapes, dans l'ordre du
   trajet, avec son nombre quand il dépasse un. Une dépense rattachée à une étape n'y figure pas :
   elle se range dans le détail des Charges, aux côtés des dépenses du scénario.
@@ -1071,11 +1077,6 @@ libellé, une icône lien si l'item vient du catalogue sinon un badge « voyage 
 quantité (dropdown, nombre fixe ou « 1 par nuit »), retirer. La valise y montrée est celle du
 voyage ouvert, pas une valise propre à ce scénario : elle est donc identique quel que soit le
 scénario dont on regarde le détail.
-
-Les trois onglets du panneau (Carte, Argent, Valise) vivent en **rail vertical**, contre le bord
-droit de la colonne — toujours visible, y compris panneau fermé, où il reste seul avec sa largeur
-fixe. Recliquer l'onglet allumé referme le panneau, comme avant ; c'est la bascule qui a bougé de
-la barre d'en-tête vers ce rail, pas le mécanisme.
 
 ### À faire
 

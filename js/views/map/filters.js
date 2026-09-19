@@ -17,6 +17,7 @@ MAP_KINDS.forEach((kind) => (filters[mapScope(kind)] = { kind, levels: [] }));
 let mapFilters = {
   shown: { hebergements: true, attractions: true },
   scenarioId: null,
+  scenarioOnly: true,
   favOnly: false,
 };
 
@@ -32,6 +33,11 @@ function toggleMapFavOnly() {
 
 function setMapScenario(id) {
   mapFilters.scenarioId = id || null;
+  refreshMap();
+}
+
+function setMapScenarioOnly(only) {
+  mapFilters.scenarioOnly = only;
   refreshMap();
 }
 

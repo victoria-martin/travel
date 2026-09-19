@@ -89,6 +89,10 @@ const MODAL_TYPES = {
     open: () => ({ payload: {} }),
     body: () => packingComposerSheet(),
   },
+  'scenario-panel': {
+    open: (scenarioId, key) => ({ scenarioId, payload: { key } }),
+    body: (m) => scenarioPanelSheet(m),
+  },
   step: {
     // Une étape neuve naît seule ou déjà ouverte en options : c'est le bouton qui l'a dit.
     open: (scenarioId, stepId, options = 1) => ({

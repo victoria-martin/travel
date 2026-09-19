@@ -10,8 +10,20 @@ function scenarioOfferBlock(scenario) {
         ? /* HTML */ `<div class="scenario-extra-empty">
             Aucune offre relevée — ajoute-en une depuis l'onglet Voitures.
           </div>`
-        : `${scenarioOfferDropdown(scenario)}${scenarioOfferOptionsBlock(scenario)}`
+        : `${scenarioOfferDropdown(scenario)}${offer ? scenarioOfferBaseLine(scenario, offer) : ''}${scenarioOfferOptionsBlock(scenario)}`
     }
+  </div>`;
+}
+
+// Le prix de base, options exclues : sans lui, la seule trace du prix/jour de l'offre était le
+// total du bloc, dont rien ne disait s'il l'incluait déjà ou non.
+function scenarioOfferBaseLine(scenario, offer) {
+  const days = totalDays(scenario);
+  const price = offerDayPrice(offer);
+  const note = price ? `${offerDayPriceLabel(offer)} × ${days} j` : 'prix par jour non renseigné';
+  return /* HTML */ `<div class="expense-line">
+    <span class="expense-label">Location<span class="expense-unit">${escapeHtml(note)}</span></span>
+    <strong>${price ? formatEuros(price * days) : '—'}</strong>
   </div>`;
 }
 

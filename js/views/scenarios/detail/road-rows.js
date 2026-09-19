@@ -8,22 +8,26 @@ function roadDetailRows(scenario) {
   if (km === null) return roadRow('Distance', 'le tracé arrive…', '—');
   return (
     roadRow('Distance', '', distanceLabel(km * 1000)) +
-    roadFuelRow(scenario) +
-    roadRow(
-      'Péages',
-      `${formatRate(travelTollRate())} €/km`,
-      formatEuros(scenarioTollCost(scenario)),
-    )
+    roadFuelCostRow(scenario) +
+    roadTollCostRow(scenario)
   );
 }
 
-function roadFuelRow(scenario) {
+function roadFuelCostRow(scenario) {
   const consumption = scenarioFuelConsumption(scenario);
-  if (!consumption) return roadRow('Essence', 'consommation du modèle non renseignée', '—');
-  return roadRow(
-    'Essence',
-    `${formatRate(consumption)} L/100 · ${formatRate(travelFuelPrice())} €/L`,
-    formatEuros(scenarioFuelCost(scenario)),
+  const note = consumption
+    ? `${formatRate(consumption)} L/100 · ${formatRate(travelFuelPrice())} €/L`
+    : 'consommation du modèle non renseignée';
+  return roadCostRow(scenario, 'fuelBudget', 'Essence', note, scenarioFuelCalc(scenario));
+}
+
+function roadTollCostRow(scenario) {
+  return roadCostRow(
+    scenario,
+    'tollBudget',
+    'Péages',
+    `${formatRate(travelTollRate())} €/km`,
+    scenarioTollCalc(scenario),
   );
 }
 
@@ -33,4 +37,32 @@ function roadRow(label, note, amount) {
     <span class="acc-recap-nights">${escapeHtml(note)}</span>
     <strong>${amount}</strong>
   </div>`;
+}
+
+// Essence et péages portent un budget qui remplace le calcul, comme sur une étape : le calcul
+// reste affiché en gris tant que rien n'est saisi à la main.
+function roadCostRow(scenario, field, label, note, calculated) {
+  const budget = scenario[field];
+  return /* HTML */ `<div class="acc-recap-row acc-recap-sub acc-recap-row-cost">
+    <span>${recapIconLabel('', label)}</span>
+    <span class="acc-recap-nights">${escapeHtml(note)}</span>
+    <span class="step-total">
+      ${
+        hasPriceValue(budget) ? '' : `<span class="step-total-auto">${formatEuros(calculated)}</span>`
+      }
+      <span class="step-budget"
+        >${editableText(
+          budget,
+          `setScenarioRoadBudget('${scenario.id}','${field}', this.innerText)`,
+          { key: `scenario:${scenario.id}:${field}`, placeholder: 'budget' },
+        )}${hasPriceValue(budget) ? ' €' : ''}</span
+      >
+    </span>
+  </div>`;
+}
+
+function setScenarioRoadBudget(scenarioId, field, value) {
+  getScenario(scenarioId)[field] = value.trim();
+  saveNow();
+  render();
 }

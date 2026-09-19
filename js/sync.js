@@ -209,6 +209,7 @@ function mergeStates(remote, local, base) {
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
     tripNotes: mergeCollections(remote.tripNotes, local.tripNotes, base.tripNotes),
     todoLists: mergeCollections(remote.todoLists, local.todoLists, base.todoLists),
+    freeTodos: mergeCollections(remote.freeTodos, local.freeTodos, base.freeTodos),
     packingItems: mergeCollections(remote.packingItems, local.packingItems, base.packingItems),
     packingListItems: mergeCollections(
       remote.packingListItems,

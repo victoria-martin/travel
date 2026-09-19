@@ -25,7 +25,9 @@ function scenarioDetailHeader(s) {
         </div>
       </div>
     </div>
-    <div class="view-header-actions">${toolbarMenu()}</div>
+    <div class="view-header-actions">
+      ${scenarioSideTabsButtons(s.id)} ${toolbarSeparator()} ${toolbarMenu()}
+    </div>
     ${scenarioHeaderMoney(s)}
   </div>`;
 }

@@ -1,21 +1,27 @@
 /*
-  Les mêmes filtres à deux endroits : la colonne à gauche de la carte, et le bouton « Filtrer » de
-  l'en-tête, qui les discloses comme sur les listes. Un bloc par collection tracée, avec la case qui
-  la met à l'écran et sous elle sa propre pile de niveaux. Décocher la collection cache aussi ses
-  niveaux — ils ne filtrent plus rien.
-  Le scénario, lui, reste dans l'en-tête : il trace le trajet et porte son message d'état.
+  Les mêmes filtres à deux endroits : la carte de la colonne à gauche, et le bouton « Filtrer » de
+  l'en-tête — `mapFilterFields` porte les champs, chacun choisit son emballage. Un bloc par
+  collection tracée, avec l'interrupteur qui la met à l'écran et sous lui sa propre pile de
+  niveaux. Éteindre la collection cache aussi ses niveaux — ils ne filtrent plus rien.
+  Le scénario, lui, vit dans sa propre carte ([scenario-panel.js](scenario-panel.js)) : il trace le
+  trajet et porte son message d'état.
 */
-function mapFilterPanel() {
+function mapFilterFields() {
   return /* HTML */ `${MAP_KINDS.map(mapResourceBlock).join('')}
-    <div class="filter-block">
-      <label class="filter-option"
-        ><input
-          type="checkbox"
-          ${mapFilters.favOnly ? 'checked' : ''}
-          onchange="toggleMapFavOnly()"
-        />${svgIcon('star', { fill: true })} Favoris uniquement</label
-      >
+    <div class="map-filter-block map-filter-favorites">
+      ${switchField(
+        `${svgIcon('star', { fill: true })} Favoris uniquement`,
+        mapFilters.favOnly,
+        'toggleMapFavOnly()',
+      )}
     </div>`;
+}
+
+function mapFilterPanel() {
+  return /* HTML */ `<div class="map-side-panel">
+    <div class="map-side-title">Filtres</div>
+    ${mapFilterFields()}
+  </div>`;
 }
 
 function mapFilterButton() {
@@ -24,7 +30,7 @@ function mapFilterButton() {
     icon: svgIcon('funnel'),
     label: 'Filtrer',
     count: mapFilterCount(),
-    body: `<div class="filter-panel">${mapFilterPanel()}</div>`,
+    body: `<div class="filter-panel">${mapFilterFields()}</div>`,
   });
 }
 
@@ -38,24 +44,12 @@ function mapFilterCount() {
 function mapResourceBlock(kind) {
   const resource = listResource(kind);
   const shown = mapFilters.shown[kind];
-  return /* HTML */ `<div class="filter-block">
-    <label class="filter-option map-resource">
-      <input type="checkbox" ${shown ? 'checked' : ''} onchange="toggleMapKind('${kind}')" />
-      <span class="map-resource-icon">${resource.icon}</span>
-      <span class="map-resource-label">${escapeHtml(resource.label)}</span>
-    </label>
-    ${shown ? filterLevelsBlock(mapScope(kind)) : ''}
+  return /* HTML */ `<div class="map-filter-block">
+    ${switchField(
+      `<span class="map-resource-icon">${resource.icon}</span><span class="map-resource-label">${escapeHtml(resource.label)}</span>`,
+      shown,
+      `toggleMapKind('${kind}')`,
+    )}
+    ${shown ? `<div class="map-filter-levels">${filterLevelsBlock(mapScope(kind))}</div>` : ''}
   </div>`;
-}
-
-function mapScenarioSelect() {
-  return /* HTML */ `<select class="map-scenario-select" onchange="setMapScenario(this.value)">
-    <option value="">Tous les lieux</option>
-    ${activeScenarios(ofCurrentTravel(state.scenarios))
-      .map(
-        (s) =>
-          `<option value="${s.id}" ${mapFilters.scenarioId === s.id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
-      )
-      .join('')}
-  </select>`;
 }

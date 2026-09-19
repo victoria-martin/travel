@@ -8,12 +8,15 @@ function renderMapView() {
         <p class="view-sub" id="route-notice">${ROUTE_HELP}</p>
       </div>
       <div class="view-header-actions">
-        ${mapFilterButton()} ${toolbarSeparator()} ${mapScenarioSelect()} ${toolbarSeparator()}
-        ${newCityPanel()} ${toolbarSeparator()} ${toolbarMenu()}
+        ${mapFilterButton()} ${toolbarSeparator()} ${newCityPanel()} ${toolbarSeparator()}
+        ${toolbarMenu()}
       </div>
     </div>
     <div class="map-layout">
-      <div class="map-filters">${mapFilterPanel()}</div>
+      <div class="map-side" style="width:${prefs.mapSideWidth}px">
+        ${mapScenarioPanel()} ${mapFilterPanel()}
+      </div>
+      ${mapSplitHandle()}
       <div id="map"></div>
     </div>
   `;

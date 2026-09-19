@@ -178,6 +178,8 @@ const COLLECTIONS = {
   ],
   tripNotes: ['travelId', 'id', 'text'],
   todoLists: ['travelId', 'id', 'kind', 'columnKey', 'filterValues'],
+  // Une tâche libre ne filtre rien : c'est un texte tapé à la main, coché quand il est fait.
+  freeTodos: ['travelId', 'id', 'text', 'done'],
   // Le catalogue est personnel, pas du voyage : pas de travelId, seule collection de l'app dans ce cas.
   // Une seule catégorie par item : la page Valise groupe par catégorie, un item dans deux groupes
   // à la fois n'aurait pas de rangée unique.

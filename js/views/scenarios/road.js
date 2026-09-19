@@ -30,13 +30,26 @@ function scenarioFuelConsumption(scenario) {
   return model ? priceNumber(model.consumption) : 0;
 }
 
-function scenarioFuelCost(scenario) {
+function scenarioFuelCalc(scenario) {
   const km = scenarioRoadKm(scenario) || 0;
   return (km / 100) * scenarioFuelConsumption(scenario) * travelFuelPrice();
 }
 
-function scenarioTollCost(scenario) {
+function scenarioTollCalc(scenario) {
   return (scenarioRoadKm(scenario) || 0) * travelTollRate();
+}
+
+// Comme sur une étape, le budget saisi à la main remplace le calcul dès qu'il est renseigné.
+function scenarioFuelCost(scenario) {
+  return hasPriceValue(scenario.fuelBudget)
+    ? priceNumber(scenario.fuelBudget)
+    : scenarioFuelCalc(scenario);
+}
+
+function scenarioTollCost(scenario) {
+  return hasPriceValue(scenario.tollBudget)
+    ? priceNumber(scenario.tollBudget)
+    : scenarioTollCalc(scenario);
 }
 
 function scenarioRoadTotal(scenario) {

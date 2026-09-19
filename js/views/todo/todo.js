@@ -1,7 +1,7 @@
 function renderTodoView() {
   const lists = todoListsOfTravel();
   return /* HTML */ `
-    ${todoHeader(lists)} ${todoBuilder()}
+    ${todoHeader(lists)} ${freeTodoCard()} ${todoBuilder()}
     ${
       lists.length === 0
         ? emptyState(

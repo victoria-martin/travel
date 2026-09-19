@@ -1,8 +1,10 @@
 /*
   La colonne de droite montre une chose à la fois, ou rien : la table dit laquelle, sous quelle
-  icône et ce qu'elle rend. Ses boutons vivent en rail vertical contre le bord droit, toujours là
-  — c'est aussi la bascule du panneau : recliquer celui qui est allumé le referme, d'où un seul
-  état retenu d'une session à l'autre, `null` quand rien n'est ouvert.
+  icône et ce qu'elle rend. Le toggle-group du header en est la bascule, sur le patron des autres
+  groupes « lire la vue » — recliquer celui qui est allumé referme le panneau, d'où un seul état
+  retenu d'une session à l'autre, `null` quand rien n'est ouvert. Sous 640px, où la colonne de
+  droite n'a plus la place de s'afficher à côté des étapes, le même bouton ouvre le contenu en
+  sheet plutôt que de le pousser en dessous.
 */
 const SCENARIO_SIDE_TABS = [
   {
@@ -10,6 +12,12 @@ const SCENARIO_SIDE_TABS = [
     icon: svgIcon('map'),
     label: 'Carte',
     body: (s) => scenarioMapBlock(s, 'scenario-side-map'),
+  },
+  {
+    key: 'transports',
+    icon: svgIcon('plane'),
+    label: 'Transports',
+    body: (s) => scenarioTransportsRecap(s),
   },
   {
     key: 'money',
@@ -33,26 +41,40 @@ function activeSideTab() {
   return SCENARIO_SIDE_TABS.find((tab) => tab.key === prefs.scenarioSidePanel);
 }
 
-function scenarioSideTabsRail() {
-  return /* HTML */ `<nav class="scenario-side-rail">
-    ${SCENARIO_SIDE_TABS.map((tab) => scenarioSideRailButton(tab)).join('')}
-  </nav>`;
+// Des boutons séparés, pas un toggle-group : la pilule soudée de toolbarToggleGroup dit « un seul
+// choix parmi N, toujours actif » (Tableau/Cartes) — ici recliquer l'actif referme le panneau, un
+// état de plus qu'un toggle-group ne sait pas montrer.
+function scenarioSideTabsButtons(scenarioId) {
+  return SCENARIO_SIDE_TABS.map((tab) =>
+    toolbarButton({
+      icon: tab.icon,
+      label: tab.label,
+      active: tab.key === prefs.scenarioSidePanel,
+      onclick: `onScenarioPanelToggle('${scenarioId}','${tab.key}')`,
+    }),
+  ).join('');
 }
 
-function scenarioSideRailButton(tab) {
-  const active = tab.key === prefs.scenarioSidePanel;
-  return /* HTML */ `<button
-    class="scenario-side-rail-btn ${active ? 'active' : ''}"
-    onclick="toggleScenarioSidePanel('${tab.key}')"
-    title="${escapeHtml(tab.label)}"
-  >
-    <span class="scenario-side-rail-icon">${tab.icon}</span>
-    <span class="scenario-side-rail-label">${escapeHtml(tab.label)}</span>
-  </button>`;
+// En dessous de 640px, la grille du détail n'a plus de colonne de droite (elle repasse à une
+// seule colonne) : le même bouton ouvre alors le panneau en sheet plutôt que de le pousser sous
+// les étapes.
+function onScenarioPanelToggle(scenarioId, key) {
+  if (window.matchMedia('(max-width: 639px)').matches) openSheet('scenario-panel', scenarioId, key);
+  else toggleScenarioSidePanel(key);
 }
 
 function toggleScenarioSidePanel(key) {
   prefs.scenarioSidePanel = prefs.scenarioSidePanel === key ? null : key;
   persistPrefs();
   renderWithTransition();
+}
+
+function scenarioPanelSheet(m) {
+  const scenario = getScenario(m.scenarioId);
+  const tab = SCENARIO_SIDE_TABS.find((t) => t.key === m.payload.key);
+  return /* HTML */ `<h3>${escapeHtml(tab.label)}</h3>
+    ${tab.body(scenario)}
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Fermer</button>
+    </div>`;
 }

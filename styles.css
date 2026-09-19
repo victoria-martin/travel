@@ -429,6 +429,14 @@ body {
   background: var(--rust);
   color: var(--white);
 }
+.btn-text {
+  background: transparent;
+  color: var(--stone-dark);
+  border: 1px solid transparent;
+}
+.btn-text:hover {
+  background: var(--paper-raised);
+}
 .btn-small {
   padding: 5px 10px;
   font-size: 12px;
@@ -2348,6 +2356,11 @@ tr:hover td {
   padding: 4px 0;
   border-top: 1px solid var(--line);
 }
+/* Le calcul en gris et le budget qui le remplace ne tiennent pas dans les 80px d'une colonne
+   ordinaire : la troisième colonne s'ajuste à ce qu'elle contient plutôt que de le rogner. */
+.acc-recap-row-cost {
+  grid-template-columns: 1fr auto auto;
+}
 .acc-recap-row:first-of-type {
   border-top: none;
 }
@@ -2453,37 +2466,113 @@ tr:hover td {
 /* ---------- Map ---------- */
 .map-layout {
   display: flex;
-  gap: 20px;
   align-items: flex-start;
 }
-.map-filters {
-  width: 250px;
+.map-side {
   flex-shrink: 0;
-  background: var(--paper-raised);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.map-split {
+  align-self: stretch;
+  width: 16px;
+  margin: 0 2px;
+  cursor: col-resize;
+  border-radius: 3px;
+  touch-action: none;
+}
+.map-split:hover,
+.map-split:active {
+  background: var(--ink-soft);
 }
 .map-layout #map {
   flex: 1;
   min-width: 0;
 }
-.map-resource {
+.map-side-panel {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+.map-side-title {
+  font-size: 12px;
   font-weight: 700;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+.map-scenario-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.map-scenario-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  padding: 8px 9px;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 0 8px 8px 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.map-scenario-item-icon {
+  display: inline-flex;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+.map-scenario-item-label {
+  flex: 1;
+}
+.map-scenario-item:hover {
+  background: var(--paper);
+}
+.map-scenario-item.active {
+  background: var(--white);
+  border-left-color: var(--stone-dark);
+  color: var(--stone-dark);
+  font-weight: 700;
+}
+.map-scenario-item.active .map-scenario-item-icon {
+  color: var(--stone-dark);
+}
+@media (max-width: 900px) {
+  .map-layout {
+    flex-direction: column;
+  }
+  .map-side {
+    width: 100% !important;
+  }
+  .map-split {
+    display: none;
+  }
 }
 .map-resource-icon {
   color: var(--ink-soft);
+  margin-right: 6px;
 }
 .map-resource-label {
-  flex: 1;
-}
-.map-resource-count {
-  padding: 0 6px;
-  font-size: 11.5px;
   font-weight: 700;
-  color: var(--white);
-  background: var(--stone);
-  border-radius: 999px;
+}
+.map-filter-block {
+  margin-bottom: 14px;
+}
+.map-filter-block:last-child {
+  margin-bottom: 0;
+}
+.map-filter-levels {
+  margin: 4px 0 0 44px;
+}
+.map-filter-favorites {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
 }
 .filter-block {
   margin-bottom: 20px;
@@ -2817,17 +2906,6 @@ tr:hover td {
   color: var(--ink-soft);
   margin-top: 8px;
 }
-/* Dans la barre de l'en-tête : le select tient sur le nom du scénario, sans pousser les boutons. */
-.map-scenario-select {
-  max-width: 220px;
-  font-family: inherit;
-  font-size: 13px;
-  padding: 7px 9px;
-  color: var(--ink);
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 7px;
-}
 
 ::-webkit-scrollbar {
   width: 9px;
@@ -2870,12 +2948,6 @@ tr:hover td {
   :root {
     --main-pad-x: 20px;
     --main-pad-y: 20px;
-  }
-  .map-layout {
-    flex-direction: column;
-  }
-  .map-filters {
-    width: 100%;
   }
 }
 
@@ -3077,6 +3149,33 @@ tr:hover td {
   }
   .mobile-nav-drop-after {
     box-shadow: inset 0 -2px 0 var(--stone);
+  }
+
+  /* Sous 640px, un onglet du détail scénario s'ouvre en sheet (scenarioPanelSheet) plutôt que de
+     pousser ce panneau sous les étapes : le masquer évite qu'une préférence posée sur desktop
+     (prefs.scenarioSidePanel) l'affiche en double ici. */
+  .scenario-detail-side,
+  .scenario-split {
+    display: none;
+  }
+
+  /* La colonne "auto" des actions (3 boutons + séparateur + ⋮) ne rentre pas à côté du titre sur
+     un téléphone : les deux repassent en une seule colonne, l'identité au-dessus des actions. */
+  .scenario-header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scenario-header-identity {
+    grid-row: 1;
+  }
+  .scenario-header .view-header-actions {
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+  .scenario-header-money {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
   }
 }
 
@@ -3364,6 +3463,90 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 1px 8px;
+}
+.free-todo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+.free-todo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.free-todo-row input[type='checkbox'] {
+  accent-color: var(--stone);
+}
+.free-todo-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.free-todo-row.is-done .free-todo-text {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+.free-todo-input {
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+/* Page Accueil : trois cartes cliquables, une par lien demandé. */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+}
+.home-card:hover {
+  border-color: var(--stone);
+}
+.home-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-card-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+.home-card-name {
+  font-weight: 600;
+  margin: 0;
+}
+.home-card-meta,
+.home-card-empty {
+  color: var(--ink-soft);
+  font-size: 13px;
+  margin: 0;
+}
+.home-card-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--stone-dark, var(--stone));
 }
 /* Le logo d'un prestataire, et l'initiale de son nom tant qu'aucune image n'est donnée. */
 .provider-logo {
@@ -3674,44 +3857,3 @@ tr:hover td {
   flex-shrink: 0;
 }
 
-/* Rail vertical des onglets du panneau latéral d'un scénario — toujours visible, bascule le
-   panneau comme avant (recliquer l'actif referme). */
-.scenario-side-rail {
-  flex-shrink: 0;
-  width: 64px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-top: 2px;
-}
-.scenario-side-rail-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 4px;
-  border: none;
-  background: none;
-  border-radius: 8px;
-  color: var(--ink-soft);
-  cursor: pointer;
-  font-family: inherit;
-  border-left: 3px solid transparent;
-}
-.scenario-side-rail-btn:hover {
-  background: var(--paper-raised);
-}
-.scenario-side-rail-btn.active {
-  background: var(--sage-pale);
-  color: var(--stone-dark);
-  border-left-color: var(--stone);
-}
-.scenario-side-rail-icon {
-  display: flex;
-}
-.scenario-side-rail-label {
-  font-size: 10.5px;
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.15;
-}

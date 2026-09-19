@@ -4,6 +4,7 @@
   ne dérivent pas chacune leur propre liste des huit pages de VIEWS (js/router.js).
 */
 const NAV_ITEMS = [
+  { key: 'accueil', label: 'Accueil', icon: svgIcon('layout-dashboard') },
   { key: 'hebergements', label: 'Hébergements', icon: svgIcon('house') },
   { key: 'depenses', label: 'Dépenses', icon: EXPENSE_ICON },
   { key: 'attractions', label: 'Lieux & activités', icon: svgIcon('landmark') },

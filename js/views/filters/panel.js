@@ -29,7 +29,7 @@ function filterLevelsBlock(scope) {
   }
   ${
     levels.length < filterableColumns(kind).length
-      ? `<button class="btn btn-ghost filter-add" onclick="addFilterLevel('${scope}')">+ Ajouter un niveau</button>`
+      ? `<button class="btn btn-text filter-add" onclick="addFilterLevel('${scope}')">+ Ajouter un niveau</button>`
       : ''
   }`;
 }

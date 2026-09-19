@@ -9,6 +9,7 @@ let prefs = {
   hiddenColumns: {},
   scenarioSidePanel: 'map',
   scenarioSideWidth: { map: 50, money: 28, valise: 28 },
+  mapSideWidth: 250,
   recapFolds: {},
   sort: {},
   sortOrder: {},

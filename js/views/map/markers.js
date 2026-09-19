@@ -13,7 +13,7 @@ function initMap() {
   leafletMap = createLeafletMap('map');
   const scenario = mapFilters.scenarioId ? getScenario(mapFilters.scenarioId) : null;
   if (scenario) drawScenarioOnMap(leafletMap, scenario, 'route-notice', ROUTE_HELP);
-  const chosen = scenario ? scenarioSelection(scenario) : null;
+  const chosen = scenario && mapFilters.scenarioOnly ? scenarioSelection(scenario) : null;
   const bounds = [];
 
   ofCurrentTravel(state.accommodations).forEach((a) => {

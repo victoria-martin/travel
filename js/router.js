@@ -5,6 +5,7 @@
 
 // The eight pages of the sidebar. `scenario-detail` is the ninth view, routed as `#scenario/<id>`.
 const VIEWS = [
+  'accueil',
   'hebergements',
   'depenses',
   'attractions',
@@ -17,7 +18,7 @@ const VIEWS = [
 
 const SCENARIO_ROUTE = 'scenario/';
 
-let view = 'scenarios';
+let view = 'accueil';
 
 function goTo(v) {
   view = v;

@@ -76,7 +76,8 @@ function trackViewHeaderHeight(main) {
 
 function renderMain() {
   const main = document.getElementById('main');
-  if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
+  if (view === 'accueil') main.innerHTML = renderHomeView();
+  else if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
   else if (view === 'transports') main.innerHTML = renderTransportsView();
