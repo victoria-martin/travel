@@ -115,6 +115,7 @@ function runPasteImport() {
       if (key) fields[key] = (cells[index] || '').trim();
     });
     if (!fields.name && !fields.city) return;
+    if (fields.city) upsertVilleByName(currentTravelId(), fields.city);
     state.accommodations.push({
       id: uid(),
       travelId: currentTravelId(),

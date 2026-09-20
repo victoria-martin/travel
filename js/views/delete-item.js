@@ -2,6 +2,7 @@ const RESOURCE_LABELS = {
   travels: 'Voyage',
   accommodations: 'Hébergement',
   attractions: 'Lieu',
+  villes: 'Ville',
   transports: 'Transport',
   providers: 'Prestataire',
   carModels: 'Modèle',

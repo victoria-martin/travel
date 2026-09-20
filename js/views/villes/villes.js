@@ -1,7 +1,6 @@
 /*
   Lecture dérivée de Lieux & activités : les mêmes lieux, en table triée par ville plutôt qu'à
-  plat — colonnes déclarées dans columns.js. Rien ne s'y crée ni ne s'y filtre par ville seule ; on
-  garde le tri et le choix des colonnes, comme toute liste de l'app.
+  plat. Rien ne s'y crée ; le tri et le choix des colonnes restent propres à cette page.
 */
 ROW_CLICKS.villes = openAttractionSheet;
 
@@ -19,15 +18,13 @@ function renderVillesView() {
         </p>
       </div>
       <div class="view-header-actions">
-        ${sortPanel('villes')} ${columnPicker('villes')} ${toolbarSeparator()} ${toolbarMenu()}
+        ${sortPanel('villes')} ${columnPicker('villes')} ${toolbarSeparator()}
+        ${toolbarMenu()}
       </div>
     </div>
     ${
       items.length === 0
-        ? emptyState(
-            'Aucun lieu',
-            'Ajoute une ville, un village, un premier lieu depuis Lieux & activités.',
-          )
+        ? emptyState('Aucun lieu', 'Ajoute une ville, un village, un premier lieu depuis Lieux & activités.')
         : listTable('villes', items)
     }
   `;

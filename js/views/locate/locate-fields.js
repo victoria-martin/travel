@@ -60,12 +60,19 @@ function placeLevelField(p, level) {
   </div>`;
 }
 
-/* Existing values from every located collection, so a place can reuse one or introduce its own. */
+/*
+  Existing values from every located collection, so a place can reuse one or introduce its own.
+  La ville est la seule à avoir sa propre db (villes.js) : elle propose ce qu'elle contient plutôt
+  que de re-dériver les attractions/hébergements.
+*/
 function locateOptions(id, key) {
-  const values = new Set();
-  locatedPlaces().forEach((place) => {
-    if (place[key]) values.add(place[key]);
-  });
+  const values = new Set(
+    key === 'city'
+      ? ofCurrentTravel(state.villes).map((v) => v.name)
+      : locatedPlaces()
+          .map((place) => place[key])
+          .filter(Boolean),
+  );
   return /* HTML */ `<datalist id="${id}">
     ${Array.from(values)
       .sort()

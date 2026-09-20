@@ -99,6 +99,11 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
+  {
+    key: 'googleMaps',
+    label: 'Google Maps',
+    cell: (a) => googleMapsCell(a.address || a.name),
+  },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: accommodationActionsCell },
 ];
 

@@ -1,5 +1,6 @@
 function readAttractionForm(id) {
   const located = readLocateFields();
+  if (located.city) upsertVilleByName(currentTravelId(), located.city);
   return {
     id: id || uid(),
     travelId: currentTravelId(),

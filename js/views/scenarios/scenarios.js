@@ -28,9 +28,12 @@ function toggleScenarioFavorite(id) {
   render();
 }
 
-function createScenario() {
+// Ce que porte un scénario neuf, avant qu'on lui donne des étapes : le bouton Scénarios l'ouvre
+// tout de suite, l'import d'itinéraire depuis la carte (route-accommodation-modal.js) le peuple
+// d'abord.
+function blankScenario() {
   const offer = defaultOffer();
-  const s = {
+  return {
     id: uid(),
     travelId: currentTravelId(),
     name: 'Nouveau scénario',
@@ -43,6 +46,10 @@ function createScenario() {
     archived: false,
     steps: [],
   };
+}
+
+function createScenario() {
+  const s = blankScenario();
   state.scenarios.push(s);
   saveNow();
   showToast('Scénario créé');

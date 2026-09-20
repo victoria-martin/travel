@@ -46,6 +46,14 @@ const MODAL_TYPES = {
     body: (m) => attractionForm(m.payload),
     edits: true,
   },
+  ville: {
+    open: (id) => {
+      const payload = id ? structuredClone(getVille(id)) : emptyVille();
+      return { payload: { ...payload, matches: [], status: villeGeocodeSummary(payload) } };
+    },
+    body: (m) => villeForm(m.payload),
+    edits: true,
+  },
   transport: {
     open: (id, scenarioId) => ({
       scenarioId,
@@ -121,6 +129,7 @@ const MODAL_RESOURCE_MESSAGES = {
   'accommodation-airbnb': ['Hébergement créé', 'Hébergement modifié'],
   'accommodation-google-maps': ['Hébergement créé', 'Hébergement modifié'],
   attraction: ['Lieu créé', 'Lieu modifié'],
+  ville: ['Ville créée', 'Ville modifiée'],
   transport: ['Transport créé', 'Transport modifié'],
   prestataire: ['Prestataire créé', 'Prestataire modifié'],
   modele: ['Modèle créé', 'Modèle modifié'],

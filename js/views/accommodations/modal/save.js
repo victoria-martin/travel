@@ -10,6 +10,7 @@ function accommodationFieldValue(id, kept) {
 function readAccommodationForm(id) {
   const p = modal.payload;
   const located = readLocateFields();
+  if (located.city) upsertVilleByName(currentTravelId(), located.city);
   const favorite = document.getElementById('f-favorite');
   return {
     id: id || uid(),

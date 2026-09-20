@@ -124,6 +124,7 @@ COLUMN_SETS.attractions = [
     cell: attractionPhoneCell,
   },
   { key: 'link', label: 'Lien', cell: linkCell },
+  { key: 'googleMaps', label: 'Google Maps', cell: (a) => googleMapsCell(a.address || a.name) },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
 ];
 

@@ -1,10 +1,9 @@
 /*
   Une ville se crée depuis la carte, là où on voit le trou : on tape son nom, on choisit le bon
-  résultat du géocodage, la pastille se pose. C'est une attraction de type ville — le reste de sa
-  fiche se remplit depuis la page Lieux, donc le panneau ne porte que la recherche et ses
-  résultats, sans les coordonnées à la main ni les quatre niveaux, qui viennent du résultat choisi.
-  Le brouillon vit dans une globale et non dans le DOM : chaque étape rend la page — la carte se
-  retrace au même moment — et un champ perdrait ce qu'on y a tapé.
+  résultat du géocodage, la pastille se pose — upsert direct dans la db villes, avec les coords du
+  résultat choisi plutôt que le géocodage best-effort de `upsertVilleByName`. Le brouillon vit dans
+  une globale et non dans le DOM : chaque étape rend la page — la carte se retrace au même moment —
+  et un champ perdrait ce qu'on y a tapé.
 */
 const NEW_CITY_HELP = 'Tape une ville, puis localise-la.';
 
@@ -71,19 +70,10 @@ async function locateNewCity() {
 function createCityFromMatch(index) {
   const match = cityDraft.matches[index];
   if (!match) return;
-  const city = {
-    ...emptyAttraction(),
-    ...placeLevelsOf(match),
-    id: uid(),
-    travelId: currentTravelId(),
-    type: 'city',
-    name: match.city || cityDraft.address,
-    address: cityDraft.address,
-    lat: match.lat,
-    lng: match.lng,
-  };
-  upsertAttraction(city);
+  const name = match.city || cityDraft.address;
+  const id = villeIdFromName(currentTravelId(), name);
+  upsertVille({ id, travelId: currentTravelId(), name, lat: match.lat, lng: match.lng });
   cityDraft = emptyCityDraft();
-  cityDraft.status = `📍 ${escapeHtml(city.name)} ajoutée`;
+  cityDraft.status = `📍 ${escapeHtml(name)} ajoutée`;
   render();
 }

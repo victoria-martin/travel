@@ -13,8 +13,8 @@ function toggleRouteBuilderMode() {
   refreshMap();
 }
 
-function addRouteBuilderPoint(lat, lng, name) {
-  routeBuilder.points.push({ lat, lng, name });
+function addRouteBuilderPoint(lat, lng, name, id, kind) {
+  routeBuilder.points.push({ lat, lng, name, id, kind });
   refreshMap();
 }
 
@@ -66,6 +66,7 @@ function routeBuilderPanel() {
     ${routeBuilder.points.length > 1
       ? '<div class="route-builder-summary" id="route-builder-summary"></div>'
       : ''}
+    ${routeBuilder.points.length ? routeScenarioActions() : ''}
     ${routeBuilder.points.length
       ? `<button class="link-btn" onclick="clearRouteBuilderPoints()">Effacer</button>`
       : ''}

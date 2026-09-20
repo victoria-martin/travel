@@ -2703,6 +2703,21 @@ tr:hover td {
   font-size: 12.5px;
   font-weight: 600;
 }
+.route-acc-ask {
+  max-width: 440px;
+}
+.route-acc-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+.route-acc-choice label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+}
 .map-filter-block {
   margin-bottom: 14px;
 }
@@ -2798,9 +2813,18 @@ tr:hover td {
 .warning-badge {
   display: inline-flex;
   align-items: center;
-  padding: 2px;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
   color: var(--ochre);
   vertical-align: middle;
+}
+.warning-badge .icon {
+  width: 10px;
+  height: 10px;
 }
 
 /* ---------- Interrupteur ---------- */

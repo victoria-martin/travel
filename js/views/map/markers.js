@@ -32,6 +32,8 @@ function initMap() {
     addAttractionMarker(leafletMap, a, bounds);
   });
 
+  ofCurrentTravel(state.villes).forEach((v) => addVilleMarker(leafletMap, v, bounds));
+
   fitToPoints(leafletMap, bounds);
   if (routeBuilder.active) drawRouteBuilderLine(leafletMap);
 }
@@ -56,13 +58,19 @@ function markerPoint(item, bounds) {
 function addAccommodationMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addMapPinMarker(map, point, mapPinIcon('house'), accommodationPopup(a), a.name);
+  addMapPinMarker(map, point, mapPinIcon('house'), accommodationPopup(a), a.name, a.id, 'accommodation');
 }
 
 function addAttractionMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addMapPinMarker(map, point, mapDotIcon(), attractionPopup(a), a.name);
+  addMapPinMarker(map, point, mapDotIcon(), attractionPopup(a), a.name, a.id, 'attraction');
+}
+
+function addVilleMarker(map, v, bounds) {
+  const point = markerPoint(v, bounds);
+  if (!point) return;
+  addMapPinMarker(map, point, mapPinIcon('map-pin'), villePopup(v), v.name, v.id, 'ville');
 }
 
 function mapPinIcon(icon) {
@@ -85,7 +93,7 @@ function mapDotIcon() {
   });
 }
 
-function addMapPinMarker(map, point, icon, popupHtml, name) {
+function addMapPinMarker(map, point, icon, popupHtml, name, id, kind) {
   const marker = L.marker(point, { icon }).addTo(map);
   marker.bindTooltip(escapeHtml(name), {
     permanent: true,
@@ -106,7 +114,7 @@ function addMapPinMarker(map, point, icon, popupHtml, name) {
   });
   marker.on('click', () => {
     if (routeBuilder.active) {
-      addRouteBuilderPoint(point[0], point[1], name);
+      addRouteBuilderPoint(point[0], point[1], name, id, kind);
       return;
     }
     pinned = true;
@@ -132,6 +140,10 @@ function attractionPopup(a) {
     .join(' · ');
   const price = priceRange(a) || '';
   return `<strong>${popupName(a, a.link)}</strong><br/>${place}${price ? `<br/>${price}` : ''}`;
+}
+
+function villePopup(v) {
+  return `<strong>${escapeHtml(v.name)}</strong>`;
 }
 
 function popupName(item, url) {

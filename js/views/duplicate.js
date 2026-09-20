@@ -84,4 +84,5 @@ function duplicateScenario(id) {
   state.scenarios.push(copy);
   saveNow();
   showToast('Scénario créé');
+  return copy.id;
 }

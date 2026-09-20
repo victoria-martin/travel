@@ -18,6 +18,10 @@ function isGoogleMapsUrl(url) {
   return GOOGLE_MAPS_URL.test(url);
 }
 
+function googleMapsPlaceUrl(query) {
+  return `https://www.google.fr/maps/place/${encodeURIComponent(query)}/`;
+}
+
 // The field still holds its old value while the paste event runs.
 function importGoogleMapsPaste(field, nameId) {
   setTimeout(() => importGoogleMapsLink(field, nameId), 0);

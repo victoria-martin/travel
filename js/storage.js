@@ -13,6 +13,7 @@ const TRAVEL_COLLECTIONS = [
   'offers',
   'fixedCosts',
   'attractions',
+  'villes',
   'transports',
   'scenarios',
   'tripNotes',
@@ -33,6 +34,7 @@ function emptyData() {
     offers: [],
     fixedCosts: [],
     attractions: [],
+    villes: [],
     transports: [],
     scenarios: [],
     tripNotes: [],
@@ -64,6 +66,7 @@ function migrateData(data) {
   if (!data.rentals) data.rentals = [];
   if (!data.carModels) data.carModels = [];
   if (!data.attractions) data.attractions = [];
+  if (!data.villes) data.villes = [];
   if (!data.transports) data.transports = [];
   if (!data.tripNotes) data.tripNotes = [];
   if (!data.todoLists) data.todoLists = [];
@@ -89,6 +92,7 @@ function migrateData(data) {
     if (!Array.isArray(a.tags)) a.tags = [];
     if (a.favorite === undefined) a.favorite = false;
   });
+  adoptVilles(data);
   (data.fixedCosts || []).forEach((c) => {
     if (!Array.isArray(c.categories)) c.categories = c.category ? [c.category] : [];
     delete c.category;
@@ -169,6 +173,33 @@ function attractionFromCity(city) {
     tags: [],
     favorite: false,
   };
+}
+
+/*
+  La ville était un simple champ texte porté par chaque attraction/hébergement, jamais une entité —
+  rien ne savait dire « quelles villes du voyage » sans dériver la liste des lieux à chaque lecture.
+  `villes` en devient l'entité propre, alimentée depuis ce même champ : un lieu déjà saisi repeuple
+  la collection une fois, et `upsertVilleByName` (get-ville.js) fait la même chose à chaque nouvelle
+  saisie. Un ancien lieu de type ville (fusionné dans `attractions` par `absorbCities`) garde ses
+  coordonnées déjà connues plutôt que de repartir en géocodage.
+*/
+function adoptVilles(data) {
+  if (!Array.isArray(data.villes)) data.villes = [];
+  const known = new Set(data.villes.map((v) => v.id));
+  [...(data.attractions || []), ...(data.accommodations || [])].forEach((item) => {
+    const name = (item.city || '').trim();
+    if (!name) return;
+    const id = villeIdFromName(item.travelId, name);
+    if (known.has(id)) return;
+    known.add(id);
+    data.villes.push({
+      id,
+      travelId: item.travelId,
+      name,
+      lat: item.type === 'city' ? item.lat || '' : '',
+      lng: item.type === 'city' ? item.lng || '' : '',
+    });
+  });
 }
 
 function renameKey(item, from, to) {

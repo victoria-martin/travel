@@ -13,5 +13,9 @@ function mapLegendPanel() {
       <span class="map-dot-pin"><span></span></span>
       Lieu &amp; activité
     </div>
+    <div class="map-legend-row">
+      <span class="map-type-pin"><span>${svgIcon('map-pin')}</span></span>
+      Ville
+    </div>
   </div>`;
 }

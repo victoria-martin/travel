@@ -7,6 +7,7 @@ function createLeafletMap(elementId) {
     attribution: '&copy; OpenStreetMap contributors',
     maxZoom: 18,
   }).addTo(map);
+  L.control.scale({ imperial: false }).addTo(map);
   return map;
 }
 
