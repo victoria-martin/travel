@@ -45,6 +45,7 @@ function createScenario() {
   };
   state.scenarios.push(s);
   saveNow();
+  showToast('Scénario créé');
   openScenario(s.id);
 }
 

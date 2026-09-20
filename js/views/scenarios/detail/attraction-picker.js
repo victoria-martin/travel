@@ -15,5 +15,6 @@ function attractionMatches(query, usedIds) {
 function createAttractionNamed(name) {
   const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
   upsertAttraction(item);
+  showToast('Lieu créé');
   return item;
 }

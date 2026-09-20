@@ -8,13 +8,19 @@ function renderMapView() {
         <p class="view-sub" id="route-notice">${ROUTE_HELP}</p>
       </div>
       <div class="view-header-actions">
-        ${mapFilterButton()} ${toolbarSeparator()} ${newCityPanel()} ${toolbarSeparator()}
-        ${toolbarMenu()}
+        ${mapFilterButton()}
+        ${toolbarButton({
+          icon: svgIcon('compass'),
+          label: 'Itinéraire',
+          onclick: 'toggleRouteBuilderMode()',
+          active: routeBuilder.active,
+        })}
+        ${toolbarSeparator()} ${newCityPanel()} ${toolbarSeparator()} ${toolbarMenu()}
       </div>
     </div>
     <div class="map-layout">
       <div class="map-side" style="width:${prefs.mapSideWidth}px">
-        ${mapScenarioPanel()} ${mapFilterPanel()} ${mapLegendPanel()}
+        ${routeBuilderPanel()} ${mapScenarioPanel()} ${mapFilterPanel()} ${mapLegendPanel()}
       </div>
       ${mapSplitHandle()}
       <div id="map"></div>

@@ -60,6 +60,20 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-09-20** — nouvelle page **Villes** ([js/views/villes/villes.js](js/views/villes/villes.js)),
+  entrée de barre latérale à part entière plutôt que mode de Lieux & activités — choix posé
+  explicitement (AskUserQuestion), donc en tension avec le critère « une lecture dérivée est un mode
+  de la page qu'elle lit » de la tâche <!--t:s7qk--> ([PLAN.md](PLAN.md)), qui aura Villes à trancher
+  avec le reste. Une première version groupait les lieux par ville en accordéons ; elle s'efface
+  devant une table classique — sur sa propre demande (« fais moi donc une table ! ») — pour rester
+  dans le seul patron de liste de l'app : [columns.js](js/views/villes/columns.js) déclare
+  `COLUMN_SETS.villes` en réutilisant telles quelles les cellules de
+  [attractions/columns.js](js/views/attractions/columns.js) (même entité, mêmes rendus), avec la
+  ville en tête et en premier niveau de tri (`SORT_DEFAULTS.villes`, ville puis nom) — préférences de
+  tri et colonnes propres à `villes`, pour ne pas modifier celles de Lieux & activités en touchant
+  l'une ou l'autre page. Une ligne ouvre la fiche du lieu en panneau (`openAttractionSheet`), déjà
+  câblée par `ROW_CLICKS.attractions` — nouvel enregistrement `ROW_CLICKS.villes`, même fonction.
+
 - **2026-09-19** — les marqueurs de la carte générale passent du disque plat (`L.circleMarker`, sans
   glyph malgré ce que disait le commentaire d'en-tête du fichier — resté d'une intention jamais
   posée) à une pastille `L.divIcon` portant l'icône Lucide de sa collection — 🏠 `house` pour un

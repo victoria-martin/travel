@@ -113,6 +113,35 @@ const MODAL_TYPES = {
   settings: { body: () => settingsForm() },
 };
 
+const MODAL_RESOURCE_MESSAGES = {
+  voyage: ['Voyage créé', 'Voyage modifié'],
+  accommodation: ['Hébergement créé', 'Hébergement modifié'],
+  'accommodation-booking': ['Hébergement créé', 'Hébergement modifié'],
+  'accommodation-home-exchange': ['Hébergement créé', 'Hébergement modifié'],
+  'accommodation-airbnb': ['Hébergement créé', 'Hébergement modifié'],
+  'accommodation-google-maps': ['Hébergement créé', 'Hébergement modifié'],
+  attraction: ['Lieu créé', 'Lieu modifié'],
+  transport: ['Transport créé', 'Transport modifié'],
+  prestataire: ['Prestataire créé', 'Prestataire modifié'],
+  modele: ['Modèle créé', 'Modèle modifié'],
+  voiture: ['Offre créée', 'Offre modifiée'],
+  charge: ['Charge créée', 'Charge modifiée'],
+  'valise-catalogue': ['Article créé', 'Article modifié'],
+  step: ['Étape créée', 'Étape modifiée'],
+};
+
+document.addEventListener(
+  'click',
+  (event) => {
+    if (!event.target.closest('#f-save') || !modal) return;
+    const messages = MODAL_RESOURCE_MESSAGES[modal.type];
+    if (!messages) return;
+    const message = messages[modal.payload.id ? 1 : 0];
+    setTimeout(() => showToast(message));
+  },
+  true,
+);
+
 // Un même formulaire se pose au centre ou en panneau de droite : c'est l'ouverture qui le dit et
 // non le type, une fiche s'ouvrant en panneau là où sa création garde la modale.
 function openModal(type, ...args) {

@@ -32,6 +32,7 @@ function initMap() {
   });
 
   fitToPoints(leafletMap, bounds);
+  if (routeBuilder.active) drawRouteBuilderLine(leafletMap);
 }
 
 // « Lieux du scénario » ne restreint que les hébergements : les attractions/villes du voyage
@@ -54,13 +55,13 @@ function markerPoint(item, bounds) {
 function addAccommodationMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addTypePinMarker(map, point, 'house', accType(a.type).color, accommodationPopup(a));
+  addTypePinMarker(map, point, 'house', accType(a.type).color, accommodationPopup(a), a.name);
 }
 
 function addAttractionMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addTypePinMarker(map, point, 'landmark', attractionType(a.type).color, attractionPopup(a));
+  addTypePinMarker(map, point, 'landmark', attractionType(a.type).color, attractionPopup(a), a.name);
 }
 
 function mapTypePinIcon(icon, color) {
@@ -73,7 +74,7 @@ function mapTypePinIcon(icon, color) {
   });
 }
 
-function addTypePinMarker(map, point, icon, color, popupHtml) {
+function addTypePinMarker(map, point, icon, color, popupHtml, name) {
   const marker = L.marker(point, { icon: mapTypePinIcon(icon, color) }).addTo(map);
   marker.bindPopup(popupHtml);
   // bindPopup attache son propre clic « toggle » : un clic fermerait ce que le survol vient
@@ -87,6 +88,10 @@ function addTypePinMarker(map, point, icon, color, popupHtml) {
     if (!pinned) marker.closePopup();
   });
   marker.on('click', () => {
+    if (routeBuilder.active) {
+      addRouteBuilderPoint(point[0], point[1], name);
+      return;
+    }
     pinned = true;
     marker.openPopup();
   });

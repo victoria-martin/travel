@@ -78,6 +78,6 @@ function saveOfferDraft() {
     priceTotal: document.getElementById('draft-price').value.trim(),
   });
   saveNow();
-  render();
+  showToast('Offre créée');
   focusOfferDraft();
 }

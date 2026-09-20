@@ -16,6 +16,12 @@ COLUMN_SETS.attractions = [
     sortValue: (a) => (a.name || '').toLowerCase(),
   },
   {
+    key: 'recent',
+    label: 'Ajout récent',
+    hiddenByDefault: true,
+    sortValue: (a) => a.recentOrder,
+  },
+  {
     key: 'type',
     label: 'Type',
     cell: attractionTypeCell,
@@ -55,6 +61,7 @@ COLUMN_SETS.attractions = [
   {
     key: 'description',
     label: 'Description',
+    ellipsis: true,
     cell: attractionDescriptionCell,
   },
   {
@@ -121,9 +128,7 @@ COLUMN_SETS.attractions = [
 ];
 
 SORT_DEFAULTS.attractions = [
-  { key: 'favorite', dir: 'asc' },
-  { key: 'type', dir: 'asc' },
-  { key: 'name', dir: 'asc' },
+  { key: 'recent', dir: 'desc' },
 ];
 
 function attractionFavoriteCell(a) {
@@ -131,7 +136,7 @@ function attractionFavoriteCell(a) {
 }
 
 function attractionNameCell(a) {
-  return `<strong>${escapeHtml(a.name)}</strong>`;
+  return `<strong>${escapeHtml(a.name)}</strong>${missingAddressIndicator(a)}`;
 }
 
 function attractionTypeCell(a) {

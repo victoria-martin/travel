@@ -23,6 +23,7 @@ function googleMapsAccommodationForm(p) {
         ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
       </div>
     </div>
+    ${accommodationStatusField(p)}
     ${locateFields(p)}
     <div class="field-row">
       <div class="field">

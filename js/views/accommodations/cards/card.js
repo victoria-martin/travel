@@ -1,7 +1,10 @@
 function accommodationCard(a) {
   return /* HTML */ `<div class="card">
     <div class="card-top">
-      <p class="card-name">${escapeHtml(a.name)} ${outOfRangeIndicator(accommodationSearchOutOfRange(a))}</p>
+      <p class="card-name">
+        ${escapeHtml(a.name)} ${outOfRangeIndicator(accommodationSearchOutOfRange(a))}
+        ${missingAddressIndicator(a)}
+      </p>
       ${favoriteStar(a.favorite, `toggleFavorite('${a.id}')`)}
     </div>
     <div class="card-selects">${accommodationTypeDropdown(a)}${accommodationStatusTag(a)}</div>

@@ -1,6 +1,6 @@
 /*
   La porte Booking : le lien en tête, puis ce que l'annonce remplit — nom, type, prix, adresse et
-  niveaux administratifs. Statut, tags et coup de cœur se posent depuis la liste.
+  niveaux administratifs. Tags et coup de cœur se posent depuis la liste.
 */
 function bookingAccommodationForm(p) {
   return /* HTML */ `
@@ -23,6 +23,7 @@ function bookingAccommodationForm(p) {
         ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
       </div>
     </div>
+    ${accommodationStatusField(p)}
     ${locateFields(p)}
     <div class="field-row">
       <div class="field">

@@ -5,7 +5,7 @@
 
 function listTable(kind, items) {
   const columns = visibleColumns(kind);
-  return /* HTML */ `<div class="table-wrap">
+  return /* HTML */ `<div class="table-wrap table-wrap-${kind}">
     <table>
       <thead>
         <tr>
@@ -30,9 +30,12 @@ function listRow(kind, item, columns) {
   const open = ROW_CLICKS[kind]
     ? ` class="row-openable" onclick="openListRow(event,'${kind}','${item.id}')"`
     : '';
-  return /* HTML */ `<tr${open}>
+  return /* HTML */ `<tr${open} class="list-row">
     ${columns
-      .map((c) => `<td${c.nowrap ? ' style="white-space:nowrap;"' : ''}>${c.cell(item)}</td>`)
+      .map(
+        (c) =>
+          `<td${c.nowrap ? ' style="white-space:nowrap;"' : ''}${c.ellipsis ? ' class="cell-ellipsis"' : ''}>${c.cell(item)}</td>`
+      )
       .join('')}
   </tr>`;
 }

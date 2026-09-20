@@ -1,5 +1,9 @@
 function renderAttractionsView() {
-  const items = sortItems('attractions', ofCurrentTravel(state.attractions));
+  const source = ofCurrentTravel(state.attractions).map((item, index) => ({
+    ...item,
+    recentOrder: index,
+  }));
+  const items = sortItems('attractions', source);
   return /* HTML */ `
     ${attractionsHeader(items)}
     ${

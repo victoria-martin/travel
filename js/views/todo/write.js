@@ -10,7 +10,7 @@ function addTodoList() {
   });
   todoDraft = { kind: todoDraft.kind, columnKey: column.key, values: [] };
   saveNow();
-  render();
+  showToast('Liste créée');
 }
 
 // A list is edited where it is read: clicking one of its pills adds or drops that word.
@@ -21,7 +21,7 @@ function toggleTodoListValue(id, index) {
     ? list.filterValues.filter((v) => v !== value)
     : [...list.filterValues, value];
   saveNow();
-  render();
+  showToast('Liste modifiée');
 }
 
 function deleteTodoList(id) {

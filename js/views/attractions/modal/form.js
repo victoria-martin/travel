@@ -23,12 +23,14 @@ function emptyAttraction() {
 }
 
 function attractionForm(p) {
+  wordSelectValues['a-type'] = p.type || '';
+  wordSelectValues['a-status'] = p.status || '';
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un lieu</h3>
     <div class="field-row">
       <div class="field">
         <label>Type</label>
-        <select id="a-type">
+        <select id="a-type" onchange="wordSelectChanged('a-type', 'attractionTypes')">
           <option value="" ${p.type ? '' : 'selected'}>
             ${UNSET_ATTRACTION_TYPE.emoji} ${UNSET_ATTRACTION_TYPE.label}
           </option>
@@ -38,30 +40,36 @@ function attractionForm(p) {
                 `<option value="${key}" ${p.type === key ? 'selected' : ''}>${t.emoji} ${t.label}</option>`,
             )
             .join('')}
+          <option value="${NEW_WORD_VALUE}">＋ Ajouter un type</option>
         </select>
       </div>
       <div class="field">
-        <label>Nom</label
-        ><input
-          id="a-name"
-          type="text"
-          value="${escapeHtml(p.name)}"
-        />
+        <label>Statut</label>
+        <select id="a-status" onchange="wordSelectChanged('a-status', 'attractionStatuses')">
+          <option value="" ${p.status ? '' : 'selected'}>
+            ${UNSET_ATTRACTION_STATUS.emoji} ${UNSET_ATTRACTION_STATUS.label}
+          </option>
+          ${Object.entries(ATTRACTION_STATUSES)
+            .map(
+              ([key, s]) =>
+                `<option value="${key}" ${p.status === key ? 'selected' : ''}>${s.emoji} ${s.label}</option>`,
+            )
+            .join('')}
+          <option value="${NEW_WORD_VALUE}">＋ Ajouter un statut</option>
+        </select>
       </div>
     </div>
     <div class="field">
-      <label>Statut</label>
-      <select id="a-status">
-        <option value="" ${p.status ? '' : 'selected'}>
-          ${UNSET_ATTRACTION_STATUS.emoji} ${UNSET_ATTRACTION_STATUS.label}
-        </option>
-        ${Object.entries(ATTRACTION_STATUSES)
-          .map(
-            ([key, s]) =>
-              `<option value="${key}" ${p.status === key ? 'selected' : ''}>${s.emoji} ${s.label}</option>`,
-          )
-          .join('')}
-      </select>
+      <label>Nom</label
+      ><input
+        id="a-name"
+        type="text"
+        value="${escapeHtml(p.name)}"
+      />
+    </div>
+    <div class="field">
+      <label>Description</label
+      ><textarea id="a-description" rows="3">${escapeHtml(p.description)}</textarea>
     </div>
     ${locateFields(p)}
     <div class="field">
@@ -117,14 +125,11 @@ function attractionForm(p) {
       </div>
     </div>
     ${tagsField(p, { field: 'tags', label: 'Tags', options: allAttractionTags })}
-    <div class="field">
-      <label>Description</label
-      ><textarea id="a-description" rows="3">${escapeHtml(p.description)}</textarea>
-    </div>
     <label class="filter-option" style="padding:0 0 6px 0;"
       ><input type="checkbox" id="a-favorite" ${p.favorite ? 'checked' : ''} />
       ${svgIcon('star', { fill: true })} Coup de cœur</label
     >
+    ${attractionScenarioActions()}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
       <button class="btn" id="f-save" onclick="saveAttraction('${p.id || ''}')">Enregistrer</button>

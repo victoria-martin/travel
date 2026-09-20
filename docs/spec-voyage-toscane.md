@@ -80,6 +80,11 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   calculs, l'affichage garde la saisie.
 - Un champ prix accepte un **calcul** : une saisie commençant par `=` (`=625/4`) est évaluée quand
   le champ perd le focus, et remplacée par son résultat arrondi à l'entier.
+- **Un mot de vocabulaire ajouté depuis un select rejoint directement le dictionnaire figé du
+  domaine** (`ACCOMMODATION_TYPES`, `ACCOMMODATION_STATUSES`, `ATTRACTION_TYPES`,
+  `ATTRACTION_STATUSES`) : tout ce qui lit ce dictionnaire — tableau, légende, filtres — le voit
+  sans rien savoir de l'ajout. Il est retenu en local (`prefs`), **jamais synchronisé** : un mot
+  ajouté sur un appareil n'apparaît pas sur un autre.
 - **Une dépense se corrige à sa source** : la page Dépenses lit les montants portés par les autres
   entités — un hébergement réservé, la voiture par défaut — et ne les édite jamais. Seules les
   charges fixes se saisissent là, parce qu'elles n'ont pas d'autre page. D'où les deux blocs,
@@ -330,8 +335,8 @@ pastilles, avant même l'enregistrement.
 
 | Champ                            | Détail                                                                                          |
 | -------------------------------- | ----------------------------------------------------------------------------------------------- |
-| type                             | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné                             |
-| statut                           | les neuf statuts du workflow, ou non renseigné                                                  |
+| type                             | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné ; complétable à la volée depuis le select |
+| statut                           | les neuf statuts du workflow, ou non renseigné ; complétable à la volée depuis le select         |
 | nom                              |                                                                                                 |
 | adresse                          | une seule, c'est elle qu'on géocode                                                             |
 | pays · région · province · ville | proposés par le géocodage, modifiables à la main                                                |
@@ -375,7 +380,7 @@ La vue principale, en **tableau ou en cartes**.
   Un tag coché puis disparu est retiré du filtre tout seul.
 - **Ajouter** : le `+` ouvre un panneau de quatre portes — depuis un lien Booking, depuis un lien
   HomeExchange, depuis un lien Airbnb, ou à la main. Chaque porte a son formulaire : le lien en
-  tête, puis nom, localisation, prix, dates et notes. Statut, tags et coup de cœur ne s'y trouvent
+  tête, puis nom, statut, localisation, prix, dates et notes. Tags et coup de cœur ne s'y trouvent
   pas, ils se posent depuis la liste. Le type est celui de la porte pour HomeExchange et Airbnb ;
   Booking logeant aussi bien un hôtel qu'une maison, sa porte garde le select que l'import remplit.
 - **La fiche s'ouvre en panneau** : cliquer une ligne du tableau — ailleurs que sur une cellule qui
@@ -421,8 +426,8 @@ le **type** qui le dit, pas la table où il serait rangé.
 | Champ                         | Détail                                                    |
 | ----------------------------- | --------------------------------------------------------- |
 | nom                           |                                                           |
-| type                          | liste figée, comme le type d'un hébergement               |
-| statut                        | liste propre, courte                                      |
+| type                          | liste figée, comme le type d'un hébergement ; complétable à la volée |
+| statut                        | liste propre, courte ; complétable à la volée                        |
 | description                   | texte libre                                               |
 | adresse                       | c'est elle qu'on géocode                                  |
 | coordonnées                   | latitude, longitude                                       |
@@ -446,7 +451,7 @@ Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, 
 ville, province, région, pays, adresse, coordonnées, hébergement, horaires et téléphone, lien —
 région, pays, adresse, coordonnées, hébergement, horaires et téléphone masqués par défaut. Les
 quatre niveaux sont des colonnes à part, comme chez les hébergements : c'est ce qui les rend
-filtrables un à un — « les lieux de Toscane ». Tri par défaut favoris d'abord, puis type, puis nom. Même bloc de
+filtrables un à un — « les lieux de Toscane ». Tri par défaut du plus récent au plus ancien. Même bloc de
 localisation que les hébergements.
 
 - **Un lien Google Maps collé remplit la fiche** : nom, adresse et coordonnées, lus par l'Apps
@@ -465,6 +470,24 @@ localisation que les hébergements.
   pour qu'une première attraction ait déjà quelque chose à choisir. Le vocabulaire est **commun à
   tous les types** : un restaurant et un musée puisent dans la même liste. Ils s'éditent sur place
   depuis la cellule du tableau, comme ceux d'un hébergement, et depuis la modale.
+- **« Ajouter à un scénario » / « Ajouter au plan »** dans la modale, deux façons de rattacher le
+  lieu à une étape sans passer par la fiche du scénario. Le premier ouvre un menu groupé par
+  scénario, chaque étape affichant son nom et sa localisation ; choisir une étape y pose le lieu en
+  activité, comme le ferait son champ Activités. Le second saute le choix : il rattache le lieu à
+  l'étape du **scénario choisi** dont l'**hébergement** est le plus proche à vol d'oiseau — seuls
+  les hébergements comptent, une étape sans logement connu ou sans coordonnées n'entre pas dans le
+  calcul, faute de pouvoir calculer une route hors ligne. Un lieu pas encore enregistré (création en
+  cours) est sauvegardé en silence au premier clic, sans fermer la modale : les deux boutons
+  marchent aussi bien à la création qu'à l'édition.
+
+### Villes
+
+Lecture dérivée de Lieux & activités : les mêmes lieux du voyage, en table triée par ville plutôt
+qu'à plat — même mécanique que les autres listes de l'app (tri, colonnes à masquer), avec ses
+propres préférences pour ne pas modifier celles de Lieux & activités. Colonnes : favori, ville,
+nom, type, statut, tags, description — description masquée par défaut. Tri par défaut ville puis
+nom. Une ligne ouvre la fiche du lieu en panneau, comme depuis Lieux & activités. Rien ne s'y crée :
+c'est une autre façon de parcourir la même collection, pas un référentiel à part.
 
 ### Transports
 

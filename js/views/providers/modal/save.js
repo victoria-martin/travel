@@ -51,5 +51,6 @@ function forgetProviderOptions(optionIds) {
 function createProviderNamed(name, mode) {
   const item = { ...emptyProvider(), id: uid(), travelId: currentTravelId(), name, mode };
   upsertProvider(item);
+  showToast('Prestataire créé');
   return item;
 }

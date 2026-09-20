@@ -25,6 +25,7 @@ function airbnbAccommodationForm(p) {
         value="${escapeHtml(p.name)}"
       />
     </div>
+    ${accommodationStatusField(p)}
     ${locateFields(p)}
     <div class="field-row">
       <div class="field">

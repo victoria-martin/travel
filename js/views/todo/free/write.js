@@ -3,7 +3,7 @@ function addFreeTodo(text) {
   if (!trimmed) return;
   state.freeTodos.push({ id: uid(), travelId: currentTravelId(), text: trimmed, done: false });
   saveNow();
-  render();
+  showToast('Tâche créée');
   focusFreeTodoInput();
 }
 
@@ -11,7 +11,7 @@ function toggleFreeTodo(id) {
   const todo = getFreeTodo(id);
   todo.done = !todo.done;
   saveNow();
-  render();
+  showToast('Tâche modifiée');
 }
 
 function deleteFreeTodo(id) {

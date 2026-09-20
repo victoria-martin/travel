@@ -2,7 +2,7 @@ function duplicateAccommodation(id) {
   const a = getAccommodation(id);
   state.accommodations.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });
   saveNow();
-  render();
+  showToast('Hébergement créé');
 }
 
 function duplicateOffer(id) {
@@ -15,28 +15,28 @@ function duplicateOffer(id) {
     isDefault: false,
   });
   saveNow();
-  render();
+  showToast('Offre créée');
 }
 
 function duplicateFixedCost(id) {
   const cost = getFixedCost(id);
   state.fixedCosts.push({ ...cost, id: uid(), label: `${cost.label} (copie)` });
   saveNow();
-  render();
+  showToast('Charge créée');
 }
 
 function duplicateAttraction(id) {
   const a = getAttraction(id);
   state.attractions.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });
   saveNow();
-  render();
+  showToast('Lieu créé');
 }
 
 function duplicateTransport(id) {
   const t = getTransport(id);
   state.transports.push({ ...t, id: uid() });
   saveNow();
-  render();
+  showToast('Transport créé');
 }
 
 // La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une. Elle ne
@@ -55,7 +55,7 @@ function duplicateStep(scenarioId, stepId) {
   const i = s.steps.findIndex((st) => st.id === stepId);
   s.steps.splice(i + 1, 0, copyStep(s.steps[i]));
   saveNow();
-  render();
+  showToast('Étape créée');
 }
 
 // Groupes et colonnes reprennent aussi des identifiants neufs, et les étapes de la copie désignent
@@ -83,5 +83,5 @@ function duplicateScenario(id) {
   }));
   state.scenarios.push(copy);
   saveNow();
-  render();
+  showToast('Scénario créé');
 }

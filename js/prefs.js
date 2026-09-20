@@ -18,6 +18,7 @@ let prefs = {
   outOfRangeStyle: 'alert',
   mobileNavOrder: null,
   filters: {},
+  customWords: {},
 };
 
 function loadPrefs() {

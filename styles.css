@@ -39,6 +39,32 @@ body {
   overflow: hidden;
 }
 
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  max-width: min(360px, calc(100vw - 48px));
+  padding: 11px 16px;
+  border: 1px solid var(--sage-line);
+  border-radius: 8px;
+  background: var(--sage-pale);
+  color: var(--ink);
+  box-shadow: 0 8px 24px rgba(36, 49, 43, 0.16);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 639px) {
+  .toast {
+    right: 16px;
+    bottom: 72px;
+    left: 16px;
+    max-width: none;
+  }
+}
+
 /* ---------- Icons ---------- */
 /* An icon sizes itself on the text carrying it, hence the em: the sizes already set in font-size
    — sidebar, .icon-btn, step arrows — hold as they are. Stroke weight is tuned here for the
@@ -676,6 +702,7 @@ a.btn {
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow-x: auto;
+  /* table-layout: fixed; */
 }
 table {
   width: 100%;
@@ -736,11 +763,33 @@ tr:last-child td {
   font-size: 12px;
   margin-top: 2px;
 }
+.cell-ellipsis {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 tr:hover td {
   background: #f6efe0;
 }
 .row-openable {
   cursor: pointer;
+  /* border: solid 1px red; */
+  /*  display: flex; */
+}
+
+.row-openable td {
+  /* border: solid 1px blue; */
+  /* display: block; */
+}
+
+.table-wrap-hebergements .row-openable {
+  display: table-row;
+  /* align-content: center; */
+}
+
+.table-wrap-hebergements .row-openable td {
+  display: table-cell;
 }
 
 /* ---------- Cards ---------- */
@@ -1117,6 +1166,14 @@ tr:hover td {
   justify-content: flex-end;
   gap: 8px;
   margin-top: 18px;
+}
+.attraction-scenario-trigger {
+  display: inline-flex;
+  align-items: center;
+  list-style: none;
+}
+.attraction-scenario-trigger::-webkit-details-marker {
+  display: none;
 }
 
 /* ---------- Scenarios ---------- */
@@ -2607,6 +2664,45 @@ tr:hover td {
   padding: 3px 0;
   font-size: 12.5px;
 }
+.route-builder-hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.route-builder-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-size: 13px;
+  border-top: 1px solid var(--line);
+}
+.route-builder-row:first-child {
+  border-top: none;
+}
+.route-builder-handle {
+  cursor: grab;
+  color: var(--ink-soft);
+}
+.route-builder-index {
+  color: var(--ink-soft);
+}
+.route-builder-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.route-builder-drop-before {
+  box-shadow: 0 -3px 0 -1px var(--stone);
+}
+.route-builder-drop-after {
+  box-shadow: 0 3px 0 -1px var(--stone);
+}
+.route-builder-summary {
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
 .map-filter-block {
   margin-bottom: 14px;
 }
@@ -2696,6 +2792,15 @@ tr:hover td {
   background: var(--sage-pale);
   border: 1px solid var(--line);
   color: var(--ink-soft);
+}
+
+/* ---------- Adresse manquante ---------- */
+.warning-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  color: var(--ochre);
+  vertical-align: middle;
 }
 
 /* ---------- Interrupteur ---------- */

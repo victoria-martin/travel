@@ -63,6 +63,17 @@ uniquement dans la capture). Un seul style, pas de variante taille/couleur.
 - `.modal` (styles.css:954) / `.modal-sheet` (styles.css:975) — deux gabarits de modale, centrée vs
   panneau latéral plein écran sous 440px.
 
+## Toast de confirmation (`.toast`, styles.css)
+
+Feedback éphémère après une mutation réussie d'une ressource : création, modification ou
+suppression. Le message reste court et nomme l'action et la ressource — « Lieu créé », « Lieu
+modifié », « Lieu supprimé » — sans remplacer le contenu de la page ni demander d'action.
+
+- Placement fixe : en bas à droite sur desktop, au-dessus de la barre de navigation mobile.
+- Fond `--sage-pale`, bordure `--sage-line`, texte `--ink`.
+- Disparition automatique après 2,6 secondes ; une nouvelle notification remplace la précédente.
+- Aucun toast si l'utilisatrice annule ou si l'opération échoue.
+
 ## Ce qui manque pour un vrai design system
 
 - Pas de `.btn-secondary` distinct d'`.btn-ghost` — à trancher si un jour un besoin les distingue.

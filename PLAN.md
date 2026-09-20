@@ -341,7 +341,7 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 
 ## 🧩 Transverse
 
-- **Regrouper la barre latérale par nature** <!--t:s7qk--> — 🖼️ écran · ⏳ à faire : ses neuf
+- **Regrouper la barre latérale par nature** <!--t:s7qk--> — 🖼️ écran · ⏳ à faire : ses onze
   entrées ([render.js](js/render.js#L27)) mélangent trois natures sans le dire — on y collecte
   (Hébergements, Lieux & activités, Transports, Locations, Dépenses), on y décide (Scénarios), on y
   lit (Carte, À faire). **Le critère** : la barre latérale liste ce qui se collecte et ce qui se
@@ -351,6 +351,11 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   tranche. Deux points restent ouverts : **Notes** n'est pas une lecture, on y écrit — soit elle
   remonte dans COLLECTER, soit le troisième bloc se nomme autrement ; et **Dépenses** est de la
   collecte (des charges saisies) dont le bloc Calculé est une lecture logée dans sa propre page.
+  **Villes**, ajoutée en page à part entière plutôt qu'en mode de Lieux & activités (choix posé
+  explicitement, hors de ce chantier), en est un cas concret à trancher avec le reste : soit elle
+  entre dans LIRE malgré tout, soit ce chantier révise le critère. L'énumération ci-dessus reste par
+  ailleurs incomplète (Accueil, Notes, Valise n'y figurent pas) — à vérifier contre `NAV_ITEMS`
+  plutôt que recompter à la main quand ce chantier démarre.
 - **Réordonner la barre latérale desktop** <!--t:n7wq--> — 🖼️ écran · ⏳ à faire : le tiroir mobile
   laisse déjà glisser l'ordre des pages (`prefs.mobileNavOrder`, [mobile-nav/](js/views/mobile-nav/)),
   pas la sidebar desktop qui boucle sur `NAV_ITEMS` dans un ordre fixe

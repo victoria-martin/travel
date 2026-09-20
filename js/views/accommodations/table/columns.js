@@ -90,7 +90,13 @@ const ACCOMMODATION_COLUMNS = [
     cell: accommodationAvailableToCell,
     sortValue: (a) => a.availableTo || '',
   },
-  { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: accommodationNotesCell },
+  {
+    key: 'notes',
+    label: 'Notes',
+    hiddenByDefault: true,
+    ellipsis: true,
+    cell: accommodationNotesCell,
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: accommodationActionsCell },
@@ -100,9 +106,12 @@ COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
 
 SORT_DEFAULTS.hebergements = [
   { key: 'favorite', dir: 'asc' },
+  { key: 'recent', dir: 'desc' },
   { key: 'type', dir: 'asc' },
   { key: 'status', dir: 'asc' },
 ];
+
+// SORT_DEFAULTS.hebergements = [{ key: 'recent', dir: 'desc' }];
 
 function accommodationFavoriteCell(a) {
   return favoriteStar(a.favorite, `toggleFavorite('${a.id}')`);
@@ -111,7 +120,8 @@ function accommodationFavoriteCell(a) {
 function accommodationNameCell(a) {
   const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
   const outOfRange = outOfRangeIndicator(accommodationSearchOutOfRange(a));
-  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${notes}`;
+  const missingAddress = missingAddressIndicator(a);
+  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${missingAddress}${notes}`;
 }
 
 function accommodationTypeCell(a) {

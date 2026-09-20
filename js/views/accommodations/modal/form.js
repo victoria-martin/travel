@@ -26,26 +26,13 @@ function accommodationForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} un hébergement</h3>
     ${outOfRangeBanner(accommodationSearchOutOfRange(p))}
-    <div class="field-row">
-      ${accommodationTypeField(p)}
-      <div class="field">
-        <label>Nom</label
-        ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
-      </div>
+    <div class="field-row">${accommodationTypeField(p)} ${accommodationStatusField(p)}</div>
+    <div class="field">
+      <label>Nom</label
+      ><input id="f-name" type="text" value="${escapeHtml(p.name)}" />
     </div>
     <div class="field">
-      <label>Statut</label>
-      <select id="f-status">
-        <option value="" ${p.status ? '' : 'selected'}>
-          ${UNSET_ACCOMMODATION_STATUS.emoji} ${UNSET_ACCOMMODATION_STATUS.label}
-        </option>
-        ${Object.entries(ACCOMMODATION_STATUSES)
-          .map(
-            ([key, s]) =>
-              `<option value="${key}" ${p.status === key ? 'selected' : ''}>${s.emoji} ${s.label}</option>`,
-          )
-          .join('')}
-      </select>
+      <label>Notes</label><textarea id="f-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     ${locateFields(p)}
     <div class="field-row">
@@ -109,9 +96,6 @@ function accommodationForm(p) {
       />
     </div>
     ${tagsField(p, { field: 'tags', label: 'Tags', options: allAccommodationTags })}
-    <div class="field">
-      <label>Notes</label><textarea id="f-notes" rows="2">${escapeHtml(p.notes)}</textarea>
-    </div>
     <label class="filter-option" style="padding:0 0 6px 0;"
       ><input type="checkbox" id="f-favorite" ${p.favorite ? 'checked' : ''} />
       ${svgIcon('star', { fill: true })} Coup de cœur</label

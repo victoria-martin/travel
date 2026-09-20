@@ -45,6 +45,7 @@ function emptyData() {
 
 function loadData() {
   loadPrefs();
+  loadCustomWords();
   state = migrateData(readStore(LOCAL_KEY) || emptyData());
   selectTestScenario();
   applyRoute();

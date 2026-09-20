@@ -6,8 +6,11 @@
 */
 const FLASH_MS = 1100;
 const COLLAPSE_MS = 260;
+const TOAST_MS = 2600;
 
 let flashedNodeId = null;
+let activeToast = '';
+let toastTimer = null;
 
 function flashOnNextRender(id) {
   flashedNodeId = id;
@@ -27,4 +30,18 @@ function collapseThen(ids, mutate) {
   if (!nodes.length) return mutate();
   nodes.forEach((node) => node.classList.add('is-collapsing'));
   setTimeout(mutate, COLLAPSE_MS);
+}
+
+function showToast(message) {
+  activeToast = message;
+  clearTimeout(toastTimer);
+  render();
+  toastTimer = setTimeout(() => {
+    activeToast = '';
+    render();
+  }, TOAST_MS);
+}
+
+function toastHtml() {
+  return activeToast ? `<div class="toast" role="status">${escapeHtml(activeToast)}</div>` : '';
 }

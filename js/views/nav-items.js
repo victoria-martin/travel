@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { key: 'hebergements', label: 'Hébergements', icon: svgIcon('house') },
   { key: 'depenses', label: 'Dépenses', icon: EXPENSE_ICON },
   { key: 'attractions', label: 'Lieux & activités', icon: svgIcon('landmark') },
+  { key: 'villes', label: 'Villes', icon: svgIcon('map-pin') },
   { key: 'transports', label: 'Transports', icon: svgIcon('plane') },
   { key: 'scenarios', label: 'Scénarios', icon: svgIcon('compass') },
   { key: 'carte', label: 'Carte', icon: svgIcon('map') },
