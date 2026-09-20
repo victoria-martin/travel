@@ -71,6 +71,7 @@ function attractionForm(p) {
       <label>Description</label
       ><textarea id="a-description" rows="3">${escapeHtml(p.description)}</textarea>
     </div>
+    ${tagsField(p, { field: 'tags', label: 'Tags', options: allAttractionTags })}
     ${locateFields(p)}
     <div class="field">
       <label>Hébergement</label>
@@ -124,7 +125,6 @@ function attractionForm(p) {
         ><input id="a-phone" type="text" value="${escapeHtml(p.phone)}" />
       </div>
     </div>
-    ${tagsField(p, { field: 'tags', label: 'Tags', options: allAttractionTags })}
     <label class="filter-option" style="padding:0 0 6px 0;"
       ><input type="checkbox" id="a-favorite" ${p.favorite ? 'checked' : ''} />
       ${svgIcon('star', { fill: true })} Coup de cœur</label

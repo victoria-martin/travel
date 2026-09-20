@@ -34,6 +34,7 @@ function accommodationForm(p) {
     <div class="field">
       <label>Notes</label><textarea id="f-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
+    ${tagsField(p, { field: 'tags', label: 'Tags', options: allAccommodationTags })}
     ${locateFields(p)}
     <div class="field-row">
       <div class="field">
@@ -95,7 +96,6 @@ function accommodationForm(p) {
         onchange="importGoogleMapsLink(this, 'f-name')"
       />
     </div>
-    ${tagsField(p, { field: 'tags', label: 'Tags', options: allAccommodationTags })}
     <label class="filter-option" style="padding:0 0 6px 0;"
       ><input type="checkbox" id="f-favorite" ${p.favorite ? 'checked' : ''} />
       ${svgIcon('star', { fill: true })} Coup de cœur</label

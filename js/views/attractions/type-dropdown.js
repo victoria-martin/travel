@@ -9,6 +9,11 @@ function pickAttractionType(id, type) {
   setAttractionType(id, type);
 }
 
+function askNewAttractionType(id) {
+  openInlineMenu = null;
+  askNewWord('attractionTypes', (word) => setAttractionType(id, word.key));
+}
+
 function attractionTypeDropdown(a) {
   const current = attractionType(a.type);
   return inlineDropdown(
@@ -26,6 +31,7 @@ function attractionTypeDropdown(a) {
           </button>`,
           )
           .join('')}
+        <button class="inline-menu-item" onclick="askNewAttractionType('${a.id}')">＋ Ajouter un type</button>
       </div>`,
   );
 }

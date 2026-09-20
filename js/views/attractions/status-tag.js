@@ -9,6 +9,11 @@ function pickAttractionStatus(id, status) {
   setAttractionStatus(id, status);
 }
 
+function askNewAttractionStatus(id) {
+  openInlineMenu = null;
+  askNewWord('attractionStatuses', (word) => setAttractionStatus(id, word.key));
+}
+
 function attractionStatusTag(a) {
   const current = attractionStatus(a.status);
   return inlineDropdown(
@@ -26,6 +31,7 @@ function attractionStatusTag(a) {
           </button>`,
           )
           .join('')}
+        <button class="inline-menu-item" onclick="askNewAttractionStatus('${a.id}')">＋ Ajouter un statut</button>
       </div>`,
   );
 }

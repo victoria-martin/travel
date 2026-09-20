@@ -14,16 +14,20 @@ const WORD_SWATCHES = [
 ];
 
 let wordAsk = null;
+let wordAskCallback = null;
 
-function askNewWord(selectId, bank) {
+// onCreate(word) reçoit le mot créé — un consommateur select le repose dans son <select>
+// (cf. wordSelectChanged), un menu inline l'applique directement à l'entité.
+function askNewWord(bank, onCreate) {
   if (wordAsk) return;
+  wordAskCallback = onCreate;
   const { noun, color } = WORD_BANKS[bank];
   wordAsk = document.createElement('div');
   wordAsk.className = 'overlay overlay-ask';
   wordAsk.onclick = (e) => {
     if (e.target === wordAsk) closeWordAsk();
   };
-  wordAsk.onkeydown = (e) => wordAskKeydown(e, selectId, bank);
+  wordAsk.onkeydown = (e) => wordAskKeydown(e, bank);
   wordAsk.innerHTML = /* HTML */ `<div class="modal modal-ask">
     <h3>Ajouter ${noun}</h3>
     <div class="field-row">
@@ -39,7 +43,7 @@ function askNewWord(selectId, bank) {
     ${color ? wordSwatchesField() : ''}
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeWordAsk()">Annuler</button>
-      <button class="btn" onclick="confirmNewWord('${selectId}','${bank}')">Créer</button>
+      <button class="btn" onclick="confirmNewWord('${bank}')">Créer</button>
     </div>
   </div>`;
   document.getElementById('app').appendChild(wordAsk);
@@ -66,14 +70,14 @@ function pickWordSwatch(color) {
     .forEach((el) => el.classList.toggle('selected', el.dataset.swatch === color));
 }
 
-function wordAskKeydown(event, selectId, bank) {
+function wordAskKeydown(event, bank) {
   if (event.key !== 'Enter' && event.key !== 'Escape') return;
   event.preventDefault();
   if (event.key === 'Escape') return closeWordAsk();
-  confirmNewWord(selectId, bank);
+  confirmNewWord(bank);
 }
 
-function confirmNewWord(selectId, bank) {
+function confirmNewWord(bank) {
   const label = document.getElementById('new-word-label').value.trim();
   if (!label) return;
   const emoji = document.getElementById('new-word-emoji').value.trim() || '🏷️';
@@ -83,7 +87,7 @@ function confirmNewWord(selectId, bank) {
   dict[word.key] = word;
   prefs.customWords[bank] = (prefs.customWords[bank] || []).concat(word);
   persistPrefs();
-  selectCreatedWord(selectId, word);
+  wordAskCallback(word);
   closeWordAsk();
 }
 

@@ -1,7 +1,8 @@
 /*
-  Une pastille par collection — 🏠 pour un hébergement, 🏛 pour une attraction, les mêmes icônes
-  que leur entrée de filtre — teintée de la couleur de son type : la forme dit la collection, la
-  couleur dit le type, un seul glyph par collection évite d'en inventer un par type.
+  Seuls les hébergements portent une icône (🏠, même glyph que leur entrée de filtre) ; les lieux &
+  activités restent un simple point — le glyph par type de couleur ne servait qu'à distinguer des
+  types que la couleur seule rendait déjà peu lisibles à cette taille. Chaque marqueur porte son nom
+  en étiquette permanente à côté du point.
   Le popup s'ouvre au survol et se referme en quittant le point ; un clic l'épingle, il reste alors
   à l'écran jusqu'à ce qu'on le ferme (sa croix, ou un clic ailleurs sur la carte).
 */
@@ -55,27 +56,43 @@ function markerPoint(item, bounds) {
 function addAccommodationMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addTypePinMarker(map, point, 'house', accType(a.type).color, accommodationPopup(a), a.name);
+  addMapPinMarker(map, point, mapPinIcon('house'), accommodationPopup(a), a.name);
 }
 
 function addAttractionMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addTypePinMarker(map, point, 'landmark', attractionType(a.type).color, attractionPopup(a), a.name);
+  addMapPinMarker(map, point, mapDotIcon(), attractionPopup(a), a.name);
 }
 
-function mapTypePinIcon(icon, color) {
+function mapPinIcon(icon) {
   return L.divIcon({
     className: 'map-type-pin',
-    html: `<span style="background:${color}">${svgIcon(icon)}</span>`,
+    html: `<span>${svgIcon(icon)}</span>`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
     popupAnchor: [0, -14],
   });
 }
 
-function addTypePinMarker(map, point, icon, color, popupHtml, name) {
-  const marker = L.marker(point, { icon: mapTypePinIcon(icon, color) }).addTo(map);
+function mapDotIcon() {
+  return L.divIcon({
+    className: 'map-dot-pin',
+    html: '<span></span>',
+    iconSize: [12, 12],
+    iconAnchor: [6, 6],
+    popupAnchor: [0, -8],
+  });
+}
+
+function addMapPinMarker(map, point, icon, popupHtml, name) {
+  const marker = L.marker(point, { icon }).addTo(map);
+  marker.bindTooltip(escapeHtml(name), {
+    permanent: true,
+    direction: 'right',
+    offset: [8, 0],
+    className: 'map-marker-label',
+  });
   marker.bindPopup(popupHtml);
   // bindPopup attache son propre clic « toggle » : un clic fermerait ce que le survol vient
   // d'ouvrir. On le retire pour ne garder que nos trois gestes (survol, clic, croix du popup).

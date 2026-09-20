@@ -2560,8 +2560,8 @@ tr:hover td {
 }
 .map-split {
   align-self: stretch;
-  width: 16px;
-  margin: 0 2px;
+  width: 6px;
+  margin: 0;
   cursor: col-resize;
   border-radius: 3px;
   touch-action: none;
@@ -3034,10 +3034,38 @@ tr:hover td {
   height: 24px;
   box-sizing: border-box;
   border-radius: 50%;
+  background: var(--stone-dark);
   border: 1.5px solid #24312b;
   color: #fff;
   font-size: 13px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.map-dot-pin {
+  background: none;
+  border: none;
+}
+.map-dot-pin span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--stone-dark);
+  border: 1.5px solid #24312b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.map-marker-label {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+.map-marker-label::before {
+  border-right-color: var(--line);
 }
 .route-arrow {
   display: flex;

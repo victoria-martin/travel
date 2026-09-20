@@ -3,6 +3,11 @@ function pickAccommodationType(id, type) {
   setAccommodationType(id, type);
 }
 
+function askNewAccommodationType(id) {
+  openInlineMenu = null;
+  askNewWord('accommodationTypes', (word) => setAccommodationType(id, word.key));
+}
+
 function accommodationTypeDropdown(a) {
   const current = accType(a.type);
   return inlineDropdown(
@@ -20,6 +25,7 @@ function accommodationTypeDropdown(a) {
           </button>`,
           )
           .join('')}
+        <button class="inline-menu-item" onclick="askNewAccommodationType('${a.id}')">＋ Ajouter un type</button>
       </div>`,
   );
 }

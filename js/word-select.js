@@ -47,5 +47,5 @@ function wordSelectChanged(id, bank) {
     return;
   }
   select.value = wordSelectValues[id] || '';
-  askNewWord(id, bank);
+  askNewWord(bank, (word) => selectCreatedWord(id, word));
 }

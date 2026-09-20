@@ -12,6 +12,7 @@ function locateFields(p) {
           id="geo-address"
           type="text"
           value="${escapeHtml(p.address || '')}"
+          onkeydown="if (event.key === 'Enter') { event.preventDefault(); locateAddress(); }"
         />
         <button type="button" class="btn btn-ghost btn-small" onclick="locateAddress()">
           Localiser

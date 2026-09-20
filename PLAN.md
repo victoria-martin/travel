@@ -355,6 +355,9 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   explicitement, hors de ce chantier), en est un cas concret à trancher avec le reste : soit elle
   entre dans LIRE malgré tout, soit ce chantier révise le critère. L'énumération ci-dessus reste par
   ailleurs incomplète (Accueil, Notes, Valise n'y figurent pas) — à vérifier contre `NAV_ITEMS`
+  plutôt que recompter à la main quand ce chantier démarre. **Titres à trancher** (les groupes
+  deviendront des items dépliants de la navbar) : Collecter / Décider / Lire ; Données / Scénarios /
+  Vues ; Contenu / Planification / Consultation ; Ressources / Décisions / Lecture.
   plutôt que recompter à la main quand ce chantier démarre.
 - **Réordonner la barre latérale desktop** <!--t:n7wq--> — 🖼️ écran · ⏳ à faire : le tiroir mobile
   laisse déjà glisser l'ordre des pages (`prefs.mobileNavOrder`, [mobile-nav/](js/views/mobile-nav/)),

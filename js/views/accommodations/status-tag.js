@@ -3,6 +3,11 @@ function pickAccommodationStatus(id, status) {
   setAccommodationStatus(id, status);
 }
 
+function askNewAccommodationStatus(id) {
+  openInlineMenu = null;
+  askNewWord('accommodationStatuses', (word) => setAccommodationStatus(id, word.key));
+}
+
 function accommodationStatusTag(a) {
   const current = accStatus(a.status);
   return inlineDropdown(
@@ -22,6 +27,7 @@ function accommodationStatusTag(a) {
           </button>`,
           )
           .join('')}
+        <button class="inline-menu-item" onclick="askNewAccommodationStatus('${a.id}')">＋ Ajouter un statut</button>
       </div>`,
   );
 }
