@@ -8,9 +8,15 @@ let packingCatalogCategoryFilter = null;
 function filteredPackingItems() {
   const needle = packingCatalogQuery.trim().toLowerCase();
   return sortedPackingItems().filter((item) => {
-    if (packingCatalogCategoryFilter && (item.category || UNCATEGORIZED) !== packingCatalogCategoryFilter)
+    if (
+      packingCatalogCategoryFilter &&
+      (item.category || UNCATEGORIZED) !== packingCatalogCategoryFilter
+    )
       return false;
-    return !needle || item.label.toLowerCase().includes(needle);
+    return (
+      !needle ||
+      [item.label, item.category || ''].some((value) => value.toLowerCase().includes(needle))
+    );
   });
 }
 

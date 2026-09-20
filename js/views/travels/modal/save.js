@@ -8,7 +8,7 @@ function readTravelForm(id) {
     status: document.getElementById('travel-status').value,
     startDate: document.getElementById('travel-start').value,
     endDate: document.getElementById('travel-end').value,
-    country: document.getElementById('travel-country').value.trim(),
+    countries: modal.payload.countries || [],
     region: document.getElementById('travel-region').value.trim(),
     accentColor: document.getElementById('travel-accent').value,
     travelers: parseInt(document.getElementById('travel-travelers').value, 10) || 0,

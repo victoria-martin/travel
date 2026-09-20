@@ -19,6 +19,102 @@ function listTable(kind, items) {
   </div>`;
 }
 
+const listSearchQueries = {};
+
+function listSearchField(kind) {
+  return `<label class="list-search" data-list-search="${kind}" title="Rechercher">
+    <span class="sr-only">Rechercher</span>
+    <input type="search" placeholder="Rechercher…" value="${escapeHtml(listSearchQueries[kind] || '')}"
+      oninput="setListSearch('${kind}', this.value)" />
+  </label>`;
+}
+
+function setListSearch(kind, query) {
+  listSearchQueries[kind] = query;
+  render();
+  const input = document.querySelector(`.list-search[data-list-search="${kind}"] input`);
+  if (input) {
+    input.focus();
+    input.setSelectionRange(query.length, query.length);
+  }
+}
+
+function listSearchItems(kind, items) {
+  const wanted = normalizeListSearch(listSearchQueries[kind]);
+  if (!wanted) return items;
+  return items.filter((item) => normalizeListSearch(listSearchText(kind, item)).includes(wanted));
+}
+
+function normalizeListSearch(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
+function listSearchText(kind, item) {
+  const values = {
+    hebergements: [
+      item.name,
+      accType(item.type).label,
+      ...(item.tags || []),
+      item.city,
+      item.county,
+      item.region,
+      item.country,
+      item.address,
+      coordsLabel(item),
+    ],
+    attractions: [
+      item.name,
+      attractionType(item.type).label,
+      ...(item.tags || []),
+      item.city,
+      item.county,
+      item.region,
+      item.country,
+      item.address,
+      coordsLabel(item),
+    ],
+    villes: [
+      item.name,
+      attractionType(item.type).label,
+      ...(item.tags || []),
+      item.city,
+      item.county,
+      item.region,
+      item.country,
+      item.address,
+      coordsLabel(item),
+    ],
+    locations: [
+      offerModelName(item),
+      providerName(item.providerId),
+      item.location,
+      carFuel(offerWords(item).fuel).label,
+      carGearbox(offerWords(item).gearbox).label,
+      ...offerOptions(item).map((option) => option.label),
+    ],
+    transports: [
+      transportMode(item).label,
+      transportEndpointLabel(item.fromAttractionId, item.fromPrecision),
+      transportEndpointLabel(item.toAttractionId, item.toPrecision),
+      providerName(item.providerId),
+      item.reference,
+    ],
+    modeles: [item.name, carFuel(item.fuel).label, carGearbox(item.gearbox).label],
+    prestataires: [
+      item.name,
+      providerMode(item.mode).label,
+      ...(item.options || []).map((option) => option.label || option),
+      ...providerCarModels(item.id).map((model) => model.name),
+    ],
+    charges: [item.label, ...(item.categories || []), expenseRecurrence(item.recurrence).label],
+  };
+  return (values[kind] || []).filter(Boolean).join(' ');
+}
+
 /*
   A row opens its resource when its kind has registered how; a click that landed on a cell which
   acts by itself — a tag, a field, a button — belongs to that cell and opens nothing.
@@ -34,7 +130,7 @@ function listRow(kind, item, columns) {
     ${columns
       .map(
         (c) =>
-          `<td${c.nowrap ? ' style="white-space:nowrap;"' : ''}${c.ellipsis ? ' class="cell-ellipsis"' : ''}>${c.cell(item)}</td>`
+          `<td${c.nowrap ? ' style="white-space:nowrap;"' : ''}${c.ellipsis ? ' class="cell-ellipsis"' : ''}>${c.cell(item)}</td>`,
       )
       .join('')}
   </tr>`;

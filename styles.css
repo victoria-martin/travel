@@ -332,6 +332,162 @@ body {
   color: var(--ink);
   line-height: 1.15;
 }
+.scenario-weather-banner {
+  position: sticky;
+  top: 84px;
+  z-index: 18;
+  width: calc(100% + (var(--main-pad-x) * 2));
+  margin: 0 calc(var(--main-pad-x) * -1) 16px;
+  padding: 10px var(--main-pad-x) 12px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(135deg, rgba(98, 156, 255, 0.12), rgba(90, 199, 255, 0.06));
+  backdrop-filter: blur(8px);
+}
+.scenario-weather-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.scenario-weather-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.scenario-weather-main strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+}
+.scenario-weather-main span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.scenario-weather-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(120, 160, 255, 0.14);
+  color: var(--ink);
+}
+.scenario-weather-days {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.scenario-weather-day {
+  position: relative;
+  display: flex;
+  flex: 0 0 110px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 82px;
+  padding: 10px 10px 8px;
+  border: 1px solid rgba(98, 156, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.26);
+}
+.scenario-weather-day-line {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(98, 156, 255, 0.9), rgba(109, 196, 255, 0.4));
+}
+.scenario-weather-day-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+.scenario-weather-day-number {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.scenario-weather-day-date {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+.scenario-weather-visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(98, 156, 255, 0.09);
+  font-size: 18px;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+.scenario-weather-day-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.page-submenu {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+.weather-style-picker {
+  display: grid;
+  gap: 8px;
+}
+.weather-style-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  cursor: pointer;
+}
+.weather-style-option.selected {
+  border-color: var(--accent);
+  background: rgba(98, 156, 255, 0.08);
+}
+.weather-style-option input {
+  accent-color: var(--accent);
+}
+.scenario-weather-banner.style-strip {
+  padding-bottom: 10px;
+}
+.scenario-weather-banner.style-strip .scenario-weather-days {
+  gap: 6px;
+}
+.scenario-weather-banner.style-strip .scenario-weather-day {
+  flex-basis: 86px;
+  min-height: 72px;
+  padding: 8px 8px 7px;
+  border-radius: 10px;
+}
 /* La date se lit comme le reste du sous-titre, et s'ouvre au clic comme un champ. */
 .scenario-start-date {
   font-family: inherit;
@@ -531,6 +687,17 @@ body {
 .toolbar-panel-body-left {
   left: 0;
   right: auto;
+}
+.toolbar-panel-body-wide {
+  min-width: 480px;
+  max-height: min(70vh, calc(100dvh - 100px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* Le rendu natif récent de <details> pose un overflow implicite sur ce pseudo-élément — sans ce
+   reset, le scroll interne du panneau ne se déclenche jamais malgré son propre overflow-y. */
+.toolbar-panel::details-content {
+  overflow: visible;
 }
 
 .sort-panel {
@@ -840,7 +1007,7 @@ tr:hover td {
 /* Laid out in window coordinates by placeInlineMenu, so that no scroller clips it. */
 .inline-menu {
   position: fixed;
-  z-index: 40;
+  z-index: 49;
   min-width: 200px;
   width: max-content;
   max-width: min(340px, 70vw);
@@ -908,9 +1075,45 @@ tr:hover td {
 .inline-menu-row {
   display: flex;
   align-items: center;
+  width: 100%;
+}
+.inline-menu-row-selected {
+  background: var(--paper-raised);
+  border-radius: 6px;
+}
+.inline-menu-row-selected:hover {
+  background: var(--paper);
 }
 .inline-menu-row .inline-menu-item {
   min-width: 0;
+}
+.inline-menu-row-selected .inline-menu-item {
+  flex: 1;
+  background: transparent;
+}
+.inline-menu-row-selected .inline-menu-item:hover,
+.inline-menu-row-selected .inline-menu-item-remove:hover,
+.inline-menu-row-selected .sheet-btn:hover {
+  background: var(--paper);
+}
+.inline-menu-item-remove {
+  flex: 0 0 auto;
+  width: 30px;
+  justify-content: center;
+  padding-inline: 4px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.inline-menu-row-selected .inline-menu-item-remove,
+.inline-menu-row-selected .sheet-btn {
+  background: transparent;
+}
+.inline-menu-item-remove:hover {
+  background: var(--paper-raised);
+  color: var(--ink);
 }
 .sheet-btn {
   flex: 0 0 auto;
@@ -1951,10 +2154,23 @@ tr:hover td {
 }
 .step-extra-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 8px;
   padding: 1px 0;
+}
+.step-place-date,
+.step-extra-date {
+  width: 124px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12px;
+}
+.step-place-date {
+  width: 112px;
 }
 .step-extra-row .step-total {
   gap: 6px;
@@ -2760,6 +2976,89 @@ tr:hover td {
   margin-left: auto;
 }
 
+.step-area-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 0 2px;
+}
+
+.step-area-label {
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.step-area-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.step-area-shape {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 82px;
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.step-area-shape input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.step-area-shape.selected {
+  border-color: var(--stone);
+  background: var(--sage-pale);
+  color: var(--ink);
+}
+
+.step-area-shape:hover {
+  border-color: var(--stone);
+}
+
+.step-area-preview {
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 30px;
+}
+
+.step-area-preview-circle::before,
+.step-area-preview-rectangle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--stone);
+  background: rgba(62, 98, 89, 0.12);
+}
+
+.step-area-preview-circle::before {
+  border-radius: 50%;
+}
+
+.step-area-preview-rectangle::before {
+  border-radius: 5px;
+}
+
+.step-area-name {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
 /* ---------- Hors dispo ---------- */
 .oor-badge {
   display: inline-flex;
@@ -2915,6 +3214,19 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 8px;
 }
+.list-search {
+  display: inline-flex;
+  align-items: center;
+}
+.list-search input {
+  width: 180px;
+  padding: 6px 9px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
 .filter-panel {
   width: 320px;
 }
@@ -3045,6 +3357,25 @@ tr:hover td {
   border: 0;
   padding: 0;
   cursor: pointer;
+}
+.map-popup-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.map-popup-action {
+  font: inherit;
+  color: var(--stone-dark);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.map-popup-dropdown {
+  position: relative;
 }
 .map-type-pin {
   background: none;
@@ -3423,6 +3754,213 @@ tr:hover td {
 .notes-area:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--line);
+}
+
+/* ---------- Infos utiles ---------- */
+.country-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.country-info-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  padding: 16px 18px;
+}
+.country-info-title {
+  margin: 0 0 12px;
+}
+
+/* ---------- Phrases ---------- */
+.phrase-search {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.phrase-lang-select {
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.phrase-category {
+  margin-bottom: 28px;
+}
+.phrase-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.phrase-note {
+  color: var(--stone);
+  font-size: 12px;
+  font-style: italic;
+  margin: 6px 0 0;
+}
+.phrase-missing {
+  color: var(--stone);
+  font-style: italic;
+  margin: 0;
+}
+.phrase-custom-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+.phrase-edit-btn,
+.phrase-delete-btn {
+  width: 22px;
+  height: 22px;
+}
+
+/*
+  Deux axes croisés, jamais un seul : le mode (chrome — boîte en grille ou ligne plate) contre le
+  style (typo du contenu). Chaque style porte donc sa mise en page interne pour les deux modes, le
+  mode ne porte que le conteneur.
+*/
+.phrase-mode-card .phrase-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.phrase-mode-card .phrase-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  padding: 12px 14px;
+}
+.phrase-mode-list .phrase-list {
+  display: block;
+}
+.phrase-mode-list .phrase-item {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 4px;
+}
+.phrase-mode-list .phrase-item:last-child {
+  border-bottom: none;
+}
+
+/* La langue et son bouton d'état voyagent toujours ensemble, quel que soit le style. */
+.phrase-it-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.phrase-status-btn {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+}
+.phrase-status-btn.phrase-status-ok {
+  color: var(--good, #3a7d5c);
+  border-color: currentColor;
+}
+.phrase-status-btn.phrase-status-missing {
+  color: var(--warn, #b3771f);
+  border-color: currentColor;
+}
+
+/* Classique — langue en avant (gras), français en dessous d'un filet. */
+.phrase-style-classique .phrase-category-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  margin: 0 0 12px;
+  padding-left: 10px;
+  border-left: 3px solid var(--stone);
+}
+.phrase-style-classique .phrase-it,
+.phrase-style-classique .phrase-missing {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+}
+.phrase-style-classique .phrase-fr {
+  color: var(--ink-soft);
+  font-size: 13px;
+  margin: 6px 0 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+/* Duo — deux colonnes langue | français, séparées par un filet vertical. */
+.phrase-style-duo .phrase-category-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.phrase-style-duo .phrase-item {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.phrase-style-duo .phrase-it-row {
+  flex: 1 1 50%;
+  padding-right: 14px;
+  border-right: 1px solid var(--line);
+}
+.phrase-style-duo .phrase-it,
+.phrase-style-duo .phrase-missing {
+  font-weight: 600;
+  margin: 0;
+}
+.phrase-style-duo .phrase-fr {
+  color: var(--ink-soft);
+  font-size: 13px;
+  flex: 1 1 50%;
+  margin: 0;
+}
+.phrase-style-duo .phrase-note {
+  flex: 0 0 100%;
+}
+
+/* Minimal — la langue portée par la couleur plutôt que le gras, français précédé d'un tiret. */
+.phrase-style-minimal .phrase-category-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin: 0 0 6px;
+}
+.phrase-style-minimal .phrase-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.phrase-style-minimal .phrase-it,
+.phrase-style-minimal .phrase-missing {
+  font-weight: 400;
+  color: var(--stone-dark, var(--stone));
+  margin: 0;
+}
+.phrase-style-minimal .phrase-fr {
+  color: var(--ink-soft);
+  font-size: 13px;
+  margin: 0;
+}
+.phrase-style-minimal .phrase-fr::before {
+  content: '— ';
+}
+.phrase-style-minimal .phrase-note {
+  flex: 0 0 100%;
 }
 
 .tag-chips {
@@ -4062,4 +4600,260 @@ tr:hover td {
   border-radius: 4px;
   padding: 1px 5px;
   flex-shrink: 0;
+}
+
+/* Journal */
+.journal-scenario-select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: var(--paper);
+  font-size: 13px;
+}
+.journal-day-cards {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 10px;
+  scrollbar-width: thin;
+}
+.journal-day-card {
+  position: relative;
+  display: flex;
+  flex: 0 0 110px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 64px;
+  padding: 10px 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+}
+.journal-day-card.active {
+  border-color: var(--accent);
+  background: rgba(98, 156, 255, 0.08);
+}
+.journal-day-card-number {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.journal-day-card-date {
+  font-size: 12px;
+  color: var(--ink);
+}
+.journal-day-card-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.journal-day-add {
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 6px;
+  color: var(--ink-soft);
+}
+.journal-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.journal-cols:has(.journal-side) {
+  grid-template-columns: 1fr 360px;
+}
+.journal-planned {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.journal-planned-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.journal-planned-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: var(--paper);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.journal-planned-pill .icon {
+  width: 13px;
+  height: 13px;
+}
+.journal-planned-pill:hover {
+  border-color: var(--accent);
+}
+.journal-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.journal-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.journal-photo-btn {
+  cursor: pointer;
+}
+.journal-editor-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.journal-textarea-wrap {
+  position: relative;
+}
+.journal-textarea {
+  width: 100%;
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  resize: vertical;
+  background: var(--paper);
+}
+.journal-tag-dropdown:empty {
+  display: none;
+}
+.journal-tag-menu {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  min-width: 220px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+}
+.journal-tag-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: left;
+}
+.journal-tag-item:hover {
+  background: rgba(98, 156, 255, 0.1);
+}
+.journal-tag-item .icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.journal-preview {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  overflow-y: auto;
+  font-size: 13.5px;
+}
+.journal-preview h1,
+.journal-preview h2,
+.journal-preview h3,
+.journal-preview h4,
+.journal-preview h5,
+.journal-preview h6 {
+  margin: 0.4em 0 0.2em;
+}
+.journal-preview p {
+  margin: 0 0 0.5em;
+}
+.journal-ref {
+  display: inline;
+  border: none;
+  background: rgba(98, 156, 255, 0.14);
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 0 4px;
+  font: inherit;
+  cursor: pointer;
+}
+.journal-ref-unknown {
+  background: rgba(255, 120, 120, 0.14);
+  cursor: default;
+}
+.journal-missing-refs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+.journal-missing-ref {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  background: rgba(255, 180, 90, 0.14);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+.journal-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.journal-photo {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.journal-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.journal-photo-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+.journal-photo-remove .icon {
+  width: 12px;
+  height: 12px;
+}
+@media (max-width: 900px) {
+  .journal-editor-body {
+    grid-template-columns: 1fr;
+  }
 }

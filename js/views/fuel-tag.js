@@ -19,6 +19,7 @@ function carFuelTag(model) {
         ${tagLabel(carFuel(current).emoji, carFuel(current).label)}
       </summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openModal('modele','${model.id}')`)}
         <button class="inline-menu-item ${current ? '' : 'selected'}" onclick="${pick('')}">
           ${tagLabel(UNSET_CAR_FUEL.emoji, UNSET_CAR_FUEL.label)}
         </button>

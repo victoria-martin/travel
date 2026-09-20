@@ -17,6 +17,7 @@ function accommodationStatusTag(a) {
         ${tagLabel(current.emoji, current.label)}
       </summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openAccommodationSheet('${a.id}')`)}
         ${Object.entries(ACCOMMODATION_STATUSES)
           .map(
             ([key, s]) => `<button
@@ -27,7 +28,9 @@ function accommodationStatusTag(a) {
           </button>`,
           )
           .join('')}
-        <button class="inline-menu-item" onclick="askNewAccommodationStatus('${a.id}')">＋ Ajouter un statut</button>
+        <button class="inline-menu-item" onclick="askNewAccommodationStatus('${a.id}')">
+          ＋ Ajouter un statut
+        </button>
       </div>`,
   );
 }

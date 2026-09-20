@@ -8,5 +8,6 @@ function todoHeader(lists) {
         à traiter
       </p>
     </div>
+    <div class="view-header-actions">${todoSearchField()}</div>
   </div>`;
 }

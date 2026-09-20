@@ -5,6 +5,7 @@ function scenariosHeader() {
       <p class="view-sub">Compare différentes versions de ton itinéraire</p>
     </div>
     <div class="view-header-actions">
+      ${scenarioSearchField()}
       ${toolbarButton({
         icon: svgIcon('scale'),
         label: 'Comparer',

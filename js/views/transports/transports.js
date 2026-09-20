@@ -3,7 +3,10 @@ function renderTransportsView() {
 }
 
 function renderTransportsList() {
-  const items = sortItems('transports', ofCurrentTravel(state.transports));
+  const items = sortItems(
+    'transports',
+    listSearchItems('transports', ofCurrentTravel(state.transports)),
+  );
   if (!items.length) return emptyState('Aucun transport', 'Ajoute un premier trajet.');
   return listTable('transports', items);
 }

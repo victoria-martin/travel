@@ -101,6 +101,10 @@ const MODAL_TYPES = {
     open: (scenarioId, key) => ({ scenarioId, payload: { key } }),
     body: (m) => scenarioPanelSheet(m),
   },
+  'journal-panel': {
+    open: (date, key) => ({ payload: { date, key } }),
+    body: (m) => journalPanelSheet(m),
+  },
   step: {
     // Une étape neuve naît seule ou déjà ouverte en options : c'est le bouton qui l'a dit.
     open: (scenarioId, stepId, options = 1) => ({
@@ -115,6 +119,11 @@ const MODAL_TYPES = {
     open: () => ({ payload: { text: '' } }),
     body: () => pasteImportForm(),
     width: '640px',
+    edits: true,
+  },
+  phrase: {
+    open: (id) => ({ payload: id ? structuredClone(getCustomPhrase(id)) : emptyCustomPhrase() }),
+    body: (m) => phraseForm(m.payload),
     edits: true,
   },
   sync: { body: () => syncForm() },
@@ -137,6 +146,7 @@ const MODAL_RESOURCE_MESSAGES = {
   charge: ['Charge créée', 'Charge modifiée'],
   'valise-catalogue': ['Article créé', 'Article modifié'],
   step: ['Étape créée', 'Étape modifiée'],
+  phrase: ['Phrase ajoutée', 'Phrase modifiée'],
 };
 
 document.addEventListener(

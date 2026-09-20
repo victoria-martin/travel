@@ -3,8 +3,8 @@
   activités restent un simple point — le glyph par type de couleur ne servait qu'à distinguer des
   types que la couleur seule rendait déjà peu lisibles à cette taille. Chaque marqueur porte son nom
   en étiquette permanente à côté du point.
-  Le popup s'ouvre au survol et se referme en quittant le point ; un clic l'épingle, il reste alors
-  à l'écran jusqu'à ce qu'on le ferme (sa croix, ou un clic ailleurs sur la carte).
+  Le popup s'ouvre au survol et se referme quand le curseur quitte le point et le popup ; un clic
+  l'épingle, il reste alors à l'écran jusqu'à ce qu'on le ferme (sa croix, ou un clic ailleurs).
 */
 function initMap() {
   const el = document.getElementById('map');
@@ -58,7 +58,15 @@ function markerPoint(item, bounds) {
 function addAccommodationMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
-  addMapPinMarker(map, point, mapPinIcon('house'), accommodationPopup(a), a.name, a.id, 'accommodation');
+  addMapPinMarker(
+    map,
+    point,
+    mapPinIcon('house'),
+    accommodationPopup(a),
+    a.name,
+    a.id,
+    'accommodation',
+  );
 }
 
 function addAttractionMarker(map, a, bounds) {
@@ -106,11 +114,38 @@ function addMapPinMarker(map, point, icon, popupHtml, name, id, kind) {
   // d'ouvrir. On le retire pour ne garder que nos trois gestes (survol, clic, croix du popup).
   marker.off('click');
   let pinned = false;
+  let overMarker = false;
+  let overPopup = false;
+  let closeTimer = null;
+  const keepPopupOpen = () => {
+    if (closeTimer) clearTimeout(closeTimer);
+  };
+  const closeOnHoverEnd = () => {
+    keepPopupOpen();
+    closeTimer = setTimeout(() => {
+      if (!pinned && !overMarker && !overPopup) marker.closePopup();
+    }, 120);
+  };
   marker.on('mouseover', () => {
+    overMarker = true;
+    keepPopupOpen();
     if (!pinned) marker.openPopup();
   });
   marker.on('mouseout', () => {
-    if (!pinned) marker.closePopup();
+    overMarker = false;
+    closeOnHoverEnd();
+  });
+  marker.on('popupopen', () => {
+    const popup = marker.getPopup().getElement();
+    if (!popup) return;
+    popup.addEventListener('mouseenter', () => {
+      overPopup = true;
+      keepPopupOpen();
+    });
+    popup.addEventListener('mouseleave', () => {
+      overPopup = false;
+      closeOnHoverEnd();
+    });
   });
   marker.on('click', () => {
     if (routeBuilder.active) {
@@ -139,7 +174,110 @@ function attractionPopup(a) {
     .filter(Boolean)
     .join(' · ');
   const price = priceRange(a) || '';
-  return `<strong>${popupName(a, a.link)}</strong><br/>${place}${price ? `<br/>${price}` : ''}`;
+  const googleMaps = externalLink(googleMapsPlaceUrl(a.address || a.name), 'Google Maps');
+  return `<strong>${popupName(a, a.link)}</strong><br/>${place}${price ? `<br/>${price}` : ''}
+    <div class="map-popup-links">
+      ${googleMaps}
+      ${mapAttractionScenarioActions(a.id)}
+    </div>`;
+}
+
+function mapAttractionScenarioActions(attractionId) {
+  const currentScenario = mapAttractionCurrentScenario();
+  return `${currentScenario ? mapAttractionCurrentActions(attractionId, currentScenario) : ''}
+    ${mapAttractionOtherScenarioActions(attractionId, currentScenario)}`;
+}
+
+function attachMapAttractionToStep(scenarioId, stepId, attractionId) {
+  closeOpenInlineMenu();
+  const attraction = getAttraction(attractionId);
+  if (!attraction) return;
+  const step = getStep(scenarioId, stepId);
+  attachExtraAttraction(scenarioId, stepId, attraction.id);
+  showToast(`Ajouté à « ${step.name || 'l’étape'} »`);
+}
+
+function addMapAttractionAutomatically(scenarioId, attractionId) {
+  const scenario = getScenario(scenarioId);
+  if (!scenario) return;
+  const attraction = getAttraction(attractionId);
+  if (!attraction) return;
+  const step = nearestAccommodationStep(scenario, attraction);
+  if (!step) return showToast('Aucun hébergement localisé dans ce scénario');
+  attachExtraAttraction(scenario.id, step.id, attractionId);
+  showToast(`Ajouté à « ${step.name || 'l’étape'} »`);
+}
+
+function mapAttractionCurrentScenario() {
+  if (view === 'scenario-detail') return getScenario(activeScenarioId);
+  return mapFilters.scenarioId ? getScenario(mapFilters.scenarioId) : chosenScenario();
+}
+
+function mapAttractionCurrentActions(attractionId, scenario) {
+  const extraArgs = `,'${attractionId}'`;
+  const steps = scenarioStepPickerGroup(scenario, 'attachMapAttractionToStep', extraArgs);
+  return `${inlineDropdown(
+    `map-attraction-step:${attractionId}:${scenario.id}`,
+    'map-popup-dropdown',
+    `<summary class="map-popup-action">Ajouter à une étape</summary>
+      <div class="inline-menu">${steps || '<div class="inline-menu-group">Aucune étape</div>'}</div>`,
+  )}
+  <button type="button" class="map-popup-action"
+    onclick="addMapAttractionAutomatically('${scenario.id}','${attractionId}')">
+    Ajouter automatiquement
+  </button>`;
+}
+
+function mapAttractionOtherScenarioActions(attractionId, currentScenario) {
+  const scenarios = activeScenarios(ofCurrentTravel(state.scenarios)).filter(
+    (scenario) => scenario.id !== currentScenario?.id,
+  );
+  if (!scenarios.length) return '';
+  const selected = scenarios[0];
+  return inlineDropdown(
+    `map-attraction-other-scenario:${attractionId}`,
+    'map-popup-dropdown',
+    `<summary class="map-popup-action">Ajouter à un autre scénario</summary>
+      <div class="inline-menu map-other-scenario-menu">
+        <select class="map-scenario-select"
+          onchange="setMapAttractionScenario('${attractionId}', this.value)">
+          ${scenarios
+            .map(
+              (scenario) =>
+                `<option value="${scenario.id}" ${scenario.id === selected.id ? 'selected' : ''}>
+                  ${escapeHtml(scenario.name)}
+                </option>`,
+            )
+            .join('')}
+        </select>
+        <div id="map-attraction-scenarios-${attractionId}">
+          ${scenarios
+            .map((scenario, index) => mapAttractionScenarioPanel(attractionId, scenario, index > 0))
+            .join('')}
+        </div>
+      </div>`,
+  );
+}
+
+function mapAttractionScenarioPanel(attractionId, scenario, hidden) {
+  const extraArgs = `,'${attractionId}'`;
+  const steps = scenarioStepPickerGroup(scenario, 'attachMapAttractionToStep', extraArgs);
+  return `<div data-map-attraction-scenario="${scenario.id}" ${hidden ? 'hidden' : ''}>
+    <div class="inline-menu-group">Ajouter à une étape</div>
+    ${steps || '<div class="inline-menu-group">Aucune étape</div>'}
+    <button type="button" class="map-popup-action"
+      onclick="addMapAttractionAutomatically('${scenario.id}','${attractionId}')">
+      Ajouter automatiquement
+    </button>
+  </div>`;
+}
+
+function setMapAttractionScenario(attractionId, scenarioId) {
+  const menu = document.getElementById(`map-attraction-scenarios-${attractionId}`);
+  if (!menu) return;
+  menu.querySelectorAll('[data-map-attraction-scenario]').forEach((panel) => {
+    panel.hidden = panel.dataset.mapAttractionScenario !== scenarioId;
+  });
 }
 
 function villePopup(v) {

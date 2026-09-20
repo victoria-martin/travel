@@ -12,7 +12,10 @@ const NAV_ITEMS = [
   { key: 'transports', label: 'Transports', icon: svgIcon('plane') },
   { key: 'scenarios', label: 'Scénarios', icon: svgIcon('compass') },
   { key: 'carte', label: 'Carte', icon: svgIcon('map') },
+  { key: 'journal', label: 'Journal', icon: svgIcon('book-open') },
   { key: 'notes', label: 'Notes', icon: svgIcon('notebook-pen') },
+  { key: 'phrases', label: 'Phrases clé', icon: svgIcon('message-circle') },
+  { key: 'infos-utiles', label: 'Infos utiles', icon: svgIcon('siren') },
   { key: 'valise', label: 'Valise', icon: svgIcon('luggage') },
   { key: 'a-faire', label: 'À faire', icon: svgIcon('list-checks') },
 ];

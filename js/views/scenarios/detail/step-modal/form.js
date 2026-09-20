@@ -4,6 +4,7 @@ function emptyStep() {
     name: '',
     arrivalDate: '',
     notes: '',
+    placeDate: '',
     extras: [],
     hidden: false,
     groupId: '',
@@ -20,8 +21,7 @@ function stepForm(p) {
   return /* HTML */ `
     <h3>${p.id ? 'Modifier' : 'Ajouter'} une étape</h3>
     <div class="field">
-      <label>Nom</label
-      ><input id="s-name" type="text" value="${escapeHtml(p.name)}" />
+      <label>Nom</label><input id="s-name" type="text" value="${escapeHtml(p.name)}" />
     </div>
     <div class="field-row">
       <div class="field">

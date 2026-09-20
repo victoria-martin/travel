@@ -3,7 +3,7 @@
   listes dynamiques du builder. Entrée l'ajoute et rouvre le champ vide.
 */
 function freeTodoCard() {
-  const todos = freeTodosOfTravel();
+  const todos = freeTodosOfTravel().filter(todoItemMatchesSearch);
   const done = todos.filter((t) => t.done).length;
   return /* HTML */ `<section class="todo-list">
     <div class="todo-list-head">
@@ -12,11 +12,7 @@ function freeTodoCard() {
         <span class="todo-list-count">${done}/${todos.length}</span>
       </h3>
     </div>
-    ${
-      todos.length
-        ? `<div class="free-todo-rows">${todos.map(freeTodoRow).join('')}</div>`
-        : ''
-    }
+    ${todos.length ? `<div class="free-todo-rows">${todos.map(freeTodoRow).join('')}</div>` : ''}
     <input
       id="free-todo-input"
       class="free-todo-input"

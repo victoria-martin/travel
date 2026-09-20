@@ -16,6 +16,7 @@ function offerStatusTag(c) {
     'status-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openOfferSheet('${c.id}')`)}
         ${Object.entries(CAR_STATUSES)
           .map(
             ([key, s]) => `<button

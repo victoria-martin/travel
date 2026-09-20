@@ -27,6 +27,13 @@ function stepPlaceLabel(step) {
   return tagLabel('', `${svgIcon('plus')} lieu`);
 }
 
+function stepPlaceResourceItem(step) {
+  if (step.accommodationId)
+    return openResourceMenuItem(`openAccommodationSheet('${step.accommodationId}')`);
+  if (step.attractionId) return openResourceMenuItem(`openAttractionSheet('${step.attractionId}')`);
+  return '';
+}
+
 function stepPlaceDropdown(scenario, step) {
   return inlineDropdown(
     `place:${step.id}`,
@@ -45,6 +52,7 @@ function stepPlaceDropdown(scenario, step) {
           placeholder="Chercher un lieu…"
           oninput="repaintPlaceOptions('${scenario.id}','${step.id}')"
         />
+        ${stepPlaceResourceItem(step)}
         <div id="place-options-${step.id}">${placeOptions(scenario.id, step.id)}</div>
       </div>`,
   );
@@ -101,6 +109,15 @@ function placeTypeGroups(items, { types, unset, keyOf, prefix }, item, group) {
     .join('');
 }
 
+function placeSelectionItem(label, selected, pick, remove) {
+  return `<div class="inline-menu-row${selected ? ' inline-menu-row-selected' : ''}">
+    <button class="inline-menu-item${selected ? ' selected' : ''}" onclick="${pick}">
+      ${label}
+    </button>
+    ${selected ? `<button class="inline-menu-item-remove" onclick="${remove}" title="Désélectionner" aria-label="Désélectionner">${svgIcon('x')}</button>` : ''}
+  </div>`;
+}
+
 const ACCOMMODATION_PLACE_TYPES = {
   types: ACCOMMODATION_TYPES,
   unset: UNSET_ACCOMMODATION_TYPE,
@@ -142,21 +159,28 @@ function placeOptions(scenarioId, stepId) {
     );
   // Le ↗ du bout de ligne ouvre la fiche de l'hébergement : il vit à côté du choix, pas dedans,
   // un bouton ne pouvant en contenir un autre.
-  const accommodationItem = (a) => `<div class="inline-menu-row">
-      <button
-        class="inline-menu-item ${step.accommodationId === a.id ? 'selected' : ''}"
-        onclick="${pick(`heb:${a.id}`)}"
-      >
+  const accommodationItem = (a) => {
+    const selected = step.accommodationId === a.id;
+    return `<div class="inline-menu-row${selected ? ' inline-menu-row-selected' : ''}">
+      <button class="inline-menu-item${selected ? ' selected' : ''}" onclick="${pick(`heb:${a.id}`)}">
         ${tagLabel(accType(a.type).emoji, `${a.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${placeOptionLabel(a)}`)}
       </button>
+      ${selected ? `<button class="inline-menu-item-remove" onclick="${pick('')}" title="Désélectionner" aria-label="Désélectionner">${svgIcon('x')}</button>` : ''}
       ${accommodationSheetButton(a.id)}
     </div>`;
-  const placeItem = (p) => `<button
-      class="inline-menu-item ${step.attractionId === p.id ? 'selected' : ''}"
-      onclick="${pick(`lieu:${p.id}`)}"
-    >
-      ${tagLabel(attractionType(p.type).emoji, `${p.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${placeOptionLabel(p)}`)}
-    </button>`;
+  };
+  const placeItem = (p) => {
+    const selected = step.attractionId === p.id;
+    return placeSelectionItem(
+      tagLabel(
+        attractionType(p.type).emoji,
+        `${p.favorite ? svgIcon('star', { fill: true }) + ' ' : ''}${placeOptionLabel(p)}`,
+      ),
+      selected,
+      pick(`lieu:${p.id}`),
+      pick(''),
+    );
+  };
   const groups =
     placeTypeGroups(accommodations, ACCOMMODATION_PLACE_TYPES, accommodationItem, group) +
     placeTypeGroups(places, ATTRACTION_PLACE_TYPES, placeItem, group);

@@ -27,6 +27,15 @@ function tagLabel(emoji, label) {
     <span class="inline-label">${label}</span>`;
 }
 
+function openResourceMenuItem(onclick) {
+  return /* HTML */ `<button
+    class="inline-menu-item inline-menu-item-resource"
+    onclick="${onclick}"
+  >
+    ${svgIcon('arrow-up-right')} Ouvrir la ressource
+  </button>`;
+}
+
 /*
   The menu opens below its trigger, above it when the room is on that side, and never past the
   window. Its box is read once laid at 0,0: an ancestor that paints (an opacity, a filter) becomes

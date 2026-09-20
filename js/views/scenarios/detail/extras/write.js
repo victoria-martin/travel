@@ -1,5 +1,5 @@
 function emptyExtra() {
-  return { id: uid(), attractionId: '', costId: '', count: 1, budget: '' };
+  return { id: uid(), attractionId: '', costId: '', date: '', count: 1, budget: '' };
 }
 
 // La recherche reste ouverte après un ajout : on rattache souvent plusieurs lignes d'affilée.
@@ -46,6 +46,12 @@ function setExtraCount(scenarioId, holderId, lineId, count) {
 
 function setExtraBudget(scenarioId, holderId, lineId, budget) {
   findHolderExtra(scenarioId, holderId, lineId).budget = budget.trim();
+  saveNow();
+  render();
+}
+
+function setExtraDate(scenarioId, holderId, lineId, date) {
+  findHolderExtra(scenarioId, holderId, lineId).date = date;
   saveNow();
   render();
 }

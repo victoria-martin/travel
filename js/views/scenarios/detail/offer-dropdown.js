@@ -18,6 +18,7 @@ function scenarioOfferDropdown(scenario) {
         ${tagLabel('', current ? escapeHtml(offerLabel(current)) : 'Aucune voiture')}
       </summary>
       <div class="inline-menu">
+        ${current ? openResourceMenuItem(`openOfferSheet('${current.id}')`) : ''}
         ${scenarioOfferNoneItem(scenario)}
         ${providers.map((provider) => scenarioOfferProviderGroup(scenario, provider)).join('')}
         ${scenarioOfferCreateItem(scenario)}

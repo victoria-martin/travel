@@ -24,6 +24,7 @@ function stepTypeDropdown(scenario, step) {
         ${stepTypeLabel(current)}
       </summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openModal('step','${scenario.id}','${step.id}')`)}
         <button class="inline-menu-item ${current ? '' : 'selected'}" onclick="${pick('')}">
           Tous les lieux
         </button>

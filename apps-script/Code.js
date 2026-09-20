@@ -308,6 +308,7 @@ function doPost(e) {
   } catch (err) {
     return json({ error: 'Corps de requête illisible' });
   }
+  if (body.action === 'uploadPhoto') return uploadJournalPhoto(body);
   if (body.action !== 'push') return json({ error: 'Action inconnue: ' + body.action });
 
   var lock = LockService.getScriptLock();
@@ -325,6 +326,34 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/*
+  Une photo du journal ne va pas dans le Sheet : une cellule a une limite de taille bien trop
+  petite pour un base64 d'image. Elle part dans un dossier Drive à côté du classeur, partagé en
+  lecture par lien, et seule son URL — légère — vit dans journalEntries.photos.
+*/
+function uploadJournalPhoto(body) {
+  try {
+    var folder = journalPhotosFolder();
+    var bytes = Utilities.base64Decode(body.base64);
+    var blob = Utilities.newBlob(bytes, body.mime || 'image/jpeg', body.filename || 'photo.jpg');
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return json({ url: 'https://drive.google.com/uc?id=' + file.getId() });
+  } catch (err) {
+    return json({ error: String(err) });
+  }
+}
+
+function journalPhotosFolder() {
+  var name = 'Journal — photos';
+  var parents = SpreadsheetApp.getActiveSpreadsheet().getId()
+    ? DriveApp.getFileById(SpreadsheetApp.getActiveSpreadsheet().getId()).getParents()
+    : null;
+  var root = parents && parents.hasNext() ? parents.next() : DriveApp.getRootFolder();
+  var existing = root.getFoldersByName(name);
+  return existing.hasNext() ? existing.next() : root.createFolder(name);
 }
 
 function json(payload) {

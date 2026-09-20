@@ -6,3 +6,9 @@ function isoToDate(iso) {
   const [y, m, d] = (iso || '').split('-').map(Number);
   return y && m && d ? new Date(y, m - 1, d) : null;
 }
+
+function dateToIso(date) {
+  if (!date) return '';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}

@@ -15,6 +15,7 @@ function accommodationTypeDropdown(a) {
     'type-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openAccommodationSheet('${a.id}')`)}
         ${Object.entries(ACCOMMODATION_TYPES)
           .map(
             ([key, t]) => `<button
@@ -25,7 +26,9 @@ function accommodationTypeDropdown(a) {
           </button>`,
           )
           .join('')}
-        <button class="inline-menu-item" onclick="askNewAccommodationType('${a.id}')">＋ Ajouter un type</button>
+        <button class="inline-menu-item" onclick="askNewAccommodationType('${a.id}')">
+          ＋ Ajouter un type
+        </button>
       </div>`,
   );
 }

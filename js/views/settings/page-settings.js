@@ -4,6 +4,7 @@
 */
 const PAGE_SETTINGS = [
   { view: 'scenario-detail', title: 'Détail du scénario', options: () => trailOptions() },
+  { view: 'phrases', title: 'Phrases', options: () => phraseStyleOption() },
 ];
 
 function pageSettingsBlock() {

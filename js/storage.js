@@ -20,6 +20,8 @@ const TRAVEL_COLLECTIONS = [
   'todoLists',
   'freeTodos',
   'packingListItems',
+  'countryInfos',
+  'journalEntries',
 ];
 
 // Le catalogue de valise n'est pas du voyage : il ne vit ni dans TRAVEL_COLLECTIONS ni derrière
@@ -42,6 +44,8 @@ function emptyData() {
     freeTodos: [],
     packingItems: [],
     packingListItems: [],
+    countryInfos: [],
+    journalEntries: [],
   };
 }
 
@@ -62,6 +66,7 @@ function migrateData(data) {
   adoptOfferNames(data);
   absorbCities(data);
   if (!data.travels) data.travels = [];
+  data.travels.forEach(adoptTravelCountries);
   if (!data.providers) data.providers = [];
   if (!data.rentals) data.rentals = [];
   if (!data.carModels) data.carModels = [];
@@ -73,6 +78,11 @@ function migrateData(data) {
   if (!data.freeTodos) data.freeTodos = [];
   if (!data.packingItems) data.packingItems = [];
   if (!data.packingListItems) data.packingListItems = [];
+  if (!data.countryInfos) data.countryInfos = [];
+  if (!data.journalEntries) data.journalEntries = [];
+  data.journalEntries.forEach((entry) => {
+    if (!Array.isArray(entry.photos)) entry.photos = [];
+  });
   data.todoLists.forEach((l) => {
     if (!Array.isArray(l.filterValues)) l.filterValues = [];
   });
@@ -445,6 +455,18 @@ function cleanOfferWords(offer) {
 }
 
 /*
+  Le pays du voyage passe d'un texte libre à un select multiple sur COUNTRIES (js/countries.js) :
+  la valeur tapée à la main se retrouve par son libellé, insensible à la casse.
+*/
+function adoptTravelCountries(travel) {
+  if (Array.isArray(travel.countries)) return;
+  const typed = (travel.country || '').trim().toLowerCase();
+  const match = COUNTRIES.find((c) => c.label.toLowerCase() === typed);
+  travel.countries = match ? [match.code] : [];
+  delete travel.country;
+}
+
+/*
   Une adresse libre et une adresse à géocoder faisaient deux champs pour la même chose, et le pays
   manquait au-dessus de la région. Le nom retenu est `address` : `geoAddress` nommait le mécanisme.
 */
@@ -525,6 +547,7 @@ function adoptStep(step) {
   if (step.accommodationType === undefined) step.accommodationType = '';
   if (step.attractionId === undefined) step.attractionId = null;
   if (step.accommodationId === undefined) step.accommodationId = null;
+  if (step.placeDate === undefined) step.placeDate = '';
   if (step.nights === undefined) step.nights = 0;
   if (step.budget === undefined) step.budget = '';
 }
@@ -534,6 +557,7 @@ function adoptExtraLine(line) {
   delete line.optionId;
   if (line.attractionId === undefined) line.attractionId = '';
   if (line.costId === undefined) line.costId = '';
+  if (line.date === undefined) line.date = '';
 }
 
 /*

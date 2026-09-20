@@ -6,7 +6,7 @@ ROW_CLICKS.villes = openAttractionSheet;
 
 function renderVillesView() {
   const source = ofCurrentTravel(state.attractions);
-  const items = sortItems('villes', source);
+  const items = sortItems('villes', listSearchItems('villes', source));
   const cities = new Set(source.map((a) => a.city).filter(Boolean));
   return /* HTML */ `
     <div class="view-header">
@@ -18,13 +18,16 @@ function renderVillesView() {
         </p>
       </div>
       <div class="view-header-actions">
-        ${sortPanel('villes')} ${columnPicker('villes')} ${toolbarSeparator()}
-        ${toolbarMenu()}
+        ${listSearchField('villes')} ${sortPanel('villes')} ${columnPicker('villes')}
+        ${toolbarSeparator()} ${toolbarMenu()}
       </div>
     </div>
     ${
       items.length === 0
-        ? emptyState('Aucun lieu', 'Ajoute une ville, un village, un premier lieu depuis Lieux & activités.')
+        ? emptyState(
+            'Aucun lieu',
+            'Ajoute une ville, un village, un premier lieu depuis Lieux & activités.',
+          )
         : listTable('villes', items)
     }
   `;

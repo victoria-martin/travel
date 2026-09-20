@@ -1,9 +1,39 @@
 let activeScenarioId = null;
+let scenarioSearchQuery = '';
+
+function scenarioSearchField() {
+  return `<label class="list-search" data-list-search="scenarios" title="Rechercher">
+    <span class="sr-only">Rechercher</span>
+    <input type="search" placeholder="Rechercher…" value="${escapeHtml(scenarioSearchQuery)}"
+      oninput="setScenarioSearch(this.value)" />
+  </label>`;
+}
+
+function setScenarioSearch(query) {
+  scenarioSearchQuery = query;
+  render();
+  const input = document.querySelector('.list-search[data-list-search="scenarios"] input');
+  if (input) {
+    input.focus();
+    input.setSelectionRange(query.length, query.length);
+  }
+}
+
+function scenarioMatchesSearch(scenario) {
+  const wanted = normalizeListSearch(scenarioSearchQuery);
+  if (!wanted) return true;
+  const values = [scenario.name];
+  scenario.steps.forEach((step) => {
+    const place = stepPlace(step);
+    values.push(step.name, place?.city, place?.name);
+  });
+  return normalizeListSearch(values.filter(Boolean).join(' ')).includes(wanted);
+}
 
 function renderScenariosView() {
-  const items = archivedScenarios(ofCurrentTravel(state.scenarios)).sort(
-    (a, b) => scenarioRank(a) - scenarioRank(b),
-  );
+  const items = archivedScenarios(ofCurrentTravel(state.scenarios))
+    .filter(scenarioMatchesSearch)
+    .sort((a, b) => scenarioRank(a) - scenarioRank(b));
   return /* HTML */ `
     ${scenariosHeader()}
     ${

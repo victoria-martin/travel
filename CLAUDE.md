@@ -35,6 +35,13 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 
 Pas de `data.js` ni de `helpers.js` fourre-tout (démantelés en `87bc0c4`).
 
+## Ne jamais reproduire avec Playwright sur ce projet
+
+Ne jamais lancer ni piloter un navigateur (Playwright ou autre) pour reproduire un bug ou vérifier
+un rendu sur l'app travel — même pour diagnostiquer. Diagnostiquer en lisant le code (CSS/JS,
+`getComputedStyle` mentalement, ancêtres `overflow`…), pas en pilotant un navigateur. Si une
+vérification visuelle est vraiment nécessaire, le dire et laisser l'utilisatrice regarder à l'écran.
+
 ## Fin de tâche → PLAN.md → spec
 
 Une tâche n'est finie que quand les deux docs ont suivi, dans le même tour, sans attendre qu'on me

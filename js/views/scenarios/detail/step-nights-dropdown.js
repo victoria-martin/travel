@@ -10,6 +10,7 @@ function stepNightsDropdown(scenario, step) {
     'nights-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel('', nightsLabel(current))}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openModal('step','${scenario.id}','${step.id}')`)}
         ${NIGHTS_OPTIONS.map(
           (n) => `<button
             class="inline-menu-item ${n === current ? 'selected' : ''}"

@@ -94,7 +94,12 @@ function renderMain() {
   } else if (view === 'carte') {
     main.innerHTML = renderMapView();
     setTimeout(initMap, 30);
+  } else if (view === 'journal') {
+    main.innerHTML = renderJournalView();
+    setTimeout(initJournalMap, 30);
   } else if (view === 'notes') main.innerHTML = renderNotesView();
+  else if (view === 'phrases') main.innerHTML = renderPhrasesView();
+  else if (view === 'infos-utiles') main.innerHTML = renderCountryInfoView();
   else if (view === 'valise') main.innerHTML = renderPackingView();
   else if (view === 'a-faire') main.innerHTML = renderTodoView();
   trackViewHeaderHeight(main);

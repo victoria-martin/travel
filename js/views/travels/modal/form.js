@@ -19,7 +19,7 @@ function emptyTravel() {
     status: DEFAULT_TRAVEL_STATUS,
     startDate: '',
     endDate: '',
-    country: '',
+    countries: [],
     region: '',
     accentColor: '',
     travelers: 0,
@@ -47,10 +47,7 @@ function travelForm(p) {
       </div>
     </div>
     <div class="field-row">
-      <div class="field">
-        <label>Pays</label
-        ><input id="travel-country" type="text" value="${escapeHtml(p.country)}" />
-      </div>
+      ${travelCountriesField(p)}
       <div class="field">
         <label>Région</label
         ><input id="travel-region" type="text" value="${escapeHtml(p.region)}" />
@@ -175,7 +172,8 @@ function paintTravelEmoji() {
 
 // The destination doubles as a subtitle only once it is filled in.
 function travelHeaderPlace(p) {
-  const place = [p.country, p.region].filter(Boolean).join(' · ');
+  const countries = (p.countries || []).map(countryLabel);
+  const place = [...countries, p.region].filter(Boolean).join(' · ');
   return place ? `<p class="travel-modal-place">${escapeHtml(place)}</p>` : '';
 }
 

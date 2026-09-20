@@ -216,6 +216,7 @@ function mergeStates(remote, local, base) {
       local.packingListItems,
       base.packingListItems,
     ),
+    countryInfos: mergeCollections(remote.countryInfos, local.countryInfos, base.countryInfos),
   };
 }
 

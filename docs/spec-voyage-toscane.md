@@ -93,6 +93,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
+- Le lieu principal d'une étape porte une **date propre** (`placeDate`) quand c'est une ville ou
+  une activité, et chaque activité rattachée à l'étape porte aussi une date propre (`date`). Ces
+  dates ponctuelles ne modifient ni la période de séjour ni le décalage des étapes suivantes.
 - **Une option est une suite d'étapes, et non un contenu d'étape.** Comparer deux façons de passer
   les mêmes jours, ce n'est pas comparer deux hôtels pour une nuit : c'est comparer deux bouts
   d'itinéraire, qui n'ont pas forcément le même nombre d'étapes — deux nuits en Toscane d'un côté,
@@ -224,21 +227,21 @@ coup par coup.
 
 ### Les entités
 
-| Entité              | Porte                                                                                                                                                               | Notes                                                                  |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| **Voyage**          | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs, prix du litre, péage au km              | possède tout le reste ; un seul est ouvert à la fois                   |
-| **Hébergement**     | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix                   |
-| **Lieu**            | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
-| **Transport**       | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, budget, prix mini / maxi, lien, notes, favori                      | un trajet du voyage                                                    |
-| **Offre**           | le loueur, le modèle, statut, lieu et dates de prise en charge, prix par jour, options cochées chez le loueur, lien, notes, **par défaut**                          | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
-| **Charge fixe**     | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                           |
-| **Scénario**        | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                                 |
-| **Étape**           | titre, notes, date d'arrivée libre, masquée, **options**                                                                                                            | appartient à un scénario, l'ordre compte                               |
-| **Option d'étape**  | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                        | appartient à une étape ; une seule est retenue                         |
-| **Notes de voyage** | texte libre                                                                                                                                                         | un bloc par voyage                                                     |
-| **Liste dynamique** | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »           |
-| **Item du catalogue** | libellé, catégories, notes                                                                                                                                        | pas de `travelId` : le seul catalogue commun à tous les voyages        |
-| **Item de valise**  | référence catalogue optionnelle, libellé, catégories, quantité, coché                                                                                              | appartient au voyage ; sans référence, propre à ce voyage seul         |
+| Entité                | Porte                                                                                                                                                               | Notes                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Voyage**            | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs, prix du litre, péage au km              | possède tout le reste ; un seul est ouvert à la fois                   |
+| **Hébergement**       | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix                   |
+| **Lieu**              | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
+| **Transport**         | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, budget, prix mini / maxi, lien, notes, favori                      | un trajet du voyage                                                    |
+| **Offre**             | le loueur, le modèle, statut, lieu et dates de prise en charge, prix par jour, options cochées chez le loueur, lien, notes, **par défaut**                          | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
+| **Charge fixe**       | libellé, montant unitaire, catégories, récurrence, notes                                                                                                            | liste simple                                                           |
+| **Scénario**          | nom, favori, **choisi**, date de départ, offre retenue et ses options, charges, transports, **étapes**                                                              | un itinéraire candidat                                                 |
+| **Étape**             | titre, notes, date d'arrivée libre, date du lieu, masquée, **options**                                                                                              | appartient à un scénario, l'ordre compte                               |
+| **Option d'étape**    | nom, où l'on se pose (un lieu **ou** un hébergement), nuits, budget, retenue                                                                                        | appartient à une étape ; une seule est retenue                         |
+| **Notes de voyage**   | texte libre                                                                                                                                                         | un bloc par voyage                                                     |
+| **Liste dynamique**   | ressource, colonne, valeurs gardées                                                                                                                                 | une question posée à une collection, sur la page « À faire »           |
+| **Item du catalogue** | libellé, catégories, notes                                                                                                                                          | pas de `travelId` : le seul catalogue commun à tous les voyages        |
+| **Item de valise**    | référence catalogue optionnelle, libellé, catégories, quantité, coché                                                                                               | appartient au voyage ; sans référence, propre à ce voyage seul         |
 
 **Statut d'un voyage**, dans l'ordre du workflow : Idée 💭 · En préparation 🧭 · Réservé 🔒 ·
 En cours ✈️ · Passé 📦.
@@ -333,24 +336,24 @@ pastilles, avant même l'enregistrement.
 
 **Hébergement** — la fiche de référence ; c'est elle qui porte le prix.
 
-| Champ                            | Détail                                                                                          |
-| -------------------------------- | ----------------------------------------------------------------------------------------------- |
-| type                             | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné ; complétable à la volée depuis le select |
-| statut                           | les neuf statuts du workflow, ou non renseigné ; complétable à la volée depuis le select         |
-| nom                              |                                                                                                 |
-| adresse                          | une seule, c'est elle qu'on géocode                                                             |
-| pays · région · province · ville | proposés par le géocodage, modifiables à la main                                                |
-| coordonnées                      | latitude, longitude                                                                             |
-| prix/nuit                        | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange |
-| dates                            | texte libre (« 12–14 juin »)                                                                    |
-| disponible du · au               | deux dates, laissées vides à la création : la fenêtre que l'annonce propose                     |
-| lien                             | l'annonce ; un lien HomeExchange ou Airbnb collé pré-remplit la fiche                           |
-| lien de réservation              | Booking ; un lien collé pré-remplit la fiche                                                    |
-| lien Google Maps                 | colle-le et le nom, l'adresse et les coordonnées se remplissent                                 |
+| Champ                            | Détail                                                                                                                                        |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| type                             | Airbnb · Home exchange · Hôtel · Maison · Camping, ou non renseigné ; complétable à la volée depuis le select                                 |
+| statut                           | les neuf statuts du workflow, ou non renseigné ; complétable à la volée depuis le select                                                      |
+| nom                              |                                                                                                                                               |
+| adresse                          | une seule, c'est elle qu'on géocode                                                                                                           |
+| pays · région · province · ville | proposés par le géocodage, modifiables à la main                                                                                              |
+| coordonnées                      | latitude, longitude                                                                                                                           |
+| prix/nuit                        | texte libre, éditable depuis la ligne et la carte ; en GuestPoints si le type est Home exchange                                               |
+| dates                            | texte libre (« 12–14 juin »)                                                                                                                  |
+| disponible du · au               | deux dates, laissées vides à la création : la fenêtre que l'annonce propose                                                                   |
+| lien                             | l'annonce ; un lien HomeExchange ou Airbnb collé pré-remplit la fiche                                                                         |
+| lien de réservation              | Booking ; un lien collé pré-remplit la fiche                                                                                                  |
+| lien Google Maps                 | colle-le et le nom, l'adresse et les coordonnées se remplissent                                                                               |
 | date de recherche                | pas un champ à saisir : posée par le lien Google Maps quand la fiche vient d'une recherche d'hôtel, elle ne sert qu'à l'indicateur hors dispo |
-| notes                            | éditables depuis la ligne                                                                       |
-| tags                             | liste libre, sans administration                                                                |
-| favori                           | ⭐, et un critère de tri                                                                        |
+| notes                            | éditables depuis la ligne                                                                                                                     |
+| tags                             | liste libre, sans administration                                                                                                              |
+| favori                           | ⭐, et un critère de tri                                                                                                                      |
 
 La vue principale, en **tableau ou en cartes**.
 
@@ -423,24 +426,24 @@ La vue principale, en **tableau ou en cartes**.
 une plage, un restaurant, et la ville d'une étape dont on ne connaît pas encore le logement. C'est
 le **type** qui le dit, pas la table où il serait rangé.
 
-| Champ                         | Détail                                                    |
-| ----------------------------- | --------------------------------------------------------- |
-| nom                           |                                                           |
+| Champ                         | Détail                                                               |
+| ----------------------------- | -------------------------------------------------------------------- |
+| nom                           |                                                                      |
 | type                          | liste figée, comme le type d'un hébergement ; complétable à la volée |
 | statut                        | liste propre, courte ; complétable à la volée                        |
-| description                   | texte libre                                               |
-| adresse                       | c'est elle qu'on géocode                                  |
-| coordonnées                   | latitude, longitude                                       |
-| pays, région, province, ville | proposés par le géocodage, modifiables à la main          |
-| hébergement                   | facultatif ; référence un hébergement du voyage           |
-| lien Google Maps              | colle-le et la fiche se remplit                           |
-| lien                          |                                                           |
-| horaires                      | texte libre, quel que soit le type                        |
-| téléphone                     | texte libre                                               |
-| budget                        | l'enveloppe qu'on se donne                                |
-| prix mini / maxi              | la fourchette réelle, règle transverse « Budget et prix » |
-| tags                          | texte libre, amorcés par un vocabulaire par défaut        |
-| favori                        | étoile en tête de ligne                                   |
+| description                   | texte libre                                                          |
+| adresse                       | c'est elle qu'on géocode                                             |
+| coordonnées                   | latitude, longitude                                                  |
+| pays, région, province, ville | proposés par le géocodage, modifiables à la main                     |
+| hébergement                   | facultatif ; référence un hébergement du voyage                      |
+| lien Google Maps              | colle-le et la fiche se remplit                                      |
+| lien                          |                                                                      |
+| horaires                      | texte libre, quel que soit le type                                   |
+| téléphone                     | texte libre                                                          |
+| budget                        | l'enveloppe qu'on se donne                                           |
+| prix mini / maxi              | la fourchette réelle, règle transverse « Budget et prix »            |
+| tags                          | texte libre, amorcés par un vocabulaire par défaut                   |
+| favori                        | étoile en tête de ligne                                              |
 
 Un même lieu tient les deux rôles qu'une étape lui donne : elle s'y **pose** — le select de lieu le
 propose à côté des hébergements — et une autre étape l'ajoute en **activité** dans ses lignes. Une
@@ -493,17 +496,17 @@ c'est une autre façon de parcourir la même collection, pas un référentiel à
 
 **Transport** — un trajet du voyage.
 
-| Champ                | Détail                                                                                                     |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- |
-| mode                 | liste figée : Avion, Train, Bus, Ferry                                                                     |
-| statut               | liste propre, courte                                                                                       |
-| départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté                                     |
-| dates et heures      | date et heure de départ, date et heure d'arrivée                                                           |
-| compagnie, référence | la compagnie référence un prestataire, la référence est libre                                              |
-| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`                                             |
-| lien                 |                                                                                                            |
-| notes                |                                                                                                            |
-| favori               | étoile en tête de ligne                                                                                    |
+| Champ                | Détail                                                                 |
+| -------------------- | ---------------------------------------------------------------------- |
+| mode                 | liste figée : Avion, Train, Bus, Ferry                                 |
+| statut               | liste propre, courte                                                   |
+| départ, arrivée      | un lieu de la table Lieux & activités, plus une précision libre à côté |
+| dates et heures      | date et heure de départ, date et heure d'arrivée                       |
+| compagnie, référence | la compagnie référence un prestataire, la référence est libre          |
+| budget, prix         | l'enveloppe, et la fourchette réelle `prix mini` / `prix maxi`         |
+| lien                 |                                                                        |
+| notes                |                                                                        |
+| favori               | étoile en tête de ligne                                                |
 
 Tableau seul, pas de vue en cartes. Colonnes : favori, mode, départ, arrivée, part le, arrive le
 (masquée par défaut), compagnie / loueur, prix, statut, lien, notes (masquée par défaut). Tri par
@@ -1062,6 +1065,52 @@ réservation, l'hébergement retenu avec son coût, ses notes. Trois liens ferme
 de l'hébergement, sa page Booking, et sa fiche, qui s'ouvre en panneau par-dessus la carte. Un
 lieu où le trajet repasse empile ses étapes dans le même popup.
 
+### Journal
+
+**Entrée de journal** (`journalEntries`)
+
+| Champ      | Détail                                                                         |
+| ---------- | ------------------------------------------------------------------------------ |
+| travelId   | le voyage                                                                      |
+| date       | clé de l'entrée — une par jour et par voyage                                   |
+| scenarioId | le scénario qui date le journal (préférence, partagée avec les jours affichés) |
+| text       | le texte du jour, en syntaxe légère                                            |
+| photos     | URLs (import depuis l'Apps Script, voir plus bas)                              |
+
+Les jours du journal viennent du **scénario choisi** : départ du scénario + nuits cumulées de ses
+étapes visibles ([scenario-days.js](js/views/journal/scenario-days.js)), une carte par jour en rang
+scrollable pleine largeur — sur le patron des cartes météo du détail d'un scénario. Une entrée déjà
+écrite hors de cette plage (jour ajouté à la main, ancien scénario) reste dans le rang.
+
+Le texte se tape dans un textarea, une syntaxe légère plutôt qu'un éditeur riche : `#`…`######` pour
+les titres, `**gras**`, `*italique*`, `[texte](url)`, rendus dans un aperçu à côté
+([markdown.js](js/views/journal/markdown.js)) — pas de moteur markdown complet, juste ce que la
+barre d'outils sait insérer. Enregistré à la frappe, sans re-render (comme les Notes).
+
+Une **référence** `{Nom}` pointe un lieu ou un hébergement du voyage — du texte brut, pas un id
+caché, qui se résout à l'affichage par son nom. Taper `{` ouvre la recherche inline sur ce qui suit
+le caret ; taper `{` avec une sélection l'entoure et filtre sur le texte sélectionné
+([tag-search.js](js/views/journal/tag-search.js)). Dans l'aperçu, une référence résolue devient un
+bouton qui ouvre la fiche du lieu ; non résolue, elle se distingue visuellement sans rien casser.
+
+Deux sens avec le scénario choisi, jamais automatiques :
+
+- ce qu'il a déjà planifié ce jour-là (hébergement de l'étape, activités en extra de l'étape ou de
+  son groupe) se propose en pastilles « Planifiés », cliquer en insère la référence dans le texte ;
+- une référence tapée qui ne correspond à aucune activité déjà planifiée ce jour-là se signale sous
+  l'éditeur, avec un bouton « Ajouter au scénario » qui l'attache en extra de l'étape du jour — une
+  faute de frappe dans `{}` ne doit rien écrire seule dans le scénario.
+
+Un onglet **Carte**, comme le panneau latéral du détail d'un scénario, montre l'hébergement et les
+activités planifiées ce jour-là plus les lieux référencés dans le texte — pas le tracé du scénario,
+qui reste l'affaire de sa propre carte.
+
+**Photos** : une entrée ne stocke jamais de base64 — une cellule du Sheet a une limite de taille
+bien trop petite. Le fichier choisi part en base64 vers une action `uploadPhoto` de
+[Code.js](apps-script/Code.js), qui l'écrit dans un dossier Drive à côté du classeur et rend une URL
+partagée en lecture ; seule cette URL, légère, vit dans `photos`. Nécessite que le déploiement de
+l'Apps Script soit republié pour exposer l'action (PLAN.md, <!--t:jrn1-->).
+
 ### Notes
 
 **Notes de voyage**
@@ -1083,17 +1132,17 @@ catalogue les change partout où l'item est utilisé. Une seule catégorie par i
 (datalist, pas de vocabulaire figé) : les deux écrans groupent dessus, un item dans deux groupes à
 la fois n'aurait pas de rangée unique.
 
-| Champ (catalogue) | Détail                                                        |
-| ------------------ | -------------------------------------------------------------- |
-| libellé, catégorie | une seule catégorie                                            |
-| notes               | libre, éditable en ligne                                       |
+| Champ (catalogue)  | Détail                   |
+| ------------------ | ------------------------ |
+| libellé, catégorie | une seule catégorie      |
+| notes              | libre, éditable en ligne |
 
-| Champ (valise du voyage) | Détail                                                        |
-| -------------------------- | -------------------------------------------------------------- |
-| référence catalogue        | optionnelle ; vide pour un item propre au voyage                |
-| libellé, catégorie         | seulement si pas de référence catalogue                        |
-| quantité                   | un nombre fixe, ou « 1 par nuit » (déduite du scénario retenu) |
-| coché                      | emballé ou non                                                 |
+| Champ (valise du voyage) | Détail                                                         |
+| ------------------------ | -------------------------------------------------------------- |
+| référence catalogue      | optionnelle ; vide pour un item propre au voyage               |
+| libellé, catégorie       | seulement si pas de référence catalogue                        |
+| quantité                 | un nombre fixe, ou « 1 par nuit » (déduite du scénario retenu) |
+| coché                    | emballé ou non                                                 |
 
 La page **Valise** (nav, après Notes) ne gère que le catalogue, groupé par catégorie
 (`<details>` repliables, un compteur par groupe) : recherche, chips de catégorie pour filtrer,

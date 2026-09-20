@@ -54,7 +54,7 @@ function travelMenu(current) {
 // Under the name: the dates when they are filled in, the destination otherwise.
 function travelSubtitle(travel) {
   if (!travel) return 'Crée ton premier voyage';
-  const parts = [travelDateRange(travel), travel.region || travel.country];
+  const parts = [travelDateRange(travel), travel.region || (travel.countries || []).map(countryLabel).join(', ')];
   return parts.filter(Boolean).join(' · ') || 'Carnet de préparation';
 }
 

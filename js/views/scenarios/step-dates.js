@@ -33,6 +33,11 @@ function formatStepDay(date) {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 }
 
+function scenarioDateLabel(value) {
+  const date = isoToDate(value);
+  return date ? escapeHtml(formatStepDate(date)) : '';
+}
+
 function dateRangeLabel(arrival, nights) {
   if (!arrival) return '';
   if (nights === 0) return escapeHtml(formatStepDate(arrival));

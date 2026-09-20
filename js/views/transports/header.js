@@ -4,7 +4,9 @@ function transportsHeader() {
     <div>
       <h2 class="view-title">Transports</h2>
     </div>
-    <div class="view-header-actions">${tab.actions()} ${toolbarSeparator()} ${toolbarMenu()}</div>
+    <div class="view-header-actions">
+      ${listSearchField('transports')} ${tab.actions()} ${toolbarSeparator()} ${toolbarMenu()}
+    </div>
     ${transportsTabs()}
   </div>`;
 }

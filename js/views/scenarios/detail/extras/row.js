@@ -4,7 +4,8 @@
 */
 function extraRow(scenario, holder, line) {
   return /* HTML */ `<div class="step-extra-row">
-    ${extraMenu(scenario, holder, line)} ${extraCountDropdown(scenario, holder, line)}
+    ${extraMenu(scenario, holder, line)} ${extraDateField(scenario, holder, line)}
+    ${extraCountDropdown(scenario, holder, line)}
     <span class="step-total">
       ${extraAutoPrice(line)}
       <span class="step-budget"
@@ -16,6 +17,17 @@ function extraRow(scenario, holder, line) {
       >
     </span>
   </div>`;
+}
+
+function extraDateField(scenario, holder, line) {
+  if (!line.attractionId) return '<span></span>';
+  return `<input
+    class="step-extra-date"
+    type="date"
+    value="${escapeHtml(line.date || '')}"
+    onchange="setExtraDate('${scenario.id}','${holder.id}','${line.id}', this.value)"
+    aria-label="Date de l'activité"
+  />`;
 }
 
 // Sans budget saisi, le prix de ce que la ligne référence reste affiché en gris, comme sur une

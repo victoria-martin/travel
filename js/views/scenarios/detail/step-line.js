@@ -2,8 +2,22 @@
 // de nuits.
 function stepLine(scenario, step, arrival) {
   return /* HTML */ `${stepTypeDropdown(scenario, step)}
-    <div class="step-place">${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}</div>
-    ${stepStatusTag(step)} ${stepAvailabilityTag(step, arrival)} ${stepNightsDropdown(scenario, step)}`;
+    <div class="step-place">
+      ${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}${stepPlaceDateField(scenario, step)}
+    </div>
+    ${stepStatusTag(step)} ${stepAvailabilityTag(step, arrival)}
+    ${stepNightsDropdown(scenario, step)}`;
+}
+
+function stepPlaceDateField(scenario, step) {
+  if (!step.attractionId) return '';
+  return `<input
+    class="step-place-date"
+    type="date"
+    value="${escapeHtml(step.placeDate || '')}"
+    onchange="setStepPlaceDate('${scenario.id}','${step.id}', this.value)"
+    aria-label="Date du lieu"
+  />`;
 }
 
 // Le ↗ ouvre la fiche du lieu retenu, sans rouvrir le menu pour aller la chercher. Une étape

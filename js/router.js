@@ -13,7 +13,10 @@ const VIEWS = [
   'transports',
   'scenarios',
   'carte',
+  'journal',
   'notes',
+  'phrases',
+  'infos-utiles',
   'a-faire',
 ];
 

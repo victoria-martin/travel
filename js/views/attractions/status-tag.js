@@ -21,6 +21,7 @@ function attractionStatusTag(a) {
     'status-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openAttractionSheet('${a.id}')`)}
         ${Object.entries(ATTRACTION_STATUSES)
           .map(
             ([key, s]) => `<button
@@ -31,7 +32,9 @@ function attractionStatusTag(a) {
           </button>`,
           )
           .join('')}
-        <button class="inline-menu-item" onclick="askNewAttractionStatus('${a.id}')">＋ Ajouter un statut</button>
+        <button class="inline-menu-item" onclick="askNewAttractionStatus('${a.id}')">
+          ＋ Ajouter un statut
+        </button>
       </div>`,
   );
 }

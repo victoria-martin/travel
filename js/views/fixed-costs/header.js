@@ -9,6 +9,7 @@ function fixedCostsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
+      ${listSearchField('charges')}
       ${
         mode === 'table'
           ? `${sortPanel('charges')} ${columnPicker('charges')} ${toolbarSeparator()}`

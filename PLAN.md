@@ -18,9 +18,9 @@ les types.
 ## 🗓️ Scénarios
 
 - **Deux dates par étape** <!--t:h4x6--> — 🗃️ modèle · 🐛 fix · 🔍 à étudier : les dates se
-  calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), mais
-  le champ libre « arrivée le » (`arrivalDate`) reste dans la modale et s'affiche à côté
-  ([step-card.js:73](js/views/scenarios/detail/step-card.js#L73)). Le retirer ou lui donner un rôle.
+  calculent depuis le départ du scénario ([step-dates.js](js/views/scenarios/step-dates.js)), tandis
+  que le lieu principal et les activités portent désormais chacun une date ponctuelle propre. Le
+  rôle du champ libre « arrivée le » (`arrivalDate`) reste à trancher.
 - **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
   [route-trail.js](js/views/scenarios/detail/route-trail.js) s'affiche de nouveau sous l'en-tête,
   derrière la bascule « Afficher le fil » des Réglages
@@ -332,6 +332,24 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   lieu, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
   Lieux & activités. À décider quand il y aura assez de contenu pour que la liste mixte devienne
   illisible.
+
+## 📔 Journal
+
+La page existe : entrées datées sur le scénario choisi, texte en syntaxe légère (titres, gras,
+italique, liens), références `{Nom}` vers un lieu ou un hébergement du voyage (recherche inline,
+entourer une sélection), pastilles « Planifiés » depuis les extras de l'étape du jour, bouton pour
+rattacher une référence non planifiée, photos, et un onglet Carte du jour — décrite dans
+[la spec](docs/spec-voyage-toscane.md).
+
+- **Déployer l'action `uploadPhoto`** <!--t:jrn1--> — 🔌 intégration · ⏳ à faire : l'import de
+  photos (js/views/journal/photos.js) appelle une action `uploadPhoto` ajoutée à
+  [Code.js](apps-script/Code.js), qui écrit dans un dossier Drive à côté du classeur. Le déploiement
+  existant de l'Apps Script doit être republié pour que l'action soit exposée — sans quoi l'import
+  échoue avec « Action inconnue ».
+- **Notes globales du journal** <!--t:jrn2--> — 🖼️ écran · 💡 idée : une note libre par voyage,
+  hors des jours, sur le modèle de [notes.js](js/views/notes.js).
+- **Récap de fin de voyage** <!--t:jrn3--> — 🖼️ écran · 💡 idée : une vue qui reprend tous les
+  liens postés, tous les lieux référencés et toutes les photos du journal, dans l'ordre des jours.
 
 ## 🔎 Browse
 

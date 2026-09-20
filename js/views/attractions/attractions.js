@@ -3,7 +3,7 @@ function renderAttractionsView() {
     ...item,
     recentOrder: index,
   }));
-  const items = sortItems('attractions', source);
+  const items = sortItems('attractions', listSearchItems('attractions', source));
   return /* HTML */ `
     ${attractionsHeader(items)}
     ${

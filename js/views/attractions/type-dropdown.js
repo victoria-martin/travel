@@ -21,6 +21,7 @@ function attractionTypeDropdown(a) {
     'type-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openAttractionSheet('${a.id}')`)}
         ${Object.entries(ATTRACTION_TYPES)
           .map(
             ([key, t]) => `<button
@@ -31,7 +32,9 @@ function attractionTypeDropdown(a) {
           </button>`,
           )
           .join('')}
-        <button class="inline-menu-item" onclick="askNewAttractionType('${a.id}')">＋ Ajouter un type</button>
+        <button class="inline-menu-item" onclick="askNewAttractionType('${a.id}')">
+          ＋ Ajouter un type
+        </button>
       </div>`,
   );
 }

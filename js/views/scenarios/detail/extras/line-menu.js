@@ -45,18 +45,39 @@ function extraAlternatives(scenario, holder, line) {
     .join('');
 }
 
+function extraResourceItem(line) {
+  if (line.costId) return openResourceMenuItem(`openModal('charge','${line.costId}')`);
+  if (line.attractionId) return openResourceMenuItem(`openAttractionSheet('${line.attractionId}')`);
+  return '';
+}
+
+function extraSelectionItem(scenario, holder, line) {
+  const label = line.costId
+    ? tagLabel(EXPENSE_ICON, escapeHtml(costLabel(getFixedCost(line.costId))))
+    : tagLabel(
+        attractionType(getAttraction(line.attractionId).type).emoji,
+        escapeHtml(getAttraction(line.attractionId).name),
+      );
+  return `<div class="inline-menu-row inline-menu-row-selected">
+    <button class="inline-menu-item selected">${label}</button>
+    <button
+      class="inline-menu-item-remove"
+      onclick="detachExtra('${scenario.id}','${holder.id}','${line.id}')"
+      title="Désélectionner"
+      aria-label="Désélectionner"
+    >
+      ${svgIcon('x')}
+    </button>
+  </div>`;
+}
+
 function extraMenu(scenario, holder, line) {
   return inlineDropdown(
     `extra:${line.id}`,
     'extra-dropdown',
     /* HTML */ `<summary class="inline-tag">${extraLabel(line)}</summary>
       <div class="inline-menu">
-        <button
-          class="inline-menu-item"
-          onclick="detachExtra('${scenario.id}','${holder.id}','${line.id}')"
-        >
-          Retirer cette ligne
-        </button>
+        ${extraResourceItem(line)} ${extraSelectionItem(scenario, holder, line)}
         ${extraAlternatives(scenario, holder, line)}
       </div>`,
   );

@@ -16,6 +16,7 @@ function transportStatusTag(t) {
     'status-dropdown',
     /* HTML */ `<summary class="inline-tag">${tagLabel(current.emoji, current.label)}</summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openModal('transport','${t.id}')`)}
         ${Object.entries(TRANSPORT_STATUSES)
           .map(
             ([key, s]) => `<button

@@ -11,8 +11,9 @@ function accommodationsHeader(items) {
       </p>
     </div>
     <div class="view-header-actions">
-      ${mode === 'table' ? sortPanel('hebergements') : ''} ${filterPanel('hebergements')}
-      ${mode === 'table' ? columnPicker('hebergements') : ''} ${toolbarSeparator()}
+      ${listSearchField('hebergements')} ${mode === 'table' ? sortPanel('hebergements') : ''}
+      ${filterPanel('hebergements')} ${mode === 'table' ? columnPicker('hebergements') : ''}
+      ${toolbarSeparator()}
       ${toolbarButton({
         icon: svgIcon('star', { fill: true }),
         label: 'Favoris',

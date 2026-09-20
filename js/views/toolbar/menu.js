@@ -5,5 +5,6 @@ function toolbarMenu() {
     icon: svgIcon('ellipsis-vertical'),
     label: 'Affichage',
     body: settingsBlocks(),
+    wide: true,
   });
 }

@@ -1,7 +1,7 @@
 function renderAccommodationsView() {
   const mode = listViewMode.hebergements;
   pruneFilterLevels('hebergements');
-  const items = resourceItems('hebergements').filter(
+  const items = listSearchItems('hebergements', resourceItems('hebergements')).filter(
     (a) => keptByFavOnly(a) && keptByFilters('hebergements', a),
   );
   return /* HTML */ `

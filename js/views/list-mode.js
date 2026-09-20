@@ -1,4 +1,4 @@
-let listViewMode = { hebergements: 'table', charges: 'table' };
+let listViewMode = { hebergements: 'table', charges: 'table', phrases: 'card' };
 
 function setListMode(kind, mode) {
   listViewMode[kind] = mode;

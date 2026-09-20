@@ -10,7 +10,17 @@ function getTodoList(id) {
 function todoListItems(list) {
   const column = filterColumn(list.kind, list.columnKey);
   if (!column) return [];
-  return resourceItems(list.kind).filter((item) =>
-    itemFilterValues(item, column).some((value) => list.filterValues.includes(value)),
-  );
+  return resourceItems(list.kind)
+    .filter((item) =>
+      itemFilterValues(item, column).some((value) => list.filterValues.includes(value)),
+    )
+    .filter(todoItemMatchesSearch);
+}
+
+function todoItemMatchesSearch(item) {
+  const wanted = normalizeListSearch(todoSearchQuery);
+  if (!wanted) return true;
+  return normalizeListSearch(
+    [item.name, item.label, item.description, item.notes, item.text].filter(Boolean).join(' '),
+  ).includes(wanted);
 }

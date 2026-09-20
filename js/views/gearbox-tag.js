@@ -19,6 +19,7 @@ function carGearboxTag(model) {
         ${tagLabel(carGearbox(current).emoji, carGearbox(current).label)}
       </summary>
       <div class="inline-menu">
+        ${openResourceMenuItem(`openModal('modele','${model.id}')`)}
         <button class="inline-menu-item ${current ? '' : 'selected'}" onclick="${pick('')}">
           ${tagLabel(UNSET_CAR_GEARBOX.emoji, UNSET_CAR_GEARBOX.label)}
         </button>

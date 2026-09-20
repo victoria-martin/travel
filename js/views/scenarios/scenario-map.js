@@ -5,9 +5,20 @@
 
 const ROUTE_ARROW_COUNT = 12;
 
+function stepAreaShape() {
+  return prefs.stepAreaShape === 'rectangle' ? 'rectangle' : 'circle';
+}
+
+function setStepAreaShape(shape) {
+  prefs.stepAreaShape = ['circle', 'rectangle'].includes(shape) ? shape : 'circle';
+  persistPrefs();
+  render();
+}
+
 function drawScenarioOnMap(map, scenario, noticeId, idleMessage) {
   const steps = visibleSteps(scenario);
   const points = steps.map((st) => coordsFor(st)).filter(Boolean);
+  steps.forEach((step) => drawStepArea(map, scenario, step));
   stepsByCoords(steps).forEach(({ coords, stops }) => {
     L.marker(coords, { icon: stepPin(stops.map((s) => stepLetter(s.idx))) })
       .bindPopup(stepPinPopup(scenario, stops))
@@ -15,6 +26,48 @@ function drawScenarioOnMap(map, scenario, noticeId, idleMessage) {
   });
   if (points.length > 1) drawScenarioRoute(map, points, noticeId, idleMessage);
   return points;
+}
+
+function drawStepArea(map, scenario, step) {
+  const places = [stepPlace(step), ...stepExtraPlaces(scenario, step)].filter(Boolean);
+  const points = places.map(placeCoords).filter(Boolean);
+  if (points.length < 2) return;
+
+  if (stepAreaShape() === 'rectangle') {
+    const bounds = L.latLngBounds(points);
+    L.rectangle(bounds.pad(0.3), {
+      color: '#C98A3E',
+      weight: 1.5,
+      fillColor: '#C98A3E',
+      fillOpacity: 0.12,
+      interactive: false,
+    }).addTo(map);
+    return;
+  }
+
+  const center = points[0];
+  const radius = Math.max(
+    250,
+    ...points.slice(1).map((point) => map.distance(center, point) + 100),
+  );
+  L.circle(center, {
+    radius,
+    color: '#C98A3E',
+    weight: 1.5,
+    fillColor: '#C98A3E',
+    fillOpacity: 0.12,
+    interactive: false,
+  }).addTo(map);
+}
+
+function stepExtraPlaces(scenario, step) {
+  const group = getStepGroup(scenario, step.groupId);
+  return [...holderExtras(group || {}), ...holderExtras(step)].map(extraAttraction).filter(Boolean);
+}
+
+function placeCoords(place) {
+  if (!place.lat || !place.lng) return null;
+  return [parseFloat(place.lat), parseFloat(place.lng)];
 }
 
 // Un aller-retour repasse par la même ville : ses étapes partagent une pastille, « A·G ».

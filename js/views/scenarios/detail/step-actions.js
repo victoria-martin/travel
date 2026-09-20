@@ -14,6 +14,12 @@ function setStepBudget(scenarioId, stepId, budget) {
   render();
 }
 
+function setStepPlaceDate(scenarioId, stepId, date) {
+  getStep(scenarioId, stepId).placeDate = date;
+  saveNow();
+  render();
+}
+
 // Une étape se rattache soit à un lieu, soit à un hébergement : le même select porte les deux.
 function setStepPlace(scenarioId, stepId, value) {
   const step = getStep(scenarioId, stepId);
