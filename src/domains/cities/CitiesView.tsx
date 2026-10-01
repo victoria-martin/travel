@@ -4,9 +4,11 @@ import type { Column } from '../../shared/DataTable/types';
 import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
+import { TextCell } from '../../shared/cells/TextCell';
+import { TagsCell } from '../../shared/cells/TagsCell';
 import type { Attraction } from '../../store/types';
 import { useTravelStore } from '../../store/useTravelStore';
-import { FavoriteCell, NameCell, StatusBadge, TagsCell, TextCell, TypeBadge } from './cells';
+import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
 
 /*
   Porte js/views/villes/cities.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`

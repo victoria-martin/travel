@@ -25,5 +25,7 @@ declare global {
     ATTRACTION_STATUSES: Record<string, { label: string; emoji: string }>;
     setAttractionType: (id: string, type: string) => void;
     setAttractionStatus: (id: string, status: string) => void;
+    expenseAmountLabel: (cost: { amount: string; recurrence: string }) => string;
+    expenseRecurrence: (recurrence: string) => { label: string; emoji: string };
   }
 }

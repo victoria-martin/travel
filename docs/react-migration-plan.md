@@ -148,7 +148,7 @@ src/
 | --- | --- | --- |
 | 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
 | 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
-| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` + `SearchField` + `ToolbarPanel`/`ColumnPicker` + `InlineDropdown`/`TagLabel` (partagés) posés. Villes : tri, recherche, colonnes masquables, type/statut éditables (délégués à `setAttractionType`/`setAttractionStatus` legacy). Restent sur Villes : menu ⋮, tags éditables, actions de ligne ; puis les 3 autres écrans |
+| 1 — Tables simples | Cities ✅ infra, Charges fixes ✅ infra, Transports, Prestataires/Modèles | `DataTable`/`SearchField`/`ToolbarPanel`/`ColumnPicker`/`InlineDropdown`/`TagLabel`/`TextCell`/`TagsCell` (partagés) posés et réutilisés sur 2 écrans sans retouche. Cities : + type/statut éditables. Charges fixes : tri/recherche/colonnes/catégories, pas le mode cartes. Restent partout : menu ⋮, édition en place des champs non encore portés, actions de ligne (`ModalHost`) ; puis Transports/Prestataires |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
 | 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |

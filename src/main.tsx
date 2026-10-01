@@ -1,5 +1,6 @@
 import { createRoot, type Root } from 'react-dom/client';
 import { CitiesView } from './domains/cities/CitiesView';
+import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
 
 /*
   Mécanisme de cohabitation (Phase 0a, docs/react-migration-plan.md § 1) : REACT_VIEWS associe une
@@ -8,6 +9,7 @@ import { CitiesView } from './domains/cities/CitiesView';
 */
 const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   cities: CitiesView,
+  charges: FixedCostsView,
 };
 
 let root: Root | null = null;

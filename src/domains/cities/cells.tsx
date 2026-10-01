@@ -41,10 +41,6 @@ export function NameCell({ attraction }: { attraction: Attraction }) {
   );
 }
 
-export function TextCell({ value }: { value: string }) {
-  return <>{value || '—'}</>;
-}
-
 export function TypeBadge({ attraction }: { attraction: Attraction }) {
   const current = window.attractionType(attraction.type);
   return (
@@ -84,18 +80,5 @@ export function StatusBadge({ attraction }: { attraction: Attraction }) {
         </button>
       ))}
     </InlineDropdown>
-  );
-}
-
-export function TagsCell({ tags }: { tags: string[] }) {
-  if (!tags.length) return null;
-  return (
-    <span className="tag-chips">
-      {tags.map((tag) => (
-        <span className="tag-chip" key={tag}>
-          {tag}
-        </span>
-      ))}
-    </span>
   );
 }
