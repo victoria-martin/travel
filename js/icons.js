@@ -28,6 +28,7 @@ const ICON_BODIES = {
   plus: `<path d="M5 12h14" /> <path d="M12 5v14" />`,
   'ellipsis-vertical': `<circle cx="12" cy="12" r="1" /> <circle cx="12" cy="5" r="1" /> <circle cx="12" cy="19" r="1" />`,
   ellipsis: `<circle cx="12" cy="12" r="1" /> <circle cx="19" cy="12" r="1" /> <circle cx="5" cy="12" r="1" />`,
+  search: `<circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" />`,
   'arrow-up': `<path d="m5 12 7-7 7 7" /> <path d="M12 19V5" />`,
   'arrow-down': `<path d="M12 5v14" /> <path d="m19 12-7 7-7-7" />`,
   'arrow-up-down': `<path d="m21 16-4 4-4-4" /> <path d="M17 20V4" /> <path d="m3 8 4-4 4 4" /> <path d="M7 4v16" />`,

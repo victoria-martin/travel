@@ -9,6 +9,7 @@ import type { ReactNode } from 'react';
 export interface Column<T> {
   key: string;
   label: string;
+  locked?: boolean;
   sortValue?: (item: T) => string | number;
   render: (item: T) => ReactNode;
 }

@@ -19,5 +19,7 @@ declare global {
     attractionType: (type: string) => { label: string; emoji: string; color: string };
     attractionStatus: (status: string) => { label: string; emoji: string };
     coordsLabel: (p: { lat: string; lng: string }) => string;
+    hiddenColumns: (kind: string) => string[];
+    toggleColumn: (kind: string, key: string) => void;
   }
 }

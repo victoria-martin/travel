@@ -3,13 +3,16 @@ import { useTravelStore } from '../../store/useTravelStore';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
+import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
 import type { Column } from '../../shared/DataTable/types';
 import type { Attraction } from '../../store/types';
 import { FavoriteCell, NameCell, StatusBadge, TagsCell, TextCell, TypeBadge } from './cells';
 
 /*
-  Porte js/views/villes/villes.js + columns.js sur DataTable. Pas encore portés dans ce lot :
-  sélecteur de colonnes, menu ⋮, édition en place (type/statut/tags), actions de ligne — tri sur
+  Porte js/views/villes/villes.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`
+  délégués au legacy (js/columns.js) : COLUMN_SETS.villes reste chargé et porte déjà
+  `description: {hiddenByDefault: true}`, une seule source pour la préférence. Pas encore portés
+  dans ce lot : menu ⋮, édition en place (type/statut/tags), actions de ligne — tri sur
   ville/nom/favori seulement, pas sur type/statut (ordre de vocabulaire, pas encore porté).
   Prochain lot : docs/react-migration-plan.md § 7.
 */
@@ -32,18 +35,21 @@ const columns: Column<Attraction>[] = [
   {
     key: 'favorite',
     label: '',
+    locked: true,
     sortValue: (a) => (a.favorite ? 0 : 1),
     render: (a) => <FavoriteCell attraction={a} />,
   },
   {
     key: 'city',
     label: 'Ville',
+    locked: true,
     sortValue: (a) => (a.city || '').toLowerCase(),
     render: (a) => <TextCell value={a.city} />,
   },
   {
     key: 'name',
     label: 'Nom',
+    locked: true,
     sortValue: (a) => (a.name || '').toLowerCase(),
     render: (a) => <NameCell attraction={a} />,
   },
@@ -62,6 +68,8 @@ export function VillesView() {
   const items = wanted
     ? attractions.filter((a) => normalizeSearch(searchText(a)).includes(wanted))
     : attractions;
+  const hidden = window.hiddenColumns('villes');
+  const visibleColumns = columns.filter((c) => c.locked || !hidden.includes(c.key));
 
   return (
     <>
@@ -75,6 +83,7 @@ export function VillesView() {
         </div>
         <div className="view-header-actions">
           <SearchField value={query} onChange={setQuery} />
+          <ColumnPicker kind="villes" columns={columns} />
         </div>
       </div>
       {items.length === 0 ? (
@@ -83,7 +92,7 @@ export function VillesView() {
           Ajoute une ville, un village, un premier lieu depuis Lieux & activités.
         </div>
       ) : (
-        <DataTable columns={columns} items={items} />
+        <DataTable columns={visibleColumns} items={items} />
       )}
     </>
   );

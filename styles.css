@@ -3307,12 +3307,21 @@ tr:hover td {
   border-radius: 8px;
 }
 .list-search {
+  position: relative;
   display: inline-flex;
   align-items: center;
 }
+.list-search-icon {
+  position: absolute;
+  left: 9px;
+  display: flex;
+  color: var(--ink-soft);
+  font-size: 13px;
+  pointer-events: none;
+}
 .list-search input {
   width: 180px;
-  padding: 6px 9px;
+  padding: 6px 9px 6px 28px;
   font: inherit;
   color: var(--ink);
   background: var(--white);
