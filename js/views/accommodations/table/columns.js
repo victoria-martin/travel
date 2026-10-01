@@ -132,8 +132,7 @@ function accommodationFavoriteCell(a) {
 function accommodationNameCell(a) {
   const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
   const outOfRange = outOfRangeIndicator(accommodationSearchOutOfRange(a));
-  const missingAddress = missingAddressIndicator(a);
-  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${missingAddress}${notes}`;
+  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${notes}`;
 }
 
 function accommodationTypeCell(a) {
@@ -161,7 +160,10 @@ function accommodationCountryCell(a) {
 }
 
 function accommodationAddressCell(a) {
-  return textCell(a.address);
+  const missingAddress = missingAddressIndicator(a);
+
+  return `<strong>${escapeHtml(a.address)}</strong>${missingAddress}`;
+  // return textCell(a.address);
 }
 
 function accommodationPriceCell(a) {

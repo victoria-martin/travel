@@ -14,11 +14,15 @@ Décisions actées (validées en session) :
   CSS-in-JS pendant la migration, pour ne pas cumuler un changement visuel avec le changement de
   moteur de rendu.
 - **Synchro** : la couche sync du store est un adaptateur remplaçable (`read()` / `push(data,
-  baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalogue partagé
+baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalogue partagé
   multi-client demande une vraie base relationnelle, seul l'adaptateur change — pas les hooks ni
   les composants. Le catalogue global démarre en pratique dès maintenant, à scope réduit : voir
   [catalogue-plan.md](catalogue-plan.md) et § 9 ci-dessous — plus « hors scope », une piste
   parallèle à celle-ci (§ 7).
+- **Build/hébergement cible (2026-10-01)** : `file://`/« ouvrir `index.html` sans rien lancer » est
+  abandonné à la fin de la migration — l'app se lancera avec un serveur front (comme les autres
+  projets), ce qui permet un vrai build Vite (ESM, dev server, HMR) une fois `js/` legacy supprimé.
+  Détail en § 1.
 
 Référence du protocole de synchro, inchangé par cette migration : [protocole-sync-sheet.md](protocole-sync-sheet.md).
 
@@ -43,6 +47,10 @@ route) — c'est exactement la frontière dont un strangler fig a besoin.
   (`REACT_VIEWS` reste `undefined`, `renderMain()` prend la branche `else`). Rejoint **Passer le
   repo en privé et héberger sur Netlify** <!--t:r6wc--> dans PLAN.md, qui donnera un vrai build.
   Pas encore exécuté dans cette session (`pnpm install` / `pnpm react:build` restent à lancer).
+- **Fin de cible** : cet IIFE reste la solution de transition tant que legacy et React coexistent.
+  À la Phase 4, `file://` n'a plus besoin d'être supporté (Décisions actées, en tête de ce
+  document) — le build repasse en ESM standard, lancé par un serveur front plutôt qu'en ouvrant le
+  fichier.
 
 ## 2. Le pont d'état
 
@@ -60,6 +68,10 @@ reste au fur et à mesure (voir § 7) :
   notification posé en Phase 0a). Les mutations restent legacy (`upsertX`, `saveNow()`) : le store
   ne devient la seule source que domaine par domaine, quand ses actions sont portées en Phase 1+ —
   pas listées en Phase 0b, pour ne rien écrire qui ne sert personne encore.
+- **Interop runtime** : une déclaration legacy `const` / `let` n'est pas une propriété de `window`.
+  Si React lit cette valeur via `window`, le script legacy l'expose explicitement et
+  [types/global.d.ts](../src/types/global.d.ts) décrit son type. Retirer l'exposition quand le
+  dernier consommateur React/legacy est migré ou supprimé en Phase 4.
 - **Synchro** : [store/sync.ts](../src/store/sync.ts) ne contient qu'un type `SyncAdapter`
   (contrat visé, documenté), **pas d'implémentation**. `js/sync.js` ne s'y prête pas tel quel : le
   push y est debouncé (`schedulePush`) et fait une fusion 3-voies entrée par entrée
@@ -97,16 +109,12 @@ responsabilité ») :
   éditables. Restent : tags éditables, actions de ligne (demandent `ModalHost`), menu ⋮. Code/route
   en anglais (`cities`), libellé visible resté « Villes » — premier pas de **Nommer les vues en
   anglais** (PLAN.md), fait pour cette vue seule, pas pour les autres.
-- `InlineDropdown` ([shared/InlineDropdown.tsx](../src/shared/InlineDropdown.tsx)) porte le
-  positionnement viewport de `js/views/inline-dropdown.js` (`position: fixed`, flip au-dessus/
-  en-dessous, clamp aux bords) en état local plutôt qu'un `openInlineMenu` global — pas de
-  replacement au scroll/resize pendant que le menu reste ouvert, encore à porter. **À améliorer**
-  (remarque laissée dans le fichier) : pas une lib ponctuelle juste pour le positionnement — plus
-  tard, un vrai système de composants (shadcn/ui, ou StyleX pour le styling) remplacerait ce calcul
-  impératif écrit à la main. Décision à prendre en dehors de ce lot, pas pendant : adopter shadcn ou
-  StyleX reviendrait sur « pas de CSS-in-JS pendant la migration » (Décisions actées, en tête de ce
-  document) — à rouvrir explicitement si elle veut, pas un détail qui se déduit d'une remarque sur
-  `InlineDropdown`.
+- Les interactions complexes utilisent les primitives headless Radix UI avec les classes
+  existantes de `styles.css`; les composants métier et le système de style restent écrits dans le
+  projet. Ne pas ajouter shadcn/ui, Tailwind ou StyleX pendant la migration. `VocabularyDropdown`
+  utilise `DropdownMenu`; Transports utilise `Tabs` pour ses trois panneaux. Remplacer les autres
+  interactions complexes au fil de leur migration, pas en réécrivant en bloc les composants déjà
+  portés.
 - `ModalHost` (remplace [modal.js](../js/modals/modal.js)) ne porte que le shell : ouverture,
   dirty-check au snapshot, fermeture. Chaque type de modale rend le composant du domaine
   (`<AccommodationForm/>`), jamais une prop par champ.
@@ -144,15 +152,15 @@ src/
 
 ## 7. Phases
 
-| Phase | Écrans | Livrable technique |
-| --- | --- | --- |
-| 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
-| 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
-| 1 — Tables simples | Cities ✅ infra, Charges fixes ✅ infra, Transports (Trajets ✅ écrit, pas câblé), Prestataires/Modèles | `DataTable`/`SearchField`/`ToolbarPanel`/`ColumnPicker`/`InlineDropdown`/`VocabularyDropdown`/`TagLabel`/`TextCell`/`TagsCell`/`FavoriteCell`/`LinkCell` (partagés) posés et réutilisés sur 3 écrans sans retouche. **Transports reste sur le legacy** : la page a 3 onglets (Trajets/Loueurs & compagnies/Voitures, `js/views/transports/tab.js`), seul Trajets est écrit côté React — câbler `REACT_VIEWS.transports` maintenant ferait disparaître les 2 autres onglets, une vraie régression. Attend un shell à onglets + les onglets Loueurs/Voitures. Restent partout : menu ⋮, édition en place des champs non encore portés, actions de ligne (`ModalHost`) ; puis Prestataires/Modèles |
-| 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
-| 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
-| 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |
-| 5 — Nettoyage RN | — | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir |
+| Phase              | Écrans                                                                                                     | Livrable technique                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0a — Mécanisme     | Villes (spike, lecture seule)                                                                              | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 0b — Store         | aucun de plus                                                                                              | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 1 — Tables simples | Cities ✅ infra, Charges fixes ✅ infra, Transports ✅ (3 onglets câblés), Prestataires/Modèles    | `DataTable`/`SearchField`/`ToolbarPanel`/`ColumnPicker`/`DropdownMenu`/`Tabs`/`VocabularyDropdown`/`EditableTagsCell`/`TagLabel`/`TextCell`/`TagsCell`/`FavoriteCell`/`LinkCell` (partagés). Transports reprend Trajets, Loueurs & compagnies et Voitures dans `REACT_VIEWS`; ses cellules et opérations de données utilisent encore les formulaires/actions legacy tant que `ModalHost` n'est pas porté. Tags éditables sur Cities/Charges fixes (`EditableTagsCell`) — pas délégué à `toggleCellTag` legacy, qui suppose une seule ligne rendue à la fois (globales posées au dernier rendu), incompatible avec une table React qui rend toutes ses lignes d'un coup ; le toggle est réimplémenté (mutation directe + `saveNow()`/`render()`). Restent sur les écrans migrés : menu ⋮, formulaires React et actions de ligne qui en dépendent (`ModalHost`). |
+| 2 — Logique propre | Scénarios (détail), Carte                                                                                  | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 3 — Reste          | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 4 — Le shell       | Sidebar, router, modale globale, toasts                                                                    | `index.html` devient 100 % React, `js/` legacy supprimé                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 5 — Nettoyage RN   | —                                                                                                          | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 **Découvrir / catalogue ([catalogue-plan.md](catalogue-plan.md)) n'est pas une étape de cette
 séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme `REACT_VIEWS` /

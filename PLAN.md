@@ -228,8 +228,10 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 - **Supprimer un voyage** <!--t:kgci--> — 🧩 ui · 🗃️ modèle · 🌙 plus tard : avec la page Voyages,
   puisque c'est de là qu'on supprime. Confirmation obligatoire, et les données rattachées partent
   avec.
-- **Voyageurs → coût par personne** <!--t:th4r--> — 🧮 calcul · ⏳ à faire : le total général d'un
-  scénario affiche le montant divisé par le nombre de voyageurs, à côté du total.
+- **Voyageurs → coût par personne** <!--t:th4r--> — 🧮 calcul · ✅ fait : une ligne sous le Total
+  général divise `scenarioTotal(scenario).euros` par `travelerCount()`
+  ([total.js](js/views/scenarios/detail/total.js)), seulement si le voyage a des voyageurs saisis.
+  Les GP ne sont pas divisés, un hébergement payé en GP ne s'achète pas par personne.
 
 ## 🏠 Hébergements
 
@@ -455,9 +457,10 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
   détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
   sur la branche `react-migration`. Phase 0 (mécanisme + store Zustand lecture seule) faite et
-  vérifiée à l'écran. Phase 1 en cours : `DataTable` posé, Villes dessus en lecture seule (tri
-  simple) — à vérifier à l'écran. Restent sur Villes : recherche, colonnes masquables, édition en
-  place (type/statut/tags), actions de ligne ; puis Transports/Charges fixes/Prestataires.
+  vérifiée à l'écran. Phase 1 en cours : `DataTable` posé sur Villes, Charges fixes et Transports.
+  Transports est câblé avec ses trois onglets (Trajets, Loueurs & compagnies, Voitures), Radix Tabs
+  et DropdownMenu. Restent sur Villes : recherche, colonnes masquables, édition en place
+  (type/statut/tags), actions de ligne ; sur les écrans migrés, formulaires React et `ModalHost`.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
@@ -502,9 +505,11 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
   se propose pas, parce qu'une cellule du Sheet joint les valeurs par virgules et qu'un morceau
   vide se perd à la relecture ([Code.js](apps-script/Code.js) `LIST_FIELDS`). Il faudrait un mot
   sentinelle pour lister ce qui n'a pas de statut.
-- **Filtrer sur les tags** <!--t:g2vw--> — 🧩 ui · ⏳ à faire : la colonne Tags ne déclare pas de
-  `sortValue`, donc le builder ne la propose pas. Un tag est pourtant l'axe le plus naturel d'une
-  liste à faire.
+- **Filtrer sur les tags** <!--t:g2vw--> — 🧩 ui · ✅ fait : en fait déjà là, sans y toucher —
+  `filterableColumns` ([filterable.js](js/views/filters/filterable.js)) accepte une colonne qui
+  porte `filterValues` **ou** `sortValue`, et Tags porte déjà `filterValues`. La prémisse de cette
+  tâche (« pas de `sortValue` donc absente ») datait d'avant la refonte du panneau Filtre du
+  2026-09-19, qui a ajouté ce chemin.
 - **Changer la ressource d'une liste** <!--t:m8rc--> — 🧩 ui · 💡 idée : on modifie les valeurs en
   cliquant les pastilles de la liste, mais changer de ressource ou de colonne demande de la
   supprimer et de la refaire.
@@ -516,8 +521,8 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 
 ## Layout
 
-- **fix scroll in page** <!--t:epip--> — 📐 layout · ⏳ à faire : make thinkgs sticky and other
-  scrollables
+- **fix scroll in page** <!--t:epip--> — 📐 layout · ✅ fait : réglé au fil des headers sticky et
+  des panneaux `overflow-y` posés view par view (journal CLAUDE.md du 2026-09-18 et suivants).
 - **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : Hébergements, Lieux &
   activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
   ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23

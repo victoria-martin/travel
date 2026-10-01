@@ -93,6 +93,9 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
   précèdent : elles ne se saisissent pas.
+- La météo du détail d'un scénario vient d'Open-Meteo et suit le lieu de chaque étape. Une prévision
+  n'est affichée que lorsque la date est couverte par l'horizon de 16 jours ; au-delà, l'app indique
+  qu'elle n'est pas disponible au lieu de présenter une estimation comme une prévision.
 - Le lieu principal d'une étape porte une **date propre** (`placeDate`) quand c'est une ville ou
   une activité, et chaque activité rattachée à l'étape porte aussi une date propre (`date`). Ces
   dates ponctuelles ne modifient ni la période de séjour ni le décalage des étapes suivantes.
@@ -230,7 +233,7 @@ coup par coup.
 | Entité                | Porte                                                                                                                                                               | Notes                                                                  |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | **Voyage**            | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs, prix du litre, péage au km              | possède tout le reste ; un seul est ouvert à la fois                   |
-| **Hébergement**       | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, heure d'arrivée, lien, lien de réservation, notes, tags, favori            | la fiche de référence ; c'est elle qui porte le prix                   |
+| **Hébergement**       | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, heure d'arrivée, lien, lien de réservation, notes, tags, favori           | la fiche de référence ; c'est elle qui porte le prix                   |
 | **Lieu**              | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
 | **Transport**         | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, budget, prix mini / maxi, lien, notes, favori                      | un trajet du voyage                                                    |
 | **Offre**             | le loueur, le modèle, statut, lieu et dates de prise en charge, prix par jour, options cochées chez le loueur, lien, notes, **par défaut**                          | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
@@ -820,6 +823,11 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
 - **Date de départ** : un champ de la ligne de sous-titre, à côté du nom. Il date la première
   étape, et les nuits de chaque étape décalent les suivantes. Sans date de départ, aucune date ne
   s'affiche.
+- **Météo** : un bouton de l'en-tête affiche ou masque un bandeau sticky pleine largeur, dont les
+  cartes suivent les jours du scénario et le lieu de l'étape correspondante. Open-Meteo fournit les
+  températures min/max, la condition et la probabilité de pluie ; les coordonnées viennent du lieu
+  choisi ou, à défaut, de la ville du même nom. Sans coordonnées, date ou prévision disponible, le
+  bandeau le signale dans la carte concernée. Trois styles se choisissent dans Affichage.
 - **Détail**, en deux colonnes : les étapes à gauche, le panneau latéral à droite. Sous les étapes,
   un pied partage la largeur — voiture, dépenses et total général à gauche, la carte du trajet à
   droite, collante à la hauteur du défilement.

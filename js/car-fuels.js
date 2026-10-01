@@ -5,8 +5,10 @@ const CAR_FUELS = {
   hybrid: { label: 'Hybride', emoji: '🔋' },
   electric: { label: 'Électrique', emoji: '⚡' },
 };
+window.CAR_FUELS = CAR_FUELS;
 
 const UNSET_CAR_FUEL = { label: 'Non renseignée', emoji: '❔' };
+window.UNSET_CAR_FUEL = UNSET_CAR_FUEL;
 
 function carFuel(key) {
   return CAR_FUELS[key] || UNSET_CAR_FUEL;

@@ -36,6 +36,7 @@ function scenarioTotalBlock(scenario) {
       <span class="acc-recap-nights">${nightsLabel(totalNights(scenario))}</span>
       <strong>${formatCosts(scenarioTotal(scenario))}</strong>
     </div>
+    ${travelerCount() ? scenarioPerTravelerRow(scenario) : ''}
   </div>`;
 }
 
@@ -54,6 +55,14 @@ function recapGroup(key, title, total, rows) {
     </summary>
     ${rows} ${recapRow(`Total ${title.toLowerCase()}`, total, 'acc-recap-sub acc-recap-subtotal')}
   </details>`;
+}
+
+function scenarioPerTravelerRow(scenario) {
+  return recapRow(
+    `Par personne (${travelerCount()})`,
+    formatEuros(scenarioTotalPerTraveler(scenario)),
+    'acc-recap-sub',
+  );
 }
 
 function recapFoldOpen(key) {

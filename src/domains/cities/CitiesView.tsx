@@ -1,14 +1,15 @@
 import { useState } from 'react';
+import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
+import { TextCell } from '../../shared/cells/TextCell';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import type { Column } from '../../shared/DataTable/types';
-import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
-import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import { TextCell } from '../../shared/cells/TextCell';
-import { TagsCell } from '../../shared/cells/TagsCell';
 import type { Attraction } from '../../store/types';
 import { useTravelStore } from '../../store/useTravelStore';
 import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
+import { CitiesHeader } from './CitiesHeader';
+import { CitiesHeaderActions } from './CitiesHeaderActions';
+import { searchAttraction } from './utils';
 
 /*
   Porte js/views/villes/cities.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`
@@ -19,21 +20,6 @@ import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
   seulement, pas type/statut (ordre de vocabulaire, pas encore porté). Prochain lot :
   docs/react-migration-plan.md § 7.
 */
-function searchText(attraction: Attraction): string {
-  return [
-    attraction.name,
-    window.attractionType(attraction.type).label,
-    ...attraction.tags,
-    attraction.city,
-    attraction.county,
-    attraction.region,
-    attraction.country,
-    attraction.address,
-    window.coordsLabel(attraction),
-  ]
-    .filter(Boolean)
-    .join(' ');
-}
 const columns: Column<Attraction>[] = [
   {
     key: 'favorite',
@@ -62,7 +48,24 @@ const columns: Column<Attraction>[] = [
     label: 'Statut',
     render: (attraction) => <StatusBadge attraction={attraction} />,
   },
-  { key: 'tags', label: 'Tags', render: (attraction) => <TagsCell tags={attraction.tags} /> },
+  {
+    key: 'tags',
+    label: 'Tags',
+    render: (attraction) => (
+      <EditableTagsCell
+        tags={attraction.tags}
+        vocabulary={window.allAttractionTags()}
+        addLabel="+ tag"
+        onToggle={(tag) => {
+          const index = attraction.tags.indexOf(tag);
+          if (index === -1) attraction.tags.push(tag);
+          else attraction.tags.splice(index, 1);
+          window.saveNow();
+          window.render();
+        }}
+      />
+    ),
+  },
   {
     key: 'description',
     label: 'Description',
@@ -77,7 +80,9 @@ export function CitiesView() {
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const items = wanted
-    ? attractions.filter((attraction) => normalizeSearch(searchText(attraction)).includes(wanted))
+    ? attractions.filter((attraction) =>
+        normalizeSearch(searchAttraction(attraction)).includes(wanted),
+      )
     : attractions;
   const hidden = window.hiddenColumns('cities');
   const visibleColumns = columns.filter((column) => column.locked || !hidden.includes(column.key));
@@ -85,17 +90,19 @@ export function CitiesView() {
   return (
     <>
       <div className="view-header">
-        <div>
-          <h2 className="view-title">Villes</h2>
-          <p className="view-sub">
-            {cities.size} ville{cities.size > 1 ? 's' : ''} — {items.length} lieu
-            {items.length > 1 ? 'x' : ''}
-          </p>
-        </div>
-        <div className="view-header-actions">
+        <CitiesHeader attractions={attractions} items={items} />
+        {/* <div>
+       <h2 className="view-title">Villes</h2>
+      <p className="view-sub">
+        {cities.size} ville{cities.size > 1 ? 's' : ''} — {items.length} lieu
+        {items.length > 1 ? 'x' : ''}
+      </p>
+    </div> */}
+        <CitiesHeaderActions query={query} setQuery={setQuery} />
+        {/* <div className="view-header-actions">
           <SearchField value={query} onChange={setQuery} />
           <ColumnPicker kind="cities" columns={columns} />
-        </div>
+        </div> */}
       </div>
       {items.length === 0 ? (
         <div className="empty-state">

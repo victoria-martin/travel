@@ -133,3 +133,8 @@ function scenarioTotal(scenario) {
     guestPoints: acc.guestPoints.amount,
   };
 }
+
+// Les GP ne se divisent pas par tête, un hébergement en GP n'est pas acheté par personne.
+function scenarioTotalPerTraveler(scenario) {
+  return scenarioTotal(scenario).euros / travelerCount();
+}

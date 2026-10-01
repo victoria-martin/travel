@@ -14,9 +14,11 @@ type Sort = { key: string; dir: SortDir } | null;
 export function DataTable<T extends { id: string }>({
   columns,
   items,
+  onRowClick,
 }: {
   columns: Column<T>[];
   items: T[];
+  onRowClick?: (item: T) => void;
 }) {
   const [sort, setSort] = useState<Sort>(null);
 
@@ -64,7 +66,25 @@ export function DataTable<T extends { id: string }>({
         </thead>
         <tbody>
           {sorted.map((item) => (
-            <tr key={item.id} className="list-row">
+            <tr
+              key={item.id}
+              className={onRowClick ? 'list-row row-openable' : 'list-row'}
+              onClick={
+                onRowClick
+                  ? (event) => {
+                      if (
+                        event.target instanceof Element &&
+                        event.target.closest(
+                          'button, a, input, textarea, select, summary, label, [contenteditable]',
+                        )
+                      ) {
+                        return;
+                      }
+                      onRowClick(item);
+                    }
+                  : undefined
+              }
+            >
               {columns.map((column) => (
                 <td key={column.key}>{column.render(item)}</td>
               ))}

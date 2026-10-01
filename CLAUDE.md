@@ -22,6 +22,12 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 « simples » — c'était le défaut de `simple-lists/`. Un dossier ne porte un mécanisme
 (`locate/`, `modals/`) que s'il sert plusieurs domaines.
 
+## Un composant parent tient son sous-arbre
+
+Pour une vue composée, le dossier porte le nom du composant parent et contient son fichier
+`<Parent>/<Parent>.tsx` ainsi que les composants enfants qu'il appelle. Les colonnes et cellules
+propres à cette vue vivent dans le même dossier.
+
 ## Un fichier = une responsabilité
 
 - `<vue>.js` — le `render…View`, rien d'autre.
@@ -30,6 +36,8 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 - `cards.js` — la grille et la carte de la vue.
 - `get-<entité>.js` — le getter.
 - `modal/form.js` / `modal/save.js` — rendu et écriture, jamais ensemble.
+- Une fonctionnalité avec ses propres données ou son état garde sa logique et son rendu dans sa
+  brique dédiée ; le header ou la vue ne fait que l'assembler.
 
 ## Les globales vivent à côté de leur consommateur
 
@@ -99,9 +107,9 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
   - **B, par nature du contenu** (retenu) — Lieux : Hébergements, Lieux & activités, Villes, Carte ·
     Budget & logistique : Dépenses, Transports, Scénarios · Voyage en cours : Journal, Notes,
     Phrases clé, Infos utiles, Valise, À faire.
-  Revenir à A : remplacer le tableau `NAV_SECTIONS` par les trois groupes ci-dessus, rien d'autre à
-  toucher (même mécanisme de pli, mêmes clés `NAV_ITEMS`). Remplace la tâche <!--t:s7qk--> du
-  backlog, dont le critère COLLECTER/DÉCIDER/LIRE n'a pas été retenu.
+    Revenir à A : remplacer le tableau `NAV_SECTIONS` par les trois groupes ci-dessus, rien d'autre à
+    toucher (même mécanisme de pli, mêmes clés `NAV_ITEMS`). Remplace la tâche <!--t:s7qk--> du
+    backlog, dont le critère COLLECTER/DÉCIDER/LIRE n'a pas été retenu.
 
 - **2026-09-20** — nouvelle page **Villes** ([js/views/villes/villes.js](js/views/villes/villes.js)),
   entrée de barre latérale à part entière plutôt que mode de Lieux & activités — choix posé
@@ -265,7 +273,7 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 - **2026-09-19** — les tables trop larges pour se lire en ligne (Hébergements et Lieux &
   activités, 23 colonnes ; Offres de voiture, 17) s'ouvrent en sheet plutôt qu'en repli carte :
   le mécanisme existait déjà pour Hébergements et Prestataires (`ROW_CLICKS` + `openSheet(type,
-  id)`, [table.js](js/views/table.js) / [modal.js](js/modals/modal.js)) — la même modale d'édition,
+id)`, [table.js](js/views/table.js) / [modal.js](js/modals/modal.js)) — la même modale d'édition,
   posée en panneau de droite au lieu du centre — et `.modal-sheet{max-width:100%}` la fait déjà
   passer plein écran sous 440px, desktop et mobile compris, sans media query dédiée. Étendre à deux
   entités de plus n'a donc été que les brancher sur le patron existant

@@ -7,6 +7,7 @@ const CAR_STATUSES = {
   toCheck: { label: 'À voir', emoji: '👀' },
   rejected: { label: 'Écarté', emoji: '👎' },
 };
+window.CAR_STATUSES = CAR_STATUSES;
 
 function carStatus(status) {
   return CAR_STATUSES[status] || UNSET_CAR_STATUS;

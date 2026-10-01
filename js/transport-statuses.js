@@ -7,6 +7,7 @@ const TRANSPORT_STATUSES = {
   toCheck: { label: 'À voir', emoji: '👀' },
   rejected: { label: 'Écarté', emoji: '👎' },
 };
+window.TRANSPORT_STATUSES = TRANSPORT_STATUSES;
 
 function transportStatus(status) {
   return TRANSPORT_STATUSES[status] || UNSET_TRANSPORT_STATUS;

@@ -180,7 +180,8 @@ function attractionCountryCell(a) {
 }
 
 function attractionAddressCell(a) {
-  return textCell(a.address);
+  // return textCell(a.address);
+  return `<strong>${escapeHtml(a.address)}</strong>${missingAddressIndicator(a)}`;
 }
 
 function attractionCoordsCell(a) {

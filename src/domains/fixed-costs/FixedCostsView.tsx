@@ -4,7 +4,7 @@ import { DataTable } from '../../shared/DataTable/DataTable';
 import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import { TagsCell } from '../../shared/cells/TagsCell';
+import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
 import type { Column } from '../../shared/DataTable/types';
 import type { FixedCost } from '../../store/types';
 import { AmountCell, LabelCell, RecurrenceBadge } from './cells';
@@ -39,7 +39,20 @@ const columns: Column<FixedCost>[] = [
   {
     key: 'categories',
     label: 'Catégories',
-    render: (fixedCost) => <TagsCell tags={fixedCost.categories} />,
+    render: (fixedCost) => (
+      <EditableTagsCell
+        tags={fixedCost.categories}
+        vocabulary={window.allFixedCostCategories()}
+        addLabel="+ catégorie"
+        onToggle={(category) => {
+          const index = fixedCost.categories.indexOf(category);
+          if (index === -1) fixedCost.categories.push(category);
+          else fixedCost.categories.splice(index, 1);
+          window.saveNow();
+          window.render();
+        }}
+      />
+    ),
   },
   {
     key: 'recurrence',
