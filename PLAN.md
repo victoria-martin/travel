@@ -451,8 +451,9 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   (372 fichiers, 18630 lignes, état global mutable + re-rendu `innerHTML`) sur React + TypeScript,
   écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
   détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
-  sur la branche `react-migration`. Phase 0a (mécanisme + spike Villes) écrite, pas encore vérifiée
-  à l'exécution — `pnpm install` / `pnpm react:build` restent à lancer.
+  sur la branche `react-migration`. Phase 0a (mécanisme + spike Villes) et 0b (types + store
+  Zustand lecture seule) faites, typecheck propre. Reste à builder (`pnpm react:build`) et
+  revérifier le spike avant la Phase 1 (premiers écrans, premières actions d'écriture du store).
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

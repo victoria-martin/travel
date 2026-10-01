@@ -45,31 +45,31 @@ route) — c'est exactement la frontière dont un strangler fig a besoin.
 
 ## 2. Le pont d'état
 
-Le store Zustand ([store/useTravelStore.ts](../js/state.js)) devient la **seule** source — pas une
-synchro à double sens avec le `state` global. Le code legacy qui n'a pas encore été migré lit
-`useTravelStore.getState()` au lieu de la globale `state` : c'est une migration mécanique,
-accès par accès, pas une réécriture de sa logique. Les 16 collections et les actions de mutation
-(`upsertAccommodation`, etc.) gardent leur forme actuelle — seul le conteneur change.
+Réalisé en Phase 0b, plus restreint que prévu ici au départ — le mécanisme vérifié d'abord, le
+reste au fur et à mesure (voir § 7) :
 
-`store/sync.ts` expose une interface étroite et non le détail du protocole Sheet :
-`read(): Promise<{rev, data}>` / `push(data, baseRev): Promise<{rev, data} | {conflict: true, ...}>`
-(reprend tel quel le contrat documenté dans [protocole-sync-sheet.md](protocole-sync-sheet.md)).
-Le store n'appelle que ces deux fonctions ; rien dans `domains/*/hooks` ni dans les composants ne
-sait que le backend est un Google Sheet. C'est ce qui laisse la porte ouverte à une bascule DB plus
-tard (catalogue partagé, multi-client — voir [atelier/notes.json](../atelier/notes.json)) sans
-toucher au reste de l'app. Pas de sur-ingénierie au-delà de cette interface : tant que la DB cible
-n'est pas tranchée, les types restent ceux d'aujourd'hui (une entité porte un `travelId`) — les
-faire porter un lien vers un catalogue global sans backend pour le servir serait une hypothèse, pas
-un besoin vérifié.
+- **Types** : [store/types.ts](../src/store/types.ts). Dérivés des `emptyX()` / fonctions de
+  sauvegarde réelles (`js/views/**/modal/form.js`, `save.js`), pas d'une modélisation abstraite —
+  `atelier/modele.json` datait du 16/09 et plusieurs champs avaient bougé depuis (`Offer` ne porte
+  plus `rentalId`/`priceTotal`, `Transport` plus `carrier`). `Scenario`/`Step`/`StepGroup` restent
+  volontairement moins détaillés, cette zone étant en flux (PLAN.md, « Deux dates par étape ») —
+  affinés en Phase 2.
+- **Store** : [store/useTravelStore.ts](../src/store/useTravelStore.ts) est un miroir Zustand
+  **en lecture seule** de la globale `state` legacy, recopié à chaque re-rendu (le mécanisme de
+  notification posé en Phase 0a). Les mutations restent legacy (`upsertX`, `saveNow()`) : le store
+  ne devient la seule source que domaine par domaine, quand ses actions sont portées en Phase 1+ —
+  pas listées en Phase 0b, pour ne rien écrire qui ne sert personne encore.
+- **Synchro** : [store/sync.ts](../src/store/sync.ts) ne contient qu'un type `SyncAdapter`
+  (contrat visé, documenté), **pas d'implémentation**. `js/sync.js` ne s'y prête pas tel quel : le
+  push y est debouncé (`schedulePush`) et fait une fusion 3-voies entrée par entrée
+  (`mergeStates`), pas un simple POST — l'écrire en parallèle aurait fait deux chemins écrivant sur
+  le même Google Sheet, un vrai risque sur les données réelles. Reste une tâche à part, quand
+  `js/sync.js` lui-même est porté (Phase 4 ou plus tôt si la bascule DB de
+  [atelier/notes.json](../atelier/notes.json) démarre avant).
 
 Risque identifié : un accès `state.x` oublié dans du legacy, pendant la période où les deux
 coexistent, lirait une donnée périmée. Pas de garde automatique prévue pour l'instant — à vérifier
 à la main à chaque écran migré, et avant de supprimer `js/state.js` en Phase 4.
-
-Types TS par domaine, dérivés des `emptyX()` / `migrateData` existants ([storage.js](../js/storage.js))
-plutôt que réinventés : `Accommodation`, `Scenario`, `Step`, `Attraction`, `Ville`, `Transport`,
-`Provider`, `CarModel`, `Offer`, `FixedCost`, `TripNote`, `TodoList`, `FreeTodo`,
-`PackingListItem`, `CountryInfo`, `JournalEntry`, `Travel`.
 
 ## 3. Hooks — donnée dérivée vs état d'action
 
@@ -129,9 +129,9 @@ src/
 
 | Phase | Écrans | Livrable technique |
 | --- | --- | --- |
-| 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()`, pont temporaire qui lit la globale `state` legacy (`useLegacyState`) — **écrit, pas encore vérifié** : `pnpm install` puis `pnpm react:build` restent à lancer |
-| 0b — Store | aucun de plus | une fois 0a vérifié à l'écran : store Zustand, types par domaine, adaptateur sync (§ 2), `useLegacyState` retiré au profit du store |
-| 1 — Tables simples | Villes, Transports, Charges fixes, Prestataires/Modèles | `DataTable`, `Toolbar`, `Modal`/`Sheet` partagés, posés une fois pour 4 écrans |
+| 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
+| 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
+| 1 — Tables simples | Villes, Transports, Charges fixes, Prestataires/Modèles | `DataTable`, `Toolbar`, `Modal`/`Sheet` partagés, posés une fois pour 4 écrans ; premières **actions** du store (`upsertX`, encore déléguées au legacy) dès qu'un écran écrit |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
 | 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |

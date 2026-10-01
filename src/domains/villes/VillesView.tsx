@@ -1,14 +1,12 @@
-import { useLegacyState } from '../../store/legacyBridge';
+import { useTravelStore } from '../../store/useTravelStore';
 
 /*
-  Spike de la Phase 0a : prouve que le mécanisme de montage (src/main.tsx, REACT_VIEWS) lit la
-  donnée legacy en direct. Pas encore le DataTable/columns de la vraie page Villes
-  (js/views/villes/) — ça, c'est la Phase 1, une fois ce mécanisme validé.
+  Spike de la Phase 0a, basculé sur le store en 0b. Pas encore le DataTable/columns de la vraie
+  page Villes (js/views/villes/) — ça, c'est la Phase 1, une fois ce mécanisme validé.
 */
 export function VillesView() {
-  const state = useLegacyState();
-  const attractions = window.ofCurrentTravel(state?.attractions ?? []);
-  const cities = new Set(attractions.map((a: any) => a.city).filter(Boolean));
+  const attractions = useTravelStore((s) => window.ofCurrentTravel(s.data.attractions));
+  const cities = new Set(attractions.map((a) => a.city).filter(Boolean));
 
   return (
     <div className="view-header">
