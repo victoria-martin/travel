@@ -11,6 +11,7 @@ let prefs = {
   scenarioSideWidth: { map: 50, money: 28, valise: 28 },
   mapSideWidth: 250,
   recapFolds: {},
+  navSectionFolds: {},
   sort: {},
   sortOrder: {},
   showButtonLabels: true,

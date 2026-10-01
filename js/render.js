@@ -25,7 +25,8 @@ function render() {
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()}
-      ${NAV_ITEMS.map((item) => navBtn(item.key, item.icon, item.label)).join('')}
+      ${navBtn('accueil', navItem('accueil').icon, navItem('accueil').label)}
+      ${NAV_SECTIONS.map(navSection).join('')}
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
     ${mobileNavBar()} ${mobileNavPlusOpen ? mobileNavPlusSheet() : ''}
@@ -60,6 +61,28 @@ function navBtn(key, icon, label) {
   >
     <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span>
   </button>`;
+}
+
+function navSection(section) {
+  return /* HTML */ `<details
+    class="nav-section"
+    ${navSectionOpen(section.key) ? 'open' : ''}
+    ontoggle="setNavSectionFold('${section.key}', this.open)"
+  >
+    <summary class="nav-section-title">${section.title}</summary>
+    <div class="nav-section-items">
+      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label)).join('')}
+    </div>
+  </details>`;
+}
+
+function navSectionOpen(key) {
+  return prefs.navSectionFolds[key] !== false;
+}
+
+function setNavSectionFold(key, open) {
+  prefs.navSectionFolds[key] = open;
+  persistPrefs();
 }
 
 let viewHeaderObserver;

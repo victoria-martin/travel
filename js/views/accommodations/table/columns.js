@@ -10,6 +10,12 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
   {
+    key: 'chosenStep',
+    label: 'Étape',
+    cell: (a) => chosenStepCell({ accommodationId: a.id }),
+    sortValue: (a) => chosenStepSortValue({ accommodationId: a.id }),
+  },
+  {
     key: 'type',
     label: 'Type',
     cell: accommodationTypeCell,
@@ -110,6 +116,7 @@ const ACCOMMODATION_COLUMNS = [
 COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
 
 SORT_DEFAULTS.hebergements = [
+  { key: 'chosenStep', dir: 'asc' },
   { key: 'favorite', dir: 'asc' },
   { key: 'recent', dir: 'desc' },
   { key: 'type', dir: 'asc' },

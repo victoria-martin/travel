@@ -23,3 +23,14 @@ const NAV_ITEMS = [
 function navItem(key) {
   return NAV_ITEMS.find((item) => item.key === key);
 }
+
+/*
+  Regroupement de la sidebar desktop seulement — la barre mobile ([mobile-nav/](js/views/mobile-nav/))
+  continue de lire NAV_ITEMS à plat. Accueil reste hors section, rendu en premier. Par nature du
+  contenu plutôt que par phase du voyage — deux essais comparés, voir le journal de CLAUDE.md.
+*/
+const NAV_SECTIONS = [
+  { key: 'lieux', title: 'Lieux', keys: ['hebergements', 'attractions', 'villes', 'carte'] },
+  { key: 'budget-logistique', title: 'Budget & logistique', keys: ['depenses', 'transports', 'scenarios'] },
+  { key: 'sejour', title: 'Voyage en cours', keys: ['journal', 'notes', 'phrases', 'infos-utiles', 'valise', 'a-faire'] },
+];

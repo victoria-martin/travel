@@ -67,6 +67,42 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-10-01** — les tables Hébergements et Lieux & activités gagnent une colonne **Étape** : le
+  rang et le nom de l'étape du **scénario choisi** où vit la ligne — directement pour un
+  hébergement (`step.accommodationId`), directement ou en activité pour un lieu
+  (`step.attractionId`, ou en extra de l'étape ou de son groupe). `chosenStepForPlace`
+  ([chosen-step-for-place.js](js/views/scenarios/chosen-step-for-place.js)) va dans
+  `js/views/scenarios/` malgré ses deux consommateurs hors du domaine — même précédent que
+  `nearestAccommodationStep` : une brique qui lit les étapes vit avec elles. Cette colonne est
+  aussi le premier critère des deux tris par défaut, pour ouvrir la liste dans l'ordre du plan
+  retenu ; sans scénario choisi ou lieu hors plan, l'étape est vide et retombe en fin de tri.
+
+  Éditer les tags d'une ligne passait par un champ texte libre + `datalist` : il devient un menu
+  déroulant à cases à cocher, sur le patron du panneau Filtrer (`.filter-option`) plutôt qu'une
+  brique neuve — `tagsCell` ([tags-cell.js](js/views/tags-cell.js)), seul fichier touché puisque
+  Hébergements et Lieux & activités en sont les deux seuls consommateurs. Le vocabulaire proposé
+  reste l'union des tags déjà posés (plus le vocabulaire par défaut des lieux,
+  `DEFAULT_ATTRACTION_TAGS`) : aucune liste n'est à administrer, cocher un tag absent de la liste
+  via le champ du bas le crée. `tagsField` (la modale), qui sert aussi les catégories de Dépenses,
+  n'est pas touché — hors du périmètre demandé, et un troisième consommateur à qui ce menu ne
+  conviendrait pas forcément de la même façon.
+
+- **2026-10-01** — la sidebar se regroupe en 3 sections repliables
+  (`NAV_SECTIONS`, [nav-items.js](js/views/nav-items.js)), Accueil restant hors groupe en tête.
+  `NAV_ITEMS` reste plat : la barre mobile ([mobile-nav/](js/views/mobile-nav/)) n'en consomme que
+  les clés, le groupement ne la concerne pas. Chaque section est un `<details>`/`<summary>` natif —
+  même patron que `recapGroup` du récap scénario — dont le pli persiste dans
+  `prefs.navSectionFolds` ([prefs.js](js/prefs.js)). Deux découpages comparés avant de choisir :
+  - **A, par phase du voyage** (essayé en premier, remplacé) — Préparation : Scénarios, Dépenses,
+    Transports, Valise, À faire · Sur place : Hébergements, Lieux & activités, Villes, Carte ·
+    Pendant le séjour : Journal, Notes, Phrases clé, Infos utiles.
+  - **B, par nature du contenu** (retenu) — Lieux : Hébergements, Lieux & activités, Villes, Carte ·
+    Budget & logistique : Dépenses, Transports, Scénarios · Voyage en cours : Journal, Notes,
+    Phrases clé, Infos utiles, Valise, À faire.
+  Revenir à A : remplacer le tableau `NAV_SECTIONS` par les trois groupes ci-dessus, rien d'autre à
+  toucher (même mécanisme de pli, mêmes clés `NAV_ITEMS`). Remplace la tâche <!--t:s7qk--> du
+  backlog, dont le critère COLLECTER/DÉCIDER/LIRE n'a pas été retenu.
+
 - **2026-09-20** — nouvelle page **Villes** ([js/views/villes/villes.js](js/views/villes/villes.js)),
   entrée de barre latérale à part entière plutôt que mode de Lieux & activités — choix posé
   explicitement (AskUserQuestion), donc en tension avec le critère « une lecture dérivée est un mode

@@ -257,6 +257,45 @@ body {
   width: 18px;
   text-align: center;
 }
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nav-section-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  padding: 10px 12px 4px;
+  color: #b9c7c0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.nav-section-title::-webkit-details-marker {
+  display: none;
+}
+.nav-section-title::before {
+  content: '\203A';
+  display: inline-block;
+  width: 10px;
+  transition: transform 0.15s;
+}
+.nav-section[open] .nav-section-title::before {
+  transform: rotate(90deg);
+}
+.nav-section .nav-btn {
+  padding-left: 20px;
+  width: 100%;
+}
 
 /* ---------- Main ---------- */
 .main {
@@ -3528,8 +3567,18 @@ tr:hover td {
     gap: 0;
     width: 100%;
   }
-  .nav-label {
+  .nav-section .nav-btn {
+    padding-left: 6px;
+  }
+  .nav-label,
+  .nav-section-title {
     display: none;
+  }
+  /* Le rail d'icônes n'a pas la place pour un titre de section cliquable : chaque section reste
+     visuellement ouverte, quel que soit son pli — cette règle l'emporte sur le `display: none`
+     que l'UA applique au contenu d'un <details> fermé. */
+  .nav-section:not([open]) .nav-btn {
+    display: flex;
   }
   .nav-icon {
     font-size: 19px;
@@ -3567,7 +3616,8 @@ tr:hover td {
     overflow: visible;
     z-index: 25;
   }
-  .sidebar > .nav-btn {
+  .sidebar > .nav-btn,
+  .nav-section {
     display: none;
   }
   .travel-selector {
@@ -4142,16 +4192,22 @@ tr:hover td {
   min-width: 90px;
   font-size: 12px;
 }
+.tags-cell-dropdown {
+  display: block;
+  width: 100%;
+}
 .tags-cell-display {
   display: block;
   width: 100%;
   padding: 2px 0;
   text-align: left;
-  background: none;
-  border: none;
   font: inherit;
   color: inherit;
+  list-style: none;
   cursor: pointer;
+}
+.tags-cell-display::-webkit-details-marker {
+  display: none;
 }
 .tags-cell-add {
   color: var(--ink-soft);
@@ -4159,6 +4215,17 @@ tr:hover td {
 }
 .tags-cell-display:hover .tags-cell-add {
   opacity: 1;
+}
+.tags-cell-new {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+.tags-cell-new input {
+  flex: 1;
 }
 .sort-panel .filter-block {
   margin-bottom: 10px;

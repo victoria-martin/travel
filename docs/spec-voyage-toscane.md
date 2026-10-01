@@ -365,14 +365,18 @@ pastilles, avant même l'enregistrement.
 
 La vue principale, en **tableau ou en cartes**.
 
-- **Colonnes** : favori, nom (+ notes en dessous), type, statut, ville, province, région, pays,
-  tags, adresse, prix, dates, disponible du, disponible au, notes, lien, Booking, actions. Région,
-  pays, adresse et notes sont masquées par défaut ; nom, favori et actions ne sont jamais
-  masquables. Le sélecteur « Colonnes » garde le choix d'une session à l'autre.
+- **Colonnes** : favori, nom (+ notes en dessous), étape (du scénario choisi), type, statut,
+  ville, province, région, pays, tags, adresse, prix, dates, disponible du, disponible au, notes,
+  lien, Booking, actions. Région, pays, adresse et notes sont masquées par défaut ; nom, favori et
+  actions ne sont jamais masquables. Le sélecteur « Colonnes » garde le choix d'une session à
+  l'autre.
+- **Étape** : le nom du **scénario choisi**, le rang (« 1. », « 2. »…) et le nom de l'étape où vit
+  l'hébergement, vide s'il n'y figure pas. C'est aussi le premier critère du tri de départ, pour
+  que la liste s'ouvre dans l'ordre du plan retenu.
 - **Tri** — panneau « Trier » : une liste ordonnée de critères (« statut, puis ville »),
   chacun avec son sens, réordonnable. Le clic sur un en-tête est le raccourci : il remplace tout
-  par un tri simple et cycle croissant → décroissant → aucun. Tri de départ : favoris, puis type,
-  puis statut. Les favoris sont un critère comme un autre.
+  par un tri simple et cycle croissant → décroissant → aucun. Tri de départ : étape du scénario
+  choisi, puis favoris, puis type, puis statut. Les favoris sont un critère comme un autre.
 - **Un critère de vocabulaire se trie en rangeant ses mots** : sur type, statut ou mode, croissant
   et décroissant ne veulent rien dire — c'est l'ordre des statuts qui fait le tri. Le second champ
   du niveau ouvre donc la liste des mots, qu'on glisse l'un au-dessus de l'autre ; l'ordre obtenu
@@ -386,9 +390,10 @@ La vue principale, en **tableau ou en cartes**.
   tombe hors de « disponible du · au ». Le style de la pastille — pastille rouge, ambre, ou icône
   seule — est un réglage du menu Affichage, pour comparer les trois sans coder. La même
   comparaison vaut pour une étape de scénario, contre ses dates à elle.
-- **Tags** : aucune liste d'options à administrer. Les options proposées sont l'union des tags déjà
-  saisis — un tag existe dès qu'il est tapé quelque part, et disparaît avec son dernier porteur.
-  Un tag coché puis disparu est retiré du filtre tout seul.
+- **Tags** : aucune liste d'options à administrer. Les options proposées — en menu déroulant à
+  cases à cocher dans la cellule du tableau — sont l'union des tags déjà saisis, plus un champ pour
+  celui qui manque ; un tag existe dès qu'il est coché une première fois, et disparaît avec son
+  dernier porteur. Un tag coché puis disparu est retiré du filtre tout seul.
 - **Ajouter** : le `+` ouvre un panneau de quatre portes — depuis un lien Booking, depuis un lien
   HomeExchange, depuis un lien Airbnb, ou à la main. Chaque porte a son formulaire : le lien en
   tête, puis nom, statut, localisation, prix, dates et notes. Tags et coup de cœur ne s'y trouvent
@@ -458,12 +463,17 @@ propose à côté des hébergements — et une autre étape l'ajoute en **activi
 seule fiche, donc une seule adresse à corriger. Un trajet y désigne aussi son départ et son
 arrivée.
 
-Tableau seul, pas de vue en cartes. Colonnes : favori, nom, type, statut, prix, tags, description,
-ville, province, région, pays, adresse, coordonnées, hébergement, horaires et téléphone, lien —
-région, pays, adresse, coordonnées, hébergement, horaires et téléphone masqués par défaut. Les
-quatre niveaux sont des colonnes à part, comme chez les hébergements : c'est ce qui les rend
-filtrables un à un — « les lieux de Toscane ». Tri par défaut du plus récent au plus ancien. Même bloc de
-localisation que les hébergements.
+Tableau seul, pas de vue en cartes. Colonnes : favori, nom, étape (du scénario choisi), type,
+statut, prix, tags, description, ville, province, région, pays, adresse, coordonnées,
+hébergement, horaires et téléphone, lien — région, pays, adresse, coordonnées, hébergement,
+horaires et téléphone masqués par défaut. Les quatre niveaux sont des colonnes à part, comme chez
+les hébergements : c'est ce qui les rend filtrables un à un — « les lieux de Toscane ». Tri par
+défaut : étape du scénario choisi, puis du plus récent au plus ancien. Même bloc de localisation
+que les hébergements.
+
+- **Étape** : comme chez les hébergements, le rang et le nom de l'étape du **scénario choisi** où
+  le lieu est posé — soit directement (une ville, une étape sans hébergement), soit comme activité
+  d'une étape ou de son groupe. Vide s'il n'y figure pas.
 
 - **Un lien Google Maps collé remplit la fiche** : nom, adresse et coordonnées, lus par l'Apps
   Script — le navigateur ne peut pas lire google.com lui-même. Le nom et les coordonnées viennent
@@ -479,8 +489,9 @@ localisation que les hébergements.
   musée, église, jardin, point de vue, plage, thermes, randonnée, artisanat, trattoria, pizzeria,
   gastronomique, terrasse, vue, cave / dégustation, fromager, glacier, street food, végétarien),
   pour qu'une première attraction ait déjà quelque chose à choisir. Le vocabulaire est **commun à
-  tous les types** : un restaurant et un musée puisent dans la même liste. Ils s'éditent sur place
-  depuis la cellule du tableau, comme ceux d'un hébergement, et depuis la modale.
+  tous les types** : un restaurant et un musée puisent dans la même liste. Dans la cellule du
+  tableau, ils se cochent dans un menu déroulant, comme ceux d'un hébergement ; la modale garde la
+  saisie libre.
 - **« Ajouter à un scénario » / « Ajouter au plan »** dans la modale, deux façons de rattacher le
   lieu à une étape sans passer par la fiche du scénario. Le premier ouvre un menu groupé par
   scénario, chaque étape affichant son nom et sa localisation ; choisir une étape y pose le lieu en

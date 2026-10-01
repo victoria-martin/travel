@@ -1,7 +1,7 @@
 /*
   Trois écrans groupent des items de valise par catégorie : le catalogue, le panneau de
   composition, l'onglet du scénario. Le repli d'un groupe est un geste transitoire, pas une
-  préférence à retrouver — il vit dans une globale, comme `editingTagsId`, et se perd au rechargement.
+  préférence à retrouver — il vit dans une globale, comme `openInlineMenu`, et se perd au rechargement.
 */
 let packingClosedGroups = new Set();
 

@@ -22,6 +22,12 @@ COLUMN_SETS.attractions = [
     sortValue: (a) => a.recentOrder,
   },
   {
+    key: 'chosenStep',
+    label: 'Étape',
+    cell: (a) => chosenStepCell({ attractionId: a.id }),
+    sortValue: (a) => chosenStepSortValue({ attractionId: a.id }),
+  },
+  {
     key: 'type',
     label: 'Type',
     cell: attractionTypeCell,
@@ -129,6 +135,7 @@ COLUMN_SETS.attractions = [
 ];
 
 SORT_DEFAULTS.attractions = [
+  { key: 'chosenStep', dir: 'asc' },
   { key: 'recent', dir: 'desc' },
 ];
 

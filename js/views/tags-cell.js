@@ -1,12 +1,10 @@
 /*
-  Le tableau édite les tags sur place : une seule cellule est en édition à la fois, et seul son
-  contenu est repeint tant que l'éditeur est ouvert — un render complet réordonnerait la ligne
-  sous la souris et arracherait le champ. Le render global attend la fermeture.
-  Le champ édité, le getter de l'entité, son vocabulaire et le libellé d'ajout tiennent dans des
-  globales, comme dans tags-field.js : une seule table est à l'écran à la fois, chaque ligne les
-  repose en se rendant.
+  Le tableau édite les tags avec le même menu que Filtrer : une case par tag déjà utilisé ailleurs
+  dans la collection, et un champ en bas pour celui qui manque — il rejoint le vocabulaire au
+  premier cochage, comme une option de loueur tapée depuis une offre. Le champ édité, le getter de
+  l'entité, son vocabulaire et le libellé d'ajout tiennent dans des globales : une seule table est
+  à l'écran à la fois, chaque ligne les repose en se rendant.
 */
-let editingTagsId = null;
 let tagsCellField = null;
 let tagsCellGetter = null;
 let tagsCellVocabulary = null;
@@ -21,65 +19,54 @@ function tagsCell(item, { field, getItem, vocabulary, addLabel }) {
 }
 
 function tagsCellBody(item) {
-  return editingTagsId === item.id ? tagsCellEditor(item) : tagsCellDisplay(item);
-}
-
-function tagsCellDisplay(item) {
-  const chips =
-    tagChips(item[tagsCellField]) ||
-    `<span class="tags-cell-add">${escapeHtml(tagsCellAddLabel)}</span>`;
-  return /* HTML */ `<button
-    type="button"
-    class="tags-cell-display"
-    onclick="openTagsEditor('${item.id}')"
-    title="Modifier"
-  >
-    ${chips}
-  </button>`;
-}
-
-function tagsCellEditor(item) {
   const used = item[tagsCellField] || [];
-  const options = tagsCellVocabulary().filter((tag) => !used.includes(tag));
-  return /* HTML */ `<div class="tags-field tags-field-inline">
-    ${used
-      .map(
-        (tag, i) =>
-          `<span class="tag-chip tag-chip-editable">${escapeHtml(tag)}<button type="button" class="tag-chip-remove" onmousedown="event.preventDefault()" onclick="removeTagFromCell('${item.id}', ${i})" title="Retirer">${svgIcon('x')}</button></span>`,
-      )
-      .join('')}
-    <input
-      id="tags-cell-input"
-      type="text"
-      list="tags-cell-options"
-      placeholder="Ajouter…"
-      onkeydown="tagsCellKeydown(event, '${item.id}')"
-      onchange="addTagFromCell('${item.id}')"
-      onblur="closeTagsEditor()"
-    />
-    <datalist id="tags-cell-options">
-      ${options.map((tag) => `<option value="${escapeHtml(tag)}"></option>`).join('')}
-    </datalist>
-  </div>`;
+  const chips = tagChips(used) || `<span class="tags-cell-add">${escapeHtml(tagsCellAddLabel)}</span>`;
+  return inlineDropdown(
+    `tags-cell:${item.id}`,
+    'tags-cell-dropdown',
+    /* HTML */ `<summary class="tags-cell-display">${chips}</summary>
+      <div class="inline-menu">
+        ${tagsCellVocabulary()
+          .map((tag) => tagsCellOption(item.id, used, tag))
+          .join('')}
+        <div class="tags-cell-new">
+          <input
+            id="tags-cell-input"
+            type="text"
+            placeholder="Nouveau tag…"
+            onkeydown="tagsCellKeydown(event, '${item.id}')"
+          />
+          <button type="button" class="btn btn-small" onclick="addTagFromCell('${item.id}')">
+            ${svgIcon('plus')}
+          </button>
+        </div>
+      </div>`,
+  );
 }
 
-function openTagsEditor(id) {
-  editingTagsId = id;
+function tagsCellOption(id, used, tag) {
+  return /* HTML */ `<label class="filter-option">
+    <input
+      type="checkbox"
+      ${used.includes(tag) ? 'checked' : ''}
+      onchange="toggleCellTag('${id}','${tag}')"
+    />
+    ${escapeHtml(tag)}
+  </label>`;
+}
+
+function toggleCellTag(id, tag) {
+  const item = tagsCellGetter(id);
+  const tags = item[tagsCellField] || (item[tagsCellField] = []);
+  const i = tags.indexOf(tag);
+  if (i === -1) tags.push(tag);
+  else tags.splice(i, 1);
+  saveNow();
   repaintTagsCell(id);
 }
 
-function closeTagsEditor() {
-  editingTagsId = null;
-  render();
-}
-
 function tagsCellKeydown(e, id) {
-  if (e.key === 'Escape') {
-    e.target.value = '';
-    e.target.blur();
-    return;
-  }
-  if (e.key !== 'Enter' && e.key !== ',') return;
+  if (e.key !== 'Enter') return;
   e.preventDefault();
   addTagFromCell(id);
 }
@@ -87,25 +74,14 @@ function tagsCellKeydown(e, id) {
 function addTagFromCell(id) {
   const input = document.getElementById('tags-cell-input');
   const value = input.value.trim();
-  input.value = '';
   if (!value) return;
-  const item = tagsCellGetter(id);
-  item[tagsCellField] = item[tagsCellField] || [];
-  if (!item[tagsCellField].includes(value)) item[tagsCellField].push(value);
-  saveNow();
-  repaintTagsCell(id);
-}
-
-function removeTagFromCell(id, index) {
-  const item = tagsCellGetter(id);
-  item[tagsCellField].splice(index, 1);
-  saveNow();
-  repaintTagsCell(id);
+  toggleCellTag(id, value);
 }
 
 function repaintTagsCell(id) {
   const item = tagsCellGetter(id);
   document.getElementById(`tags-cell-${item.id}`).innerHTML = tagsCellBody(item);
+  placeOpenInlineMenu();
   const input = document.getElementById('tags-cell-input');
   if (input) input.focus();
 }

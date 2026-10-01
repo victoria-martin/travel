@@ -332,6 +332,10 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
   lieu, une entrée de barre latérale « Restaurants » n'est qu'un filtre sur la vue
   Lieux & activités. À décider quand il y aura assez de contenu pour que la liste mixte devienne
   illisible.
+- **Listes Google Maps** <!--t:gm1s--> — 🔌 intégration · ⏳ à faire : importer une liste
+  personnalisée Google Maps (les lieux enregistrés) pour créer les lieux qui manquent. Et une vraie
+  synchro dans les deux sens : ajouter un lieu à la liste Google Maps l'ajoute à la base, l'ajouter
+  depuis le site l'ajoute à la liste.
 
 ## 📔 Journal
 
@@ -359,24 +363,6 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 
 ## 🧩 Transverse
 
-- **Regrouper la barre latérale par nature** <!--t:s7qk--> — 🖼️ écran · ⏳ à faire : ses onze
-  entrées ([render.js](js/render.js#L27)) mélangent trois natures sans le dire — on y collecte
-  (Hébergements, Lieux & activités, Transports, Locations, Dépenses), on y décide (Scénarios), on y
-  lit (Carte, À faire). **Le critère** : la barre latérale liste ce qui se collecte et ce qui se
-  décide ; une lecture dérivée est un mode de la page qu'elle lit, un référentiel est un onglet de
-  son consommateur. Trois blocs titrés COLLECTER / DÉCIDER / LIRE, sans rien déplacer d'autre —
-  DÉCIDER ne tient alors qu'une entrée, et c'est ce qu'il dit : il n'y a qu'un écran où l'on
-  tranche. Deux points restent ouverts : **Notes** n'est pas une lecture, on y écrit — soit elle
-  remonte dans COLLECTER, soit le troisième bloc se nomme autrement ; et **Dépenses** est de la
-  collecte (des charges saisies) dont le bloc Calculé est une lecture logée dans sa propre page.
-  **Villes**, ajoutée en page à part entière plutôt qu'en mode de Lieux & activités (choix posé
-  explicitement, hors de ce chantier), en est un cas concret à trancher avec le reste : soit elle
-  entre dans LIRE malgré tout, soit ce chantier révise le critère. L'énumération ci-dessus reste par
-  ailleurs incomplète (Accueil, Notes, Valise n'y figurent pas) — à vérifier contre `NAV_ITEMS`
-  plutôt que recompter à la main quand ce chantier démarre. **Titres à trancher** (les groupes
-  deviendront des items dépliants de la navbar) : Collecter / Décider / Lire ; Données / Scénarios /
-  Vues ; Contenu / Planification / Consultation ; Ressources / Décisions / Lecture.
-  plutôt que recompter à la main quand ce chantier démarre.
 - **Réordonner la barre latérale desktop** <!--t:n7wq--> — 🖼️ écran · ⏳ à faire : le tiroir mobile
   laisse déjà glisser l'ordre des pages (`prefs.mobileNavOrder`, [mobile-nav/](js/views/mobile-nav/)),
   pas la sidebar desktop qui boucle sur `NAV_ITEMS` dans un ordre fixe
@@ -456,9 +442,14 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   favori, les notes — et ce qui n'appartient qu'à la fiche.
 - **Installer l'app en PWA** <!--t:s7ka--> — ⚙️ infra · ⏸️ en attente : un `manifest.json` et un
   service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
-  puisque tout est déjà dans `localStorage`, et l'URL reste partageable. React Native est écarté :
-  5801 des 7397 lignes de `js/` sont du rendu DOM à réécrire, Leaflet n'y existe pas, et on perdrait
-  le lien à envoyer. À reprendre une fois la navigation revue.
+  puisque tout est déjà dans `localStorage`, et l'URL reste partageable. À reprendre une fois la
+  navigation revue. Le React Native écarté ici (2026-09, sur un chiffre de 7397 lignes) est
+  reconsidéré par **Migrer l'app sur React**, juste en-dessous.
+- **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · ⏳ à faire : passer `js/`
+  (372 fichiers, 18630 lignes, état global mutable + re-rendu `innerHTML`) sur React + TypeScript,
+  écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
+  détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md).
+  Phase 0 (fondations : Vite, store Zustand, mécanisme de cohabitation) pas commencée.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
