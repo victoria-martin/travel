@@ -38,6 +38,7 @@ function render() {
   if (modal) renderModal();
   applyFlash();
   placeOpenInlineMenu();
+  window.__reactStateSubscribers?.forEach((cb) => cb());
 }
 
 /*
@@ -98,8 +99,16 @@ function trackViewHeaderHeight(main) {
   viewHeaderObserver.observe(header);
 }
 
+// Point de bascule du strangler fig (docs/react-migration-plan.md § 1) : une vue déclarée dans
+// REACT_VIEWS (posée par react-app.js) se monte en React au lieu de son innerHTML legacy.
 function renderMain() {
   const main = document.getElementById('main');
+  if (window.REACT_VIEWS && view in window.REACT_VIEWS) {
+    window.mountReactView(main, view);
+    trackViewHeaderHeight(main);
+    return;
+  }
+  window.unmountReactView?.();
   if (view === 'accueil') main.innerHTML = renderHomeView();
   else if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();

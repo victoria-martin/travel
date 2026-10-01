@@ -6,12 +6,10 @@
     "Scraper prix en continu",
     "Scraper disponibilité en continu",
     "Modéliser le multi-client (agence, niches parents/chiens, outil vendu, guide type Fooding) sur une même DB partagée",
-    "Améliorer la table voiture (prix par jour, options) pour le flow « recherche de transport »",
     "Suggestions de valise en fonction des activités du scénario",
     "Todo qui se met à jour selon ce qui est booké en priorité",
     "Mode suggestion (toggle préférences) + ML plus tard, alimenté par toutes les données entrées",
-    "Check Google Maps intégré pour chercher/ajouter directement depuis la carte",
-    "Comparer plusieurs scénarios complets (vision agence) vs comparer l'impact de 2 hébergements sur un même scénario (vision user)"
+    "Check Google Maps intégré pour chercher/ajouter directement depuis la carte"
   ],
   "porte": []
 }

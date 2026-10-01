@@ -37,13 +37,14 @@ les types.
   ✚ d'ajout, champs éditables — alors qu'on le lit bien plus souvent qu'on ne le construit.
   Chercher à quoi ressemble la même étape quand on ne fait que la lire : ce qui disparaît, ce qui
   se resserre, et par quel geste on repasse en construction.
+  IMPORTANT
 
 ### Plus tard
 
 ### Step
 
 - **stepForm** <!--t:zfop--> — 🧩 ui · 💾 données · 🪟 modal · ⏳ à faire :
-  ajout d un champ pour le prix (si on change ca change le prix de l accomodation),
+  ajout d un champ pour le prix (si on change ca change le prix de l accomodation) - déjà fait, budget non ?
   j ai une date d arrivée et de depart sur la vue du scenario mais pas ds le form
 - **Retirer la reprise d'avant les colonnes** <!--t:v4m2--> — 🔄 synchro · ⏳ à faire : l'onglet
   `stepOptions` et la colonne `city` de `COLLECTIONS.steps` ([Code.js](apps-script/Code.js)) ne sont
@@ -116,8 +117,8 @@ les types.
   un clic sur une section fait la même action, ouvre celle liste ds le main panel. on ajoute une
   fleche gauche a gauche du nom de la section pr revenir plus facilement à la liste
 
-  voir comment filtrer les sections (fix par barre de filtre global pour l instant, cf - **créer une meilleur toolbar pour filtrer** <!--t:1ab9--> — 🧩 ui · ✅ fait : elle sera en
-  )
+  voir comment filtrer les sections (fix par barre de filtre global pour l instant, cf « créer une
+  meilleur toolbar pour filtrer »)
 
   tri ok (drag and drop)
 
@@ -322,7 +323,8 @@ La page existe : modèle, types, statuts, tags et tableau sont décrits dans
 - **Aligner les libellés sur l'entité** <!--t:8kqp--> — 🧹 refacto · ⏳ à faire : la page dit
   « Lieux & activités » depuis la fusion des villes, mais les libellés d'item disent encore « une
   attraction » (recherche, chips d'étape), et les clés de code et de Sheet restent `attractions`.
-  Reste à décider si les clés suivent — c'est la même migration que <!--t:omun-->.
+  Reste à décider si les clés suivent — c'est la même migration que **Nommer les vues en
+  anglais**.
 - **Les horaires depuis un lien Google Maps** <!--t:tr0w--> — 🔌 intégration · ⏳ à faire : le nom,
   l'adresse et les coordonnées se remplissent déjà
   ([GoogleMaps.js](apps-script/GoogleMaps.js)), lus dans l'URL finale et dans les métadonnées de
@@ -445,11 +447,12 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   puisque tout est déjà dans `localStorage`, et l'URL reste partageable. À reprendre une fois la
   navigation revue. Le React Native écarté ici (2026-09, sur un chiffre de 7397 lignes) est
   reconsidéré par **Migrer l'app sur React**, juste en-dessous.
-- **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · ⏳ à faire : passer `js/`
+- **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · 🚧 en cours : passer `js/`
   (372 fichiers, 18630 lignes, état global mutable + re-rendu `innerHTML`) sur React + TypeScript,
   écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
-  détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md).
-  Phase 0 (fondations : Vite, store Zustand, mécanisme de cohabitation) pas commencée.
+  détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
+  sur la branche `react-migration`. Phase 0a (mécanisme + spike Villes) écrite, pas encore vérifiée
+  à l'exécution — `pnpm install` / `pnpm react:build` restent à lancer.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

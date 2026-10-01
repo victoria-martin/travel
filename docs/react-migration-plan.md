@@ -32,11 +32,16 @@ route) — c'est exactement la frontière dont un strangler fig a besoin.
   React dans `#main` ; sinon, `innerHTML = renderXView()` comme aujourd'hui.
 - Le shell (sidebar, router, modale globale, toasts) reste legacy jusqu'à la toute fin (Phase 4) :
   il sert les deux mondes sans rien savoir d'eux.
-- **À valider en spike avant d'ouvrir le premier écran** (pas encore vérifié à l'exécution) :
-  comment Vite sert `src/` en mode dev à côté des scripts classiques déjà en place, et comment le
-  build de prod s'intègre à `index.html` sans casser les balises `<script src>` existantes. Deux
-  pistes à comparer sur le vrai repo plutôt qu'à trancher sur papier : Vite avec les assets legacy
-  dans `public/`, ou un build séparé chargé en `<script type="module">` additionnel.
+- **Build posé** (branche `react-migration`) : `vite.config.ts` compile `src/main.tsx` en **IIFE**
+  (`build.lib`, format `iife`) et non en module — l'app tourne encore en scripts classiques/`file://`
+  (`open index.html`, [technique.json](../atelier/technique.json)), où un `<script type="module">`
+  casse sur les imports cross-origin. `react-app.js` s'inclut donc comme un `<script src>` de plus,
+  juste avant `js/init.js`. Sortie dans `react-dist/`, gitignoré (c'est un build, pas une source) —
+  **pas encore câblé au déploiement** : tant que `react-dist/` n'est pas construit en CI ou chez
+  l'hébergeur, le script 404 silencieusement et l'app retombe sur la vue legacy, par construction
+  (`REACT_VIEWS` reste `undefined`, `renderMain()` prend la branche `else`). Rejoint **Passer le
+  repo en privé et héberger sur Netlify** <!--t:r6wc--> dans PLAN.md, qui donnera un vrai build.
+  Pas encore exécuté dans cette session (`pnpm install` / `pnpm react:build` restent à lancer).
 
 ## 2. Le pont d'état
 
@@ -124,7 +129,8 @@ src/
 
 | Phase | Écrans | Livrable technique |
 | --- | --- | --- |
-| 0 — Fondations | aucun | Vite + TS + Zustand en place, store porté, pont d'état, mécanisme `REACT_VIEWS`, spike validé sur un écran trivial (Villes) |
+| 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()`, pont temporaire qui lit la globale `state` legacy (`useLegacyState`) — **écrit, pas encore vérifié** : `pnpm install` puis `pnpm react:build` restent à lancer |
+| 0b — Store | aucun de plus | une fois 0a vérifié à l'écran : store Zustand, types par domaine, adaptateur sync (§ 2), `useLegacyState` retiré au profit du store |
 | 1 — Tables simples | Villes, Transports, Charges fixes, Prestataires/Modèles | `DataTable`, `Toolbar`, `Modal`/`Sheet` partagés, posés une fois pour 4 écrans |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
