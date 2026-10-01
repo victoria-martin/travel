@@ -21,32 +21,35 @@ function countryInfoCardHtml(country) {
     <section class="country-info-card">
       <h3 class="country-info-title">${escapeHtml(country)}</h3>
       <div class="field-row">
-        ${countryInfoField(country, 'police', 'Police', info.police)}
-        ${countryInfoField(country, 'firefighters', 'Pompiers', info.firefighters)}
-        ${countryInfoField(country, 'medical', 'Secours', info.medical)}
+        ${countryInfoField(country, 'police', 'Police', info.police, { disabled: true })}
+        ${countryInfoField(country, 'firefighters', 'Pompiers', info.firefighters, { disabled: true })}
+        ${countryInfoField(country, 'medical', 'Secours', info.medical, { disabled: true })}
       </div>
-      ${countryInfoField(country, 'emergencyNumber', "Numéro d'urgence unique", info.emergencyNumber)}
+      ${countryInfoField(country, 'emergencyNumber', "Numéro d'urgence unique", info.emergencyNumber, {
+        disabled: true,
+      })}
       ${countryInfoField(
         country,
         'embassy',
         'Ambassade / consulat (adresse, téléphone)',
         info.embassy,
-        true,
+        { isTextarea: true, disabled: true, textareaClass: 'country-info-embassy' },
       )}
-      ${countryInfoField(country, 'note', 'Note', info.note, true)}
+      ${countryInfoField(country, 'note', 'Note', info.note, { isTextarea: true })}
     </section>
   `;
 }
 
-function countryInfoField(country, field, label, value, isTextarea) {
+function countryInfoField(country, field, label, value, opts = {}) {
+  const { isTextarea, disabled, textareaClass } = opts;
   const escaped = escapeHtml(country).replace(/"/g, '&quot;');
-  const oninput = `setCountryInfoField('${escaped}', '${field}', this.value)`;
+  const oninput = disabled ? '' : `oninput="setCountryInfoField('${escaped}', '${field}', this.value)"`;
   return /* HTML */ `
     <div class="field">
       <label>${label}</label>
       ${isTextarea
-        ? /* HTML */ `<textarea oninput="${oninput}">${escapeHtml(value)}</textarea>`
-        : /* HTML */ `<input type="text" value="${escapeHtml(value)}" oninput="${oninput}" />`}
+        ? /* HTML */ `<textarea class="${textareaClass || ''}" ${oninput} ${disabled ? 'disabled' : ''}>${escapeHtml(value)}</textarea>`
+        : /* HTML */ `<input type="text" value="${escapeHtml(value)}" ${oninput} ${disabled ? 'disabled' : ''} />`}
     </div>
   `;
 }

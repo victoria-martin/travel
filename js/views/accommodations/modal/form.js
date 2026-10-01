@@ -10,6 +10,7 @@ function emptyAccommodation() {
     lng: '',
     price: '',
     dates: '',
+    checkInTime: '',
     availableFrom: '',
     availableTo: '',
     searchDate: '',
@@ -51,6 +52,10 @@ function accommodationForm(p) {
         <label>Dates</label
         ><input id="f-dates" type="text" value="${escapeHtml(p.dates)}" />
         <small class="field-hint">ex. 12–14 juin</small>
+      </div>
+      <div class="field">
+        <label>Heure d'arrivée</label
+        ><input id="f-check-in-time" type="time" value="${escapeHtml(p.checkInTime)}" />
       </div>
     </div>
     <div class="field-row">

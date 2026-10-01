@@ -55,4 +55,10 @@ function setAccommodationStatus(id, status) {
   render();
 }
 
+function setAccommodationCheckInTime(id, checkInTime) {
+  getAccommodation(id).checkInTime = checkInTime;
+  saveNow();
+  render();
+}
+
 // Add filters

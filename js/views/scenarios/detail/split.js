@@ -9,10 +9,17 @@ const SPLIT_HANDLE_PX = 6;
 // Le rail des onglets est un quatrième invité de la grille, toujours là — même panneau fermé.
 const SCENARIO_RAIL_PX = 64;
 
+// Sous 1100px le rail est masqué (styles.css) : ne pas lui réserver de colonne — une colonne à
+// 0px garderait quand même le gap fixe de la grille, un blanc à sa place.
+function scenarioRailHidden() {
+  return window.matchMedia('(max-width: 1100px)').matches;
+}
+
 function scenarioSplitStyle() {
-  if (!prefs.scenarioSidePanel) return `grid-template-columns: minmax(0, 1fr) ${SCENARIO_RAIL_PX}px`;
+  const rail = scenarioRailHidden() ? '' : ` ${SCENARIO_RAIL_PX}px`;
+  if (!prefs.scenarioSidePanel) return `grid-template-columns: minmax(0, 1fr)${rail}`;
   const pct = prefs.scenarioSideWidth[prefs.scenarioSidePanel] ?? 50;
-  return `grid-template-columns: minmax(0, 1fr) ${SPLIT_HANDLE_PX}px ${pct}% ${SCENARIO_RAIL_PX}px`;
+  return `grid-template-columns: minmax(0, 1fr) ${SPLIT_HANDLE_PX}px ${pct}%${rail}`;
 }
 
 function scenarioSplitHandle() {
@@ -32,7 +39,7 @@ function startScenarioSplit(event) {
   const maxPct = ((box.width - SPLIT_MIN_PX) / box.width) * 100;
   const minPct = (SPLIT_MIN_PX / box.width) * 100;
   const onMove = (move) => {
-    const pct = ((box.right - SCENARIO_RAIL_PX - move.clientX) / box.width) * 100;
+    const pct = ((box.right - (scenarioRailHidden() ? 0 : SCENARIO_RAIL_PX) - move.clientX) / box.width) * 100;
     prefs.scenarioSideWidth[prefs.scenarioSidePanel] = Math.min(Math.max(pct, minPct), maxPct);
     cols.setAttribute('style', scenarioSplitStyle());
     scenarioDetailMaps.forEach((map) => map.invalidateSize());

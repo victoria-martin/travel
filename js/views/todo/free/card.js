@@ -27,6 +27,7 @@ function freeTodoRow(todo) {
   return /* HTML */ `<div class="free-todo-row ${todo.done ? 'is-done' : ''}">
     <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleFreeTodo('${todo.id}')" />
     <span class="free-todo-text">${escapeHtml(todo.text)}</span>
+    ${freeTodoStatusTag(todo)}
     <button class="icon-btn" onclick="deleteFreeTodo('${todo.id}')" title="Supprimer">
       ${svgIcon('x')}
     </button>

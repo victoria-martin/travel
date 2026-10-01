@@ -24,6 +24,7 @@ function readAccommodationForm(id) {
     lng: located.lng,
     price: accommodationFieldValue('f-price', p.price),
     dates: accommodationFieldValue('f-dates', p.dates),
+    checkInTime: accommodationFieldValue('f-check-in-time', p.checkInTime),
     availableFrom: accommodationFieldValue('f-available-from', p.availableFrom),
     availableTo: accommodationFieldValue('f-available-to', p.availableTo),
     searchDate: p.searchDate || '',

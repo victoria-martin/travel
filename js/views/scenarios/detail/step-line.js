@@ -5,8 +5,22 @@ function stepLine(scenario, step, arrival) {
     <div class="step-place">
       ${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}${stepPlaceDateField(scenario, step)}
     </div>
-    ${stepStatusTag(step)} ${stepAvailabilityTag(step, arrival)}
+    ${stepStatusTag(step)} ${stepAvailabilityTag(step, arrival)} ${stepCheckInTimeTag(step)}
     ${stepNightsDropdown(scenario, step)}`;
+}
+
+// L'heure d'arrivée n'a de sens qu'une fois la réservation faite : avant, elle ne fait que
+// promettre un horaire qui n'est pas garanti.
+function stepCheckInTimeTag(step) {
+  const acc = getAccommodation(step.accommodationId);
+  if (!isBookedAccommodation(acc)) return '';
+  return /* HTML */ `<span class="step-check-in-time" title="Heure d'arrivée">
+    ${svgIcon('clock')}
+    ${editableText(acc.checkInTime, `setAccommodationCheckInTime('${acc.id}', this.innerText)`, {
+      key: `acc:${acc.id}:checkInTime`,
+      placeholder: '',
+    })}
+  </span>`;
 }
 
 function stepPlaceDateField(scenario, step) {

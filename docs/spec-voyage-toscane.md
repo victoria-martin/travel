@@ -230,7 +230,7 @@ coup par coup.
 | Entité                | Porte                                                                                                                                                               | Notes                                                                  |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | **Voyage**            | nom, emoji, image, description, statut, dates de début et de fin, destination (pays / région), couleur d'accent, voyageurs, prix du litre, péage au km              | possède tout le reste ; un seul est ouvert à la fois                   |
-| **Hébergement**       | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, lien, lien de réservation, notes, tags, favori                            | la fiche de référence ; c'est elle qui porte le prix                   |
+| **Hébergement**       | type, statut, nom, adresse, pays, région, province, ville, coordonnées, prix/nuit, dates, heure d'arrivée, lien, lien de réservation, notes, tags, favori            | la fiche de référence ; c'est elle qui porte le prix                   |
 | **Lieu**              | nom, type, statut, description, adresse, pays, région, province, ville, coordonnées, hébergement, lien, horaires, téléphone, budget, prix mini / maxi, tags, favori | un endroit du voyage : une ville où l'on se pose, un site qu'on visite |
 | **Transport**         | mode, statut, départ et arrivée (lieu + précision libre), dates et heures, compagnie, référence, budget, prix mini / maxi, lien, notes, favori                      | un trajet du voyage                                                    |
 | **Offre**             | le loueur, le modèle, statut, lieu et dates de prise en charge, prix par jour, options cochées chez le loueur, lien, notes, **par défaut**                          | ce qu'un loueur demande pour un modèle ; une seule par défaut          |
@@ -294,6 +294,14 @@ En tête de la barre latérale, un bouton **emoji + nom + sous-titre** (les date
 saisies, sinon la destination) ouvre le menu des voyages : les autres voyages, « Modifier ce
 voyage » et « Nouveau voyage ». Les deux derniers ouvrent la même modale. En barre latérale
 réduite, il ne reste que l'emoji.
+
+Sous le bouton Accueil (hors groupe), les pages se répartissent en **3 sections repliables** par
+nature de contenu — « Lieux » (Hébergements, Lieux & activités, Villes, Carte), « Budget &
+logistique » (Dépenses, Transports, Scénarios), « Voyage en cours » (Journal, Notes, Phrases clé,
+Infos utiles, Valise, À faire) —, déclarées dans `NAV_SECTIONS`
+([nav-items.js](js/views/nav-items.js)). Chaque section est un `<details>` natif dont le pli est une
+préférence persistée (`prefs.navSectionFolds`), sur le modèle du récapitulatif d'un scénario. La
+barre du bas mobile continue de lire `NAV_ITEMS` à plat, sans groupe.
 
 Sous 640px de large, la barre latérale disparaît au profit d'une barre du bas à 4 pages
 principales + un onglet **Plus**, qui ouvre un tiroir listant les autres pages. Un bouton
@@ -836,7 +844,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   Une étape masquée ne le porte pas, elle est hors du voyage ; la pastille-lettre, elle, reste neutre
   — elle dit le rang de l'étape et non son état. Les pastilles passent à la ligne plutôt que de se réduire, une
   colonne étroite ne devant jamais rendre un select inatteignable ; un champ vide se montre en
-  pastille creuse (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Réordonnable en la glissant par
+  pastille creuse (« ＋ type », « ＋ lieu ») au lieu de s'effacer. Une fois l'hébergement réservé,
+  sa carte porte en plus son heure d'arrivée, éditable en ligne : promettre un horaire n'a de sens
+  qu'une fois la réservation faite. Réordonnable en la glissant par
   sa poignée ⠿ — la carte survolée montre la ligne où l'étape atterrira, au-dessus ou au-dessous selon la moitié visée ; le titre reste
   éditable en ligne, d'où la poignée plutôt qu'une carte entièrement attrapable. Duplicable,
   masquable, supprimable. Son coût se lit **en haut à droite** de la carte, sur le modèle du total
@@ -926,7 +936,9 @@ suppression confirmée, tri et colonnes configurables depuis l'en-tête.
   groupe pour celles qui lui sont communes, un bloc par porteur — une ligne par activité ou dépense, sur une grille à elle : le nom
   précédé de l'emoji de son type (💰 pour une dépense) prend la largeur, le nombre et le montant
   s'épinglent à droite. Un nombre de 1 et un montant vide ne s'affichent qu'au survol de leur ligne,
-  sans la quitter — sa hauteur ne saute pas sous la souris. La pastille du nom ouvre un menu qui
+  sans la quitter — sa hauteur ne saute pas sous la souris. Une ligne qui référence une activité
+  porte en plus son statut, la même pastille que celle de la page Lieux & activités. La pastille du
+  nom ouvre un menu qui
   détache la ligne ou la remplace par une autre du même genre : une activité par une activité, une
   dépense par une dépense. Un porteur ne porte jamais deux fois la même.
 - **Rattacher depuis la carte** : la dernière ligne du bloc est un `＋ ajouter` qui porte à sa
@@ -1187,6 +1199,10 @@ Changer de ressource ou de colonne, en revanche, fait une autre liste.
 
 Les listes vivent dans le Sheet comme le reste du voyage : elles se retrouvent sur un autre
 appareil.
+
+**Tâches libres** — en tête de page, une liste de cases à cocher tapées à la main, pour ce qu'aucune
+collection ne porte. Chacune peut recevoir un statut — À réserver 💳 · Réservé 🔒 · Écarté 👎 —
+posé depuis une pastille, « Aucun statut » ❔ par défaut.
 
 ---
 

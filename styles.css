@@ -459,6 +459,13 @@ body {
   display: grid;
   gap: 8px;
 }
+.weather-style-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
 .weather-style-option {
   display: flex;
   align-items: center;
@@ -468,13 +475,47 @@ body {
   border-radius: 10px;
   background: var(--paper);
   cursor: pointer;
+  color: var(--ink);
 }
 .weather-style-option.selected {
-  border-color: var(--accent);
-  background: rgba(98, 156, 255, 0.08);
+  border-color: var(--stone);
+  background: rgba(98, 156, 255, 0.05);
 }
 .weather-style-option input {
-  accent-color: var(--accent);
+  accent-color: var(--stone);
+}
+.scenario-weather-banner.style-standard {
+  background: linear-gradient(135deg, rgba(98, 156, 255, 0.08), rgba(90, 199, 255, 0.04));
+}
+.scenario-weather-banner.style-standard .scenario-weather-day {
+  border-color: rgba(98, 156, 255, 0.16);
+  background: rgba(255, 255, 255, 0.28);
+}
+.scenario-weather-banner.style-compact {
+  background: rgba(246, 248, 250, 0.95);
+}
+.scenario-weather-banner.style-compact .scenario-weather-day {
+  min-height: 74px;
+  padding: 8px 8px 7px;
+  border-radius: 9px;
+  background: var(--paper);
+}
+.scenario-weather-banner.style-compact .scenario-weather-day-summary {
+  font-size: 11.5px;
+}
+.scenario-weather-banner.style-line {
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.scenario-weather-banner.style-line .scenario-weather-day {
+  background: transparent;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.scenario-weather-banner.style-line .scenario-weather-day-line {
+  height: 3px;
+  background: linear-gradient(90deg, var(--stone), rgba(98, 156, 255, 0.35));
 }
 .scenario-weather-banner.style-strip {
   padding-bottom: 10px;
@@ -487,6 +528,13 @@ body {
   min-height: 72px;
   padding: 8px 8px 7px;
   border-radius: 10px;
+}
+.scenario-weather-banner.style-compact.style-strip .scenario-weather-day {
+  min-height: 68px;
+}
+.scenario-weather-banner.style-line.style-strip .scenario-weather-day {
+  background: transparent;
+  border-radius: 8px;
 }
 /* La date se lit comme le reste du sous-titre, et s'ouvre au clic comme un champ. */
 .scenario-start-date {
@@ -2154,7 +2202,7 @@ tr:hover td {
 }
 .step-extra-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto auto;
   align-items: center;
   gap: 8px;
   padding: 1px 0;
@@ -2571,6 +2619,11 @@ tr:hover td {
   .side-panel {
     overflow: visible;
     padding-bottom: 0;
+  }
+  /* Le rail vertical duplique les boutons du header, qui restent seuls accessibles en une
+     colonne : inutile de le répéter au milieu de la page. */
+  .scenario-side-rail {
+    display: none;
   }
 }
 /* Sous les étapes, l'argent et la carte se partagent la largeur de la colonne. */
@@ -3715,6 +3768,67 @@ tr:hover td {
     grid-row: 3;
     justify-self: start;
   }
+
+  /* Une carte d'étape empilait tout sur une seule ligne : réordonner, rang, titre, statut et prix
+     se partageaient une largeur trop étroite pour le titre, jusqu'à le casser lettre par lettre.
+     Chaque bloc reprend sa propre ligne, le titre garde toute la largeur de la carte. */
+  .step-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .step-reorder {
+    flex-direction: row;
+    align-self: flex-start;
+    gap: 4px;
+  }
+  .step-reorder-buttons {
+    flex-direction: row;
+    flex: none;
+  }
+  .step-drag-handle {
+    display: none;
+  }
+  .step-side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .step-actions {
+    position: static;
+    opacity: 1;
+    justify-content: flex-end;
+  }
+  .step-fork-btn {
+    position: static;
+    transform: none;
+    opacity: 1;
+    align-self: flex-end;
+  }
+  .step-card > .step-main > .step-body > .step-stay > .step-extras {
+    padding-right: 0;
+  }
+  /* 5 enfants à plat (menu, statut, date, nombre, prix) : le flex-wrap seul les répartissait au
+     hasard selon la largeur dispo, avec le prix de la ligne du dessus qui dérivait sous "+
+     ajouter". La date force un retour à la ligne (flex-basis 100%) pour figer deux groupes —
+     menu+statut, puis date+nombre+prix — quelle que soit la largeur du texte du menu. */
+  .step-extra-row {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .step-extra-date {
+    width: auto;
+    flex-basis: 100%;
+    order: 1;
+  }
+  .step-extra-row .step-total {
+    margin-left: auto;
+    order: 3;
+  }
+  .extra-count-dropdown {
+    order: 2;
+  }
 }
 
 .editable {
@@ -3770,6 +3884,14 @@ tr:hover td {
 }
 .country-info-title {
   margin: 0 0 12px;
+}
+.country-info-card .field input:disabled,
+.country-info-card .field textarea:disabled {
+  background: var(--paper);
+  color: var(--ink-soft);
+}
+.country-info-embassy {
+  min-height: 90px;
 }
 
 /* ---------- Phrases ---------- */

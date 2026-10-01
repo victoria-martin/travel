@@ -4,8 +4,8 @@
 */
 function extraRow(scenario, holder, line) {
   return /* HTML */ `<div class="step-extra-row">
-    ${extraMenu(scenario, holder, line)} ${extraDateField(scenario, holder, line)}
-    ${extraCountDropdown(scenario, holder, line)}
+    ${extraMenu(scenario, holder, line)} ${extraStatusTag(line)}
+    ${extraDateField(scenario, holder, line)} ${extraCountDropdown(scenario, holder, line)}
     <span class="step-total">
       ${extraAutoPrice(line)}
       <span class="step-budget"
@@ -17,6 +17,11 @@ function extraRow(scenario, holder, line) {
       >
     </span>
   </div>`;
+}
+
+function extraStatusTag(line) {
+  const attraction = extraAttraction(line);
+  return attraction ? attractionStatusTag(attraction) : '';
 }
 
 function extraDateField(scenario, holder, line) {

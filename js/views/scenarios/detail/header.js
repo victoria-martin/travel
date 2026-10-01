@@ -7,7 +7,8 @@ function weatherBannerShown() {
 }
 
 function weatherBannerStyle() {
-  return prefs.weatherBannerStyle || 'timeline';
+  const style = prefs.weatherBannerStyle || 'standard';
+  return ['standard', 'compact', 'line'].includes(style) ? style : 'standard';
 }
 
 function toggleWeatherBanner() {
@@ -24,8 +25,9 @@ function setWeatherBannerStyle(style) {
 
 function weatherStyleOptions() {
   const options = [
-    { key: 'timeline', label: 'Frise horizontale' },
-    { key: 'strip', label: 'Bandeau fin' },
+    { key: 'standard', label: 'Standard' },
+    { key: 'compact', label: 'Compact' },
+    { key: 'line', label: 'Lignes' },
   ];
 
   return options
@@ -52,7 +54,10 @@ function weatherBannerStyleOption() {
     <div class="page-submenu">
       <p class="filter-title">Météo</p>
       ${switchField('Afficher la météo', weatherBannerShown(), 'toggleWeatherBanner()')}
-      <div class="weather-style-picker">${weatherStyleOptions()}</div>
+      <div class="weather-style-picker">
+        <span class="weather-style-label">Style</span>
+        ${weatherStyleOptions()}
+      </div>
     </div>
   `;
 }
