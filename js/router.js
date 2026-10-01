@@ -9,7 +9,7 @@ const VIEWS = [
   'hebergements',
   'depenses',
   'attractions',
-  'villes',
+  'cities',
   'transports',
   'scenarios',
   'carte',

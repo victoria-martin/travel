@@ -5,7 +5,7 @@ import type { Attraction } from '../../store/types';
 
 /*
   Type et statut éditables (InlineDropdown) depuis ce lot. Pas encore portés : le tri par
-  vocabulaire (ordre de déclaration, pas alphabétique — VillesView ne rend pas ces colonnes
+  vocabulaire (ordre de déclaration, pas alphabétique — CitiesView ne rend pas ces colonnes
   triables), « Ouvrir la ressource » et « ＋ Ajouter un type/statut » dans le menu (askNewWord est
   tout un flux à part), et les tags/actions (modale). Prochain lot.
 */

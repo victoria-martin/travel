@@ -1,5 +1,5 @@
 import { createRoot, type Root } from 'react-dom/client';
-import { VillesView } from './domains/villes/VillesView';
+import { CitiesView } from './domains/cities/CitiesView';
 
 /*
   Mécanisme de cohabitation (Phase 0a, docs/react-migration-plan.md § 1) : REACT_VIEWS associe une
@@ -7,7 +7,7 @@ import { VillesView } from './domains/villes/VillesView';
   ici au lieu de son innerHTML habituel — le shell (sidebar, router) reste legacy jusqu'à la Phase 4.
 */
 const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
-  villes: VillesView,
+  cities: CitiesView,
 };
 
 let root: Root | null = null;

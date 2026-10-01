@@ -407,6 +407,9 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   aligne le tout ; les prefs stockées étant indexées par vue, les colonnes masquées et le tri
   repartent à zéro une fois. La page Dépenses ajoute un troisième nom : sa clé de `view` est
   `depenses`, ses clés de `listViewMode`, `COLUMN_SETS` et `prefs.sort` sont restées `charges`.
+  **Villes faite** (migration React, branche `react-migration`) : clé `view`/`COLUMN_SETS`/
+  `prefs.sort`/`prefs.hiddenColumns` passée de `villes` à `cities` — libellé affiché resté
+  « Villes ». Première vue traitée, les autres restent à faire.
 - **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire : 58 lignes à plat alors
   que `js/views/accommodations/` existe. Les filtres en sont sortis dans
   [filters.js](js/views/accommodations/filters.js) et

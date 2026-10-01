@@ -1,9 +1,9 @@
 /*
   Mêmes lieux que Lieux & activités, mêmes cellules — seule la ville passe en tête et en tri par
-  défaut. Une table à soi (prefs.sort/hiddenColumns clés `villes`) pour que masquer une colonne ici
-  ne touche pas l'autre page.
+  défaut. Une table à soi (prefs.sort/hiddenColumns clés `cities`) pour que masquer une colonne ici
+  ne touche pas l'autre page. Clé lue aussi par src/domains/cities/ (délégation, pas de doublon).
 */
-COLUMN_SETS.villes = [
+COLUMN_SETS.cities = [
   {
     key: 'favorite',
     label: '',
@@ -67,7 +67,7 @@ COLUMN_SETS.villes = [
   { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
 ];
 
-SORT_DEFAULTS.villes = [
+SORT_DEFAULTS.cities = [
   { key: 'city', dir: 'asc' },
   { key: 'name', dir: 'asc' },
 ];

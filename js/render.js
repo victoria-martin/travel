@@ -113,7 +113,7 @@ function renderMain() {
   else if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
   else if (view === 'depenses') main.innerHTML = renderExpensesView();
   else if (view === 'attractions') main.innerHTML = renderAttractionsView();
-  else if (view === 'villes') main.innerHTML = renderVillesView();
+  else if (view === 'cities') main.innerHTML = renderCitiesView();
   else if (view === 'transports') main.innerHTML = renderTransportsView();
   else if (view === 'scenarios') {
     main.innerHTML = renderScenariosView();

@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { key: 'hebergements', label: 'Hébergements', icon: svgIcon('house') },
   { key: 'depenses', label: 'Dépenses', icon: EXPENSE_ICON },
   { key: 'attractions', label: 'Lieux & activités', icon: svgIcon('landmark') },
-  { key: 'villes', label: 'Villes', icon: svgIcon('map-pin') },
+  { key: 'cities', label: 'Villes', icon: svgIcon('map-pin') },
   { key: 'transports', label: 'Transports', icon: svgIcon('plane') },
   { key: 'scenarios', label: 'Scénarios', icon: svgIcon('compass') },
   { key: 'carte', label: 'Carte', icon: svgIcon('map') },
@@ -30,7 +30,7 @@ function navItem(key) {
   contenu plutôt que par phase du voyage — deux essais comparés, voir le journal de CLAUDE.md.
 */
 const NAV_SECTIONS = [
-  { key: 'lieux', title: 'Lieux', keys: ['hebergements', 'attractions', 'villes', 'carte'] },
+  { key: 'lieux', title: 'Lieux', keys: ['hebergements', 'attractions', 'cities', 'carte'] },
   { key: 'budget-logistique', title: 'Budget & logistique', keys: ['depenses', 'transports', 'scenarios'] },
   { key: 'sejour', title: 'Voyage en cours', keys: ['journal', 'notes', 'phrases', 'infos-utiles', 'valise', 'a-faire'] },
 ];

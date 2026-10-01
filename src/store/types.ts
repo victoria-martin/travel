@@ -76,7 +76,10 @@ export interface Attraction extends PlaceLevels {
   favorite: boolean;
 }
 
-// Onglet legacy, absorbé dans `attractions` (absorbCities) — jamais peuplé en usage normal.
+// Pas la page Villes (dérivée d'Attraction, state.attractions) : une liste légère de noms de
+// villes connues, alimentée par upsertVilleByName (autocomplete d'adresse) et lue par la carte
+// (markers) — vérifié dans le code, pas déduite. Corrige un commentaire précédent erroné qui la
+// disait morte.
 export interface Ville {
   id: string;
   travelId: string;

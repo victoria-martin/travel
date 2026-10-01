@@ -92,9 +92,11 @@ responsabilité ») :
   multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
   (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
   donnée — c'est déjà de la composition, rien à changer là-dessus. Premier consommateur :
-  [domains/villes/VillesView.tsx](../src/domains/villes/VillesView.tsx)
-  ([cells.tsx](../src/domains/villes/cells.tsx)), avec recherche, colonnes masquables, type/statut
-  éditables. Restent : tags éditables, actions de ligne (demandent `ModalHost`), menu ⋮.
+  [domains/cities/CitiesView.tsx](../src/domains/cities/CitiesView.tsx)
+  ([cells.tsx](../src/domains/cities/cells.tsx)), avec recherche, colonnes masquables, type/statut
+  éditables. Restent : tags éditables, actions de ligne (demandent `ModalHost`), menu ⋮. Code/route
+  en anglais (`cities`), libellé visible resté « Villes » — premier pas de **Nommer les vues en
+  anglais** (PLAN.md), fait pour cette vue seule, pas pour les autres.
 - `InlineDropdown` ([shared/InlineDropdown.tsx](../src/shared/InlineDropdown.tsx)) porte le
   positionnement viewport de `js/views/inline-dropdown.js` (`position: fixed`, flip au-dessus/
   en-dessous, clamp aux bords) en état local plutôt qu'un `openInlineMenu` global — pas de

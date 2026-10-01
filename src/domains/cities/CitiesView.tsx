@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { useTravelStore } from '../../store/useTravelStore';
 import { DataTable } from '../../shared/DataTable/DataTable';
+import type { Column } from '../../shared/DataTable/types';
 import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import type { Column } from '../../shared/DataTable/types';
 import type { Attraction } from '../../store/types';
+import { useTravelStore } from '../../store/useTravelStore';
 import { FavoriteCell, NameCell, StatusBadge, TagsCell, TextCell, TypeBadge } from './cells';
 
 /*
-  Porte js/views/villes/villes.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`
-  délégués au legacy (js/columns.js) : COLUMN_SETS.villes reste chargé et porte déjà
-  `description: {hiddenByDefault: true}`, une seule source pour la préférence. Pas encore portés
-  dans ce lot : menu ⋮, édition en place (type/statut/tags), actions de ligne — tri sur
-  ville/nom/favori seulement, pas sur type/statut (ordre de vocabulaire, pas encore porté).
-  Prochain lot : docs/react-migration-plan.md § 7.
+  Porte js/views/villes/cities.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`
+  délégués au legacy (js/columns.js) : COLUMN_SETS.cities reste chargé et porte déjà
+  `description: {hiddenByDefault: true}`, une seule source pour la préférence. Clé 'cities' choisie
+  pour la route/le code — le libellé visible reste « Villes » (NAV_ITEMS, ce fichier).
+  Pas encore portés : menu ⋮, tags éditables, actions de ligne ; tri sur ville/nom/favori
+  seulement, pas type/statut (ordre de vocabulaire, pas encore porté). Prochain lot :
+  docs/react-migration-plan.md § 7.
 */
 function searchText(a: Attraction): string {
   return [
@@ -59,7 +60,7 @@ const columns: Column<Attraction>[] = [
   { key: 'description', label: 'Description', render: (a) => <TextCell value={a.description} /> },
 ];
 
-export function VillesView() {
+export function CitiesView() {
   const attractions = useTravelStore((s) => window.ofCurrentTravel(s.data.attractions));
   const cities = new Set(attractions.map((a) => a.city).filter(Boolean));
 
@@ -68,7 +69,7 @@ export function VillesView() {
   const items = wanted
     ? attractions.filter((a) => normalizeSearch(searchText(a)).includes(wanted))
     : attractions;
-  const hidden = window.hiddenColumns('villes');
+  const hidden = window.hiddenColumns('cities');
   const visibleColumns = columns.filter((c) => c.locked || !hidden.includes(c.key));
 
   return (
@@ -83,7 +84,7 @@ export function VillesView() {
         </div>
         <div className="view-header-actions">
           <SearchField value={query} onChange={setQuery} />
-          <ColumnPicker kind="villes" columns={columns} />
+          <ColumnPicker kind="cities" columns={columns} />
         </div>
       </div>
       {items.length === 0 ? (

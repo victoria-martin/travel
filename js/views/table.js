@@ -77,7 +77,7 @@ function listSearchText(kind, item) {
       item.address,
       coordsLabel(item),
     ],
-    villes: [
+    cities: [
       item.name,
       attractionType(item.type).label,
       ...(item.tags || []),
