@@ -27,5 +27,17 @@ declare global {
     setAttractionStatus: (id: string, status: string) => void;
     expenseAmountLabel: (cost: { amount: string; recurrence: string }) => string;
     expenseRecurrence: (recurrence: string) => { label: string; emoji: string };
+    toggleTransportFavorite: (id: string) => void;
+    setTransportMode: (id: string, mode: string) => void;
+    setTransportStatus: (id: string, status: string) => void;
+    TRANSPORT_MODES: Record<string, { label: string; emoji: string; color: string }>;
+    TRANSPORT_STATUSES: Record<string, { label: string; emoji: string }>;
+    transportMode: (mode: string) => { label: string; emoji: string; color: string };
+    transportStatus: (status: string) => { label: string; emoji: string };
+    transportEndpointLabel: (placeId: string, precision: string) => string;
+    transportPlaceName: (placeId: string) => string;
+    transportMoment: (date: string, time: string) => string;
+    priceLabel: (entity: { amountMin?: string; amountMax?: string; budget: string }) => string;
+    providerName: (id: string) => string;
   }
 }

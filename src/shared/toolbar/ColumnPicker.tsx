@@ -8,17 +8,21 @@ import type { Column } from '../DataTable/types';
 */
 export function ColumnPicker<T>({ kind, columns }: { kind: string; columns: Column<T>[] }) {
   const hidden = window.hiddenColumns(kind);
-  const options = columns.filter((c) => !c.locked);
+  const options = columns.filter((column) => !column.locked);
   return (
-    <ToolbarPanel icon="columns-3" label="Colonnes" count={options.filter((c) => hidden.includes(c.key)).length}>
-      {options.map((c) => (
-        <label className="filter-option" key={c.key}>
+    <ToolbarPanel
+      icon="columns-3"
+      label="Colonnes"
+      count={options.filter((column) => hidden.includes(column.key)).length}
+    >
+      {options.map((column) => (
+        <label className="filter-option" key={column.key}>
           <input
             type="checkbox"
-            checked={!hidden.includes(c.key)}
-            onChange={() => window.toggleColumn(kind, c.key)}
+            checked={!hidden.includes(column.key)}
+            onChange={() => window.toggleColumn(kind, column.key)}
           />
-          {c.label}
+          {column.label}
         </label>
       ))}
     </ToolbarPanel>

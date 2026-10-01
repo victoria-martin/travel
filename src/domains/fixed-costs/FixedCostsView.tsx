@@ -16,8 +16,8 @@ import { AmountCell, LabelCell, RecurrenceBadge } from './cells';
   écran. Pas encore portés : mode cartes (listModeToggle), notes éditables, catégories éditables,
   bouton Ajouter, actions de ligne, menu ⋮ — même scope réduit que Villes/Cities.
 */
-function searchText(c: FixedCost): string {
-  return [c.label, ...c.categories, window.expenseRecurrence(c.recurrence).label]
+function searchText(fixedCost: FixedCost): string {
+  return [fixedCost.label, ...fixedCost.categories, window.expenseRecurrence(fixedCost.recurrence).label]
     .filter(Boolean)
     .join(' ');
 }
@@ -27,37 +27,37 @@ const columns: Column<FixedCost>[] = [
     key: 'label',
     label: 'Libellé',
     locked: true,
-    sortValue: (c) => (c.label || '').toLowerCase(),
-    render: (c) => <LabelCell cost={c} />,
+    sortValue: (fixedCost) => (fixedCost.label || '').toLowerCase(),
+    render: (fixedCost) => <LabelCell cost={fixedCost} />,
   },
   {
     key: 'amount',
     label: 'Montant',
-    sortValue: (c) => (c.amount || '').toLowerCase(),
-    render: (c) => <AmountCell cost={c} />,
+    sortValue: (fixedCost) => (fixedCost.amount || '').toLowerCase(),
+    render: (fixedCost) => <AmountCell cost={fixedCost} />,
   },
   {
     key: 'categories',
     label: 'Catégories',
-    render: (c) => <TagsCell tags={c.categories} />,
+    render: (fixedCost) => <TagsCell tags={fixedCost.categories} />,
   },
   {
     key: 'recurrence',
     label: 'Récurrence',
-    render: (c) => <RecurrenceBadge recurrence={c.recurrence} />,
+    render: (fixedCost) => <RecurrenceBadge recurrence={fixedCost.recurrence} />,
   },
 ];
 
 export function FixedCostsView() {
-  const fixedCosts = useTravelStore((s) => window.ofCurrentTravel(s.data.fixedCosts));
+  const fixedCosts = useTravelStore((store) => window.ofCurrentTravel(store.data.fixedCosts));
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const items = wanted
-    ? fixedCosts.filter((c) => normalizeSearch(searchText(c)).includes(wanted))
+    ? fixedCosts.filter((fixedCost) => normalizeSearch(searchText(fixedCost)).includes(wanted))
     : fixedCosts;
   const hidden = window.hiddenColumns('charges');
-  const visibleColumns = columns.filter((c) => c.locked || !hidden.includes(c.key));
+  const visibleColumns = columns.filter((column) => column.locked || !hidden.includes(column.key));
 
   return (
     <>

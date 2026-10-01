@@ -23,7 +23,7 @@ export function SearchField({
         type="search"
         placeholder="Rechercher…"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
       />
     </label>
   );

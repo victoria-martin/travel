@@ -19,17 +19,17 @@ import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
   seulement, pas type/statut (ordre de vocabulaire, pas encore porté). Prochain lot :
   docs/react-migration-plan.md § 7.
 */
-function searchText(a: Attraction): string {
+function searchText(attraction: Attraction): string {
   return [
-    a.name,
-    window.attractionType(a.type).label,
-    ...a.tags,
-    a.city,
-    a.county,
-    a.region,
-    a.country,
-    a.address,
-    window.coordsLabel(a),
+    attraction.name,
+    window.attractionType(attraction.type).label,
+    ...attraction.tags,
+    attraction.city,
+    attraction.county,
+    attraction.region,
+    attraction.country,
+    attraction.address,
+    window.coordsLabel(attraction),
   ]
     .filter(Boolean)
     .join(' ');
@@ -39,40 +39,48 @@ const columns: Column<Attraction>[] = [
     key: 'favorite',
     label: '',
     locked: true,
-    sortValue: (a) => (a.favorite ? 0 : 1),
-    render: (a) => <FavoriteCell attraction={a} />,
+    sortValue: (attraction) => (attraction.favorite ? 0 : 1),
+    render: (attraction) => <FavoriteCell attraction={attraction} />,
   },
   {
     key: 'city',
     label: 'Ville',
     locked: true,
-    sortValue: (a) => (a.city || '').toLowerCase(),
-    render: (a) => <TextCell value={a.city} />,
+    sortValue: (attraction) => (attraction.city || '').toLowerCase(),
+    render: (attraction) => <TextCell value={attraction.city} />,
   },
   {
     key: 'name',
     label: 'Nom',
     locked: true,
-    sortValue: (a) => (a.name || '').toLowerCase(),
-    render: (a) => <NameCell attraction={a} />,
+    sortValue: (attraction) => (attraction.name || '').toLowerCase(),
+    render: (attraction) => <NameCell attraction={attraction} />,
   },
-  { key: 'type', label: 'Type', render: (a) => <TypeBadge attraction={a} /> },
-  { key: 'status', label: 'Statut', render: (a) => <StatusBadge attraction={a} /> },
-  { key: 'tags', label: 'Tags', render: (a) => <TagsCell tags={a.tags} /> },
-  { key: 'description', label: 'Description', render: (a) => <TextCell value={a.description} /> },
+  { key: 'type', label: 'Type', render: (attraction) => <TypeBadge attraction={attraction} /> },
+  {
+    key: 'status',
+    label: 'Statut',
+    render: (attraction) => <StatusBadge attraction={attraction} />,
+  },
+  { key: 'tags', label: 'Tags', render: (attraction) => <TagsCell tags={attraction.tags} /> },
+  {
+    key: 'description',
+    label: 'Description',
+    render: (attraction) => <TextCell value={attraction.description} />,
+  },
 ];
 
 export function CitiesView() {
-  const attractions = useTravelStore((s) => window.ofCurrentTravel(s.data.attractions));
-  const cities = new Set(attractions.map((a) => a.city).filter(Boolean));
+  const attractions = useTravelStore((store) => window.ofCurrentTravel(store.data.attractions));
+  const cities = new Set(attractions.map((attraction) => attraction.city).filter(Boolean));
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const items = wanted
-    ? attractions.filter((a) => normalizeSearch(searchText(a)).includes(wanted))
+    ? attractions.filter((attraction) => normalizeSearch(searchText(attraction)).includes(wanted))
     : attractions;
   const hidden = window.hiddenColumns('cities');
-  const visibleColumns = columns.filter((c) => c.locked || !hidden.includes(c.key));
+  const visibleColumns = columns.filter((column) => column.locked || !hidden.includes(column.key));
 
   return (
     <>

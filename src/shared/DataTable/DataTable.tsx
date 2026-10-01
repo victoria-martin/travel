@@ -78,12 +78,12 @@ export function DataTable<T extends { id: string }>({
 
 function sortItems<T>(items: T[], columns: Column<T>[], sort: Sort): T[] {
   if (!sort) return items;
-  const column = columns.find((c) => c.key === sort.key);
+  const column = columns.find((candidate) => candidate.key === sort.key);
   if (!column?.sortValue) return items;
   const sortValue = column.sortValue;
-  return [...items].sort((a, b) => {
-    const left = sortValue(a);
-    const right = sortValue(b);
+  return [...items].sort((itemA, itemB) => {
+    const left = sortValue(itemA);
+    const right = sortValue(itemB);
     const diff =
       typeof left === 'number' && typeof right === 'number'
         ? left - right

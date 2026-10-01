@@ -65,7 +65,7 @@ export function InlineDropdown({
         type="button"
         className="inline-tag"
         style={{ font: 'inherit' }}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen((isOpen) => !isOpen)}
       >
         {trigger}
       </button>
