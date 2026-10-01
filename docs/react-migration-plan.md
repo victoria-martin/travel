@@ -16,8 +16,9 @@ Décisions actées (validées en session) :
 - **Synchro** : la couche sync du store est un adaptateur remplaçable (`read()` / `push(data,
   baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalogue partagé
   multi-client demande une vraie base relationnelle, seul l'adaptateur change — pas les hooks ni
-  les composants. Ce besoin (catalogue global, plusieurs fronts clients sur la même DB) est noté à
-  part, hors scope de cette migration : [atelier/notes.json](../atelier/notes.json), § 9 ci-dessous.
+  les composants. Le catalogue global démarre en pratique dès maintenant, à scope réduit : voir
+  [catalogue-plan.md](catalogue-plan.md) et § 9 ci-dessous — plus « hors scope », une piste
+  parallèle à celle-ci (§ 7).
 
 Référence du protocole de synchro, inchangé par cette migration : [protocole-sync-sheet.md](protocole-sync-sheet.md).
 
@@ -86,10 +87,16 @@ responsabilité ») :
 
 ## 4. Composition — le chrome vs le contenu
 
-- `DataTable` (remplace [table.js](../js/views/table.js)) ne porte que le chrome : tri, rendu des
-  lignes, panneau de colonnes. `columns` reste une table de données comme aujourd'hui
-  (`COLUMN_SETS` → `{key, label, Cell, sortValue, filterValues}[]`), chaque `Cell` est un composant
-  du domaine passé en donnée — c'est déjà de la composition, rien à changer là-dessus.
+- `DataTable` ([shared/DataTable/](../src/shared/DataTable/), remplace [table.js](../js/views/table.js))
+  ne porte que le chrome : tri (un niveau, cycle asc/desc/aucun — pas encore persisté dans prefs ni
+  multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
+  (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
+  donnée — c'est déjà de la composition, rien à changer là-dessus. Premier consommateur :
+  [domains/villes/VillesView.tsx](../src/domains/villes/VillesView.tsx), cellules lecture seule
+  ([domains/villes/cells.tsx](../src/domains/villes/cells.tsx)) — pas encore l'édition en place
+  (type/statut/tags, qui demande le mécanisme d'inline-dropdown positionné en viewport) ni les
+  actions de ligne (qui demandent `ModalHost`), ni recherche/colonnes masquables/menu ⋮. Chaque
+  pièce manquante est un lot à part, pas un seul gros portage.
 - `ModalHost` (remplace [modal.js](../js/modals/modal.js)) ne porte que le shell : ouverture,
   dirty-check au snapshot, fermeture. Chaque type de modale rend le composant du domaine
   (`<AccommodationForm/>`), jamais une prop par champ.
@@ -131,11 +138,29 @@ src/
 | --- | --- | --- |
 | 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
 | 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
-| 1 — Tables simples | Villes, Transports, Charges fixes, Prestataires/Modèles | `DataTable`, `Toolbar`, `Modal`/`Sheet` partagés, posés une fois pour 4 écrans ; premières **actions** du store (`upsertX`, encore déléguées au legacy) dès qu'un écran écrit |
+| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` posé, Villes dessus en lecture seule (tri simple, pas de recherche/colonnes/édition/actions — chaque pièce un lot à part). Restent : `Toolbar`, `Modal`/`Sheet`, édition en place, actions de ligne, puis les 3 autres écrans |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
 | 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |
 | 5 — Nettoyage RN | — | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir |
+
+**Découvrir / catalogue ([catalogue-plan.md](catalogue-plan.md)) n'est pas une étape de cette
+séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme `REACT_VIEWS` /
+mount-unmount), déjà fait : c'est un écran neuf, câblé sur Hasura/Postgres en GraphQL, qui ne lit
+ni n'écrit jamais la globale `state` legacy ni le store Zustand — rien à attendre des Phases 1-5,
+qui portent des écrans EXISTANTS depuis le Sheet. Elle peut donc avancer en même temps, sans ordre
+imposé entre les deux. Ce que les deux partagent reste optionnel, pas un blocage : `DataTable`
+(§ 4) rendrait la liste Découvrir cohérente avec le reste une fois réutilisé, mais le plan catalogue
+prévoit sa propre liste en lecture seule d'abord — un alignement à faire plus tard, pas une
+dépendance dure.
+
+Point pratique : les deux pistes tournent actuellement dans le même répertoire de travail, sur la
+même branche `react-migration`, avec des fichiers non commités entremêlés (Villes/DataTable d'un
+côté, catalogue-plan.md de l'autre). Comme ce sont deux changements sans rapport de contenu,
+séparer sur une branche à part (`decouvrir-catalogue` ou similaire, créée depuis `react-migration`
+une fois ce commit-ci posé) garderait chaque effort revue-able et revert-able indépendamment,
+plutôt que des commits qui mélangent les deux. À elle de trancher si une seule branche partagée est
+préférée malgré tout.
 
 ## 8. Ce qui ne bouge pas
 
@@ -154,3 +179,8 @@ une même DB partagée — catalogue global d'hébergements/activités/villes, i
 une vraie base relationnelle et un vrai backend multi-tenant, pas juste une réécriture React. Ce
 n'est pas une étape de ce plan : l'adaptateur sync (§ 2) garde seulement la porte ouverte pour ne
 pas avoir à redéfaire le store le jour où cette initiative démarre pour de vrai.
+
+**2026-10-01** — le catalogue global d'hébergements démarre pour de vrai, avant le multi-tenant :
+voir [catalogue-plan.md](catalogue-plan.md). Scope volontairement réduit (pas d'auth, ajout au
+voyage = copie) — le reste (villes/activités au catalogue, import, scraping, multi-tenant réel)
+reste hors scope ici.

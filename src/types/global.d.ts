@@ -14,5 +14,9 @@ declare global {
     mountReactView: (container: HTMLElement, viewKey: string) => boolean;
     unmountReactView: () => void;
     __reactStateSubscribers?: Set<() => void>;
+    svgIcon: (name: string, opts?: { fill?: boolean; className?: string }) => string;
+    toggleAttractionFavorite: (id: string) => void;
+    attractionType: (type: string) => { label: string; emoji: string; color: string };
+    attractionStatus: (status: string) => { label: string; emoji: string };
   }
 }

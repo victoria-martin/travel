@@ -357,11 +357,11 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 - **Récap de fin de voyage** <!--t:jrn3--> — 🖼️ écran · 💡 idée : une vue qui reprend tous les
   liens postés, tous les lieux référencés et toutes les photos du journal, dans l'ordre des jours.
 
-## 🔎 Browse
+## 🔎 Découvrir
 
-- **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · 🌙 plus tard : des propositions
-  d'hôtels dans la page, et des intégrations qui partent des lieux déjà choisis — par exemple les
-  lieux des étapes d'un scénario. Sources et point d'entrée à préciser.
+- **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · ⚙️ infra · ⏳ à faire : catalogue
+  global d'hébergements (Hasura Cloud + Postgres, Apollo côté front), avec un bouton qui copie une
+  entrée dans le voyage ouvert. Plan détaillé : [catalogue-plan.md](docs/catalogue-plan.md).
 
 ## 🧩 Transverse
 
@@ -451,9 +451,10 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   (372 fichiers, 18630 lignes, état global mutable + re-rendu `innerHTML`) sur React + TypeScript,
   écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
   détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
-  sur la branche `react-migration`. Phase 0a (mécanisme + spike Villes) et 0b (types + store
-  Zustand lecture seule) faites, typecheck propre. Reste à builder (`pnpm react:build`) et
-  revérifier le spike avant la Phase 1 (premiers écrans, premières actions d'écriture du store).
+  sur la branche `react-migration`. Phase 0 (mécanisme + store Zustand lecture seule) faite et
+  vérifiée à l'écran. Phase 1 en cours : `DataTable` posé, Villes dessus en lecture seule (tri
+  simple) — à vérifier à l'écran. Restent sur Villes : recherche, colonnes masquables, édition en
+  place (type/statut/tags), actions de ligne ; puis Transports/Charges fixes/Prestataires.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
