@@ -99,10 +99,12 @@ responsabilité ») :
   positionnement viewport de `js/views/inline-dropdown.js` (`position: fixed`, flip au-dessus/
   en-dessous, clamp aux bords) en état local plutôt qu'un `openInlineMenu` global — pas de
   replacement au scroll/resize pendant que le menu reste ouvert, encore à porter. **À améliorer**
-  (remarque laissée dans le fichier) : le calcul impératif (`getBoundingClientRect` direct, deux
-  passes de rendu) gagnerait à passer par de vrais composants ou une lib dédiée au positionnement
-  (ex. floating-ui) plutôt que la traduction ligne à ligne du legacy — à soupeser quand plusieurs
-  domaines de plus l'utiliseront et que le besoin réel (scroll, clavier, a11y) sera mieux cerné.
+  (remarque laissée dans le fichier) : pas une lib ponctuelle juste pour le positionnement — plus
+  tard, un vrai système de composants (shadcn/ui, ou StyleX pour le styling) remplacerait ce calcul
+  impératif écrit à la main. Décision à prendre en dehors de ce lot, pas pendant : adopter shadcn ou
+  StyleX reviendrait sur « pas de CSS-in-JS pendant la migration » (Décisions actées, en tête de ce
+  document) — à rouvrir explicitement si elle veut, pas un détail qui se déduit d'une remarque sur
+  `InlineDropdown`.
 - `ModalHost` (remplace [modal.js](../js/modals/modal.js)) ne porte que le shell : ouverture,
   dirty-check au snapshot, fermeture. Chaque type de modale rend le composant du domaine
   (`<AccommodationForm/>`), jamais une prop par champ.
