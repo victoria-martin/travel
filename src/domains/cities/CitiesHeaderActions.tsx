@@ -1,6 +1,6 @@
 import { SearchField } from '../../shared/SearchField';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import { columns } from '../transports/columns';
+import { columns } from './columns';
 
 export const CitiesHeaderActions = ({
   query,

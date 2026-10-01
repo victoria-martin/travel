@@ -1,14 +1,10 @@
 import { useState } from 'react';
-import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
-import { TextCell } from '../../shared/cells/TextCell';
 import { DataTable } from '../../shared/DataTable/DataTable';
-import type { Column } from '../../shared/DataTable/types';
 import { normalizeSearch } from '../../shared/normalizeSearch';
-import type { Attraction } from '../../store/types';
 import { useTravelStore } from '../../store/useTravelStore';
-import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
 import { CitiesHeader } from './CitiesHeader';
 import { CitiesHeaderActions } from './CitiesHeaderActions';
+import { columns } from './columns';
 import { searchAttraction } from './utils';
 
 /*
@@ -16,66 +12,12 @@ import { searchAttraction } from './utils';
   délégués au legacy (js/columns.js) : COLUMN_SETS.cities reste chargé et porte déjà
   `description: {hiddenByDefault: true}`, une seule source pour la préférence. Clé 'cities' choisie
   pour la route/le code — le libellé visible reste « Villes » (NAV_ITEMS, ce fichier).
-  Pas encore portés : menu ⋮, tags éditables, actions de ligne ; tri sur ville/nom/favori
-  seulement, pas type/statut (ordre de vocabulaire, pas encore porté). Prochain lot :
-  docs/react-migration-plan.md § 7.
+  Édition en place (type/statut/tags), actions de ligne (ouvrir/dupliquer/supprimer, déléguées à
+  openModal/duplicateAttraction/deleteItem legacy) faites. Reste : menu ⋮, tri sur type/statut
+  (ordre de vocabulaire, pas encore porté).
 */
-const columns: Column<Attraction>[] = [
-  {
-    key: 'favorite',
-    label: '',
-    locked: true,
-    sortValue: (attraction) => (attraction.favorite ? 0 : 1),
-    render: (attraction) => <FavoriteCell attraction={attraction} />,
-  },
-  {
-    key: 'city',
-    label: 'Ville',
-    locked: true,
-    sortValue: (attraction) => (attraction.city || '').toLowerCase(),
-    render: (attraction) => <TextCell value={attraction.city} />,
-  },
-  {
-    key: 'name',
-    label: 'Nom',
-    locked: true,
-    sortValue: (attraction) => (attraction.name || '').toLowerCase(),
-    render: (attraction) => <NameCell attraction={attraction} />,
-  },
-  { key: 'type', label: 'Type', render: (attraction) => <TypeBadge attraction={attraction} /> },
-  {
-    key: 'status',
-    label: 'Statut',
-    render: (attraction) => <StatusBadge attraction={attraction} />,
-  },
-  {
-    key: 'tags',
-    label: 'Tags',
-    render: (attraction) => (
-      <EditableTagsCell
-        tags={attraction.tags}
-        vocabulary={window.allAttractionTags()}
-        addLabel="+ tag"
-        onToggle={(tag) => {
-          const index = attraction.tags.indexOf(tag);
-          if (index === -1) attraction.tags.push(tag);
-          else attraction.tags.splice(index, 1);
-          window.saveNow();
-          window.render();
-        }}
-      />
-    ),
-  },
-  {
-    key: 'description',
-    label: 'Description',
-    render: (attraction) => <TextCell value={attraction.description} />,
-  },
-];
-
 export function CitiesView() {
   const attractions = useTravelStore((store) => window.ofCurrentTravel(store.data.attractions));
-  const cities = new Set(attractions.map((attraction) => attraction.city).filter(Boolean));
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
@@ -91,18 +33,7 @@ export function CitiesView() {
     <>
       <div className="view-header">
         <CitiesHeader attractions={attractions} items={items} />
-        {/* <div>
-       <h2 className="view-title">Villes</h2>
-      <p className="view-sub">
-        {cities.size} ville{cities.size > 1 ? 's' : ''} — {items.length} lieu
-        {items.length > 1 ? 'x' : ''}
-      </p>
-    </div> */}
         <CitiesHeaderActions query={query} setQuery={setQuery} />
-        {/* <div className="view-header-actions">
-          <SearchField value={query} onChange={setQuery} />
-          <ColumnPicker kind="cities" columns={columns} />
-        </div> */}
       </div>
       {items.length === 0 ? (
         <div className="empty-state">
@@ -110,7 +41,11 @@ export function CitiesView() {
           Ajoute une ville, un village, un premier lieu depuis Lieux & activités.
         </div>
       ) : (
-        <DataTable columns={visibleColumns} items={items} />
+        <DataTable
+          columns={visibleColumns}
+          items={items}
+          onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
+        />
       )}
     </>
   );

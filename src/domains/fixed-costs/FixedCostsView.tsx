@@ -5,6 +5,7 @@ import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
 import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
+import { Icon } from '../../shared/Icon';
 import type { Column } from '../../shared/DataTable/types';
 import type { FixedCost } from '../../store/types';
 import { AmountCell, LabelCell, RecurrenceBadge } from './cells';
@@ -58,6 +59,42 @@ const columns: Column<FixedCost>[] = [
     key: 'recurrence',
     label: 'Récurrence',
     render: (fixedCost) => <RecurrenceBadge recurrence={fixedCost.recurrence} />,
+  },
+  {
+    key: 'actions',
+    label: '',
+    locked: true,
+    render: (fixedCost) => (
+      <>
+        <button
+          type="button"
+          className="icon-btn"
+          title="Modifier"
+          aria-label={`Modifier ${fixedCost.label}`}
+          onClick={() => window.openModal('charge', fixedCost.id)}
+        >
+          <Icon name="pencil" />
+        </button>
+        <button
+          type="button"
+          className="icon-btn"
+          title="Dupliquer"
+          aria-label={`Dupliquer ${fixedCost.label}`}
+          onClick={() => window.duplicateFixedCost(fixedCost.id)}
+        >
+          ⧉
+        </button>
+        <button
+          type="button"
+          className="icon-btn"
+          title="Supprimer"
+          aria-label={`Supprimer ${fixedCost.label}`}
+          onClick={() => window.deleteItem('fixedCosts', fixedCost.id)}
+        >
+          <Icon name="trash-2" />
+        </button>
+      </>
+    ),
   },
 ];
 

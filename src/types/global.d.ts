@@ -72,6 +72,9 @@ declare global {
     providerName: (id: string) => string;
     saveNow: () => void;
     render: () => void;
+    duplicateAttraction: (id: string) => void;
+    duplicateFixedCost: (id: string) => void;
+    openAttractionSheet: (id: string) => void;
     allAttractionTags: () => string[];
     allFixedCostCategories: () => string[];
   }
