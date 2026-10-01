@@ -21,5 +21,9 @@ declare global {
     coordsLabel: (p: { lat: string; lng: string }) => string;
     hiddenColumns: (kind: string) => string[];
     toggleColumn: (kind: string, key: string) => void;
+    ATTRACTION_TYPES: Record<string, { label: string; emoji: string; color: string }>;
+    ATTRACTION_STATUSES: Record<string, { label: string; emoji: string }>;
+    setAttractionType: (id: string, type: string) => void;
+    setAttractionStatus: (id: string, status: string) => void;
   }
 }

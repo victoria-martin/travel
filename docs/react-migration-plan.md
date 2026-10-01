@@ -92,11 +92,17 @@ responsabilité ») :
   multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
   (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
   donnée — c'est déjà de la composition, rien à changer là-dessus. Premier consommateur :
-  [domains/villes/VillesView.tsx](../src/domains/villes/VillesView.tsx), cellules lecture seule
-  ([domains/villes/cells.tsx](../src/domains/villes/cells.tsx)) — pas encore l'édition en place
-  (type/statut/tags, qui demande le mécanisme d'inline-dropdown positionné en viewport) ni les
-  actions de ligne (qui demandent `ModalHost`), ni recherche/colonnes masquables/menu ⋮. Chaque
-  pièce manquante est un lot à part, pas un seul gros portage.
+  [domains/villes/VillesView.tsx](../src/domains/villes/VillesView.tsx)
+  ([cells.tsx](../src/domains/villes/cells.tsx)), avec recherche, colonnes masquables, type/statut
+  éditables. Restent : tags éditables, actions de ligne (demandent `ModalHost`), menu ⋮.
+- `InlineDropdown` ([shared/InlineDropdown.tsx](../src/shared/InlineDropdown.tsx)) porte le
+  positionnement viewport de `js/views/inline-dropdown.js` (`position: fixed`, flip au-dessus/
+  en-dessous, clamp aux bords) en état local plutôt qu'un `openInlineMenu` global — pas de
+  replacement au scroll/resize pendant que le menu reste ouvert, encore à porter. **À améliorer**
+  (remarque laissée dans le fichier) : le calcul impératif (`getBoundingClientRect` direct, deux
+  passes de rendu) gagnerait à passer par de vrais composants ou une lib dédiée au positionnement
+  (ex. floating-ui) plutôt que la traduction ligne à ligne du legacy — à soupeser quand plusieurs
+  domaines de plus l'utiliseront et que le besoin réel (scroll, clavier, a11y) sera mieux cerné.
 - `ModalHost` (remplace [modal.js](../js/modals/modal.js)) ne porte que le shell : ouverture,
   dirty-check au snapshot, fermeture. Chaque type de modale rend le composant du domaine
   (`<AccommodationForm/>`), jamais une prop par champ.
@@ -138,7 +144,7 @@ src/
 | --- | --- | --- |
 | 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
 | 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
-| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` + `SearchField`/`normalizeSearch` + `ToolbarPanel`/`ColumnPicker` (partagés) posés, Villes dessus avec tri simple, recherche et colonnes masquables (délégué à `hiddenColumns`/`toggleColumn` legacy). Restent sur Villes : menu ⋮, édition en place, actions de ligne ; puis les 3 autres écrans |
+| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` + `SearchField` + `ToolbarPanel`/`ColumnPicker` + `InlineDropdown`/`TagLabel` (partagés) posés. Villes : tri, recherche, colonnes masquables, type/statut éditables (délégués à `setAttractionType`/`setAttractionStatus` legacy). Restent sur Villes : menu ⋮, tags éditables, actions de ligne ; puis les 3 autres écrans |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
 | 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |

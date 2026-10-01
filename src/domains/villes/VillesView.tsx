@@ -53,8 +53,8 @@ const columns: Column<Attraction>[] = [
     sortValue: (a) => (a.name || '').toLowerCase(),
     render: (a) => <NameCell attraction={a} />,
   },
-  { key: 'type', label: 'Type', render: (a) => <TypeBadge type={a.type} /> },
-  { key: 'status', label: 'Statut', render: (a) => <StatusBadge status={a.status} /> },
+  { key: 'type', label: 'Type', render: (a) => <TypeBadge attraction={a} /> },
+  { key: 'status', label: 'Statut', render: (a) => <StatusBadge attraction={a} /> },
   { key: 'tags', label: 'Tags', render: (a) => <TagsCell tags={a.tags} /> },
   { key: 'description', label: 'Description', render: (a) => <TextCell value={a.description} /> },
 ];
