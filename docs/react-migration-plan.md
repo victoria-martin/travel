@@ -138,7 +138,7 @@ src/
 | --- | --- | --- |
 | 0a — Mécanisme | Villes (spike, lecture seule) | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran** |
 | 0b — Store | aucun de plus | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre** |
-| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` posé, Villes dessus en lecture seule (tri simple, pas de recherche/colonnes/édition/actions — chaque pièce un lot à part). Restent : `Toolbar`, `Modal`/`Sheet`, édition en place, actions de ligne, puis les 3 autres écrans |
+| 1 — Tables simples | Villes (en cours), Transports, Charges fixes, Prestataires/Modèles | `DataTable` + `SearchField`/`normalizeSearch` (partagés) posés, Villes dessus avec tri simple et recherche. Restent sur Villes : colonnes masquables, menu ⋮, édition en place, actions de ligne ; puis les 3 autres écrans |
 | 2 — Logique propre | Scénarios (détail), Carte | Hooks de dérivation (money/road), premher découpage `platform/web` (Leaflet), drag & drop des étapes |
 | 3 — Reste | Accueil, Journal, Valise, À faire, Notes, Phrases, Infos utiles, Hébergements, Lieux & activités, Dépenses | application mécanique des patterns posés en 1 et 2 |
 | 4 — Le shell | Sidebar, router, modale globale, toasts | `index.html` devient 100 % React, `js/` legacy supprimé |
