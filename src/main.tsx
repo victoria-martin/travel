@@ -17,25 +17,28 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
 };
 
 let root: Root | null = null;
-let mountedView: string | null = null;
 
+/*
+  js/render.js reconstruit TOUT #app (donc un #main flambant neuf) à chaque render() legacy, sans
+  condition — pas seulement au changement de vue. Un root React créé une fois et réutilisé peint
+  alors dans un #main détaché du DOM dès le render() suivant, invisible, pendant que le nouveau
+  #main reste vide. Donc : toujours démonter et recréer le root sur le conteneur reçu, jamais le
+  réutiliser d'un appel à l'autre — coûte l'état local React (un dropdown ouvert ailleurs, etc.) à
+  chaque mutation qui redéclenche render(), mais c'est déjà le comportement du legacy partout
+  ailleurs (tout re-rendu y perd déjà l'état DOM), donc pas une régression par rapport à lui.
+*/
 function mountReactView(container: HTMLElement, viewKey: string): boolean {
   const Component = REACT_VIEWS[viewKey];
   if (!Component) return false;
-  if (mountedView !== viewKey) {
-    root?.unmount();
-    container.innerHTML = '';
-    root = createRoot(container);
-    mountedView = viewKey;
-  }
-  root!.render(<Component />);
+  root?.unmount();
+  root = createRoot(container);
+  root.render(<Component />);
   return true;
 }
 
 function unmountReactView(): void {
   root?.unmount();
   root = null;
-  mountedView = null;
 }
 
 window.REACT_VIEWS = REACT_VIEWS;

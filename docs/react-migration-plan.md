@@ -35,6 +35,16 @@ route) — c'est exactement la frontière dont un strangler fig a besoin.
 - `REACT_VIEWS` (table de données, comme `MODAL_TYPES` aujourd'hui) associe une clé de route à son
   composant React. `renderMain()` teste `view in REACT_VIEWS` : si oui, monte/mets à jour un root
   React dans `#main` ; sinon, `innerHTML = renderXView()` comme aujourd'hui.
+- **2026-10-02 — bug structurel trouvé en vrai, pas en théorie.** `render()` (js/render.js)
+  reconstruit **tout** `#app` — donc un `<div id="main">` flambant neuf — à **chaque** appel, sans
+  condition, pas seulement au changement de vue. `mountReactView` ne recréait un root React que si
+  la vue changeait (`mountedView !== viewKey`) : dès le deuxième `render()` sur la même vue (la
+  moindre interaction), React continuait de peindre dans l'ancien `#main`, détaché du DOM, pendant
+  que le `#main` visible restait vide pour toujours — rien de React n'était donc réellement visible
+  après le tout premier rendu. `mountReactView` démonte et recrée désormais le root à **chaque**
+  appel, sur le conteneur reçu, jamais réutilisé d'un `render()` à l'autre. Coût assumé : l'état
+  local React (un menu ouvert ailleurs, etc.) se perd à chaque mutation qui redéclenche `render()`
+  — déjà le comportement du legacy partout ailleurs, donc pas une régression par rapport à lui.
 - Le shell (sidebar, router, modale globale, toasts) reste legacy jusqu'à la toute fin (Phase 4) :
   il sert les deux mondes sans rien savoir d'eux.
 - **Build posé** (branche `react-migration`) : `vite.config.ts` compile `src/main.tsx` en **IIFE**
