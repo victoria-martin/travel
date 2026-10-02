@@ -183,6 +183,7 @@ declare global {
       }[];
     }[];
     derivedExpensesTotal: () => number;
+    mapAttractionScenarioActions: (attractionId: string) => string;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

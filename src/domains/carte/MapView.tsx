@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { LeafletMap } from '../../platform/web/LeafletMap';
 import { Icon } from '../../shared/Icon';
@@ -29,6 +30,7 @@ export function MapView() {
   );
   const villes = useTravelStore(useShallow((store) => window.ofCurrentTravel(store.data.villes)));
   const markers = markerData(accommodations, attractions, villes);
+  const mapRef = useRef<any>(null);
 
   return (
     <>
@@ -78,7 +80,7 @@ export function MapView() {
           <FilterPanel />
           <Legend />
         </div>
-        <SplitHandle />
+        <SplitHandle mapRef={mapRef} />
         <LeafletMap
           markers={markers}
           onMarkerClick={
@@ -94,6 +96,7 @@ export function MapView() {
               : undefined
           }
           afterMarkers={(map) => {
+            mapRef.current = map;
             const scenario = window.mapFilters.scenarioId
               ? window.getScenario(window.mapFilters.scenarioId)
               : null;

@@ -203,11 +203,13 @@ l'instance Leaflet brute, pour un dessin que LeafletMap n'a pas à connaître).
 légende, split-pane, menu ⋮. **Délégués au legacy en HTML injecté** (pas réimplémentés) :
 `RouteBuilderPanel`/`NewCityButton` — état + async dans des globales de module, glisser HTML5,
 fetch OSRM ; réécrire ça maintenant dupliquerait une logique entière pour un gain nul tant que ce
-mode n'est pas une priorité à part. Pas encore porté : les actions de popup « ajouter à un
-scénario » (dépendent des étapes, à ne pas re-dériver avant le détail d'un Scénario) ; le
-split-pane n'appelle pas encore `invalidateSize()` pendant le glisser (LeafletMap n'expose pas
-l'instance à l'extérieur), la carte se réajuste au prochain changement de marqueurs plutôt qu'en
-temps réel.
+mode n'est pas une priorité à part. **2026-10-02 — les deux derniers restes de la Phase 2 Carte
+faits** : les actions de popup « ajouter à un scénario » (`attractionPopup.ts` délègue à
+`window.mapAttractionScenarioActions`, une chaîne HTML de plus — Leaflet rend les popups hors de
+l'arbre React, pas de composant à écrire) ; `SplitHandle` reçoit maintenant la ref posée par
+`afterMarkers` sur l'instance Leaflet (la même porte de sortie assumée que pour le tracé de
+scénario) et appelle `invalidateSize()` à chaque pixel du glisser, au lieu d'attendre le prochain
+changement de marqueurs.
 
 ## 6. Dossiers
 
@@ -263,9 +265,9 @@ panneau de filtres, bouton Importer, menu d'ajout à 5 portes (un seul bouton «
 manuelle). `ACCOMMODATION_TYPES`/`ACCOMMODATION_STATUSES` n'étaient jamais exposées sur `window`
 (même classe de bug que § 2) — corrigé au passage.
 
-**Phase 2, détail.** Carte : faite et câblée (§ 5) — filtre, panneau scénario, itinéraire (délégué),
-villes, légende, split-pane, menu ⋮. Reste : popups d'ajout à un scénario, `invalidateSize()` pendant
-le split.
+**Phase 2, détail.** Carte : **faite, § 5 pour le détail** — filtre, panneau scénario, itinéraire
+(délégué), villes, légende, split-pane (`invalidateSize()` pendant le glisser), popups d'ajout à un
+scénario, menu ⋮. Rien de connu en reste sur cet écran.
 Scénarios détail : parent React, hooks money/road/route, cartes, groupes/options et drag
 multi-colonnes dnd-kit branchés dans `REACT_VIEWS`, vérifié à l'écran par l'utilisatrice
 (2026-10-02) — sauf le DnD : toute étape déplacée atterrissait en fin de liste, quel que soit

@@ -366,7 +366,7 @@ body[data-render-mode='react']::after {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   column-gap: 6px;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   /* row-gap: 4px; */
 }
 .scenario-header-identity {
@@ -3854,7 +3854,6 @@ tr:hover td {
      un téléphone : les deux repassent en une seule colonne, l'identité au-dessus des actions. */
   .scenario-header {
     grid-template-columns: minmax(0, 1fr);
-    border: solid 1px blue;
   }
   .scenario-header-identity {
     grid-row: 1;
@@ -3868,7 +3867,7 @@ tr:hover td {
     grid-column: 1;
     grid-row: 1;
     justify-self: start;
-    border: solid 1px blue;
+    justify-content: flex-start;
   }
 
   /* Une carte d'étape empilait tout sur une seule ligne : réordonner, rang, titre, statut et prix

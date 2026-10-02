@@ -1,12 +1,13 @@
+import type { RefObject } from 'react';
+
 const MIN_PX = 180;
 const MAX_PX = 480;
 
 // Port de split.js : la largeur s'écrit directement sur l'élément pendant le geste (pas de
-// useState par pixel), sans quoi Leaflet serait redessiné en boucle à chaque frame.
-// Écart connu : le legacy appelle aussi leafletMap.invalidateSize() à chaque pixel — LeafletMap
-// n'expose pas encore l'instance Leaflet à l'extérieur, donc les tuiles ne se réajustent qu'au
-// prochain re-rendu de la carte (changement de marqueurs), pas pendant le glisser lui-même.
-export function SplitHandle() {
+// useState par pixel), sans quoi Leaflet serait redessiné en boucle à chaque frame. `mapRef` vient
+// du callback `afterMarkers` de LeafletMap (seule porte de sortie assumée vers l'instance Leaflet
+// brute, voir platform/web/LeafletMap.tsx) : on y pioche juste invalidateSize(), jamais stocké ici.
+export function SplitHandle({ mapRef }: { mapRef: RefObject<any> }) {
   return (
     <div
       className="map-split"
@@ -23,6 +24,7 @@ export function SplitHandle() {
           const width = Math.min(Math.max(move.clientX - box.left, MIN_PX), MAX_PX);
           window.prefs.mapSideWidth = width;
           side.style.width = `${width}px`;
+          mapRef.current?.invalidateSize();
         };
         const onUp = () => {
           document.removeEventListener('pointermove', onMove);
