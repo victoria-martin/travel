@@ -11,12 +11,14 @@ export function ToolbarPanel({
   label,
   count,
   align,
+  wide,
   children,
 }: {
   icon: string;
   label: string;
   count?: number;
   align?: 'left';
+  wide?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -28,7 +30,9 @@ export function ToolbarPanel({
         <span className="toolbar-label">{label}</span>
         {!!count && <span className="toolbar-count">{count}</span>}
       </summary>
-      <div className={`toolbar-panel-body ${align === 'left' ? 'toolbar-panel-body-left' : ''}`}>
+      <div
+        className={`toolbar-panel-body ${align === 'left' ? 'toolbar-panel-body-left' : ''} ${wide ? 'toolbar-panel-body-wide' : ''}`}
+      >
         {children}
       </div>
     </details>

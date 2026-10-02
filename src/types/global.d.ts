@@ -77,5 +77,7 @@ declare global {
     openAttractionSheet: (id: string) => void;
     allAttractionTags: () => string[];
     allFixedCostCategories: () => string[];
+    showButtonLabels: () => boolean;
+    toggleButtonLabels: () => void;
   }
 }

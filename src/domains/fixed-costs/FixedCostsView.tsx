@@ -4,6 +4,7 @@ import { DataTable } from '../../shared/DataTable/DataTable';
 import { SearchField } from '../../shared/SearchField';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
+import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
 import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
 import { Icon } from '../../shared/Icon';
 import type { Column } from '../../shared/DataTable/types';
@@ -122,6 +123,7 @@ export function FixedCostsView() {
         <div className="view-header-actions">
           <SearchField value={query} onChange={setQuery} />
           <ColumnPicker kind="charges" columns={columns} />
+          <SettingsMenu />
         </div>
       </div>
       {items.length === 0 ? (

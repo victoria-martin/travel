@@ -1,5 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import { Icon } from '../../shared/Icon';
+import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
 import { useTravelStore } from '../../store/useTravelStore';
 import { CarsTab } from './TransportsView/CarsTab';
 import { ProvidersTab } from './TransportsView/ProvidersTab';
@@ -18,6 +19,9 @@ export function TransportsView() {
     <Tabs.Root defaultValue="trajets" className="transports-react-view">
       <div className="view-header">
         <h2 className="view-title">Transports</h2>
+        <div className="view-header-actions">
+          <SettingsMenu />
+        </div>
         {/* create subcomponent */}
         <Tabs.List className="view-tabs" aria-label="Sections Transports">
           <Tabs.Trigger className="view-tab" value="trajets">
