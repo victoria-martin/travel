@@ -30,11 +30,9 @@ export function FilterFields() {
       ))}
       <div className="map-filter-block map-filter-favorites">
         <SwitchField
-          label={
-            <>
-              <Icon name="star" fill /> Favoris uniquement
-            </>
-          }
+          icon="star"
+          iconFill
+          label="Favoris uniquement"
           checked={window.mapFilters.favOnly}
           onChange={() => window.toggleMapFavOnly()}
         />
