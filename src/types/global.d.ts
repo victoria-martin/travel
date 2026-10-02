@@ -137,6 +137,17 @@ declare global {
     freeTodoStatus: (status: string) => { label: string; emoji: string };
     FREE_TODO_STATUSES: Record<string, { label: string; emoji: string }>;
     UNSET_FREE_TODO_STATUS: { label: string; emoji: string };
+    defaultJournalScenarioId: () => string;
+    journalScenarioOptions: () => import('../store/types').Scenario[];
+    setJournalScenario: (id: string) => void;
+    journalScenarioDays: (scenario: import('../store/types').Scenario) => string[];
+    journalEntriesForTravel: (travelId: string) => import('../store/types').JournalEntry[];
+    getJournalEntry: (travelId: string, date: string) => import('../store/types').JournalEntry | null;
+    selectJournalDay: (date: string) => void;
+    promptJournalDay: () => void;
+    journalDayPanel: (scenario: import('../store/types').Scenario, date: string) => string;
+    onJournalPanelToggle: (date: string, key: string) => void;
+    initJournalMap: () => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

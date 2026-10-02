@@ -3843,8 +3843,9 @@ tr:hover td {
 
   /* La colonne "auto" des actions (3 boutons + séparateur + ⋮) ne rentre pas à côté du titre sur
      un téléphone : les deux repassent en une seule colonne, l'identité au-dessus des actions. */
-  /* .scenario-header {
+  .scenario-header {
     grid-template-columns: minmax(0, 1fr);
+    border: solid 1px blue;
   }
   .scenario-header-identity {
     grid-row: 1;
@@ -3856,9 +3857,10 @@ tr:hover td {
   }
   .scenario-header-money {
     grid-column: 1;
-    grid-row: 3;
+    grid-row: 1;
     justify-self: start;
-  } */
+    border: solid 1px blue;
+  }
 
   /* Une carte d'étape empilait tout sur une seule ligne : réordonner, rang, titre, statut et prix
      se partageaient une largeur trop étroite pour le titre, jusqu'à le casser lettre par lettre.
