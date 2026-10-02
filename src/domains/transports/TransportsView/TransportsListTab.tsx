@@ -5,7 +5,7 @@ import { SearchField } from '../../../shared/SearchField';
 import { ColumnPicker } from '../../../shared/toolbar/ColumnPicker';
 import type { Transport } from '../../../store/types';
 import { useTravelStore } from '../../../store/useTravelStore';
-import { columns } from './columns';
+import { columns } from './TransportsListTab/columns';
 
 function searchText(transport: Transport): string {
   return [
