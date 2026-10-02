@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '../../../shared/DataTable/DataTable';
 import { normalizeSearch } from '../../../shared/normalizeSearch';
 import { SearchField } from '../../../shared/SearchField';
@@ -20,7 +21,9 @@ function searchText(transport: Transport): string {
 }
 
 export function TransportsListTab() {
-  const transports = useTravelStore((store) => window.ofCurrentTravel(store.data.transports));
+  const transports = useTravelStore(
+    useShallow((store) => window.ofCurrentTravel(store.data.transports)),
+  );
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);

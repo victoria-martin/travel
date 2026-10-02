@@ -1,4 +1,4 @@
-import { VocabularyDropdown } from '../../../../shared/VocabularyDropdown';
+import { TagDropdown } from '../../../../shared/TagDropdown';
 import type { CarModel } from '../../../../store/types';
 
 // Partagés entre OffersSection et ModelsSection : même dictionnaire, même setter, que la ligne
@@ -6,7 +6,7 @@ import type { CarModel } from '../../../../store/types';
 export function FuelDropdown({ model }: { model: CarModel | undefined }) {
   if (!model) return <>—</>;
   return (
-    <VocabularyDropdown
+    <TagDropdown
       className="fuel-dropdown"
       dict={window.CAR_FUELS}
       current={window.carFuel(model.fuel)}
@@ -19,7 +19,7 @@ export function FuelDropdown({ model }: { model: CarModel | undefined }) {
 export function GearboxDropdown({ model }: { model: CarModel | undefined }) {
   if (!model) return <>—</>;
   return (
-    <VocabularyDropdown
+    <TagDropdown
       className="gearbox-dropdown"
       dict={window.CAR_GEARBOXES}
       current={window.carGearbox(model.gearbox)}

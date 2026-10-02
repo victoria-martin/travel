@@ -1,10 +1,10 @@
 import { FavoriteCell as SharedFavoriteCell } from '../../../shared/cells/FavoriteCell';
 import { Icon } from '../../../shared/Icon';
-import { VocabularyDropdown } from '../../../shared/VocabularyDropdown';
+import { TagDropdown } from '../../../shared/TagDropdown';
 import type { Attraction } from '../../../store/types';
 
 /*
-  Type et statut éditables (VocabularyDropdown, partagé avec Transports). Pas encore portés : le
+  Type et statut éditables (TagDropdown, partagé avec Transports). Pas encore portés : le
   tri par vocabulaire (ordre de déclaration, pas alphabétique — CitiesView ne rend pas ces colonnes
   triables), « Ouvrir la ressource » et « ＋ Ajouter un type/statut » dans le menu (askNewWord est
   tout un flux à part), et les tags/actions (modale). Prochain lot.
@@ -34,7 +34,7 @@ export function NameCell({ attraction }: { attraction: Attraction }) {
 
 export function TypeBadge({ attraction }: { attraction: Attraction }) {
   return (
-    <VocabularyDropdown
+    <TagDropdown
       className="type-dropdown"
       dict={window.ATTRACTION_TYPES}
       current={window.attractionType(attraction.type)}
@@ -45,7 +45,7 @@ export function TypeBadge({ attraction }: { attraction: Attraction }) {
 
 export function StatusBadge({ attraction }: { attraction: Attraction }) {
   return (
-    <VocabularyDropdown
+    <TagDropdown
       className="status-dropdown"
       dict={window.ATTRACTION_STATUSES}
       current={window.attractionStatus(attraction.status)}

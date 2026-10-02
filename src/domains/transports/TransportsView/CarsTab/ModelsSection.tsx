@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '../../../../shared/DataTable/DataTable';
 import { Icon } from '../../../../shared/Icon';
 import { normalizeSearch } from '../../../../shared/normalizeSearch';
@@ -15,7 +16,9 @@ function carModelSearchText(model: CarModel): string {
 }
 
 export function ModelsSection() {
-  const models = useTravelStore((store) => window.ofCurrentTravel(store.data.carModels));
+  const models = useTravelStore(
+    useShallow((store) => window.ofCurrentTravel(store.data.carModels)),
+  );
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const items = models

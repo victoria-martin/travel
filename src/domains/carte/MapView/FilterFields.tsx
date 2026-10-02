@@ -9,6 +9,7 @@ import { MAP_KINDS } from './mapKinds';
   migré n'en a eu besoin jusqu'ici. Partagé par FilterPanel (colonne fixe) et FilterButton (menu
   d'en-tête) — mêmes champs, deux emplacements, comme en legacy.
 */
+// TODO; rename to MapFilters et creer un FilterFields generique si besoin
 export function FilterFields() {
   return (
     <>

@@ -1,5 +1,5 @@
 import { Icon } from '../../../../../shared/Icon';
-import { VocabularyDropdown } from '../../../../../shared/VocabularyDropdown';
+import { TagDropdown } from '../../../../../shared/TagDropdown';
 import type { Offer } from '../../../../../store/types';
 
 export function DefaultToggleCell({ offer }: { offer: Offer }) {
@@ -55,7 +55,7 @@ export function ModelCell({ offer }: { offer: Offer }) {
 
 export function StatusDropdown({ offer }: { offer: Offer }) {
   return (
-    <VocabularyDropdown
+    <TagDropdown
       className="status-dropdown"
       dict={window.CAR_STATUSES}
       current={window.carStatus(offer.status)}

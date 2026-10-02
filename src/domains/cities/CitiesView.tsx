@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { useTravelStore } from '../../store/useTravelStore';
@@ -17,7 +18,9 @@ import { searchAttraction } from './utils';
   (ordre de vocabulaire, pas encore porté).
 */
 export function CitiesView() {
-  const attractions = useTravelStore((store) => window.ofCurrentTravel(store.data.attractions));
+  const attractions = useTravelStore(
+    useShallow((store) => window.ofCurrentTravel(store.data.attractions)),
+  );
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);

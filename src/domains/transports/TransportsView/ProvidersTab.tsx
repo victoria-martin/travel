@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '../../../shared/DataTable/DataTable';
 import { Icon } from '../../../shared/Icon';
 import { normalizeSearch } from '../../../shared/normalizeSearch';
@@ -20,7 +21,9 @@ function providerSearchText(provider: Provider): string {
 }
 
 export function ProvidersTab() {
-  const providers = useTravelStore((store) => window.ofCurrentTravel(store.data.providers));
+  const providers = useTravelStore(
+    useShallow((store) => window.ofCurrentTravel(store.data.providers)),
+  );
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const modeOrder = Object.keys(window.PROVIDER_MODES);

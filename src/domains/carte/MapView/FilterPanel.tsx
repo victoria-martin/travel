@@ -5,6 +5,7 @@ import { SidePanel } from './SidePanel';
 export function FilterPanel() {
   return (
     <SidePanel title="Filtres">
+      <span>coucou</span>
       <FilterFields />
     </SidePanel>
   );

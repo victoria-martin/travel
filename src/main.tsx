@@ -17,21 +17,25 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
 };
 
 let root: Root | null = null;
+let mountedContainer: HTMLElement | null = null;
+let mountedView: string | null = null;
 
 /*
-  js/render.js reconstruit TOUT #app (donc un #main flambant neuf) à chaque render() legacy, sans
-  condition — pas seulement au changement de vue. Un root React créé une fois et réutilisé peint
-  alors dans un #main détaché du DOM dès le render() suivant, invisible, pendant que le nouveau
-  #main reste vide. Donc : toujours démonter et recréer le root sur le conteneur reçu, jamais le
-  réutiliser d'un appel à l'autre — coûte l'état local React (un dropdown ouvert ailleurs, etc.) à
-  chaque mutation qui redéclenche render(), mais c'est déjà le comportement du legacy partout
-  ailleurs (tout re-rendu y perd déjà l'état DOM), donc pas une régression par rapport à lui.
+  js/render.js garde désormais #main comme un noeud stable (jamais recréé par innerHTML) — le root
+  React peut donc persister d'un render() legacy à l'autre et se contenter d'un nouveau
+  root.render(), comme React s'y attend. On ne recrée le root que si le conteneur a changé (jamais
+  en pratique, #main ne bouge plus) ou si la vue change — passer de `cities` à `carte` doit repartir
+  d'un arbre neuf, pas réconcilier deux composants sans rapport.
 */
 function mountReactView(container: HTMLElement, viewKey: string): boolean {
   const Component = REACT_VIEWS[viewKey];
   if (!Component) return false;
-  root?.unmount();
-  root = createRoot(container);
+  if (!root || container !== mountedContainer || viewKey !== mountedView) {
+    root?.unmount();
+    root = createRoot(container);
+    mountedContainer = container;
+    mountedView = viewKey;
+  }
   root.render(<Component />);
   return true;
 }
@@ -39,6 +43,8 @@ function mountReactView(container: HTMLElement, viewKey: string): boolean {
 function unmountReactView(): void {
   root?.unmount();
   root = null;
+  mountedContainer = null;
+  mountedView = null;
 }
 
 window.REACT_VIEWS = REACT_VIEWS;

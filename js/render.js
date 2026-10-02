@@ -16,6 +16,21 @@ function keptScroll() {
   return scroller && renderedRoute === routeHash() ? scroller.scrollTop : 0;
 }
 
+/*
+  #main est créé une seule fois et jamais recréé : un root React monté dessus (mountReactView)
+  reste attaché à un noeud qui survit à chaque render(), au lieu de peindre dans un #main détaché
+  dès le render() suivant (docs/react-migration-plan.md § 1 — bug trouvé le 2026-10-02).
+*/
+function mainNode() {
+  let main = document.getElementById('main');
+  if (!main) {
+    main = document.createElement('div');
+    main.id = 'main';
+    main.className = 'main';
+  }
+  return main;
+}
+
 function render() {
   // Avant tout : le store React doit refléter `state` avant que renderMain() ne monte/mette à
   // jour un écran React, sinon un composant lit encore l'instantané pris au chargement du script
@@ -26,6 +41,7 @@ function render() {
   const scrollTop = keptScroll();
   renderedRoute = routeHash();
   const app = document.getElementById('app');
+  const main = mainNode();
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
       ${travelSelector()}
@@ -34,9 +50,10 @@ function render() {
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
     ${mobileNavBar()} ${mobileNavPlusOpen ? mobileNavPlusSheet() : ''}
-    <div class="main" id="main"></div>
+    <div id="main-slot"></div>
     ${toastHtml()}
   `;
+  app.querySelector('#main-slot').replaceWith(main);
   renderMain();
   viewScroller().scrollTop = scrollTop;
   if (modal) renderModal();

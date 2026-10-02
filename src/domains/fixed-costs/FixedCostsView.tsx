@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useTravelStore } from '../../store/useTravelStore';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import { SearchField } from '../../shared/SearchField';
@@ -100,7 +101,9 @@ const columns: Column<FixedCost>[] = [
 ];
 
 export function FixedCostsView() {
-  const fixedCosts = useTravelStore((store) => window.ofCurrentTravel(store.data.fixedCosts));
+  const fixedCosts = useTravelStore(
+    useShallow((store) => window.ofCurrentTravel(store.data.fixedCosts)),
+  );
 
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);

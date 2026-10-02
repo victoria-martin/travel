@@ -2,7 +2,7 @@ import { FavoriteCell } from '../../../../shared/cells/FavoriteCell';
 import { LinkCell } from '../../../../shared/cells/LinkCell';
 import { TextCell } from '../../../../shared/cells/TextCell';
 import type { Column } from '../../../../shared/DataTable/types';
-import { VocabularyDropdown } from '../../../../shared/VocabularyDropdown';
+import { TagDropdown } from '../../../../shared/TagDropdown';
 import type { Transport } from '../../../../store/types';
 import { EndpointCell, PriceCell, ProviderCell, ScheduleCell } from './cells';
 
@@ -29,7 +29,7 @@ export const columns: Column<Transport>[] = [
       return modeIndex < 0 ? modes.length : modeIndex;
     },
     render: (transport) => (
-      <VocabularyDropdown
+      <TagDropdown
         className="type-dropdown"
         dict={window.TRANSPORT_MODES}
         current={window.transportMode(transport.mode)}
@@ -72,7 +72,7 @@ export const columns: Column<Transport>[] = [
     key: 'status',
     label: 'Statut',
     render: (transport) => (
-      <VocabularyDropdown
+      <TagDropdown
         className="status-dropdown"
         dict={window.TRANSPORT_STATUSES}
         current={window.transportStatus(transport.status)}

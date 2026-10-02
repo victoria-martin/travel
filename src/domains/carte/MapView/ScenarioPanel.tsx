@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow';
 import { Icon } from '../../../shared/Icon';
 import type { Scenario } from '../../../store/types';
 import { useTravelStore } from '../../../store/useTravelStore';
@@ -54,8 +55,10 @@ function ScopeToggle() {
 }
 
 export function ScenarioPanel() {
-  const scenarios = useTravelStore((store): Scenario[] =>
-    window.activeScenarios(window.ofCurrentTravel(store.data.scenarios)),
+  const scenarios = useTravelStore(
+    useShallow((store): Scenario[] =>
+      window.activeScenarios(window.ofCurrentTravel(store.data.scenarios)),
+    ),
   );
 
   return (
