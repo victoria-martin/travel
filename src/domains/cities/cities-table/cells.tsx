@@ -1,7 +1,7 @@
-import { Icon } from '../../shared/Icon';
-import { FavoriteCell as SharedFavoriteCell } from '../../shared/cells/FavoriteCell';
-import { VocabularyDropdown } from '../../shared/VocabularyDropdown';
-import type { Attraction } from '../../store/types';
+import { FavoriteCell as SharedFavoriteCell } from '../../../shared/cells/FavoriteCell';
+import { Icon } from '../../../shared/Icon';
+import { VocabularyDropdown } from '../../../shared/VocabularyDropdown';
+import type { Attraction } from '../../../store/types';
 
 /*
   Type et statut éditables (VocabularyDropdown, partagé avec Transports). Pas encore portés : le

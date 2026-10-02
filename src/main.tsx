@@ -1,7 +1,7 @@
 import { createRoot, type Root } from 'react-dom/client';
 import { CitiesView } from './domains/cities/CitiesView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
-import { TransportsView } from './domains/transports/TransportsView/TransportsView';
+import { TransportsView } from './domains/transports/TransportsView';
 
 /*
   Mécanisme de cohabitation (Phase 0a, docs/react-migration-plan.md § 1) : REACT_VIEWS associe une

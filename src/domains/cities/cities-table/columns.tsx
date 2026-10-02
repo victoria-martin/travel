@@ -1,8 +1,8 @@
-import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
-import { TextCell } from '../../shared/cells/TextCell';
-import { Icon } from '../../shared/Icon';
-import type { Column } from '../../shared/DataTable/types';
-import type { Attraction } from '../../store/types';
+import { EditableTagsCell } from '../../../shared/cells/EditableTagsCell';
+import { TextCell } from '../../../shared/cells/TextCell';
+import type { Column } from '../../../shared/DataTable/types';
+import { Icon } from '../../../shared/Icon';
+import type { Attraction } from '../../../store/types';
 import { FavoriteCell, NameCell, StatusBadge, TypeBadge } from './cells';
 
 export const columns: Column<Attraction>[] = [

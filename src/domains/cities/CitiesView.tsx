@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { useTravelStore } from '../../store/useTravelStore';
-import { CitiesHeader } from './CitiesHeader';
-import { CitiesHeaderActions } from './CitiesHeaderActions';
-import { columns } from './columns';
+import { columns } from './cities-table/columns';
+import { CitiesHeader } from './CitiesView/CitiesHeader';
+import { CitiesHeaderActions } from './CitiesView/CitiesHeaderActions';
 import { searchAttraction } from './utils';
 
 /*

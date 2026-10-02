@@ -1,9 +1,9 @@
 import * as Tabs from '@radix-ui/react-tabs';
-import { Icon } from '../../../shared/Icon';
-import { useTravelStore } from '../../../store/useTravelStore';
-import { CarsTab } from './CarsTab';
-import { ProvidersTab } from './ProvidersTab';
-import { TransportsListTab } from './TransportsListTab';
+import { Icon } from '../../shared/Icon';
+import { useTravelStore } from '../../store/useTravelStore';
+import { CarsTab } from './TransportsView/CarsTab';
+import { ProvidersTab } from './TransportsView/ProvidersTab';
+import { TransportsListTab } from './TransportsView/TransportsListTab';
 
 export function TransportsView() {
   const transportCount = useTravelStore(
@@ -18,6 +18,7 @@ export function TransportsView() {
     <Tabs.Root defaultValue="trajets" className="transports-react-view">
       <div className="view-header">
         <h2 className="view-title">Transports</h2>
+        {/* create subcomponent */}
         <Tabs.List className="view-tabs" aria-label="Sections Transports">
           <Tabs.Trigger className="view-tab" value="trajets">
             <span className="view-tab-icon">

@@ -22,11 +22,14 @@ Les critères de découpage : où vit quoi. Ce fichier grossit à chaque « red�
 « simples » — c'était le défaut de `simple-lists/`. Un dossier ne porte un mécanisme
 (`locate/`, `modals/`) que s'il sert plusieurs domaines.
 
-## Un composant parent tient son sous-arbre
+## Un composant parent tient son sous-arbre — fichier et dossier côte à côte
 
-Pour une vue composée, le dossier porte le nom du composant parent et contient son fichier
-`<Parent>/<Parent>.tsx` ainsi que les composants enfants qu'il appelle. Les colonnes et cellules
-propres à cette vue vivent dans le même dossier.
+Pour une vue composée, le fichier parent `<Parent>.tsx` et le dossier `<Parent>/` de ses enfants
+sont deux frères au même niveau — jamais le fichier déplacé **dans** un dossier du même nom
+(`<Parent>/<Parent>.tsx`, qui l'imbrique sous lui-même). Exemple :
+[domains/cities/CitiesView.tsx](src/domains/cities/CitiesView.tsx) à côté de
+[domains/cities/CitiesView/](src/domains/cities/CitiesView/) (`CitiesHeader.tsx`,
+`CitiesHeaderActions.tsx`).
 
 ## Un fichier = une responsabilité
 
