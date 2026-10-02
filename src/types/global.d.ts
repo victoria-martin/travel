@@ -79,5 +79,14 @@ declare global {
     allFixedCostCategories: () => string[];
     showButtonLabels: () => boolean;
     toggleButtonLabels: () => void;
+    L: any;
+    createLeafletMap: (elementId: string) => any;
+    fitToPoints: (map: any, points: [number, number][]) => void;
+    keptOnMap: (kind: 'hebergements' | 'attractions', item: { favorite: boolean }) => boolean;
+    accType: (type: string) => { label: string; emoji: string };
+    accTypeKey: (type: string) => string;
+    accommodationPriceUnit: (acc: { price: string }) => string;
+    googleMapsPlaceUrl: (query: string) => string;
+    priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
   }
 }
