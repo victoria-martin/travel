@@ -38,7 +38,7 @@ export function ProvidersTab() {
 
   return (
     <>
-      <div className="view-header-actions">
+      <div className="view-header-actions test-red">
         <SearchField value={query} onChange={setQuery} />
         <ColumnPicker kind="prestataires" columns={columns} />
         <button
