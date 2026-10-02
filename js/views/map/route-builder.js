@@ -4,7 +4,7 @@
   ajoute son point à la liste au lieu d'épingler son popup ; la liste se glisse pour se réordonner,
   sur le patron de step-drag.js. Le tracé redemande OSRM à chaque changement, via routing.js.
 */
-let routeBuilder = { active: false, points: [] };
+var routeBuilder = { active: false, points: [] };
 let draggedRoutePoint = -1;
 
 function toggleRouteBuilderMode() {

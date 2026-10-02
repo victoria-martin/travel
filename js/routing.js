@@ -8,6 +8,7 @@
 const OSRM_URL = 'https://router.project-osrm.org/route/v1/driving';
 const ROUTE_HELP =
   "Choisir un scénario trace son trajet et n'affiche que les hébergements qu'il utilise.";
+window.ROUTE_HELP = ROUTE_HELP;
 
 const routeCache = new Map();
 

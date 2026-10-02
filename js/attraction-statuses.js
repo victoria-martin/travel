@@ -7,6 +7,7 @@ const ATTRACTION_STATUSES = {
   visited: { label: 'Vu', emoji: '☑️' },
   rejected: { label: 'Écarté', emoji: '👎' },
 };
+window.ATTRACTION_STATUSES = ATTRACTION_STATUSES;
 
 function attractionStatus(status) {
   return ATTRACTION_STATUSES[status] || UNSET_ATTRACTION_STATUS;

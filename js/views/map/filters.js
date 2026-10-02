@@ -14,7 +14,7 @@ function mapScope(kind) {
 // Chaque collection tracée a son écran de filtre, posé sur ses propres colonnes.
 MAP_KINDS.forEach((kind) => registerFilterScope(mapScope(kind), kind));
 
-let mapFilters = {
+var mapFilters = {
   shown: { hebergements: true, attractions: true },
   scenarioId: null,
   scenarioOnly: true,

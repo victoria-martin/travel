@@ -8,6 +8,11 @@ import react from '@vitejs/plugin-react';
 */
 export default defineConfig({
   plugins: [react()],
+  // React/Radix référencent process.env.NODE_ENV (code mort en prod, mais évalué quand même par
+  // endroits) — remplacé en dur à la build puisqu'un navigateur nu n'a pas `process`.
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     outDir: 'react-dist',
     emptyOutDir: true,

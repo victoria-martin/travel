@@ -68,10 +68,24 @@ reste au fur et à mesure (voir § 7) :
   notification posé en Phase 0a). Les mutations restent legacy (`upsertX`, `saveNow()`) : le store
   ne devient la seule source que domaine par domaine, quand ses actions sont portées en Phase 1+ —
   pas listées en Phase 0b, pour ne rien écrire qui ne sert personne encore.
-- **Interop runtime** : une déclaration legacy `const` / `let` n'est pas une propriété de `window`.
-  Si React lit cette valeur via `window`, le script legacy l'expose explicitement et
-  [types/global.d.ts](../src/types/global.d.ts) décrit son type. Retirer l'exposition quand le
-  dernier consommateur React/legacy est migré ou supprimé en Phase 4.
+- **Interop runtime — passé inaperçu longtemps.** Une déclaration legacy `const` / `let` n'est pas
+  une propriété de `window` ; seuls `var` et les déclarations de fonction s'y attachent. Si React
+  lit une valeur via `window`, le script legacy l'expose explicitement (`window.X = X` juste après
+  la déclaration, ou `let X` → `var X` si elle est réassignée ailleurs — `window.X = X` une seule
+  fois deviendrait sinon obsolète) et [types/global.d.ts](../src/types/global.d.ts) décrit son
+  type. **2026-10-02** — masqué tout ce temps par une erreur de build antérieure
+  (`process is not defined`, § 1/§ 4 : React/Radix référencent `process.env.NODE_ENV`, jamais
+  défini dans un navigateur nu) qui empêchait `react-app.js` de s'exécuter jusqu'au bout — aucun
+  écran React n'avait donc jamais vraiment tourné sous les yeux de l'utilisatrice, malgré des
+  confirmations verbales : elles testaient la page legacy de secours sans le savoir. Une fois le
+  script débloqué, cette classe de bug est apparue d'un coup sur plusieurs écrans (`ATTRACTION_TYPES`,
+  `ATTRACTION_STATUSES`, `ROUTE_HELP`, `prefs`, `mapFilters`, `routeBuilder` manquaient tous) —
+  audité et corrigé en un passage sur tout ce que `global.d.ts` déclare. Un deuxième bug
+  d'ordonnancement est sorti en même temps : `useTravelStore` capture `window.state` une seule fois
+  au chargement du script (avant que `loadData()` l'ait peuplé), et la notification qui le
+  rafraîchit arrivait après le premier montage React plutôt qu'avant — `js/render.js` notifie
+  maintenant `__reactStateSubscribers` en tout premier dans `render()`. Retirer l'exposition quand
+  le dernier consommateur React/legacy est migré ou supprimé en Phase 4.
 - **Synchro** : [store/sync.ts](../src/store/sync.ts) ne contient qu'un type `SyncAdapter`
   (contrat visé, documenté), **pas d'implémentation**. `js/sync.js` ne s'y prête pas tel quel : le
   push y est debouncé (`schedulePush`) et fait une fusion 3-voies entrée par entrée

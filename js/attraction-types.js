@@ -10,6 +10,7 @@ const ATTRACTION_TYPES = {
   activity: { label: 'Activité', emoji: '🎟️', color: '#8B5E7C' },
   restaurant: { label: 'Restaurant', emoji: '🍝', color: '#7A5C3E' },
 };
+window.ATTRACTION_TYPES = ATTRACTION_TYPES;
 
 const ATTRACTION_TYPES_SIMPLE = {
   nature: { label: 'Nature' },

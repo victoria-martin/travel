@@ -17,6 +17,10 @@ function keptScroll() {
 }
 
 function render() {
+  // Avant tout : le store React doit refléter `state` avant que renderMain() ne monte/mette à
+  // jour un écran React, sinon un composant lit encore l'instantané pris au chargement du script
+  // (potentiellement `state` pas encore chargé) — vu en vrai : un crash au tout premier rendu.
+  window.__reactStateSubscribers?.forEach((cb) => cb());
   applyTravelAccent();
   applyTravelTab();
   const scrollTop = keptScroll();
@@ -38,7 +42,6 @@ function render() {
   if (modal) renderModal();
   applyFlash();
   placeOpenInlineMenu();
-  window.__reactStateSubscribers?.forEach((cb) => cb());
 }
 
 /*
