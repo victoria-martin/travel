@@ -235,6 +235,7 @@ export interface Scenario {
   transportIds: string[];
   favorite: boolean;
   archived: boolean;
+  isChosen?: boolean;
   steps: Step[];
   groups?: StepGroup[];
 }

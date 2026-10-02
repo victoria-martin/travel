@@ -213,6 +213,21 @@ declare global {
     activeToast: string;
     activeAsk: { html: string; onKeydown?: (event: KeyboardEvent) => void; after?: () => void; onClose: () => void } | null;
     closeAskOverlay: () => void;
+    stepPlace: (
+      step: import('../store/types').Step,
+    ) => { name: string; city: string } | null;
+    visibleSteps: (scenario: import('../store/types').Scenario) => import('../store/types').Step[];
+    scenarioRouteBar: (scenario: import('../store/types').Scenario, maxNights: number) => string;
+    setChosenScenario: (id: string) => void;
+    toggleComparedScenario: (id: string) => void;
+    isComparedScenario: (id: string) => boolean;
+    duplicateScenario: (id: string) => void;
+    toggleScenarioArchived: (id: string) => void;
+    showArchivedScenarios: boolean;
+    toggleArchivedScenarios: () => void;
+    toggleCompareMode: () => void;
+    createScenario: () => void;
+    scenarioCompareCard: (scenario: import('../store/types').Scenario) => string;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

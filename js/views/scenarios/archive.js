@@ -2,7 +2,7 @@
   Un scénario archivé sort de la liste sans disparaître : c'est un état du plan, donc il se garde
   sur le scénario. Les voir est un geste en cours, comme comparer — d'où une globale de module.
 */
-let showArchivedScenarios = false;
+var showArchivedScenarios = false;
 
 function toggleArchivedScenarios() {
   showArchivedScenarios = !showArchivedScenarios;

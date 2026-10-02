@@ -43,8 +43,14 @@ sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état 
   disparu — plus besoin d'un root imbriqué dans `#main` une fois que `#app` entier est React.
   Le point de bascule par vue vit maintenant dans
   [src/shell/MainContent.tsx](../src/shell/MainContent.tsx) : une table `VIEWS` (même esprit que
-  l'ancien `REACT_VIEWS`) associe une clé de route à son composant ; la vue sans entrée
-  (`scenarios`, la liste — seule encore 100 % legacy) se rend via `LegacyMarkup`.
+  l'ancien `REACT_VIEWS`) associe une clé de route à son composant. **2026-10-02** — `scenarios`
+  (la liste), dernière vue de `js/router.js` sans entrée, portée sur React
+  ([domains/scenarios/ScenariosView.tsx](../src/domains/scenarios/ScenariosView.tsx)) : toutes les
+  clés de `VIEWS` ont désormais un composant, le repli `LegacyMarkup` générique dans
+  `MainContent.tsx` a disparu avec. Recherche/favoris/scénario choisi/comparer/archivés/actions en
+  vrai React ; la bande d'itinéraire (`scenarioRouteBar`, calcul + couleurs de statut, aucune
+  interaction propre) et la carte de comparaison (`scenarioCompareCard`, même famille que les
+  lignes de récap du détail d'un scénario) restent déléguées.
 - **Conséquence qui compte** : `react-dist/react-app.js` devient une **dépendance dure**, plus un
   filet de secours. Avant cette phase, un build React absent/périmé faisait silencieusement
   retomber CHAQUE vue sur son rendu legacy (`REACT_VIEWS` `undefined` → branche `else` de
@@ -81,10 +87,11 @@ sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état 
   et la remettre à zéro en changeant de vue. La réconciliation React fait ça gratuitement : même
   composant → mêmes noeuds DOM gardés en place (scroll intact) ; composant différent → l'ancien
   arbre est démonté, le nouveau commence sans scroll. Supprimés sans remplacement.
-- **Ce qui reste délégué, inchangé par cette phase** : `scenarios` (liste) entier, le menu mobile
-  (glisser-déposer), `travelSelector`/`syncStatusHtml`/`settingsButton` (widgets autonomes), et
-  tout ce que les écrans déjà portés délèguent déjà (RouteBuilderPanel, NewCityButton, le builder
-  À faire, le panneau du jour du Journal). Rien de tout ça n'est retiré de `js/` — Phase 4 change
+- **Ce qui reste délégué, inchangé par cette phase** : le menu mobile (glisser-déposer),
+  `travelSelector`/`syncStatusHtml`/`settingsButton` (widgets autonomes), et tout ce que les
+  écrans déjà portés délèguent déjà (RouteBuilderPanel, NewCityButton, le builder À faire, le
+  panneau du jour du Journal, la bande d'itinéraire et les cartes de comparaison de Scénarios).
+  Rien de tout ça n'est retiré de `js/` — Phase 4 change
   *qui possède le DOM*, pas *combien d'écrans sont encore legacy*.
 
 ---

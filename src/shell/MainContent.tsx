@@ -11,17 +11,17 @@ import { JournalView } from '../domains/journal/JournalView';
 import { NotesView } from '../domains/notes/NotesView';
 import { PackingView } from '../domains/packing/PackingView';
 import { PhrasesView } from '../domains/phrases/PhrasesView';
+import { ScenariosView } from '../domains/scenarios/ScenariosView';
 import { ScenarioDetailView } from '../domains/scenarios/detail/ScenarioDetailView';
 import { TodoView } from '../domains/todo/TodoView';
 import { TransportsView } from '../domains/transports/TransportsView';
-import { LegacyMarkup } from '../shared/LegacyMarkup';
-import type { Scenario } from '../store/types';
 
 /*
   Point de bascule du strangler fig, maintenant côté React (remplace window.REACT_VIEWS +
   mountReactView/renderMain, inutiles depuis que #app entier est un seul root React — plus besoin
-  d'un second root imbriqué dans #main). `scenarios` (la liste, pas le détail) est la seule vue
-  encore 100 % legacy, déléguée comme n'importe quel fragment complexe non prioritaire.
+  d'un second root imbriqué dans #main). Toutes les vues de js/router.js (VIEWS) ont désormais une
+  entrée ici ; les fragments complexes qu'une vue délègue encore (RouteBuilderPanel, le builder À
+  faire, le panneau du jour du Journal…) restent internes au composant de cette vue.
 */
 const VIEWS: Record<string, () => React.JSX.Element> = {
   hebergements: AccommodationsView,
@@ -29,6 +29,7 @@ const VIEWS: Record<string, () => React.JSX.Element> = {
   cities: CitiesView,
   charges: FixedCostsView,
   transports: TransportsView,
+  scenarios: ScenariosView,
   carte: MapView,
   notes: NotesView,
   'infos-utiles': CountryInfoView,
@@ -44,14 +45,7 @@ const VIEWS: Record<string, () => React.JSX.Element> = {
 export function MainContent() {
   const view = window.getCurrentView();
   const Component = VIEWS[view];
-  const compareMode = view === 'scenarios' && window.compareMode;
   const mainRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (!compareMode) return;
-    const scenarios: Scenario[] = window.ofCurrentTravel(window.state.scenarios);
-    window.comparedScenarios(scenarios).forEach((scenario) => window.fillStepLegs(scenario));
-  }, [compareMode]);
 
   // Port de trackViewHeaderHeight (js/render.js) : les blocs collants sous l'en-tête se décalent
   // de sa hauteur, qui change avec la largeur de fenêtre.
@@ -72,7 +66,7 @@ export function MainContent() {
 
   return (
     <main id="main" className="main" ref={mainRef}>
-      {Component ? <Component /> : <LegacyMarkup html={window.renderScenariosView()} />}
+      {Component && <Component />}
     </main>
   );
 }
