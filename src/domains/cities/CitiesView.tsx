@@ -3,10 +3,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '../../shared/DataTable/DataTable';
 import { normalizeSearch } from '../../shared/normalizeSearch';
 import { useTravelStore } from '../../store/useTravelStore';
+import { searchAttraction } from '../attractions/searchAttraction';
 import { columns } from './cities-table/columns';
 import { CitiesHeader } from './CitiesView/CitiesHeader';
 import { CitiesHeaderActions } from './CitiesView/CitiesHeaderActions';
-import { searchAttraction } from './utils';
 
 /*
   Porte js/views/villes/cities.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`

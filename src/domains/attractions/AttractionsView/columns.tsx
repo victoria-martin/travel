@@ -1,9 +1,15 @@
-import { ActionsCell, FavoriteCell, NameCell, StatusBadge, TypeBadge } from '../../attractions/cells';
 import { EditableTagsCell } from '../../../shared/cells/EditableTagsCell';
+import { LinkCell } from '../../../shared/cells/LinkCell';
 import { TextCell } from '../../../shared/cells/TextCell';
 import type { Column } from '../../../shared/DataTable/types';
 import type { Attraction } from '../../../store/types';
+import { ActionsCell, FavoriteCell, NameCell, StatusBadge, TypeBadge } from '../cells';
 
+/*
+  Port de js/views/attractions/columns.js, scope réduit comme Cities/Charges fixes/Transports :
+  reste à porter — chosenStep (dérivation scénario), prix, region/country/address/coords/
+  accommodation/hours/phone, Google Maps, et le tri sur vocabulaire (ordre de déclaration).
+*/
 export const columns: Column<Attraction>[] = [
   {
     key: 'favorite',
@@ -11,13 +17,6 @@ export const columns: Column<Attraction>[] = [
     locked: true,
     sortValue: (attraction) => (attraction.favorite ? 0 : 1),
     render: (attraction) => <FavoriteCell attraction={attraction} />,
-  },
-  {
-    key: 'city',
-    label: 'Ville',
-    locked: true,
-    sortValue: (attraction) => (attraction.city || '').toLowerCase(),
-    render: (attraction) => <TextCell value={attraction.city} />,
   },
   {
     key: 'name',
@@ -54,6 +53,23 @@ export const columns: Column<Attraction>[] = [
     key: 'description',
     label: 'Description',
     render: (attraction) => <TextCell value={attraction.description} />,
+  },
+  {
+    key: 'city',
+    label: 'Ville',
+    sortValue: (attraction) => (attraction.city || '').toLowerCase(),
+    render: (attraction) => <TextCell value={attraction.city} />,
+  },
+  {
+    key: 'county',
+    label: 'Province',
+    sortValue: (attraction) => (attraction.county || '').toLowerCase(),
+    render: (attraction) => <TextCell value={attraction.county} />,
+  },
+  {
+    key: 'link',
+    label: 'Lien',
+    render: (attraction) => <LinkCell link={attraction.link} />,
   },
   {
     key: 'actions',

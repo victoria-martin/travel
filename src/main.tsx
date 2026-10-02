@@ -1,4 +1,5 @@
 import { createRoot, type Root } from 'react-dom/client';
+import { AttractionsView } from './domains/attractions/AttractionsView';
 import { MapView } from './domains/carte/MapView';
 import { CitiesView } from './domains/cities/CitiesView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
@@ -11,6 +12,7 @@ import { TransportsView } from './domains/transports/TransportsView';
   ici au lieu de son innerHTML habituel — le shell (sidebar, router) reste legacy jusqu'à la Phase 4.
 */
 const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
+  attractions: AttractionsView,
   cities: CitiesView,
   charges: FixedCostsView,
   transports: TransportsView,
