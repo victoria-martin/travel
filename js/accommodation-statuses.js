@@ -12,6 +12,7 @@ const ACCOMMODATION_STATUSES = {
   notAvailable: { label: 'Pas dispo', emoji: '🚫' },
   rejected: { label: 'Écarté', emoji: '👎' },
 };
+window.ACCOMMODATION_STATUSES = ACCOMMODATION_STATUSES;
 
 function accStatus(status) {
   return ACCOMMODATION_STATUSES[status] || UNSET_ACCOMMODATION_STATUS;

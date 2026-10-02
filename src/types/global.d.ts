@@ -88,9 +88,17 @@ declare global {
     createLeafletMap: (elementId: string) => any;
     fitToPoints: (map: any, points: [number, number][]) => void;
     keptOnMap: (kind: 'hebergements' | 'attractions', item: { favorite: boolean }) => boolean;
-    accType: (type: string) => { label: string; emoji: string };
+    accType: (type: string) => { label: string; emoji: string; color: string };
     accTypeKey: (type: string) => string;
+    accStatus: (status: string) => { label: string; emoji: string };
     accommodationPriceUnit: (acc: { price: string }) => string;
+    ACCOMMODATION_TYPES: Record<string, { label: string; emoji: string; color: string }>;
+    ACCOMMODATION_STATUSES: Record<string, { label: string; emoji: string }>;
+    setAccommodationType: (id: string, type: string) => void;
+    setAccommodationStatus: (id: string, status: string) => void;
+    toggleFavorite: (id: string) => void;
+    duplicateAccommodation: (id: string) => void;
+    allAccommodationTags: () => string[];
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;
@@ -242,6 +250,8 @@ declare global {
     scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
     dateRangeLabel: (arrival: Date | null, nights: number) => string;
     formatStepDate: (date: Date) => string;
+    formatStepDay: (date: Date) => string;
+    isoToDate: (iso: string) => Date | null;
     formatGuestPoints: (amount: number) => string;
     totalNights: (scenario: import('../store/types').Scenario) => number;
     accommodationTotals: (scenario: import('../store/types').Scenario) => {

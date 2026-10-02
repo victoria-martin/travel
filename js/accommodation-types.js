@@ -35,6 +35,7 @@ const ACCOMMODATION_TYPES = {
   //   aliases: ['camping', 'camp', 'tent'],
   // },
 };
+window.ACCOMMODATION_TYPES = ACCOMMODATION_TYPES;
 
 function accType(type) {
   return ACCOMMODATION_TYPES[type] || UNSET_ACCOMMODATION_TYPE;
