@@ -13,7 +13,7 @@ let prefs = {
   recapFolds: {},
   navSectionFolds: {},
   sort: {},
-  sortOrder: {},
+  sortValueOrder: {},
   showButtonLabels: false,
   trailColorByType: false,
   trailShown: false,
@@ -29,7 +29,11 @@ let prefs = {
 
 function loadPrefs() {
   const stored = readStore(PREFS_KEY);
-  if (stored) prefs = { ...prefs, ...stored };
+  if (stored) {
+    prefs = { ...prefs, ...stored };
+    if (stored.sortValueOrder === undefined) prefs.sortValueOrder = stored.sortOrder || {};
+    delete prefs.sortOrder;
+  }
   renamePref('voitures', 'locations');
 }
 

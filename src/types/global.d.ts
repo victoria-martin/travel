@@ -88,5 +88,31 @@ declare global {
     accommodationPriceUnit: (acc: { price: string }) => string;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
+    ROUTE_HELP: string;
+    routeBuilder: {
+      active: boolean;
+      points: { lat: number; lng: number; name: string; id: string; kind: string }[];
+    };
+    toggleRouteBuilderMode: () => void;
+    routeBuilderPanel: () => string;
+    drawRouteBuilderLine: (map: any) => void;
+    addRouteBuilderPoint: (lat: number, lng: number, name: string, id: string, kind: string) => void;
+    newCityPanel: () => string;
+    mapFilters: {
+      shown: { hebergements: boolean; attractions: boolean };
+      scenarioId: string | null;
+      scenarioOnly: boolean;
+      favOnly: boolean;
+    };
+    toggleMapKind: (kind: 'hebergements' | 'attractions') => void;
+    toggleMapFavOnly: () => void;
+    setMapScenario: (id: string) => void;
+    setMapScenarioOnly: (only: boolean) => void;
+    activeScenarios: (scenarios: import('../store/types').Scenario[]) => import('../store/types').Scenario[];
+    getScenario: (id: string) => import('../store/types').Scenario | null;
+    drawScenarioOnMap: (map: any, scenario: import('../store/types').Scenario, noticeId: string, idleMessage: string) => void;
+    scenarioAccommodationIds: (scenario: import('../store/types').Scenario) => Set<string>;
+    prefs: { mapSideWidth: number; [key: string]: any };
+    persistPrefs: () => void;
   }
 }

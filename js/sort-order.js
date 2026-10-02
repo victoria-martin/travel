@@ -1,13 +1,12 @@
 /*
-  A dictionary column — statut, type, mode — sorts on the order of its vocabulary rather than on
-  its labels, and that order is the reader's to arrange. The chosen list lives in prefs next to
-  prefs.sort, and holds only the words that were placed: a word the code adds later is unknown to
-  it, so it falls in after them, at the place its declaration gives it.
+  A column with a fixed set of values — statut, type, mode — sorts by the chosen value order rather
+  than by labels. prefs.sortValueOrder stores that order by shared key and holds only placed values;
+  values added later follow in declaration order.
 */
 
 function sortOrderWords(order) {
   const declared = Object.keys(order.dict);
-  const placed = (prefs.sortOrder[order.key] || []).filter((word) => declared.includes(word));
+  const placed = (prefs.sortValueOrder[order.key] || []).filter((word) => declared.includes(word));
   return [...placed, ...declared.filter((word) => !placed.includes(word))];
 }
 
@@ -22,7 +21,7 @@ function moveSortOrderWord(order, word, target, before) {
   const words = sortOrderWords(order).filter((w) => w !== word);
   const at = words.indexOf(target);
   words.splice(at < 0 ? words.length : at + (before ? 0 : 1), 0, word);
-  prefs.sortOrder[order.key] = words;
+  prefs.sortValueOrder[order.key] = words;
   persistPrefs();
   render();
 }

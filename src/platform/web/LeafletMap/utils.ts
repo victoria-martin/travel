@@ -1,10 +1,10 @@
-import type { MapMarkerData } from '../LeafletMap';
+import type { MapMarkerData } from './MapMarkerData';
 
 function markerDivIcon(icon: MapMarkerData['icon']) {
-  if (icon === 'house') {
+  if (icon === 'house' || icon === 'map-pin') {
     return window.L.divIcon({
       className: 'map-type-pin',
-      html: `<span>${window.svgIcon('house')}</span>`,
+      html: `<span>${window.svgIcon(icon)}</span>`,
       iconSize: [24, 24],
       iconAnchor: [12, 12],
       popupAnchor: [0, -14],
@@ -21,7 +21,9 @@ function markerDivIcon(icon: MapMarkerData['icon']) {
 
 // Même geste que le legacy : survol ouvre, clic épingle (reste ouvert jusqu'à la croix ou un clic
 // ailleurs), la fermeture au survol attend 120ms pour couvrir le passage marqueur -> popup.
-export function addPinMarker(map: any, data: MapMarkerData) {
+// `onClick`, s'il est fourni, remplace l'épinglage — c'est l'appelant (le mode itinéraire de
+// MapView) qui décide, LeafletMap ignore ce que "cliquer un marqueur" veut dire ailleurs.
+export function addPinMarker(map: any, data: MapMarkerData, onClick?: (data: MapMarkerData) => void) {
   const marker = window.L.marker(data.point, { icon: markerDivIcon(data.icon) }).addTo(map);
   marker.bindTooltip(data.tooltip, {
     permanent: true,
@@ -67,6 +69,7 @@ export function addPinMarker(map: any, data: MapMarkerData) {
     });
   });
   marker.on('click', () => {
+    if (onClick) return onClick(data);
     pinned = true;
     marker.openPopup();
   });

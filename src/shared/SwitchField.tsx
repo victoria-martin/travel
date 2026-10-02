@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react';
+
 // Port de switchField (js/views/switch-field.js).
 export function SwitchField({
   label,
   checked,
   onChange,
 }: {
-  label: string;
+  label: ReactNode;
   checked: boolean;
   onChange: () => void;
 }) {
