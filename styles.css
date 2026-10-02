@@ -39,29 +39,6 @@ body {
   overflow: hidden;
 }
 
-/* ---------- Indicateur React/legacy ---------- */
-body::after {
-  content: 'legacy';
-  position: fixed;
-  top: 6px;
-  right: 6px;
-  z-index: 1000;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: var(--rust);
-  color: var(--white);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  pointer-events: none;
-  opacity: 0.85;
-}
-body[data-render-mode='react']::after {
-  content: 'react';
-  background: var(--stone);
-}
-
 /* ---------- Toast ---------- */
 .toast {
   position: fixed;
@@ -283,15 +260,6 @@ body[data-render-mode='react']::after {
   text-align: center;
 }
 
-.nav-legacy-indicator {
-  /* font-size: 16px;
-  width: 18px; */
-  /* text-align: center; */
-  /* position: absolute;
-  right: 0; */
-  margin-left: auto;
-}
-
 .nav-section {
   display: flex;
   flex-direction: column;
@@ -332,6 +300,15 @@ body[data-render-mode='react']::after {
   width: 100%;
 }
 
+/* TODO: à ranger */
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  padding: 8px;
+}
+
 /* ---------- Main ---------- */
 .main {
   flex: 1;
@@ -366,6 +343,7 @@ body[data-render-mode='react']::after {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   column-gap: 6px;
+  row-gap: 8px;
   /* align-items: flex-start; */
   /* row-gap: 4px; */
 }

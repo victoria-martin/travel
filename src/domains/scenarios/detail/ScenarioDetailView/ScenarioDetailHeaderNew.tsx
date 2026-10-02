@@ -59,7 +59,7 @@ export function ScenarioDetailHeaderNew({
         />
       </div>
 
-      <p className="view-sub" style={{ marginLeft: 44 }}>
+      <div className="view-sub" style={{ marginLeft: 44 }}>
         <input
           className="scenario-start-date"
           type="date"
@@ -70,7 +70,7 @@ export function ScenarioDetailHeaderNew({
         {' · '}
         {visibleCount} étape{visibleCount > 1 ? 's' : ''} · {nights} nuit
         {nights === 1 ? '' : 's'}
-      </p>
+      </div>
 
       <div className="scenario-header-money">
         {money.guestPoints > 0 && <span>{window.formatGuestPoints(money.guestPoints)}</span>}

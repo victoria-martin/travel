@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { key: 'valise', label: 'Valise', icon: svgIcon('luggage') },
   { key: 'a-faire', label: 'À faire', icon: svgIcon('list-checks') },
 ];
+window.NAV_ITEMS = NAV_ITEMS;
 
 function navItem(key) {
   return NAV_ITEMS.find((item) => item.key === key);
@@ -42,3 +43,13 @@ const NAV_SECTIONS = [
     keys: ['journal', 'notes', 'phrases', 'infos-utiles', 'valise', 'a-faire'],
   },
 ];
+window.NAV_SECTIONS = NAV_SECTIONS;
+
+function navSectionOpen(key) {
+  return prefs.navSectionFolds[key] !== false;
+}
+
+function setNavSectionFold(key, open) {
+  prefs.navSectionFolds[key] = open;
+  persistPrefs();
+}

@@ -52,6 +52,15 @@ export function ScenarioDetailView() {
         )}
         <ScenarioLegacyMarkup html={window.scenarioSideTabsRail(scenario.id)} />
       </div>
+      <div className="sticky-footer">
+        <div className="scenario-header-money">
+          <span>Total: </span>
+          {money.total.guestPoints > 0 && (
+            <span>{window.formatGuestPoints(money.total.guestPoints)}</span>
+          )}
+          <strong className="scenario-header-total">{window.formatEuros(money.total.euros)}</strong>
+        </div>
+      </div>
     </>
   );
 }

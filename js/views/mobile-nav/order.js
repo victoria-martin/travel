@@ -36,7 +36,7 @@ function moveMobileNavItemBefore(draggedKey, targetKey, before) {
   render();
 }
 
-let mobileNavPlusOpen = false;
+var mobileNavPlusOpen = false;
 let mobileNavReordering = false;
 
 function toggleMobileNavPlus() {

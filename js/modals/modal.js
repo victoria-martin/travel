@@ -6,8 +6,8 @@
   modifieraient la donnée qu'Annuler est censé laisser intacte.
 */
 
-let modal = null; // {type, sheet, payload}
-let modalSnapshot = null; // field values as opened, to tell whether anything was typed
+var modal = null; // {type, sheet, payload}
+var modalSnapshot = null; // field values as opened, to tell whether anything was typed
 
 const MODAL_TYPES = {
   voyage: {
@@ -88,6 +88,12 @@ const MODAL_TYPES = {
     body: (m) => fixedCostForm(m.payload),
     edits: true,
   },
+  'import-expenses': {
+    open: () => ({ payload: { text: '' } }),
+    body: (m) => importExpensesForm(m.payload),
+    width: '640px',
+    edits: true,
+  },
   'actual-expense': {
     open: (id) => ({
       payload: id ? structuredClone(getActualExpense(id)) : emptyActualExpense(),
@@ -136,6 +142,7 @@ const MODAL_TYPES = {
   sync: { body: () => syncForm() },
   settings: { body: () => settingsForm() },
 };
+window.MODAL_TYPES = MODAL_TYPES;
 
 const MODAL_RESOURCE_MESSAGES = {
   voyage: ['Voyage créé', 'Voyage modifié'],
@@ -191,39 +198,29 @@ function showModal(type, sheet, args) {
 function closeModal() {
   modal = null;
   modalSnapshot = null;
-  dismissAsk = null;
+  dismissAskOpen = false;
   render();
 }
 
 /*
-  Fermer sur une saisie non enregistrée demande quoi en faire, et le demande dans l'app. La
-  question se pose par-dessus le formulaire sans le re-rendre : ses champs ne vivent que dans le
-  DOM tant qu'ils ne sont pas lus, et un render les remplacerait par la donnée d'avant.
+  Fermer sur une saisie non enregistrée demande quoi en faire. ModalHost (src/shell/ModalHost.tsx)
+  peint le corps de la modale via dangerouslySetInnerHTML : tant que modal.payload ne change pas,
+  cfg.body(modal) rend la même chaîne à chaque appel, donc React ne retouche pas ce DOM — rouvrir
+  dismissAskOpen et rappeler render() ne perd plus la saisie en cours (l'arrachait quand ce bloc
+  vivait hors de #app, peint par un appendChild manuel jamais revisité par un render()).
 */
-let dismissAsk = null;
+var dismissAskOpen = false;
 
 function dismissModal() {
   if (!modalIsDirty()) return closeModal();
-  if (dismissAsk) return;
-  dismissAsk = document.createElement('div');
-  dismissAsk.className = 'overlay overlay-ask';
-  dismissAsk.onclick = (e) => {
-    if (e.target === dismissAsk) keepEditing();
-  };
-  dismissAsk.innerHTML = /* HTML */ `<div class="modal modal-ask">
-    <h3>Enregistrer les modifications ?</h3>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Ne pas enregistrer</button>
-      <button class="btn btn-ghost" onclick="keepEditing()">Annuler</button>
-      <button class="btn" onclick="saveAndClose()">Enregistrer</button>
-    </div>
-  </div>`;
-  document.getElementById('app').appendChild(dismissAsk);
+  if (dismissAskOpen) return;
+  dismissAskOpen = true;
+  render();
 }
 
 function keepEditing() {
-  dismissAsk.remove();
-  dismissAsk = null;
+  dismissAskOpen = false;
+  render();
 }
 
 function saveAndClose() {
@@ -253,19 +250,22 @@ function modalFieldValue(field) {
   return field.type === 'checkbox' || field.type === 'radio' ? field.checked : field.value;
 }
 
-function renderModal() {
-  const container = document.createElement('div');
-  container.onclick = (e) => {
-    if (e.target === container) dismissModal();
-  };
+// Peint par ModalHost (src/shell/ModalHost.tsx) via dangerouslySetInnerHTML — ces trois lectures
+// remplacent l'ancien renderModal() qui créait et appendait le DOM lui-même.
+function modalBodyHtml() {
+  return MODAL_TYPES[modal.type].body(modal);
+}
 
+function modalPanelWidth() {
   const cfg = MODAL_TYPES[modal.type];
   // Un panneau tient toute la hauteur contre le bord droit : sa largeur est la sienne.
-  const style = cfg.width && !modal.sheet ? `max-width:${cfg.width};` : '';
-  container.className = modal.sheet ? 'overlay overlay-sheet' : 'overlay';
-  const box = modal.sheet ? 'modal modal-sheet' : 'modal';
-  container.innerHTML = `<div class="${box}" style="${style}">${cfg.body(modal)}</div>`;
-  document.getElementById('app').appendChild(container);
+  return cfg.width && !modal.sheet ? cfg.width : null;
+}
+
+// Rappelé par ModalHost une fois le corps peint dans le DOM (cfg.after lit des champs qui doivent
+// déjà exister), comme initScenarioDetailMaps après ScenarioLegacyMarkup.
+function onModalPainted() {
+  const cfg = MODAL_TYPES[modal.type];
   if (cfg.after) cfg.after(modal);
   modalSnapshot = cfg.edits ? modalFieldsState() : null;
 }
@@ -274,7 +274,7 @@ function renderModal() {
 // un résultat qu'on choisit — l'a déjà consommée, et une zone de texte y écrit une ligne.
 document.addEventListener('keydown', (event) => {
   if (!modal || event.defaultPrevented) return;
-  if (event.key === 'Escape') return dismissAsk ? keepEditing() : dismissModal();
+  if (event.key === 'Escape') return dismissAskOpen ? keepEditing() : dismissModal();
   if (event.key !== 'Enter' || event.target.tagName === 'TEXTAREA') return;
   if (dismissAsk) saveAndClose();
   else submitModal();

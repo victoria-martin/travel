@@ -5,19 +5,11 @@
   trajet ou de la voiture qui a demandé la création. Entrée et Échap sont traitées ici, sinon la
   modale du dessous les prendrait pour les siennes.
 */
-let providerAsk = null;
-
 function askNewProvider(selectId, mode) {
-  if (providerAsk) return;
+  if (activeAsk) return;
   const noun = providerNoun(mode);
   const current = providerMode(mode);
-  providerAsk = document.createElement('div');
-  providerAsk.className = 'overlay overlay-ask';
-  providerAsk.onclick = (e) => {
-    if (e.target === providerAsk) closeProviderAsk();
-  };
-  providerAsk.onkeydown = (e) => providerAskKeydown(e, selectId, mode);
-  providerAsk.innerHTML = /* HTML */ `<div class="modal modal-ask provider-ask">
+  const html = /* HTML */ `<div class="modal modal-ask provider-ask">
     <h3>Ajouter ${noun.indefinite}</h3>
     <div class="field">
       <label>${tagLabel(current.emoji, current.label)}</label>
@@ -28,8 +20,10 @@ function askNewProvider(selectId, mode) {
       <button class="btn" onclick="confirmNewProvider('${selectId}','${mode}')">Créer</button>
     </div>
   </div>`;
-  document.getElementById('app').appendChild(providerAsk);
-  document.getElementById('new-provider-name').focus();
+  showAskOverlay(html, {
+    onKeydown: (e) => providerAskKeydown(e, selectId, mode),
+    after: () => document.getElementById('new-provider-name').focus(),
+  });
 }
 
 function providerAskKeydown(event, selectId, mode) {
@@ -47,6 +41,5 @@ function confirmNewProvider(selectId, mode) {
 }
 
 function closeProviderAsk() {
-  providerAsk.remove();
-  providerAsk = null;
+  closeAskOverlay();
 }

@@ -2,7 +2,7 @@ export {};
 
 /*
   Interop avec le legacy (scripts classiques, tout en globales) : ce fichier ne déclare que ce dont
-  le pont React (src/store/legacyBridge.ts, src/main.tsx) a besoin. Pas une tentative de typer
+  le pont React (src/store/useTravelStore.ts, src/shell/) a besoin. Pas une tentative de typer
   l'app legacy en entier.
 */
 declare global {
@@ -13,9 +13,6 @@ declare global {
     openModal: (type: string, ...args: string[]) => void;
     openSheet: (type: string, ...args: string[]) => void;
     deleteItem: (collection: string, id: string) => void;
-    REACT_VIEWS: Record<string, () => React.JSX.Element>;
-    mountReactView: (container: HTMLElement, viewKey: string) => boolean;
-    unmountReactView: () => void;
     __reactStateSubscribers?: Set<() => void>;
     svgIcon: (name: string, opts?: { fill?: boolean; className?: string }) => string;
     toggleAttractionFavorite: (id: string) => void;
@@ -184,6 +181,38 @@ declare global {
     }[];
     derivedExpensesTotal: () => number;
     mapAttractionScenarioActions: (attractionId: string) => string;
+    getCurrentView: () => string;
+    navItem: (key: string) => { key: string; label: string; icon: string } | undefined;
+    navSectionOpen: (key: string) => boolean;
+    setNavSectionFold: (key: string, open: boolean) => void;
+    NAV_ITEMS: { key: string; label: string; icon: string }[];
+    NAV_SECTIONS: { key: string; title: string; keys: string[] }[];
+    travelSelector: () => string;
+    syncStatusHtml: () => string;
+    settingsButton: () => string;
+    mobileNavBar: () => string;
+    mobileNavPlusSheet: () => string;
+    mobileNavPlusOpen: boolean;
+    modal: { type: string; sheet: boolean; payload: any } | null;
+    modalBodyHtml: () => string;
+    modalPanelWidth: () => string | null;
+    onModalPainted: () => void;
+    dismissModal: () => void;
+    dismissAskOpen: boolean;
+    keepEditing: () => void;
+    closeModal: () => void;
+    saveAndClose: () => void;
+    applyTravelAccent: () => void;
+    applyTravelTab: () => void;
+    applyFlash: () => void;
+    placeOpenInlineMenu: () => void;
+    renderScenariosView: () => string;
+    fillStepLegs: (scenario: import('../store/types').Scenario) => void;
+    comparedScenarios: <T extends { id: string }>(items: T[]) => T[];
+    compareMode: boolean;
+    activeToast: string;
+    activeAsk: { html: string; onKeydown?: (event: KeyboardEvent) => void; after?: () => void; onClose: () => void } | null;
+    closeAskOverlay: () => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

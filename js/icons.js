@@ -71,7 +71,7 @@ const ICON_BODIES = {
   image: `<rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />`,
   camera: `<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z" /> <circle cx="12" cy="13" r="3" />`,
   'book-open': `<path d="M12 7v14" /> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />`,
-  logs: `<svg transform="rotate(90 12 12) xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs preview-icon"><path d="M3 5h1"/><path d="M3 12h1"/><path d="M3 19h1"/><path d="M8 5h1"/><path d="M8 12h1"/><path d="M8 19h1"/><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/></svg>`,
+  logs: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs preview-icon"><path d="M3 5h1"/><path d="M3 12h1"/><path d="M3 19h1"/><path d="M8 5h1"/><path d="M8 12h1"/><path d="M8 19h1"/><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/></svg>`,
   'panel-left-swap': `<path d="M3 7V5a2 2 0 0 1 2-2h3" /> <path d="M3 11v2" /> <path d="M3 17v-2" /> <path d="M3 17v2a2 2 0 0 0 2 2h3" /> <path d="M10 3h9a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-9" /> <path d="M10 3v18" /> <path d="M10 9h5" /> <path d="m13 7 2 2-2 2" /> <path d="M15 15h-5" /> <path d="m12 13-2 2 2 2" />`,
 };
 

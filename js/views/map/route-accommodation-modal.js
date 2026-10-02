@@ -4,19 +4,14 @@
   patron de dismissAsk/askNewWord, une question posée par-dessus l'écran sans passer par le
   système de modale d'édition (rien à enregistrer/annuler ici, juste un choix immédiat).
 */
-let routeAccommodationAsk = null;
 let routeAccommodationPoints = [];
 
 function openRouteAccommodationChoice(scenarioId, stepId, points) {
-  if (routeAccommodationAsk) return;
+  if (activeAsk) return;
   routeAccommodationPoints = points;
-  routeAccommodationAsk = document.createElement('div');
-  routeAccommodationAsk.className = 'overlay overlay-ask';
-  routeAccommodationAsk.onclick = (e) => {
-    if (e.target === routeAccommodationAsk) closeRouteAccommodationChoice();
-  };
-  routeAccommodationAsk.innerHTML = routeAccommodationAskForm(scenarioId, stepId, points);
-  document.getElementById('app').appendChild(routeAccommodationAsk);
+  showAskOverlay(routeAccommodationAskForm(scenarioId, stepId, points), {
+    onClose: closeRouteAccommodationChoice,
+  });
 }
 
 function routeAccommodationAskForm(scenarioId, stepId, points) {
@@ -77,18 +72,17 @@ function routeAccommodationAskForm(scenarioId, stepId, points) {
 }
 
 function updateRouteAccommodationChoice() {
-  const value = routeAccommodationAsk.querySelector('input[name="route-acc-choice"]:checked').value;
-  routeAccommodationAsk.querySelector('#route-scenario-source-field').hidden = value !== 'new-scenario';
+  const value = document.querySelector('.overlay-ask input[name="route-acc-choice"]:checked').value;
+  document.querySelector('.overlay-ask #route-scenario-source-field').hidden = value !== 'new-scenario';
 }
 
 function closeRouteAccommodationChoice() {
-  routeAccommodationAsk.remove();
-  routeAccommodationAsk = null;
+  closeAskOverlay();
   routeAccommodationPoints = [];
 }
 
 function confirmRouteAccommodationChoice(scenarioId, stepId) {
-  const choice = routeAccommodationAsk.querySelector('input[name="route-acc-choice"]:checked').value;
+  const choice = document.querySelector('.overlay-ask input[name="route-acc-choice"]:checked').value;
   const points = routeAccommodationPoints;
   if (choice === 'new-step') {
     addAccommodationSteps(scenarioId, points);

@@ -1,159 +1,21 @@
 /*
-  Every gesture re-renders the whole app, so the scrolling element is built anew each time. The
-  route tells a redraw of the same screen from a move to another one: only the first keeps its
-  place, changing page still lands at the top.
+  Phase 4 (docs/react-migration-plan.md § 1) : React possède #app en entier (src/shell/AppShell.tsx,
+  monté une fois dans src/main.tsx). render() ne reconstruit plus rien ici — il notifie
+  __reactStateSubscribers, la même liste que useTravelStore, et laisse React se re-rendre lui-même.
+  Conséquence : react-dist/react-app.js devient une dépendance dure, pas un filet de secours — s'il
+  ne charge pas, #app reste vide (plus de repli sur un rendu 100 % legacy, possible avant cette
+  phase).
 */
-let renderedRoute;
-
-// `.main` scrolls unless the view holds its own scrolling area, as the scenario detail does.
-function viewScroller() {
-  const main = document.getElementById('main');
-  return (main && main.querySelector('.view-scroller')) || main;
-}
-
-function keptScroll() {
-  const scroller = viewScroller();
-  return scroller && renderedRoute === routeHash() ? scroller.scrollTop : 0;
-}
-
-/*
-  #main est créé une seule fois et jamais recréé : un root React monté dessus (mountReactView)
-  reste attaché à un noeud qui survit à chaque render(), au lieu de peindre dans un #main détaché
-  dès le render() suivant (docs/react-migration-plan.md § 1 — bug trouvé le 2026-10-02).
-*/
-function mainNode() {
-  let main = document.getElementById('main');
-  if (!main) {
-    main = document.createElement('div');
-    main.id = 'main';
-    main.className = 'main';
-  }
-  return main;
-}
-
 function render() {
-  // Avant tout : le store React doit refléter `state` avant que renderMain() ne monte/mette à
-  // jour un écran React, sinon un composant lit encore l'instantané pris au chargement du script
-  // (potentiellement `state` pas encore chargé) — vu en vrai : un crash au tout premier rendu.
   window.__reactStateSubscribers?.forEach((cb) => cb());
-  applyTravelAccent();
-  applyTravelTab();
-  const scrollTop = keptScroll();
-  renderedRoute = routeHash();
-  const app = document.getElementById('app');
-  const main = mainNode();
-  app.innerHTML = /* HTML */ `
-    <div class="sidebar">
-      ${travelSelector()} ${navBtn('accueil', navItem('accueil').icon, navItem('accueil').label)}
-      ${NAV_SECTIONS.map(navSection).join('')}
-      <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
-    </div>
-    ${mobileNavBar()} ${mobileNavPlusOpen ? mobileNavPlusSheet() : ''}
-    <div id="main-slot"></div>
-    ${toastHtml()}
-  `;
-  app.querySelector('#main-slot').replaceWith(main);
-  renderMain();
-  viewScroller().scrollTop = scrollTop;
-  if (modal) renderModal();
-  applyFlash();
-  placeOpenInlineMenu();
 }
 
 /*
-  Un changement de mise en page se montre au lieu de sauter. Une transition CSS ne part jamais
-  ici : render() rebâtit le DOM, l'élément est neuf et n'a pas d'état d'avant. Le navigateur, lui,
-  sait photographier l'écran des deux côtés du re-rendu et animer le passage ; sans l'API, le
-  rendu est immédiat, comme avant.
+  Un changement de mise en page se montre au lieu de sauter. React s'en charge lui-même pour les
+  éléments qu'il réconcilie (la même ligne reste la même ligne), ce commentaire ne vaut donc plus
+  que pour startViewTransition lui-même, toujours utile pour animer un changement de vue.
 */
 function renderWithTransition() {
   if (!document.startViewTransition) return render();
   document.startViewTransition(() => render());
-}
-
-function navBtn(key, icon, label) {
-  const isActive = view === key || (key === 'scenarios' && view === 'scenario-detail');
-  return /* HTML */ `<button
-    class="nav-btn ${isActive ? 'active' : ''}"
-    title="${label}"
-    aria-label="${label}"
-    onclick="goTo('${key}')"
-  >
-    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span>
-  </button>`;
-}
-
-function navSection(section) {
-  return /* HTML */ `<details
-    class="nav-section"
-    ${navSectionOpen(section.key) ? 'open' : ''}
-    ontoggle="setNavSectionFold('${section.key}', this.open)"
-  >
-    <summary class="nav-section-title">${section.title}</summary>
-    <div class="nav-section-items">
-      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label)).join('')}
-    </div>
-  </details>`;
-}
-
-function navSectionOpen(key) {
-  return prefs.navSectionFolds[key] !== false;
-}
-
-function setNavSectionFold(key, open) {
-  prefs.navSectionFolds[key] = open;
-  persistPrefs();
-}
-
-let viewHeaderObserver;
-
-// Sticky blocks below the header offset themselves from its height, which wraps with the window.
-function trackViewHeaderHeight(main) {
-  if (viewHeaderObserver) viewHeaderObserver.disconnect();
-  const header = main.querySelector('.view-header');
-  if (!header) return main.style.setProperty('--view-header-h', '0px');
-  viewHeaderObserver = new ResizeObserver(() =>
-    main.style.setProperty('--view-header-h', `${header.offsetHeight}px`),
-  );
-  viewHeaderObserver.observe(header);
-}
-
-// Point de bascule du strangler fig (docs/react-migration-plan.md § 1) : une vue déclarée dans
-// REACT_VIEWS (posée par react-app.js) se monte en React au lieu de son innerHTML legacy.
-function renderMain() {
-  const main = document.getElementById('main');
-  if (window.REACT_VIEWS && view in window.REACT_VIEWS) {
-    document.body.dataset.renderMode = 'react';
-    window.mountReactView(main, view);
-    trackViewHeaderHeight(main);
-    return;
-  }
-  document.body.dataset.renderMode = 'legacy';
-  window.unmountReactView?.();
-  if (view === 'accueil') main.innerHTML = renderHomeView();
-  else if (view === 'hebergements') main.innerHTML = renderAccommodationsView();
-  else if (view === 'depenses') main.innerHTML = renderExpensesView();
-  else if (view === 'attractions') main.innerHTML = renderAttractionsView();
-  else if (view === 'cities') main.innerHTML = renderCitiesView();
-  else if (view === 'transports') main.innerHTML = renderTransportsView();
-  else if (view === 'scenarios') {
-    main.innerHTML = renderScenariosView();
-    if (compareMode)
-      comparedScenarios(ofCurrentTravel(state.scenarios)).forEach((s) => fillStepLegs(s));
-  } else if (view === 'scenario-detail') {
-    main.innerHTML = renderScenarioDetailView();
-    setTimeout(initScenarioDetailMaps, 30);
-    fillStepLegs(getScenario(activeScenarioId));
-  } else if (view === 'carte') {
-    main.innerHTML = renderMapView();
-    setTimeout(initMap, 30);
-  } else if (view === 'journal') {
-    main.innerHTML = renderJournalView();
-    setTimeout(initJournalMap, 30);
-  } else if (view === 'notes') main.innerHTML = renderNotesView();
-  else if (view === 'phrases') main.innerHTML = renderPhrasesView();
-  else if (view === 'infos-utiles') main.innerHTML = renderCountryInfoView();
-  else if (view === 'valise') main.innerHTML = renderPackingView();
-  else if (view === 'a-faire') main.innerHTML = renderTodoView();
-  trackViewHeaderHeight(main);
 }

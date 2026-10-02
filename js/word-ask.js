@@ -13,22 +13,15 @@ const WORD_SWATCHES = [
   '#4e7a9b',
 ];
 
-let wordAsk = null;
 let wordAskCallback = null;
 
 // onCreate(word) reçoit le mot créé — un consommateur select le repose dans son <select>
 // (cf. wordSelectChanged), un menu inline l'applique directement à l'entité.
 function askNewWord(bank, onCreate) {
-  if (wordAsk) return;
+  if (activeAsk) return;
   wordAskCallback = onCreate;
   const { noun, color } = WORD_BANKS[bank];
-  wordAsk = document.createElement('div');
-  wordAsk.className = 'overlay overlay-ask';
-  wordAsk.onclick = (e) => {
-    if (e.target === wordAsk) closeWordAsk();
-  };
-  wordAsk.onkeydown = (e) => wordAskKeydown(e, bank);
-  wordAsk.innerHTML = /* HTML */ `<div class="modal modal-ask">
+  const html = /* HTML */ `<div class="modal modal-ask">
     <h3>Ajouter ${noun}</h3>
     <div class="field-row">
       <div class="field" style="flex:0 0 64px;">
@@ -46,8 +39,10 @@ function askNewWord(bank, onCreate) {
       <button class="btn" onclick="confirmNewWord('${bank}')">Créer</button>
     </div>
   </div>`;
-  document.getElementById('app').appendChild(wordAsk);
-  document.getElementById('new-word-label').focus();
+  showAskOverlay(html, {
+    onKeydown: (e) => wordAskKeydown(e, bank),
+    after: () => document.getElementById('new-word-label').focus(),
+  });
 }
 
 function wordSwatchesField() {
@@ -65,8 +60,8 @@ function wordSwatchesField() {
 
 function pickWordSwatch(color) {
   document.getElementById('new-word-color').value = color;
-  wordAsk
-    .querySelectorAll('.accent-swatch')
+  document
+    .querySelectorAll('.overlay-ask .accent-swatch')
     .forEach((el) => el.classList.toggle('selected', el.dataset.swatch === color));
 }
 
@@ -101,6 +96,5 @@ function selectCreatedWord(id, word) {
 }
 
 function closeWordAsk() {
-  wordAsk.remove();
-  wordAsk = null;
+  closeAskOverlay();
 }

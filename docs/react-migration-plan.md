@@ -28,9 +28,72 @@ Référence du protocole de synchro, inchangé par cette migration : [protocole-
 
 ## 1. Le mécanisme de cohabitation
 
-Le point de bascule est `#main`. [render.js](../js/render.js) sépare déjà le shell (sidebar, rendu
-une fois dans `render()`) du contenu de la vue (`renderMain()`, qui réécrit `#main` à chaque
-route) — c'est exactement la frontière dont un strangler fig a besoin.
+**2026-10-02 — Phase 4 : React possède `#app` en entier.** Ce qui suit, jusqu'à la ligne « Fin de
+cible » ci-dessous, décrit le mécanisme des Phases 0-3 (React monté dans `#main` seulement,
+sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état actuel.
+
+- **Un seul root React**, monté une fois dans [src/main.tsx](../src/main.tsx)
+  (`createRoot(document.getElementById('app')).render(<AppShell />)`), pas par `render()` legacy.
+  [src/shell/AppShell.tsx](../src/shell/AppShell.tsx) assemble Sidebar, MobileNav, MainContent,
+  Toast, ModalHost, AskOverlayHost — s'abonne à `useTravelStore()` sans sélecteur pour se re-rendre
+  sur **toute** mutation, pas une tranche typée de `state`.
+- **`render()` ([js/render.js](../js/render.js)) ne construit plus rien** : il notifie
+  `__reactStateSubscribers`, la même liste que `useTravelStore`, et laisse React se re-rendre
+  lui-même. `REACT_VIEWS`/`mountReactView`/`unmountReactView`/`renderMain()`/`mainNode()` ont
+  disparu — plus besoin d'un root imbriqué dans `#main` une fois que `#app` entier est React.
+  Le point de bascule par vue vit maintenant dans
+  [src/shell/MainContent.tsx](../src/shell/MainContent.tsx) : une table `VIEWS` (même esprit que
+  l'ancien `REACT_VIEWS`) associe une clé de route à son composant ; la vue sans entrée
+  (`scenarios`, la liste — seule encore 100 % legacy) se rend via `LegacyMarkup`.
+- **Conséquence qui compte** : `react-dist/react-app.js` devient une **dépendance dure**, plus un
+  filet de secours. Avant cette phase, un build React absent/périmé faisait silencieusement
+  retomber CHAQUE vue sur son rendu legacy (`REACT_VIEWS` `undefined` → branche `else` de
+  `renderMain()`). Maintenant, si ce script ne charge pas, `#app` reste **vide** — rien ne se
+  rend du tout, nulle part. Rejoint le chantier **Passer le repo en privé et héberger sur
+  Netlify** <!--t:r6wc--> (PLAN.md) : un vrai build en CI devient nécessaire, pas juste utile.
+- **Ordre de script inversé dans `index.html`** : `js/init.js` (qui appelle `loadData()`) charge
+  maintenant **avant** `react-dist/react-app.js`, pas après. `useTravelStore` lit `window.state`
+  à l'évaluation du module (au chargement du script React) — avant ce changement, React montait
+  avant que `loadData()` ait peuplé `state`, lisant un store vide dès le tout premier rendu.
+- **Le pont React ↔ DOM manuel legacy, généralisé.** Quatre mécanismes — `dismissAsk` (modal.js),
+  `askNewWord`, `askNewProvider`, `openRouteAccommodationChoice` — posaient une question
+  par-dessus l'écran en faisant eux-mêmes `document.getElementById('app').appendChild(...)`,
+  jamais revisités par un `render()`. Sûr tant que `#app` était du HTML legacy brut ; plus du tout
+  une fois que React possède `#app` et réconcilie ses propres enfants sans connaître ce noeud
+  étranger (risque réel de collision lors d'un futur `insertBefore`, pas juste théorique). Unifiés
+  derrière un seul mécanisme, [js/ask-overlay.js](../js/ask-overlay.js)
+  (`showAskOverlay`/`closeAskOverlay`/`activeAsk`) peint par
+  [src/shell/AskOverlayHost.tsx](../src/shell/AskOverlayHost.tsx) — une seule ask active à la fois,
+  comme avant. Au passage : l'indicateur « legacy/react » posé en haut à droite de l'écran plus tôt
+  dans la session (`body[data-render-mode]`) n'avait plus de sens une fois ce binaire disparu —
+  retiré, avec `.nav-legacy-indicator` (CSS mort depuis qu'un essai antérieur de flag par page a
+  été abandonné).
+- **`ModalHost` ([src/shell/ModalHost.tsx](../src/shell/ModalHost.tsx)) peint le corps de la
+  modale via `dangerouslySetInnerHTML`**, pas via l'ancien `appendChild` manuel. Gain inattendu :
+  tant que `modal.payload` ne change pas (la saisie est non contrôlée, lue seulement à
+  l'enregistrement), `modalBodyHtml()` rend la **même chaîne** à chaque appel → React ne retouche
+  jamais ce DOM. `dismissModal()` peut donc rappeler `render()` sans perdre la saisie en cours —
+  avant, `render()` était justement évité pendant l'édition pour cette raison précise (commentaire
+  d'origine : « un render les remplacerait par la donnée d'avant »). Ce garde-fou n'est donc plus
+  nécessaire ; gardé quand même par cohérence avec le reste de l'app.
+- **Le défilement se préserve sans code dédié.** `keptScroll`/`renderedRoute`/`viewScroller()`
+  (js/render.js) existaient pour garder la position de scroll d'un rendu à l'autre de la même vue,
+  et la remettre à zéro en changeant de vue. La réconciliation React fait ça gratuitement : même
+  composant → mêmes noeuds DOM gardés en place (scroll intact) ; composant différent → l'ancien
+  arbre est démonté, le nouveau commence sans scroll. Supprimés sans remplacement.
+- **Ce qui reste délégué, inchangé par cette phase** : `scenarios` (liste) entier, le menu mobile
+  (glisser-déposer), `travelSelector`/`syncStatusHtml`/`settingsButton` (widgets autonomes), et
+  tout ce que les écrans déjà portés délèguent déjà (RouteBuilderPanel, NewCityButton, le builder
+  À faire, le panneau du jour du Journal). Rien de tout ça n'est retiré de `js/` — Phase 4 change
+  *qui possède le DOM*, pas *combien d'écrans sont encore legacy*.
+
+---
+
+Ce qui suit décrit le mécanisme des Phases 0-3, remplacé ci-dessus — gardé pour l'historique.
+
+Le point de bascule était `#main`. [render.js](../js/render.js) séparait le shell (sidebar, rendu
+une fois dans `render()`) du contenu de la vue (`renderMain()`, qui réécrivait `#main` à chaque
+route) — c'était la frontière dont un strangler fig avait besoin à ce stade.
 
 - `REACT_VIEWS` (table de données, comme `MODAL_TYPES` aujourd'hui) associe une clé de route à son
   composant React. `renderMain()` teste `view in REACT_VIEWS` : si oui, monte/mets à jour un root
@@ -226,7 +289,9 @@ src/
       hooks/        useScenarioMoney.ts, useScenarioRoad.ts
       detail/       ScenarioDetailView.tsx, StepList/, ...
     ... (un dossier par domaine, même règle qu'aujourd'hui : un domaine = un dossier)
-  shared/           DataTable/, Modal/, Toolbar/, TagsField/   (multi-domaines, comme js/views/*.js à plat)
+  shared/           DataTable/, Toolbar/, TagsField/, LegacyMarkup.tsx   (multi-domaines, comme js/views/*.js à plat)
+  shell/            AppShell.tsx, Sidebar.tsx, MainContent.tsx, ModalHost.tsx, Toast.tsx,
+                     AskOverlayHost.tsx, MobileNav.tsx — la racine React (Phase 4, § 1)
   platform/web/     LeafletMap.tsx, dragAndDrop.ts
 ```
 
@@ -239,7 +304,7 @@ src/
 | 1 — Tables simples | Cities ✅, Charges fixes ✅, Transports ✅, Attractions ✅, Hébergements ✅ | **Fait**, détail ci-dessous. |
 | 2 — Logique propre | Carte ✅, Scénarios (détail) 🚧 en cours | Carte faite ; Scénarios détail vérifié sauf le DnD, détail ci-dessous. |
 | 3 — Terminée ✅    | Journal, Accueil, Notes, Infos utiles, Phrases, Valise, À faire, Dépenses | détail ci-dessous. |
-| 4 — Le shell       | Sidebar, router, modale globale, toasts                                                                    | `index.html` devient 100 % React, `js/` legacy supprimé                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| 4 — Le shell       | Sidebar ✅, router ✅, modale globale ✅, toasts ✅ | `#app` est un seul root React (§ 1, détail complet) — `js/` reste en place : cette phase change qui possède le DOM, pas combien d'écrans sont encore legacy (`scenarios` liste, menu mobile, formulaires, panneaux complexes délégués restent à part). « `js/` legacy supprimé » reste l'horizon final, pas le livrable de ce lot. |
 | 5 — Nettoyage RN   | —                                                                                                          | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 **Phase 1, détail.** Partagé : `DataTable`/`SearchField`/`ToolbarPanel`/`SettingsMenu`/`ColumnPicker`/

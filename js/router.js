@@ -17,12 +17,17 @@ const VIEWS = [
   'notes',
   'phrases',
   'infos-utiles',
+  'valise',
   'a-faire',
 ];
 
 const SCENARIO_ROUTE = 'scenario/';
 
 let view = 'accueil';
+
+function getCurrentView() {
+  return view;
+}
 
 function goTo(v) {
   view = v;

@@ -9,7 +9,7 @@ const COLLAPSE_MS = 260;
 const TOAST_MS = 2600;
 
 let flashedNodeId = null;
-let activeToast = '';
+var activeToast = '';
 let toastTimer = null;
 
 function flashOnNextRender(id) {
@@ -40,8 +40,4 @@ function showToast(message) {
     activeToast = '';
     render();
   }, TOAST_MS);
-}
-
-function toastHtml() {
-  return activeToast ? `<div class="toast" role="status">${escapeHtml(activeToast)}</div>` : '';
 }

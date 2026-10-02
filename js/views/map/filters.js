@@ -41,7 +41,7 @@ function setMapScenarioOnly(only) {
   refreshMap();
 }
 
-// renderMain redessine déjà la carte après chaque rendu de la vue : un seul render suffit.
+// React redessine déjà la carte (MapView) à chaque notify : un seul render() suffit.
 function refreshMap() {
   render();
 }

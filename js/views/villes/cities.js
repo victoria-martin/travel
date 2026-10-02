@@ -1,10 +1,10 @@
 /*
   Lecture dérivée de Lieux & activités : les mêmes lieux, en table triée par ville plutôt qu'à
   plat. Rien ne s'y crée ; le tri et le choix des colonnes restent propres à cette page.
-  Filet de secours du legacy (docs/react-migration-plan.md § 1) : rendu seulement si
-  react-dist/react-app.js n'est pas buildé, sinon REACT_VIEWS.cities (src/domains/cities/) prend
-  la main dans renderMain(). La clé 'cities' (COLUMN_SETS, SORT_DEFAULTS, prefs) doit rester la
-  même des deux côtés.
+  Code mort depuis la Phase 4 (docs/react-migration-plan.md § 1) : plus aucun chemin n'appelle
+  renderCitiesView(), remplacé par src/domains/cities/CitiesView.tsx dans
+  src/shell/MainContent.tsx. Gardé pour l'instant — pas encore retiré du bundle legacy, la clé
+  'cities' (COLUMN_SETS, SORT_DEFAULTS, prefs) doit rester la même si on le supprime un jour.
 */
 ROW_CLICKS.cities = openAttractionSheet;
 

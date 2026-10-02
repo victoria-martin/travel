@@ -27,6 +27,7 @@
     <script src="js/attraction-statuses.js"></script>
     <script src="js/free-todo-statuses.js"></script>
     <script src="js/word-select.js"></script>
+    <script src="js/ask-overlay.js"></script>
     <script src="js/word-ask.js"></script>
     <script src="js/transport-modes.js"></script>
     <script src="js/provider-option-units.js"></script>
@@ -394,8 +395,12 @@
     <script src="js/views/home/home.js"></script>
     <script src="js/modals/modal.js"></script>
     <script src="js/modals/geocode-status.js"></script>
-    <!-- Mécanisme de cohabitation React, voir docs/react-migration-plan.md -->
-    <script src="react-dist/react-app.js"></script>
     <script src="js/init.js"></script>
+    <!--
+      Phase 4 (docs/react-migration-plan.md § 1) : React monte #app en entier dès que ce script
+      s'exécute (src/main.tsx) — js/init.js doit donc avoir déjà chargé `state` avant, sinon le
+      premier rendu lit un state vide.
+    -->
+    <script src="react-dist/react-app.js"></script>
   </body>
 </html>

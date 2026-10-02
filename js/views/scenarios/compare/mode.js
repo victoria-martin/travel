@@ -2,7 +2,7 @@
   Comparer est un mode de la liste, pas une vue : les lignes restent, elles gagnent une case. La
   sélection est transitoire — elle ne vit que le temps de la session, comme le scénario ouvert.
 */
-let compareMode = false;
+var compareMode = false;
 let comparedScenarioIds = [];
 
 function toggleCompareMode() {
