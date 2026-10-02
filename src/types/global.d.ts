@@ -29,7 +29,7 @@ declare global {
     setAttractionType: (id: string, type: string) => void;
     setAttractionStatus: (id: string, status: string) => void;
     expenseAmountLabel: (cost: { amount: string; recurrence: string }) => string;
-    expenseRecurrence: (recurrence: string) => { label: string; emoji: string };
+    expenseRecurrence: (recurrence: string) => { label: string; emoji: string; unit: string };
     toggleTransportFavorite: (id: string) => void;
     setTransportMode: (id: string, mode: string) => void;
     setTransportStatus: (id: string, status: string) => void;
@@ -148,6 +148,41 @@ declare global {
     journalDayPanel: (scenario: import('../store/types').Scenario, date: string) => string;
     onJournalPanelToggle: (date: string, key: string) => void;
     initJournalMap: () => void;
+    expenseBudgetScenario: () => import('../store/types').Scenario | null;
+    manualExpenses: () => import('../store/types').FixedCost[];
+    actualExpenses: () => import('../store/types').ActualExpense[];
+    actualExpensesTotal: () => number;
+    scenarioBudgetTotal: (scenario: import('../store/types').Scenario | null) => number;
+    actualExpenseCostTotal: (costId: string) => number;
+    actualExpensesWithoutBudget: () => import('../store/types').ActualExpense[];
+    scenarioSpan: (scenario: import('../store/types').Scenario) => {
+      nights: number;
+      days: number;
+      travelers: number;
+    };
+    getScenarioExpenses: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').FixedCost[];
+    expenseAmount: (
+      cost: import('../store/types').FixedCost,
+      span: { nights: number; days: number; travelers: number },
+    ) => number;
+    firmPrice: (entity: { amountMin?: string; amountMax?: string; budget: string }) => number | null;
+    defaultOffer: () => import('../store/types').Offer | null;
+    offerLabel: (offer: import('../store/types').Offer) => string;
+    derivedExpenseGroups: () => {
+      key: string;
+      label: string;
+      view: string;
+      items: {
+        icon: string;
+        label: string;
+        unit: string;
+        amount: number | null;
+        display: string;
+      }[];
+    }[];
+    derivedExpensesTotal: () => number;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

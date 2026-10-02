@@ -301,6 +301,16 @@ export interface JournalEntry {
   text: string;
 }
 
+export interface ActualExpense {
+  id: string;
+  travelId: string;
+  date: string;
+  label: string;
+  amount: string;
+  fixedCostId: string;
+  notes: string;
+}
+
 export interface TravelData {
   travels: Travel[];
   accommodations: Accommodation[];
@@ -309,6 +319,7 @@ export interface TravelData {
   rentals: Rental[];
   offers: Offer[];
   fixedCosts: FixedCost[];
+  actualExpenses: ActualExpense[];
   attractions: Attraction[];
   villes: Ville[];
   transports: Transport[];

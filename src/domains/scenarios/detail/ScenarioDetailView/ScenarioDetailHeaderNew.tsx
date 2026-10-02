@@ -1,5 +1,6 @@
 import { Icon } from '../../../../shared/Icon';
 import type { Scenario } from '../../../../store/types';
+import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
 
 export function ScenarioDetailHeaderNew({
   scenario,
@@ -13,7 +14,6 @@ export function ScenarioDetailHeaderNew({
 
   return (
     <div className="view-header scenario-header">
-      {/* <div className='test-red'> */}
       <div className="scenario-header-identity">
         <div className="scenario-header-name-text">
           <button
@@ -44,7 +44,6 @@ export function ScenarioDetailHeaderNew({
           </h2>
           <button
             type="button"
-            // className="icon-btn"
             className="btn-ghost btn btn-square"
             title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
             onClick={() => window.toggleScenarioFavorite(scenario.id)}
@@ -52,30 +51,27 @@ export function ScenarioDetailHeaderNew({
             <Icon name="star" fill={scenario.favorite} />
           </button>
         </div>
-        {/* <div className="view-header-actions">
-          <ScenarioLegacyMarkup
-            html={`${window.scenarioWeatherToggleButton()} ${window.toolbarSeparator()} ${window.scenarioSideTabsButtons(scenario.id)} ${window.toolbarSeparator()} ${window.toolbarMenu()}`}
-          />
-        </div> */}
-        <p className="view-sub" style={{ paddingLeft: '44px' }}>
-          <input
-            className="scenario-start-date"
-            type="date"
-            value={scenario.startDate || ''}
-            aria-label="Date de départ du scénario"
-            onChange={(event) => window.setScenarioStartDate(scenario.id, event.target.value)}
-          />
-          {' · '}
-          {visibleCount} étape{visibleCount > 1 ? 's' : ''} · {nights} nuit
-          {nights === 1 ? '' : 's'}
-        </p>
       </div>
 
-      {/* <div className="view-header-actions">
+      <div className="view-header-actions">
         <ScenarioLegacyMarkup
           html={`${window.scenarioWeatherToggleButton()} ${window.toolbarSeparator()} ${window.scenarioSideTabsButtons(scenario.id)} ${window.toolbarSeparator()} ${window.toolbarMenu()}`}
         />
-      </div> */}
+      </div>
+
+      <p className="view-sub" style={{ marginLeft: 44 }}>
+        <input
+          className="scenario-start-date"
+          type="date"
+          value={scenario.startDate || ''}
+          aria-label="Date de départ du scénario"
+          onChange={(event) => window.setScenarioStartDate(scenario.id, event.target.value)}
+        />
+        {' · '}
+        {visibleCount} étape{visibleCount > 1 ? 's' : ''} · {nights} nuit
+        {nights === 1 ? '' : 's'}
+      </p>
+
       <div className="scenario-header-money">
         {money.guestPoints > 0 && <span>{window.formatGuestPoints(money.guestPoints)}</span>}
         <strong className="scenario-header-total">{window.formatEuros(money.euros)}</strong>

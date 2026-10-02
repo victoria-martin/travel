@@ -365,10 +365,12 @@ body[data-render-mode='react']::after {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
-  column-gap: 16px;
-  row-gap: 8px;
+  column-gap: 6px;
+  align-items: flex-start;
+  /* row-gap: 4px; */
 }
 .scenario-header-identity {
+  grid-column: 1;
   grid-row: 1 / span 2;
   min-width: 0;
 }
@@ -389,8 +391,15 @@ body[data-render-mode='react']::after {
 .scenario-header .view-header-actions {
   grid-column: 2;
   grid-row: 1;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
 }
+
+.scenario-header .view-sub {
+  grid-column: 1;
+  grid-row: 2;
+  /* justify-content: flex-end; */
+}
+
 .scenario-header-money {
   grid-column: 2;
   grid-row: 2;
@@ -621,7 +630,7 @@ body[data-render-mode='react']::after {
 .view-sub {
   color: var(--ink-soft);
   font-size: 13.5px;
-  margin-top: 4px;
+  /* margin-top: 4px; */
 }
 /* Les onglets d'une page prennent leur propre rangée sous le titre : le nom se lit toujours, à
    côté de son icône, et le compte de chacun tient dans une pastille plutôt qu'en sous-titre. */

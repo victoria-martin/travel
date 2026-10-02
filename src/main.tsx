@@ -4,6 +4,7 @@ import { AttractionsView } from './domains/attractions/AttractionsView';
 import { MapView } from './domains/carte/MapView';
 import { CitiesView } from './domains/cities/CitiesView';
 import { CountryInfoView } from './domains/country-info/CountryInfoView';
+import { ExpensesView } from './domains/expenses/ExpensesView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
 import { HomeView } from './domains/home/HomeView';
 import { JournalView } from './domains/journal/JournalView';
@@ -33,6 +34,7 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   valise: PackingView,
   'a-faire': TodoView,
   journal: JournalView,
+  depenses: ExpensesView,
   'scenario-detail': ScenarioDetailView,
 };
 

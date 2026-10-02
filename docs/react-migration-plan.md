@@ -236,7 +236,7 @@ src/
 | 0b — Store         | aucun de plus                                                                                              | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 1 — Tables simples | Cities ✅, Charges fixes ✅, Transports ✅, Attractions ✅, Hébergements ✅ | **Fait**, détail ci-dessous. |
 | 2 — Logique propre | Carte ✅, Scénarios (détail) 🚧 en cours | Carte faite ; Scénarios détail vérifié sauf le DnD, détail ci-dessous. |
-| 3 — Reste          | Journal ✅, Accueil ✅, Notes ✅, Infos utiles ✅, Phrases ✅, Valise ✅, À faire ✅ — reste Dépenses | détail ci-dessous. |
+| 3 — Terminée ✅    | Journal, Accueil, Notes, Infos utiles, Phrases, Valise, À faire, Dépenses | détail ci-dessous. |
 | 4 — Le shell       | Sidebar, router, modale globale, toasts                                                                    | `index.html` devient 100 % React, `js/` legacy supprimé                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | 5 — Nettoyage RN   | —                                                                                                          | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
@@ -320,6 +320,19 @@ sous-composants React — même famille que RouteBuilderPanel/NewCityButton/le b
 liste ou un formulaire ordinaire. `initJournalMap()` (Leaflet, panneau carte) rappelé dans un
 `useEffect` plutôt qu'un `setTimeout` comme en legacy — le montage React garantit déjà le DOM peint
 avant l'effet.
+Dépenses (`domains/expenses/`) : budget prévu, dépenses réelles et calculé-depuis-les-réservations,
+les trois sections portées en React. Budget prévu/Dépenses réelles restent des `<table>` écrites en
+clair plutôt que `DataTable` — des lignes de total et de non-budgétisé s'intercalent entre les
+lignes d'entité, que l'abstraction `DataTable` (une ligne = un item) ne sait pas représenter.
+`LabelCell` (`domains/fixed-costs/cells.tsx`) réutilisé tel quel pour le libellé budgétaire — même
+entité (`FixedCost`) que la page Charges fixes. Nouveau type `ActualExpense`
+([store/types.ts](../src/store/types.ts)) : collection absente du typage, ajoutée par le lot
+« budget vs actual » pendant que la migration portait d'autres écrans. Restent, pas bloquants :
+panneau de tri (`sortPanel`), menu ⋮ complet (seule la préférence transverse `SettingsMenu` est
+reprise, comme partout ailleurs).
+
+**Phase 3 terminée.** Les 8 écrans legacy identifiés sont portés. Reste ouvert, hors de cette
+phase : le DnD de `StepList.tsx` (Phase 2, toujours cassé), puis la Phase 4 (le shell).
 
 **Découvrir / catalogue ([catalogue-plan.md](catalogue-plan.md)) n'est pas une étape de cette
 séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme `REACT_VIEWS` /
