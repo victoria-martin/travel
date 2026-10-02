@@ -71,7 +71,7 @@ function renderWithTransition() {
   document.startViewTransition(() => render());
 }
 
-function navBtn(key, icon, label, legacy) {
+function navBtn(key, icon, label) {
   const isActive = view === key || (key === 'scenarios' && view === 'scenario-detail');
   return /* HTML */ `<button
     class="nav-btn ${isActive ? 'active' : ''}"
@@ -79,8 +79,7 @@ function navBtn(key, icon, label, legacy) {
     aria-label="${label}"
     onclick="goTo('${key}')"
   >
-    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span
-    ><span class="nav-legacy-indicator">${legacy ? 'L' : ''}</span>
+    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span>
   </button>`;
 }
 
@@ -92,7 +91,7 @@ function navSection(section) {
   >
     <summary class="nav-section-title">${section.title}</summary>
     <div class="nav-section-items">
-      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label, navItem(key).legacy)).join('')}
+      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label)).join('')}
     </div>
   </details>`;
 }

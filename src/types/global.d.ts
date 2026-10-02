@@ -118,6 +118,14 @@ declare global {
     todoListsOfTravel: () => import('../store/types').TodoList[];
     todoListItems: (list: import('../store/types').TodoList) => unknown[];
     freeTodosOfTravel: () => import('../store/types').FreeTodo[];
+    travelPhraseLanguages: () => string[];
+    currentPhraseLang: () => string;
+    setPhraseLang: (lang: string) => void;
+    languageLabel: (code: string) => string;
+    phraseCategoriesWithCustom: () => import('../domains/phrases/types').PhraseCategory[];
+    phraseTranslation: (fr: string, lang: string) => string;
+    editPhraseTranslation: (fr: string, lang: string) => void;
+    deleteCustomPhrase: (id: string) => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

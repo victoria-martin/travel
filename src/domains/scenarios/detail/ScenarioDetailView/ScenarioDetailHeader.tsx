@@ -25,7 +25,7 @@ export function ScenarioDetailHeader({
             {/* Tous les scénarios */}
           </button>
           <div className="scenario-header-name-text">
-            <div>
+            <div className="scenario-header-name-label">
               <h2 className="view-title">
                 <span
                   className="editable"
@@ -44,15 +44,15 @@ export function ScenarioDetailHeader({
                 >
                   {scenario.name}
                 </span>
-                <button
-                  type="button"
-                  className="icon-btn"
-                  title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                  onClick={() => window.toggleScenarioFavorite(scenario.id)}
-                >
-                  <Icon name="star" fill={scenario.favorite} />
-                </button>
               </h2>
+              <button
+                type="button"
+                className="icon-btn"
+                title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                onClick={() => window.toggleScenarioFavorite(scenario.id)}
+              >
+                <Icon name="star" fill={scenario.favorite} />
+              </button>
             </div>
 
             <p className="view-sub">

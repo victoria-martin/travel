@@ -4,20 +4,20 @@
   ne dérivent pas chacune leur propre liste des huit pages de VIEWS (js/router.js).
 */
 const NAV_ITEMS = [
-  { key: 'accueil', label: 'Accueil', icon: svgIcon('layout-dashboard'), legacy: true },
-  { key: 'hebergements', label: 'Hébergements', icon: svgIcon('house'), legacy: true },
-  { key: 'depenses', label: 'Dépenses', icon: EXPENSE_ICON, legacy: true },
-  { key: 'attractions', label: 'Lieux & activités', icon: svgIcon('landmark'), legacy: true },
-  { key: 'cities', label: 'Villes', icon: svgIcon('map-pin'), legacy: false },
-  { key: 'transports', label: 'Transports', icon: svgIcon('plane'), legacy: false },
-  { key: 'scenarios', label: 'Scénarios', icon: svgIcon('compass'), legacy: true },
-  { key: 'carte', label: 'Carte', icon: svgIcon('map'), legacy: false },
-  { key: 'journal', label: 'Journal', icon: svgIcon('book-open'), legacy: true },
-  { key: 'notes', label: 'Notes', icon: svgIcon('notebook-pen'), legacy: true },
-  { key: 'phrases', label: 'Phrases clé', icon: svgIcon('message-circle'), legacy: true },
-  { key: 'infos-utiles', label: 'Infos utiles', icon: svgIcon('siren'), legacy: true },
-  { key: 'valise', label: 'Valise', icon: svgIcon('luggage'), legacy: true },
-  { key: 'a-faire', label: 'À faire', icon: svgIcon('list-checks'), legacy: true },
+  { key: 'accueil', label: 'Accueil', icon: svgIcon('layout-dashboard') },
+  { key: 'hebergements', label: 'Hébergements', icon: svgIcon('house') },
+  { key: 'depenses', label: 'Dépenses', icon: EXPENSE_ICON },
+  { key: 'attractions', label: 'Lieux & activités', icon: svgIcon('landmark') },
+  { key: 'cities', label: 'Villes', icon: svgIcon('map-pin') },
+  { key: 'transports', label: 'Transports', icon: svgIcon('plane') },
+  { key: 'scenarios', label: 'Scénarios', icon: svgIcon('compass') },
+  { key: 'carte', label: 'Carte', icon: svgIcon('map') },
+  { key: 'journal', label: 'Journal', icon: svgIcon('book-open') },
+  { key: 'notes', label: 'Notes', icon: svgIcon('notebook-pen') },
+  { key: 'phrases', label: 'Phrases clé', icon: svgIcon('message-circle') },
+  { key: 'infos-utiles', label: 'Infos utiles', icon: svgIcon('siren') },
+  { key: 'valise', label: 'Valise', icon: svgIcon('luggage') },
+  { key: 'a-faire', label: 'À faire', icon: svgIcon('list-checks') },
 ];
 
 function navItem(key) {

@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useTravelStore } from '../../../store/useTravelStore';
-import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';
 import { ScenarioLegacyMarkup } from './ScenarioDetailView/ScenarioLegacyMarkup';
 
 import { useScenarioMoney } from './hooks/useScenarioMoney';
 import { useScenarioRoad } from './hooks/useScenarioRoad';
 import { useScenarioRoute } from './hooks/useScenarioRoute';
+import { ScenarioDetailHeaderNew } from './ScenarioDetailView/ScenarioDetailHeaderNew';
 import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
 import { StepList } from './ScenarioDetailView/StepList';
 
@@ -31,7 +31,7 @@ export function ScenarioDetailView() {
 
   return (
     <>
-      <ScenarioDetailHeader scenario={scenario} money={money.total} />
+      <ScenarioDetailHeaderNew scenario={scenario} money={money.total} />
       <ScenarioLegacyMarkup html={window.scenarioWeatherBanner(scenario)} />
       {window.trailShown() && (
         <>
