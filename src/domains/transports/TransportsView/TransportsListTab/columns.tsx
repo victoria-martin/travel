@@ -2,7 +2,7 @@ import { FavoriteCell } from '../../../../shared/cells/FavoriteCell';
 import { LinkCell } from '../../../../shared/cells/LinkCell';
 import { TextCell } from '../../../../shared/cells/TextCell';
 import type { Column } from '../../../../shared/DataTable/types';
-import { TagDropdown } from '../../../../shared/TagDropdown';
+import { TagDropdown } from '../../../../shared/select/TagDropdown';
 import type { Transport } from '../../../../store/types';
 import { EndpointCell, PriceCell, ProviderCell, ScheduleCell } from './cells';
 

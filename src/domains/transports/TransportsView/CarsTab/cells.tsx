@@ -1,4 +1,4 @@
-import { TagDropdown } from '../../../../shared/TagDropdown';
+import { TagDropdown } from '../../../../shared/select/TagDropdown';
 import type { CarModel } from '../../../../store/types';
 
 // Partagés entre OffersSection et ModelsSection : même dictionnaire, même setter, que la ligne

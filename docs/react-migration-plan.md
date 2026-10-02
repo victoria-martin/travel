@@ -149,17 +149,26 @@ responsabilité ») :
   multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
   (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
   donnée — c'est déjà de la composition, rien à changer là-dessus. Premier consommateur :
-  [domains/cities/CitiesView.tsx](../src/domains/cities/CitiesView.tsx)
-  ([cells.tsx](../src/domains/cities/cells.tsx)), avec recherche, colonnes masquables, type/statut
-  éditables, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer). Restent : menu ⋮.
+  [domains/cities/CitiesView.tsx](../src/domains/cities/CitiesView.tsx), dont les cellules ont
+  migré dans [domains/attractions/cells.tsx](../src/domains/attractions/cells.tsx) — Attractions et
+  Cities portent la même entité (§ 7, Phase 1). Recherche, colonnes masquables, type/statut
+  éditables, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer) faits. Reste : menu ⋮.
   Code/route en anglais (`cities`), libellé visible resté « Villes » — premier pas de **Nommer les
   vues en anglais** (PLAN.md), fait pour cette vue seule, pas pour les autres.
 - Les interactions complexes utilisent les primitives headless Radix UI avec les classes
   existantes de `styles.css`; les composants métier et le système de style restent écrits dans le
-  projet. Ne pas ajouter shadcn/ui, Tailwind ou StyleX pendant la migration. `VocabularyDropdown`
-  utilise `DropdownMenu`; Transports utilise `Tabs` pour ses trois panneaux. Remplacer les autres
-  interactions complexes au fil de leur migration, pas en réécrivant en bloc les composants déjà
-  portés.
+  projet. Ne pas ajouter shadcn/ui, Tailwind ou StyleX pendant la migration. `TagDropdown`
+  ([shared/select/](../src/shared/select/)) utilise `DropdownMenu`; Transports utilise `Tabs` pour
+  ses trois panneaux. Remplacer les autres interactions complexes au fil de leur migration, pas en
+  réécrivant en bloc les composants déjà portés.
+- **2026-10-02 — dossier `shared/select/`** : tout composant de menu déroulant (Radix
+  `DropdownMenu`) vit dans `src/shared/select/`, pour repérer les doublons d'un coup d'œil plutôt
+  que de les laisser se recréer sous des noms différents à chaque écran. A tout de suite servi :
+  `VocabularyDropdown.tsx`, recréé par erreur à l'identique de `TagDropdown.tsx` (déjà renommé plus
+  tôt) par la session parallèle qui ignorait le renommage — supprimé, zéro consommateur.
+  `EditableTagsCell` ([shared/cells/](../src/shared/cells/)) utilise aussi `DropdownMenu` en
+  interne mais reste dans `cells/` : son identité première est une cellule de tableau éditable, le
+  menu n'est qu'un détail d'implémentation — à rouvrir si ce découpage s'avère faux à l'usage.
 - **`ModalHost` n'a pas été nécessaire pour les actions de ligne.** `window.openModal(type, id)` /
   `openSheet(type, id)` / `deleteItem(collection, id)` ouvrent l'overlay legacy par-dessus toute la
   page, hors de l'arbre React monté dans `#main` — aucun conflit avec React, pas de shell à écrire.

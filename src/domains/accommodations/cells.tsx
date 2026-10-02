@@ -1,7 +1,7 @@
 import { FavoriteCell as SharedFavoriteCell } from '../../shared/cells/FavoriteCell';
 import { EditableTextCell } from '../../shared/cells/EditableTextCell';
 import { Icon } from '../../shared/Icon';
-import { TagDropdown } from '../../shared/TagDropdown';
+import { TagDropdown } from '../../shared/select/TagDropdown';
 import type { Accommodation } from '../../store/types';
 
 export function FavoriteCell({ accommodation }: { accommodation: Accommodation }) {

@@ -1,6 +1,6 @@
 import { FavoriteCell as SharedFavoriteCell } from '../../shared/cells/FavoriteCell';
 import { Icon } from '../../shared/Icon';
-import { TagDropdown } from '../../shared/TagDropdown';
+import { TagDropdown } from '../../shared/select/TagDropdown';
 import type { Attraction } from '../../store/types';
 
 /*

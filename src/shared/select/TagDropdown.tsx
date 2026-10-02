@@ -1,5 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { TagLabel } from './TagLabel';
+import { TagLabel } from '../TagLabel';
 
 /*
   Forme commune à attractionTypeDropdown/attractionStatusTag/transportModeDropdown/

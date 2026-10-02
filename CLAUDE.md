@@ -31,6 +31,15 @@ sont deux frères au même niveau — jamais le fichier déplacé **dans** un do
 [domains/cities/CitiesView/](src/domains/cities/CitiesView/) (`CitiesHeader.tsx`,
 `CitiesHeaderActions.tsx`).
 
+## Un menu déroulant vit dans `shared/select/`
+
+Tout composant React construit sur Radix `DropdownMenu` — un menu déroulant, pas un panneau
+`ToolbarPanel`/`details` ni une cellule qui en utilise un comme détail d'implémentation — va dans
+[src/shared/select/](src/shared/select/), jamais recréé localement à un écran. Objectif : repérer
+les doublons d'un coup d'œil au lieu de les laisser se recréer sous des noms différents. A trouvé
+un doublon dès sa création : `VocabularyDropdown.tsx`, recréé à l'identique de `TagDropdown.tsx`
+par une session parallèle qui ignorait le renommage — supprimé.
+
 ## Un fichier = une responsabilité
 
 - `<vue>.js` — le `render…View`, rien d'autre.
