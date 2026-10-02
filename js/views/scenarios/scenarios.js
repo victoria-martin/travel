@@ -7,7 +7,6 @@ function getActiveScenarioId() {
 
 function scenarioSearchField() {
   return `<label class="list-search" data-list-search="scenarios" title="Rechercher">
-    <span class="sr-only">Rechercher</span>
     <input type="search" placeholder="Rechercher…" value="${escapeHtml(scenarioSearchQuery)}"
       oninput="setScenarioSearch(this.value)" />
   </label>`;

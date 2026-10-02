@@ -147,41 +147,24 @@ function loadScenarioWeather() {
   });
 }
 
-function weatherStyleOptions() {
-  const options = [
-    { key: 'standard', label: 'Standard' },
-    { key: 'compact', label: 'Compact' },
-    { key: 'line', label: 'Lignes' },
-  ];
-
-  return options
-    .map(
-      (option) => /* HTML */ `
-        <label
-          class="weather-style-option ${weatherBannerStyle() === option.key ? 'selected' : ''}"
-        >
-          <input
-            type="radio"
-            name="weather-banner-style"
-            ${weatherBannerStyle() === option.key ? 'checked' : ''}
-            onchange="setWeatherBannerStyle('${option.key}')"
-          />
-          <span>${option.label}</span>
-        </label>
-      `,
-    )
-    .join('');
-}
+const WEATHER_BANNER_STYLES = [
+  { key: 'standard', label: 'Standard' },
+  { key: 'compact', label: 'Compact' },
+  { key: 'line', label: 'Lignes' },
+];
 
 function weatherBannerStyleOption() {
   return /* HTML */ `
     <div class="page-submenu">
       <p class="filter-title">Météo</p>
       ${switchField('Afficher la météo', weatherBannerShown(), 'toggleWeatherBanner()')}
-      <div class="weather-style-picker">
-        <span class="weather-style-label">Style</span>
-        ${weatherStyleOptions()}
-      </div>
+      ${radioCardField(
+        'Style',
+        'weather-banner-style',
+        WEATHER_BANNER_STYLES,
+        weatherBannerStyle(),
+        'setWeatherBannerStyle',
+      )}
     </div>
   `;
 }

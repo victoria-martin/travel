@@ -18,43 +18,32 @@ export function ScenarioDetailHeader({
         <div className="scenario-header-name">
           <button
             type="button"
-            className="btn-ghost btn btn-square back-link"
+            className="btn-ghost btn btn-small back-link"
             onClick={() => window.goTo('scenarios')}
           >
             <Icon name="arrow-left" />
             {/* Tous les scénarios */}
           </button>
           <div className="scenario-header-name-text">
-            <div>
-              <h2 className="view-title">
-                <span
-                  className="editable"
-                  contentEditable
-                  suppressContentEditableWarning
-                  data-placeholder="Nom du scénario…"
-                  onKeyDown={(event) => {
-                    if (event.key !== 'Enter') return;
-                    event.preventDefault();
-                    event.currentTarget.blur();
-                  }}
-                  onBlur={(event) => {
-                    window.renameScenario(scenario.id, event.currentTarget.innerText);
-                    window.render();
-                  }}
-                >
-                  {scenario.name}
-                </span>
-                <button
-                  type="button"
-                  className="icon-btn"
-                  title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                  onClick={() => window.toggleScenarioFavorite(scenario.id)}
-                >
-                  <Icon name="star" fill={scenario.favorite} />
-                </button>
-              </h2>
-            </div>
-
+            <h2 className="view-title">
+              <span
+                className="editable"
+                contentEditable
+                suppressContentEditableWarning
+                data-placeholder="Nom du scénario…"
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter') return;
+                  event.preventDefault();
+                  event.currentTarget.blur();
+                }}
+                onBlur={(event) => {
+                  window.renameScenario(scenario.id, event.currentTarget.innerText);
+                  window.render();
+                }}
+              >
+                {scenario.name}
+              </span>
+            </h2>
             <p className="view-sub">
               <input
                 className="scenario-start-date"
@@ -68,6 +57,14 @@ export function ScenarioDetailHeader({
               {nights === 1 ? '' : 's'}
             </p>
           </div>
+          <button
+            type="button"
+            className="icon-btn"
+            title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            onClick={() => window.toggleScenarioFavorite(scenario.id)}
+          >
+            <Icon name="star" fill={scenario.favorite} />
+          </button>
         </div>
       </div>
       <div className="view-header-actions">

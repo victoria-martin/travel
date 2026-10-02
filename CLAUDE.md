@@ -78,6 +78,15 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 
 ## Journal
 
+- **2026-10-02** — un choix fermé à peu d'options (zone d'étape, style météo, style de phrase,
+  indicateur hors dispo) se pose désormais en rangée de cartes via un seul composant partagé,
+  `radioCardField` ([radio-card-field.js](js/views/radio-card-field.js)) : les deux patrons de
+  cartes qui coexistaient (zone d'étape en grille, style météo empilé plein largeur) et les deux
+  `<select>` natifs (indicateur hors dispo, style de phrase) convergent vers le même balisage —
+  `.radio-card-field` / `.radio-card-grid` / `.radio-card` dans [styles.css](styles.css),
+  remplaçant `.step-area-*` et `.weather-style-*`. Repéré sur la modale Réglages : le dropdown natif
+  détonnait visuellement à côté des cartes Cercle/Rectangle et Standard/Compact/Lignes.
+
 - **2026-10-01** — les tables Hébergements et Lieux & activités gagnent une colonne **Étape** : le
   rang et le nom de l'étape du **scénario choisi** où vit la ligne — directement pour un
   hébergement (`step.accommodationId`), directement ou en activité pour un lieu

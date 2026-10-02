@@ -37,6 +37,22 @@ export function MapView() {
           <h2 className="view-title">Carte</h2>
           <p className="view-sub">{window.ROUTE_HELP}</p>
         </div>
+        {/* pas sur de cette implem mais laisson spr l instant */}
+        {/* <HeaderActions>
+          <FilterButton />
+          <button
+            type="button"
+            className={`toolbar-btn ${window.routeBuilder.active ? 'active' : ''}`}
+            title="Itinéraire"
+            onClick={() => window.toggleRouteBuilderMode()}
+          >
+            <span className="toolbar-icon">
+              <Icon name="compass" />
+            </span>
+            <span className="toolbar-label">Itinéraire</span>
+          </button>
+          <NewCityButton />
+        </HeaderActions> */}
         <div className="view-header-actions">
           <FilterButton />
           <button

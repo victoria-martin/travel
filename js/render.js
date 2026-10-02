@@ -44,8 +44,7 @@ function render() {
   const main = mainNode();
   app.innerHTML = /* HTML */ `
     <div class="sidebar">
-      ${travelSelector()}
-      ${navBtn('accueil', navItem('accueil').icon, navItem('accueil').label)}
+      ${travelSelector()} ${navBtn('accueil', navItem('accueil').icon, navItem('accueil').label)}
       ${NAV_SECTIONS.map(navSection).join('')}
       <div class="sidebar-footer">${syncStatusHtml()} ${settingsButton()}</div>
     </div>
@@ -72,7 +71,7 @@ function renderWithTransition() {
   document.startViewTransition(() => render());
 }
 
-function navBtn(key, icon, label) {
+function navBtn(key, icon, label, legacy) {
   const isActive = view === key || (key === 'scenarios' && view === 'scenario-detail');
   return /* HTML */ `<button
     class="nav-btn ${isActive ? 'active' : ''}"
@@ -80,7 +79,8 @@ function navBtn(key, icon, label) {
     aria-label="${label}"
     onclick="goTo('${key}')"
   >
-    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span>
+    <span class="nav-icon">${icon}</span><span class="nav-label">${label}</span
+    ><span class="nav-legacy-indicator">${legacy ? 'L' : ''}</span>
   </button>`;
 }
 
@@ -92,7 +92,7 @@ function navSection(section) {
   >
     <summary class="nav-section-title">${section.title}</summary>
     <div class="nav-section-items">
-      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label)).join('')}
+      ${section.keys.map((key) => navBtn(key, navItem(key).icon, navItem(key).label, navItem(key).legacy)).join('')}
     </div>
   </details>`;
 }
@@ -124,10 +124,12 @@ function trackViewHeaderHeight(main) {
 function renderMain() {
   const main = document.getElementById('main');
   if (window.REACT_VIEWS && view in window.REACT_VIEWS) {
+    document.body.dataset.renderMode = 'react';
     window.mountReactView(main, view);
     trackViewHeaderHeight(main);
     return;
   }
+  document.body.dataset.renderMode = 'legacy';
   window.unmountReactView?.();
   if (view === 'accueil') main.innerHTML = renderHomeView();
   else if (view === 'hebergements') main.innerHTML = renderAccommodationsView();

@@ -112,15 +112,13 @@ function setPhraseStyle(key) {
 }
 
 function phraseStyleOption() {
-  return /* HTML */ `<label class="filter-option">
-    Style des phrases
-    <select onchange="setPhraseStyle(this.value)">
-      ${PHRASE_STYLES.map(
-        (s) =>
-          `<option value="${s.key}" ${phraseStyle().key === s.key ? 'selected' : ''}>${s.label}</option>`,
-      ).join('')}
-    </select>
-  </label>`;
+  return radioCardField(
+    'Style des phrases',
+    'phrase-style',
+    PHRASE_STYLES,
+    phraseStyle().key,
+    'setPhraseStyle',
+  );
 }
 
 /*

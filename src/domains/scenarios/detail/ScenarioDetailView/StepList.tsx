@@ -1,5 +1,5 @@
 import * as dnd from '@dnd-kit/react';
-import { Fragment, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { Icon } from '../../../../shared/Icon';
 import type { Scenario, Step, StepGroup } from '../../../../store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
@@ -42,11 +42,27 @@ function rowLeadStep(scenario: Scenario, row: StepRow): Step | null {
 
 export function StepList({ scenario, route }: { scenario: Scenario; route: ScenarioRoute }) {
   const ranks = new Map<string, number>();
-  const pointerY = useRef<number | null>(null);
   scenario.steps.forEach((step) => {
     if (window.isStepVisible(scenario, step) && step.id) ranks.set(step.id, ranks.size);
   });
   const rows = scenarioRows(scenario);
+
+  /*
+    Le `position` que dnd-kit traque en interne (event.operation.position) n'a pas résolu le bug :
+    les drops atterrissaient toujours en fin de liste, signe d'un espace de coordonnées différent
+    de celui de getBoundingClientRect() (viewport). On retraque donc le pointeur nous-mêmes, mais en
+    phase de capture sur `window` — jamais interceptable par l'overlay de drag, contrairement à un
+    onPointerMove posé en bulle sur `.step-list` — avec `clientY`, garanti dans le même repère que
+    getBoundingClientRect().
+  */
+  const pointerY = useRef(0);
+  useEffect(() => {
+    function trackPointer(event: PointerEvent) {
+      pointerY.current = event.clientY;
+    }
+    window.addEventListener('pointermove', trackPointer, { capture: true });
+    return () => window.removeEventListener('pointermove', trackPointer, { capture: true });
+  }, []);
 
   function finishDrag(
     event: Parameters<
@@ -60,25 +76,13 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
     const dropTarget = targetStep.element;
     if (!dropTarget) return;
     const bounds = dropTarget.getBoundingClientRect();
-    const sourceData = draggedStep.data as { lane: string; sortIndex: number };
-    const targetData = targetStep.data as { lane: string; sortIndex: number };
-    const before =
-      pointerY.current === null
-        ? sourceData.lane === targetData.lane
-          ? sourceData.sortIndex > targetData.sortIndex
-          : true
-        : pointerY.current < bounds.top + bounds.height / 2;
+    const before = pointerY.current < bounds.top + bounds.height / 2;
     window.moveStepBefore(scenario.id, String(draggedStep.id), String(targetStep.id), before);
   }
 
   if (scenario.steps.length === 0) {
     return (
-      <div
-        className="step-list"
-        onPointerMove={(event) => {
-          pointerY.current = event.clientY;
-        }}
-      >
+      <div className="step-list">
         <div className="empty-state">
           <strong>Aucune étape</strong>
           Ajoute une première étape à ce scénario.
@@ -103,12 +107,7 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
 
   return (
     <dnd.DragDropProvider onDragEnd={finishDrag}>
-      <div
-        className="step-list"
-        onPointerMove={(event) => {
-          pointerY.current = event.clientY;
-        }}
-      >
+      <div className="step-list">
         {rows.map((row, rowIndex) => {
           if (row.step) {
             const current = row.step;

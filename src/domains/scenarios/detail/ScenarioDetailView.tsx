@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { useTravelStore } from '../../../store/useTravelStore';
 import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';
 import { ScenarioLegacyMarkup } from './ScenarioDetailView/ScenarioLegacyMarkup';
-import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
-import { StepList } from './ScenarioDetailView/StepList';
+
 import { useScenarioMoney } from './hooks/useScenarioMoney';
 import { useScenarioRoad } from './hooks/useScenarioRoad';
 import { useScenarioRoute } from './hooks/useScenarioRoute';
+import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
+import { StepList } from './ScenarioDetailView/StepList';
 
 export function ScenarioDetailView() {
   const store = useTravelStore();

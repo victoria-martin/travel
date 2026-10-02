@@ -4,25 +4,18 @@ const STEP_AREA_SHAPES = [
 ];
 
 function stepAreaShapeOption() {
-  return /* HTML */ `<div class="step-area-option">
-    <div class="step-area-label">Zone d’étape</div>
-    <div class="step-area-picker">
-      ${STEP_AREA_SHAPES.map(
-        (shape) => `
-          <label class="step-area-shape ${prefs.stepAreaShape === shape.key ? 'selected' : ''}">
-            <input
-              type="radio"
-              name="step-area-shape"
-              ${prefs.stepAreaShape === shape.key ? 'checked' : ''}
-              onchange="setStepAreaShape('${shape.key}')"
-            />
-            <span class="step-area-preview step-area-preview-${shape.key}"></span>
-            <span class="step-area-name">${shape.label}</span>
-          </label>
-        `,
-      ).join('')}
-    </div>
-  </div>`;
+  const options = STEP_AREA_SHAPES.map((shape) => ({
+    key: shape.key,
+    label: shape.label,
+    preview: `<span class="radio-card-preview-${shape.key}"></span>`,
+  }));
+  return radioCardField(
+    'Zone d’étape',
+    'step-area-shape',
+    options,
+    prefs.stepAreaShape,
+    'setStepAreaShape',
+  );
 }
 
 // Les réglages du fil du trajet et de la zone autour d'une étape.

@@ -3,6 +3,7 @@
   from the four data collections only, so anything stored there is dropped on the next pull.
 */
 
+// TODO: il faut utiliser l'id du projet
 const PREFS_KEY = 'voyage-toscane-prefs';
 
 var prefs = {

@@ -7,7 +7,7 @@ function scenariosHeader() {
     <div class="view-header-actions">
       ${scenarioSearchField()}
       ${toolbarButton({
-        icon: svgIcon('scale'),
+        icon: svgIcon('logs'),
         label: 'Comparer',
         onclick: 'toggleCompareMode()',
         active: compareMode,
