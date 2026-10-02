@@ -99,6 +99,17 @@ declare global {
     toggleFavorite: (id: string) => void;
     duplicateAccommodation: (id: string) => void;
     allAccommodationTags: () => string[];
+    setTripNote: (text: string) => void;
+    travelCountries: () => string[];
+    countryInfoDefaults: (country: string) => {
+      police: string;
+      firefighters: string;
+      medical: string;
+      emergencyNumber: string;
+      embassy: string;
+      note: string;
+    };
+    setCountryInfoField: (country: string, field: string, value: string) => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

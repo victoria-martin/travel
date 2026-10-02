@@ -3,7 +3,9 @@ import { AccommodationsView } from './domains/accommodations/AccommodationsView'
 import { AttractionsView } from './domains/attractions/AttractionsView';
 import { MapView } from './domains/carte/MapView';
 import { CitiesView } from './domains/cities/CitiesView';
+import { CountryInfoView } from './domains/country-info/CountryInfoView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
+import { NotesView } from './domains/notes/NotesView';
 import { ScenarioDetailView } from './domains/scenarios/detail/ScenarioDetailView';
 import { TransportsView } from './domains/transports/TransportsView';
 
@@ -19,6 +21,8 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   charges: FixedCostsView,
   transports: TransportsView,
   carte: MapView,
+  notes: NotesView,
+  'infos-utiles': CountryInfoView,
   'scenario-detail': ScenarioDetailView,
 };
 
