@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { LegacyMarkup } from '../../../../shared/LegacyMarkup';
 
 export function ScenarioLegacyMarkup({
   html,
@@ -13,5 +14,5 @@ export function ScenarioLegacyMarkup({
     return () => window.destroyScenarioDetailMaps();
   }, [html, initializeMaps]);
 
-  return <div style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: html }} />;
+  return <LegacyMarkup html={html} />;
 }

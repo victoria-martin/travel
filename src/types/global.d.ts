@@ -127,6 +127,16 @@ declare global {
     editPhraseTranslation: (fr: string, lang: string) => void;
     deleteCustomPhrase: (id: string) => void;
     deletePackingItem: (id: string) => void;
+    todoBuilder: () => string;
+    todoListCard: (list: import('../store/types').TodoList) => string;
+    setTodoSearch: (query: string) => void;
+    addFreeTodo: (text: string) => void;
+    toggleFreeTodo: (id: string) => void;
+    deleteFreeTodo: (id: string) => void;
+    setFreeTodoStatus: (id: string, status: string) => void;
+    freeTodoStatus: (status: string) => { label: string; emoji: string };
+    FREE_TODO_STATUSES: Record<string, { label: string; emoji: string }>;
+    UNSET_FREE_TODO_STATUS: { label: string; emoji: string };
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

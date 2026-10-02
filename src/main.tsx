@@ -10,6 +10,7 @@ import { NotesView } from './domains/notes/NotesView';
 import { PackingView } from './domains/packing/PackingView';
 import { PhrasesView } from './domains/phrases/PhrasesView';
 import { ScenarioDetailView } from './domains/scenarios/detail/ScenarioDetailView';
+import { TodoView } from './domains/todo/TodoView';
 import { TransportsView } from './domains/transports/TransportsView';
 
 /*
@@ -29,6 +30,7 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   accueil: HomeView,
   phrases: PhrasesView,
   valise: PackingView,
+  'a-faire': TodoView,
   'scenario-detail': ScenarioDetailView,
 };
 

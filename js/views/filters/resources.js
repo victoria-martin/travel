@@ -30,6 +30,7 @@ const LIST_RESOURCES = [
   },
   { kind: 'charges', label: 'Dépenses', icon: EXPENSE_ICON, items: () => state.fixedCosts },
 ];
+window.LIST_RESOURCES = LIST_RESOURCES;
 
 function listResource(kind) {
   return LIST_RESOURCES.find((r) => r.kind === kind) || LIST_RESOURCES[0];
