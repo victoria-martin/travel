@@ -110,6 +110,14 @@ declare global {
       note: string;
     };
     setCountryInfoField: (country: string, field: string, value: string) => void;
+    currentTravel: () => import('../store/types').Travel | null;
+    chosenScenario: () => import('../store/types').Scenario | null;
+    nightsLabel: (nights: number) => string;
+    openScenario: (id: string) => void;
+    travelPackingItems: () => import('../store/types').PackingListItem[];
+    todoListsOfTravel: () => import('../store/types').TodoList[];
+    todoListItems: (list: import('../store/types').TodoList) => unknown[];
+    freeTodosOfTravel: () => import('../store/types').FreeTodo[];
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

@@ -5,6 +5,7 @@ import { MapView } from './domains/carte/MapView';
 import { CitiesView } from './domains/cities/CitiesView';
 import { CountryInfoView } from './domains/country-info/CountryInfoView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
+import { HomeView } from './domains/home/HomeView';
 import { NotesView } from './domains/notes/NotesView';
 import { ScenarioDetailView } from './domains/scenarios/detail/ScenarioDetailView';
 import { TransportsView } from './domains/transports/TransportsView';
@@ -23,6 +24,7 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   carte: MapView,
   notes: NotesView,
   'infos-utiles': CountryInfoView,
+  accueil: HomeView,
   'scenario-detail': ScenarioDetailView,
 };
 
