@@ -29,9 +29,6 @@ les types.
   fil doit montrer, et quand. Il se peint du statut de l'étape comme la bande de la liste, et
   « Coloré par type d'hébergement » ([trail-color.js](js/views/scenarios/detail/trail-color.js))
   bascule sa couleur, dans le même bloc du panneau.
-- **Variables du scénario ou générales ?** <!--t:p11j--> — 🗃️ modèle · 💡 idée : on commence a
-  répondre à ca dans la trasfo de charges fixes en depense normameent
-
 - **Un mode lecture du scénario** <!--t:r2wn--> — 🖼️ écran · 🧩 ui · 🔍 à étudier : le
   détail d'un scénario est aujourd'hui un plan de travail — poignées de glisser, boutons Modifier,
   ✚ d'ajout, champs éditables — alors qu'on le lit bien plus souvent qu'on ne le construit.
@@ -255,9 +252,9 @@ place ; le sommeil est décrit dans [la spec](docs/spec-voyage-toscane.md).
 
 ## 💰 Dépenses
 
-La page existe : les deux blocs Calculé / Saisi, les sources dérivées et le récap sont décrits dans
-[la spec](docs/spec-voyage-toscane.md). Les charges fixes sont le bloc Saisi ; elles gardent leur
-table et leur modale.
+La page compare les charges budgétaires du scénario retenu aux dépenses réelles datées du voyage ;
+les dépenses calculées depuis les réservations restent séparées. Le détail est décrit dans
+[la spec](docs/spec-voyage-toscane.md).
 
 - **Budget et prix** <!--t:w4qe--> — 🗃️ modèle · ⏳ à faire : applique la règle transverse « Budget
   et prix » — un `budget` optionnel, et le prix en `amountMin` / `amountMax`. Le champ `type`
@@ -267,9 +264,6 @@ table et leur modale.
   un total quand un seul des deux montants est saisi. `firmPrice`
   ([derived.js](js/views/expenses/derived.js)) tient la réponse provisoire : une seule borne compte
   pour elle-même, deux bornes différentes restent hors du total. À confirmer ou à changer.
-- **Afficher ou non le bloc Calculé** <!--t:v2ne--> — 🧩 ui · ⏳ à faire : un toggle sur la section
-  des dépenses dérivées, et une condition par source qui dit ce qui y entre —
-  `accommodation.status === 'booked'`, `scenario.isChosen`, et la troisième reste à nommer.
 - **La récurrence sur une ligne d'étape** <!--t:n4vc--> — 🧮 calcul · 🔍 à étudier : une dépense
   rattachée au scénario se multiplie par ses nuits, ses jours ou ses voyageurs
   ([expense-recurrences.js](js/expense-recurrences.js)), mais la même posée sur une étape ou un
@@ -461,6 +455,9 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   Transports est câblé avec ses trois onglets (Trajets, Loueurs & compagnies, Voitures), Radix Tabs
   et DropdownMenu. Restent sur Villes : recherche, colonnes masquables, édition en place
   (type/statut/tags), actions de ligne ; sur les écrans migrés, formulaires React et `ModalHost`.
+  Phase 2 démarrée : le détail Scénario a son arbre React, ses hooks money/road/route et le drag
+  multi-colonnes dnd-kit; les blocs secondaires réutilisent encore le legacy. À vérifier à l'écran
+  avant de considérer ce port terminé.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

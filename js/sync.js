@@ -204,6 +204,11 @@ function mergeStates(remote, local, base) {
     rentals: mergeCollections(remote.rentals, local.rentals, base.rentals),
     offers: mergeCollections(remote.offers, local.offers, base.offers),
     fixedCosts: mergeCollections(remote.fixedCosts, local.fixedCosts, base.fixedCosts),
+    actualExpenses: mergeCollections(
+      remote.actualExpenses,
+      local.actualExpenses,
+      base.actualExpenses,
+    ),
     attractions: mergeCollections(remote.attractions, local.attractions, base.attractions),
     transports: mergeCollections(remote.transports, local.transports, base.transports),
     scenarios: mergeCollections(remote.scenarios, local.scenarios, base.scenarios, mergeScenario),
@@ -339,11 +344,7 @@ function syncForm() {
     </p>
     <div class="field">
       <label>URL de l'application web</label>
-      <input
-        id="sync-url"
-        type="text"
-        value="${escapeHtml(sync.url || sync.lastUrl)}"
-      />
+      <input id="sync-url" type="text" value="${escapeHtml(sync.url || sync.lastUrl)}" />
     </div>
     <p style="font-size:12.5px; color:var(--ink-soft);">
       État : ${escapeHtml(sync.message || sync.status)}

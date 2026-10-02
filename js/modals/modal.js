@@ -88,6 +88,13 @@ const MODAL_TYPES = {
     body: (m) => fixedCostForm(m.payload),
     edits: true,
   },
+  'actual-expense': {
+    open: (id) => ({
+      payload: id ? structuredClone(getActualExpense(id)) : emptyActualExpense(),
+    }),
+    body: (m) => actualExpenseForm(m.payload),
+    edits: true,
+  },
   'valise-catalogue': {
     open: (id) => ({ payload: id ? structuredClone(getPackingItem(id)) : emptyPackingItem() }),
     body: (m) => packingCatalogForm(m.payload),
@@ -144,6 +151,7 @@ const MODAL_RESOURCE_MESSAGES = {
   modele: ['Modèle créé', 'Modèle modifié'],
   voiture: ['Offre créée', 'Offre modifiée'],
   charge: ['Charge créée', 'Charge modifiée'],
+  'actual-expense': ['Dépense réelle créée', 'Dépense réelle modifiée'],
   'valise-catalogue': ['Article créé', 'Article modifié'],
   step: ['Étape créée', 'Étape modifiée'],
   phrase: ['Phrase ajoutée', 'Phrase modifiée'],
@@ -156,7 +164,11 @@ document.addEventListener(
     const messages = MODAL_RESOURCE_MESSAGES[modal.type];
     if (!messages) return;
     const message = messages[modal.payload.id ? 1 : 0];
-    setTimeout(() => showToast(message));
+    const openedModal = modal;
+    setTimeout(() => {
+      if (modal === openedModal) return;
+      showToast(message);
+    });
   },
   true,
 );

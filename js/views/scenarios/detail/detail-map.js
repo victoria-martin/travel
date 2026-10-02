@@ -5,6 +5,11 @@
 */
 let scenarioDetailMaps = [];
 
+function destroyScenarioDetailMaps() {
+  scenarioDetailMaps.forEach((map) => map.remove());
+  scenarioDetailMaps = [];
+}
+
 function scenarioMapBlock(scenario, id) {
   const hasPlaces = visibleSteps(scenario).some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">
@@ -20,8 +25,7 @@ function scenarioMapBlock(scenario, id) {
 }
 
 function initScenarioDetailMaps() {
-  scenarioDetailMaps.forEach((map) => map.remove());
-  scenarioDetailMaps = [];
+  destroyScenarioDetailMaps();
   const scenario = getScenario(activeScenarioId);
   if (!scenario || typeof L === 'undefined') return;
   document.querySelectorAll('.scenario-map-canvas').forEach((el) => {

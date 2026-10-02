@@ -8,6 +8,7 @@ const RESOURCE_LABELS = {
   carModels: 'Modèle',
   offers: 'Offre',
   fixedCosts: 'Charge',
+  actualExpenses: 'Dépense réelle',
   packingItems: 'Article',
   freeTodos: 'Tâche',
   todoLists: 'Liste',

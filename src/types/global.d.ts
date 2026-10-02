@@ -61,9 +61,14 @@ declare global {
     offerDatesLabel: (offer: import('../store/types').Offer) => string[];
     offerDayPrice: (offer: import('../store/types').Offer) => number;
     offerDayPriceLabel: (offer: import('../store/types').Offer) => string;
-    offerOptions: (offer: import('../store/types').Offer) => import('../store/types').ProviderOption[];
+    offerOptions: (
+      offer: import('../store/types').Offer,
+    ) => import('../store/types').ProviderOption[];
     priceNumber: (value: string) => number;
     formatRate: (value: number) => string;
+    formatEuros: (value: number) => string;
+    formatGuestPoints: (value: number) => string;
+    formatCosts: (value: { euros: number; guestPoints: number }) => string;
     transportStatus: (status: string) => { label: string; emoji: string };
     transportEndpointLabel: (placeId: string, precision: string) => string;
     transportPlaceName: (placeId: string) => string;
@@ -96,7 +101,13 @@ declare global {
     toggleRouteBuilderMode: () => void;
     routeBuilderPanel: () => string;
     drawRouteBuilderLine: (map: any) => void;
-    addRouteBuilderPoint: (lat: number, lng: number, name: string, id: string, kind: string) => void;
+    addRouteBuilderPoint: (
+      lat: number,
+      lng: number,
+      name: string,
+      id: string,
+      kind: string,
+    ) => void;
     newCityPanel: () => string;
     mapFilters: {
       shown: { hebergements: boolean; attractions: boolean };
@@ -108,9 +119,158 @@ declare global {
     toggleMapFavOnly: () => void;
     setMapScenario: (id: string) => void;
     setMapScenarioOnly: (only: boolean) => void;
-    activeScenarios: (scenarios: import('../store/types').Scenario[]) => import('../store/types').Scenario[];
+    activeScenarios: (
+      scenarios: import('../store/types').Scenario[],
+    ) => import('../store/types').Scenario[];
+    getActiveScenarioId: () => string | null;
     getScenario: (id: string) => import('../store/types').Scenario | null;
-    drawScenarioOnMap: (map: any, scenario: import('../store/types').Scenario, noticeId: string, idleMessage: string) => void;
+    goTo: (view: string) => void;
+    toggleScenarioFavorite: (id: string) => void;
+    renameScenario: (id: string, name: string) => void;
+    setScenarioStartDate: (id: string, date: string) => void;
+    stepNights: (step: import('../store/types').Step) => number;
+    stepArrival: (scenario: import('../store/types').Scenario, index: number) => Date | null;
+    stepLegRank: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step | null,
+    ) => number | null;
+    groupArrival: (
+      scenario: import('../store/types').Scenario,
+      group: import('../store/types').StepGroup,
+    ) => Date | null;
+    isStepVisible: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+    ) => boolean;
+    moveStepBefore: (scenarioId: string, stepId: string, targetId: string, before: boolean) => void;
+    moveStep: (scenarioId: string, stepId: string, direction: number) => void;
+    moveGroup: (scenarioId: string, groupId: string, direction: number) => void;
+    insertStep: (scenarioId: string, index: number) => void;
+    insertOptionStep: (scenarioId: string, index: number, optionId: string) => void;
+    insertStepGroup: (scenarioId: string, index: number) => void;
+    makeStepGroup: (scenarioId: string, stepId: string) => void;
+    deleteStep: (scenarioId: string, stepId: string) => void;
+    duplicateStep: (scenarioId: string, stepId: string) => void;
+    toggleStepHidden: (scenarioId: string, stepId: string) => void;
+    renameStep: (scenarioId: string, stepId: string, name: string) => void;
+    setStepBudget: (scenarioId: string, stepId: string, budget: string) => void;
+    setStepNights: (scenarioId: string, stepId: string, nights: string) => void;
+    groupOptions: (
+      group: import('../store/types').StepGroup,
+    ) => import('../store/types').StepGroupOption[];
+    optionSteps: (
+      scenario: import('../store/types').Scenario,
+      optionId: string,
+    ) => import('../store/types').Step[];
+    groupSteps: (
+      scenario: import('../store/types').Scenario,
+      group: import('../store/types').StepGroup,
+    ) => import('../store/types').Step[];
+    chooseGroupOption: (scenarioId: string, groupId: string, optionId: string) => void;
+    toggleGroupHidden: (scenarioId: string, groupId: string) => void;
+    renameStepGroup: (scenarioId: string, groupId: string, name: string) => void;
+    addGroupOption: (scenarioId: string, groupId: string) => void;
+    removeGroupOption: (scenarioId: string, groupId: string, optionId: string) => void;
+    keepGroupOption: (scenarioId: string, groupId: string, optionId: string) => void;
+    optionCost: (
+      scenario: import('../store/types').Scenario,
+      option: import('../store/types').StepGroupOption,
+    ) => { euros: number; guestPoints: number };
+    stepAccommodationCost: (step: import('../store/types').Step) => number;
+    scenarioRoadPoints: (scenario: import('../store/types').Scenario) => [number, number][];
+    scenarioRoadKm: (scenario: import('../store/types').Scenario) => number | null;
+    scenarioRoadTotal: (scenario: import('../store/types').Scenario) => number;
+    scenarioFuelCost: (scenario: import('../store/types').Scenario) => number;
+    scenarioTollCost: (scenario: import('../store/types').Scenario) => number;
+    fetchRoute: (points: [number, number][]) => Promise<{
+      line: [number, number][];
+      legs: { distance: number; duration: number }[];
+    }>;
+    scenarioWeatherBanner: (scenario: import('../store/types').Scenario) => string;
+    scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
+    scenarioTransportsBlock: (scenario: import('../store/types').Scenario) => string;
+    scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
+    scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
+    trailShown: () => boolean;
+    scenarioRouteTrail: (scenario: import('../store/types').Scenario) => string;
+    scenarioRouteStrip: (scenario: import('../store/types').Scenario) => string;
+    scenarioSideTabsButtons: (scenarioId: string) => string;
+    scenarioSideTabsRail: (scenarioId: string) => string;
+    scenarioSidePanel: (scenario: import('../store/types').Scenario) => string;
+    scenarioSplitStyle: () => string;
+    scenarioSplitHandle: () => string;
+    initScenarioDetailMaps: () => void;
+    destroyScenarioDetailMaps: () => void;
+    toolbarSeparator: () => string;
+    toolbarMenu: () => string;
+    scenarioWeatherToggleButton: () => string;
+    stepOrderBadge: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+      rank: number | null,
+    ) => string;
+    stepPlaceSuffix: (step: import('../store/types').Step) => string;
+    stepDetailLine: (step: import('../store/types').Step) => string;
+    stepLine: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+      arrival: Date | null,
+    ) => string;
+    stepStatusBadge: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+    ) => string;
+    stepMoney: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+    ) => string;
+    stepCardPaint: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+    ) => string;
+    extrasBlock: (
+      scenario: import('../store/types').Scenario,
+      holder: import('../store/types').Step | import('../store/types').StepGroup,
+    ) => string;
+    stepStatus: (
+      scenario: import('../store/types').Scenario,
+      step: import('../store/types').Step,
+    ) => string;
+    stepStatusInfo: (status: string) => { label: string; emoji: string; color: string };
+    travelerCount: () => number;
+    dateAfter: (date: Date | null, nights: number) => Date | null;
+    scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
+    dateRangeLabel: (arrival: Date | null, nights: number) => string;
+    formatStepDate: (date: Date) => string;
+    formatGuestPoints: (amount: number) => string;
+    totalNights: (scenario: import('../store/types').Scenario) => number;
+    accommodationTotals: (scenario: import('../store/types').Scenario) => {
+      euros: { amount: number; nights: number };
+      guestPoints: { amount: number; nights: number };
+    };
+    scenarioChargesTotal: (scenario: import('../store/types').Scenario) => number;
+    scenarioTransportTotal: (scenario: import('../store/types').Scenario) => number;
+    scenarioAttractionsTotal: (scenario: import('../store/types').Scenario) => number;
+    scenarioTotal: (scenario: import('../store/types').Scenario) => {
+      euros: number;
+      guestPoints: number;
+    };
+    scenarioTotalPerTraveler: (scenario: import('../store/types').Scenario) => number;
+    scenarioRoadPoints: (scenario: import('../store/types').Scenario) => [number, number][];
+    scenarioRoadKm: (scenario: import('../store/types').Scenario) => number | null;
+    scenarioRoadTotal: (scenario: import('../store/types').Scenario) => number;
+    scenarioFuelCost: (scenario: import('../store/types').Scenario) => number;
+    scenarioTollCost: (scenario: import('../store/types').Scenario) => number;
+    fetchRoute: (points: [number, number][]) => Promise<{
+      line: [number, number][];
+      legs: { distance: number; duration: number }[];
+    }>;
+    drawScenarioOnMap: (
+      map: any,
+      scenario: import('../store/types').Scenario,
+      noticeId: string,
+      idleMessage: string,
+    ) => void;
     scenarioAccommodationIds: (scenario: import('../store/types').Scenario) => Set<string>;
     prefs: { mapSideWidth: number; [key: string]: any };
     persistPrefs: () => void;

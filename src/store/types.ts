@@ -197,6 +197,7 @@ export interface Step {
   id: string | null;
   name: string;
   arrivalDate: string;
+  placeDate?: string;
   notes: string;
   extras: Extra[];
   hidden: boolean;
@@ -217,7 +218,9 @@ export interface StepGroupOption {
 
 export interface StepGroup {
   id: string;
+  name?: string;
   hidden?: boolean;
+  extras?: Extra[];
   options: StepGroupOption[];
 }
 
@@ -233,7 +236,7 @@ export interface Scenario {
   favorite: boolean;
   archived: boolean;
   steps: Step[];
-  groups: StepGroup[];
+  groups?: StepGroup[];
 }
 
 export interface TripNote {

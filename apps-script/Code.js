@@ -98,6 +98,7 @@ const COLLECTIONS = {
     'gearbox',
   ],
   fixedCosts: ['travelId', 'id', 'label', 'amount', 'categories', 'recurrence', 'notes'],
+  actualExpenses: ['travelId', 'id', 'date', 'label', 'amount', 'fixedCostId', 'notes'],
   // Une ville et une activité sont le même endroit : cet onglet n'est plus que la source de la
   // reprise, et repart vide au premier enregistrement.
   cities: [
@@ -260,7 +261,15 @@ const COLLECTIONS = {
 };
 const STEP_CHILDREN = { options: 'stepOptions', extras: 'stepAttractions' };
 const GROUP_CHILDREN = { options: 'groupOptions', extras: 'groupAttractions' };
-const BOOL_FIELDS = ['favorite', 'isDefault', 'hidden', 'isChosen', 'isSelected', 'checked', 'perNight'];
+const BOOL_FIELDS = [
+  'favorite',
+  'isDefault',
+  'hidden',
+  'isChosen',
+  'isSelected',
+  'checked',
+  'perNight',
+];
 const NUM_FIELDS = ['nights', 'travelers', 'count', 'quantity'];
 // Listes d'identifiants : une seule cellule, séparée par des virgules.
 const LIST_FIELDS = [
@@ -383,6 +392,7 @@ function readState() {
     rentals: rows.rentals,
     offers: rows.offers,
     fixedCosts: rows.fixedCosts,
+    actualExpenses: rows.actualExpenses,
     cities: rows.cities,
     attractions: rows.attractions,
     transports: rows.transports,

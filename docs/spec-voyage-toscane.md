@@ -85,10 +85,12 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
   `ATTRACTION_STATUSES`) : tout ce qui lit ce dictionnaire — tableau, légende, filtres — le voit
   sans rien savoir de l'ajout. Il est retenu en local (`prefs`), **jamais synchronisé** : un mot
   ajouté sur un appareil n'apparaît pas sur un autre.
-- **Une dépense se corrige à sa source** : la page Dépenses lit les montants portés par les autres
-  entités — un hébergement réservé, la voiture par défaut — et ne les édite jamais. Seules les
-  charges fixes se saisissent là, parce qu'elles n'ont pas d'autre page. D'où les deux blocs,
-  Calculé et Saisi, plutôt qu'une liste unique où l'origine d'une ligne serait invisible.
+- **Prévision et réalisé sont deux données différentes.** Les charges fixes restent les postes de
+  budget réutilisables dans les scénarios. La page compare les postes du scénario retenu aux dépenses
+  réelles du voyage ; changer de scénario ne déplace ni ne modifie les achats déjà enregistrés. Une
+  dépense réelle porte une date et peut référencer un poste budgétaire ; plusieurs achats peuvent
+  alimenter le même poste, et un achat sans référence reste non budgétisé. Les montants calculés
+  depuis les réservations restent séparés du budget et du réel.
 - Un budget saisi sur une étape **remplace** le prix calculé de l'hébergement, et reste en euros
   même sur une étape en GuestPoints.
 - Les dates des étapes se **calculent** depuis la date de départ du scénario et les nuits qui
@@ -187,15 +189,15 @@ Les arbitrages qui ne se relisent pas dans le code, et dont tout le reste décou
 
 ### D'où vient la donnée
 
-| Nature                                          | Collections                                                                           | Ce qui la caractérise                                                                          |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **Racine**                                      | `travels`                                                                             | possède tout le reste et le filtre ; un seul voyage est ouvert                                 |
-| **Base** — porte sa propre donnée               | `accommodations`, `attractions`, `carModels`, `providers`, `fixedCosts`, `transports` | se saisit sans rien d'autre à l'écran ; ce qu'elle référence l'enrichit sans la définir        |
-| **Contexte** — n'existe que par un croisement   | `offers` (loueur × modèle)                                                            | supprimer un parent les vide de sens ; `rentals` dort, sans lecteur                            |
-| **Arbitrage** — ne porte presque rien en propre | `scenarios`, leurs `steps` et leurs `groups`                                          | des références (offre, options, charges, transports, hébergement) et un ordre                  |
-| **Question enregistrée**                        | `todoLists`                                                                           | ressource + colonne + valeurs gardées : la seule entité qui référence l'écran et non la donnée |
-| **Texte libre**                                 | `tripNotes`                                                                           | une entrée par voyage                                                                          |
-| **Dérivée, zéro stockage**                      | la Carte, le bloc « Calculé » de Dépenses, les totaux d'un scénario                   | relisent les collections à chaque rendu, n'écrivent jamais                                     |
+| Nature                                          | Collections                                                                                             | Ce qui la caractérise                                                                          |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **Racine**                                      | `travels`                                                                                               | possède tout le reste et le filtre ; un seul voyage est ouvert                                 |
+| **Base** — porte sa propre donnée               | `accommodations`, `actualExpenses`, `attractions`, `carModels`, `providers`, `fixedCosts`, `transports` | se saisit sans rien d'autre à l'écran ; ce qu'elle référence l'enrichit sans la définir        |
+| **Contexte** — n'existe que par un croisement   | `offers` (loueur × modèle)                                                                              | supprimer un parent les vide de sens ; `rentals` dort, sans lecteur                            |
+| **Arbitrage** — ne porte presque rien en propre | `scenarios`, leurs `steps` et leurs `groups`                                                            | des références (offre, options, charges, transports, hébergement) et un ordre                  |
+| **Question enregistrée**                        | `todoLists`                                                                                             | ressource + colonne + valeurs gardées : la seule entité qui référence l'écran et non la donnée |
+| **Texte libre**                                 | `tripNotes`                                                                                             | une entrée par voyage                                                                          |
+| **Dérivée, zéro stockage**                      | la Carte, le bloc « Calculé » de Dépenses, les totaux d'un scénario                                     | relisent les collections à chaque rendu, n'écrivent jamais                                     |
 
 Deux familles vivent hors de l'état. Les **vocabulaires figés en code** — statuts, types, modes,
 motorisations, boîtes, unités d'option, récurrences — ne s'éditent pas dans l'app ; seul leur ordre
@@ -671,44 +673,39 @@ motorisation, boîte, prix, `Entrée` enchaîne — n'a pas d'équivalent dans l
 
 ### Dépenses
 
-Ce que le voyage coûte, en deux blocs : **Calculé**, lu sur les autres pages, et **Saisi**, tapé
-ici. Un récap ferme l'écran avec les deux sous-totaux et leur somme.
+La page compare le **budget du scénario retenu** aux **dépenses réelles datées** du voyage. Les
+montants calculés depuis les réservations restent à part.
 
-**Calculé** — une dépense dérivée se lit sur l'entité qui la porte, elle ne se saisit pas ici. Un
-groupe par source, dont le titre mène à la page où la corriger :
+**Résumé** — budget du scénario, dépenses réelles et budget restant. Le restant est le budget du
+scénario moins tous les achats réels du voyage ; il peut être négatif.
 
-| Source                | Ce qu'elle apporte                             |
-| --------------------- | ---------------------------------------------- |
-| Hébergements réservés | une ligne par hébergement au statut Réservé 🔒 |
-| Voiture par défaut    | la voiture marquée ◉, si elle en porte une     |
-| Transports réservés   | une ligne par transport au statut Réservé 🔒   |
-| Activités, validé     | une ligne par activité au statut Go ✅         |
+**Budget prévu** — toutes les charges du voyage restent visibles et éditables. Pour chaque charge,
+la page affiche son montant calculé dans le scénario retenu si celui-ci la référence ; les autres
+restent visibles comme hors scénario. Une charge budgétaire garde son libellé, montant unitaire,
+catégories, récurrence et notes.
 
-Une source sans montant ferme reste **hors du total** et s'affiche telle quelle : un prix par nuit
-ou par jour garde son unité (« 120 € / nuit ») tant que rien ne dit sur combien le multiplier, et
-une fourchette dont les deux bornes diffèrent s'affiche en fourchette. Un montant unique — une
-seule borne saisie, les deux égales, ou le budget à défaut — entre dans la somme. Une source sans
-aucune ligne ne s'affiche pas ; toutes vides donnent un message d'état vide.
+**Dépenses réelles** — les achats du voyage sont triés par date et s'ajoutent, se modifient et se
+suppriment depuis la page.
 
-**Saisi** — la liste des charges fixes : tableau ou cartes, ajout et modification en modale,
-suppression confirmée, tri et colonnes configurables depuis l'en-tête.
+| Champ            | Détail                                               |
+| ---------------- | ---------------------------------------------------- |
+| date             | jour de l'achat                                      |
+| libellé          | restaurant, plein d'essence, parking…                |
+| montant          | texte libre, montant réellement payé                 |
+| poste budgétaire | facultatif ; référence une charge du scénario retenu |
+| notes            | facultatives                                         |
 
-**Charge fixe**
+Plusieurs achats réels peuvent référencer le même poste. Les achats sans poste associé sont
+regroupés sous « Non budgétisé ». Chaque dépense réelle appartient au voyage, pas au scénario.
 
-| Champ      | Détail                                                  |
-| ---------- | ------------------------------------------------------- |
-| libellé    |                                                         |
-| montant    | texte libre, unitaire — ce que coûte **une** récurrence |
-| catégories | plusieurs, en pastilles, éditables depuis la ligne      |
-| récurrence | une fois, par nuit, par jour, par voyageur              |
-| notes      | éditables depuis la ligne                               |
+**Calculé depuis les réservations** — bloc repliable, séparé du budget et des dépenses réelles.
+Une dépense dérivée se lit sur l'entité qui la porte, elle ne se saisit pas ici : hébergements
+réservés, voiture par défaut, transports réservés et activités validées. Le titre de chaque source
+mène à la page où la corriger.
 
-- **Récurrence** : elle dit sur quoi le montant se multiplie, jamais combien de fois — le nombre ne
-  vit pas sur la dépense, il vient du scénario où elle est comptée. Une dépense « 10 € par nuit »
-  rattachée à un scénario de sept nuits y vaut 70 €, et 30 € dans un scénario de trois. Sur cette
-  page, où aucun scénario ne donne le compte, une dépense qui se multiplie s'affiche avec son unité
-  et reste **hors du total saisi**, comme une source dérivée à montant ouvert. La colonne se range
-  sur l'ordre du vocabulaire, pas sur ses libellés.
+- **Récurrence** : elle dit sur quoi le montant se multiplie, jamais combien de fois. Dans le
+  scénario retenu, une charge « 10 € par nuit » vaut 70 € pour sept nuits et 30 € pour trois nuits.
+  Les montants de charges hors du scénario ne comptent pas dans son budget.
 
 - **Catégories** : mêmes mots libres que les tags des hébergements — une catégorie existe dès
   qu'elle est tapée quelque part, et disparaît avec sa dernière porteuse. Aucune liste à

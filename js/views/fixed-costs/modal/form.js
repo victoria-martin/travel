@@ -11,10 +11,9 @@ function emptyFixedCost() {
 
 function fixedCostForm(p) {
   return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Ajouter'} une charge fixe</h3>
+    <h3>${p.id ? 'Modifier' : 'Ajouter'} une charge budgétaire</h3>
     <div class="field">
-      <label>Libellé</label
-      ><input id="cost-label" type="text" value="${escapeHtml(p.label)}" />
+      <label>Libellé</label><input id="cost-label" type="text" value="${escapeHtml(p.label)}" />
     </div>
     <div class="field">
       <label>Montant</label><input id="cost-amount" type="text" value="${escapeHtml(p.amount)}" />

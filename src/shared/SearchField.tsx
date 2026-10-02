@@ -15,7 +15,6 @@ export function SearchField({
 }) {
   return (
     <label className="list-search" title="Rechercher">
-      <span className="sr-only">Rechercher</span>
       <span className="list-search-icon">
         <Icon name="search" />
       </span>

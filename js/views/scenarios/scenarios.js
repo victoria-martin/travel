@@ -1,6 +1,10 @@
 let activeScenarioId = null;
 let scenarioSearchQuery = '';
 
+function getActiveScenarioId() {
+  return activeScenarioId;
+}
+
 function scenarioSearchField() {
   return `<label class="list-search" data-list-search="scenarios" title="Rechercher">
     <span class="sr-only">Rechercher</span>

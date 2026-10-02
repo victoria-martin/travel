@@ -12,6 +12,7 @@ const TRAVEL_COLLECTIONS = [
   'rentals',
   'offers',
   'fixedCosts',
+  'actualExpenses',
   'attractions',
   'villes',
   'transports',
@@ -35,6 +36,7 @@ function emptyData() {
     rentals: [],
     offers: [],
     fixedCosts: [],
+    actualExpenses: [],
     attractions: [],
     villes: [],
     transports: [],
@@ -70,6 +72,7 @@ function migrateData(data) {
   if (!data.providers) data.providers = [];
   if (!data.rentals) data.rentals = [];
   if (!data.carModels) data.carModels = [];
+  if (!data.actualExpenses) data.actualExpenses = [];
   if (!data.attractions) data.attractions = [];
   if (!data.villes) data.villes = [];
   if (!data.transports) data.transports = [];

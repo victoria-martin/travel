@@ -3225,7 +3225,7 @@ tr:hover td {
 }
 .warning-badge .icon {
   width: 10px;
-  height: 10px;
+  /* height: 10px; */
 }
 
 /* ---------- Interrupteur ---------- */

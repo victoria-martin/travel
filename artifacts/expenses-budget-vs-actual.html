@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dépenses · Toscane</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f1e9d8;
+        --raised: #faf5ea;
+        --ink: #24312b;
+        --muted: #5b6660;
+        --line: #d9cfb8;
+        --green: #3e6259;
+        --green-dark: #2c4740;
+        --ochre: #c98a3e;
+        --sage-pale: #eef0e4;
+        --white: #fff;
+        font-family: 'IBM Plex Sans', sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background-color: var(--paper);
+        background-image: radial-gradient(rgba(62, 98, 89, 0.07) 0.65px, transparent 0.65px);
+        background-size: 8px 8px;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .shell {
+        display: grid;
+        grid-template-columns: 218px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 24px 16px;
+        background: var(--green-dark);
+        color: var(--raised);
+      }
+      .trip {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 11px;
+        border: 1px solid rgba(250, 245, 234, 0.2);
+        border-radius: 8px;
+        background: rgba(250, 245, 234, 0.06);
+      }
+      .trip-mark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 50%;
+        background: #d7a66a;
+        color: var(--green-dark);
+        font-family: 'Fraunces', serif;
+        font-size: 18px;
+      }
+      .trip-name {
+        display: block;
+        font:
+          17px 'Fraunces',
+          serif;
+      }
+      .trip-date {
+        display: block;
+        margin-top: 2px;
+        color: #bac7c0;
+        font-size: 11px;
+      }
+      .nav-label {
+        margin: 0 0 8px 10px;
+        color: #b7c4bd;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .nav-list {
+        display: grid;
+        gap: 3px;
+      }
+      .nav-item {
+        display: flex;
+        min-height: 38px;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: #d5ded9;
+        font-size: 13px;
+        text-decoration: none;
+      }
+      .nav-item[aria-current='page'] {
+        background: var(--paper);
+        color: var(--green-dark);
+        font-weight: 600;
+      }
+      .nav-icon {
+        width: 18px;
+        color: #c5d0ca;
+        font-size: 15px;
+        text-align: center;
+      }
+      .nav-item[aria-current='page'] .nav-icon {
+        color: var(--green);
+      }
+      .main {
+        width: min(100%, 1420px);
+        margin: 0 auto;
+        padding: 32px clamp(20px, 4vw, 56px) 52px;
+      }
+      .page-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 25px;
+      }
+      .eyebrow {
+        margin: 0 0 5px;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+      h1 {
+        margin-bottom: 5px;
+        font:
+          500 34px/1.1 'Fraunces',
+          serif;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .button {
+        display: inline-flex;
+        min-height: 38px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 13px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--raised);
+        color: var(--green-dark);
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .button-primary {
+        border-color: var(--green);
+        background: var(--green);
+        color: var(--white);
+      }
+      .plus {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 0.8;
+      }
+      .scenario {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+        padding: 11px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(250, 245, 234, 0.86);
+      }
+      .scenario-label {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .chosen {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ochre);
+        box-shadow: 0 0 0 3px rgba(201, 138, 62, 0.15);
+      }
+      .scenario select {
+        max-width: 300px;
+        padding: 5px 24px 5px 8px;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-bottom: 29px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--raised);
+      }
+      .metric {
+        min-width: 0;
+        padding: 17px 20px 16px;
+      }
+      .metric + .metric {
+        border-left: 1px solid var(--line);
+      }
+      .metric-label,
+      .metric-note {
+        display: block;
+        color: var(--muted);
+      }
+      .metric-label {
+        min-height: 18px;
+        margin-bottom: 8px;
+        font-size: 11px;
+      }
+      .metric-value {
+        display: block;
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .metric-note {
+        margin-top: 7px;
+        font-size: 10px;
+      }
+      .metric:last-child .metric-value {
+        color: var(--green);
+      }
+      .section {
+        margin-bottom: 28px;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 10px;
+      }
+      .section-title-wrap {
+        display: flex;
+        align-items: baseline;
+        gap: 9px;
+      }
+      h2 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .count {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .table-frame {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--raised);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      th {
+        height: 37px;
+        padding: 0 14px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      td {
+        height: 47px;
+        padding: 8px 14px;
+        border-bottom: 1px solid rgba(217, 207, 184, 0.72);
+        font-size: 12px;
+      }
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      .amount {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .category {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+      }
+      .category-icon {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 7px;
+        background: var(--sage-pale);
+        color: var(--green-dark);
+        font-size: 13px;
+      }
+      .detail,
+      .location {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 400;
+      }
+      .positive {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .unbudgeted td {
+        background: rgba(217, 207, 184, 0.16);
+        color: var(--muted);
+      }
+      .total td {
+        height: 42px;
+        border-top: 1px solid var(--line);
+        border-bottom: 0;
+        background: rgba(238, 240, 228, 0.58);
+        font-weight: 600;
+      }
+      .date {
+        width: 140px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .expense-name {
+        font-weight: 500;
+      }
+      .linked {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--green-dark);
+        font-size: 11px;
+      }
+      .linked::before {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7c8b5e;
+        content: '';
+      }
+      .linked-unbudgeted {
+        color: var(--muted);
+      }
+      .linked-unbudgeted::before {
+        background: var(--ochre);
+      }
+      .actual-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .search {
+        width: 190px;
+        height: 34px;
+        padding: 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--raised);
+        color: var(--ink);
+        font-size: 11px;
+      }
+      .calculated {
+        padding-top: 19px;
+        border-top: 1px solid var(--line);
+      }
+      .calculated summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        list-style: none;
+        cursor: pointer;
+      }
+      .calculated summary::-webkit-details-marker {
+        display: none;
+      }
+      .calculated-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .calculated-heading {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .chevron {
+        color: var(--green);
+        transition: transform 160ms ease;
+      }
+      .calculated[open] .chevron {
+        transform: rotate(90deg);
+      }
+      .calculated-note {
+        margin: 5px 0 12px 21px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .calculated-total {
+        color: var(--muted);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+      .calculated-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 14px;
+        border-top: 1px solid var(--line);
+        background: var(--raised);
+        font-size: 12px;
+      }
+
+      @media (max-width: 900px) {
+        .shell {
+          grid-template-columns: 68px minmax(0, 1fr);
+        }
+        .sidebar {
+          align-items: center;
+          padding: 20px 8px;
+        }
+        .trip {
+          justify-content: center;
+          width: 48px;
+          padding: 6px;
+        }
+        .trip-copy,
+        .nav-label,
+        .nav-text {
+          display: none;
+        }
+        .nav-item {
+          width: 48px;
+          justify-content: center;
+          padding: 9px 0;
+        }
+        .nav-icon {
+          font-size: 17px;
+        }
+      }
+      @media (max-width: 680px) {
+        .shell {
+          display: block;
+          padding-bottom: 58px;
+        }
+        .sidebar {
+          position: fixed;
+          z-index: 2;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: flex;
+          height: 58px;
+          flex-direction: row;
+          justify-content: space-around;
+          padding: 5px 10px;
+          border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .trip,
+        .nav-label {
+          display: none;
+        }
+        .nav-list {
+          display: contents;
+        }
+        .nav-item,
+        .nav-item[aria-current='page'] {
+          width: 44px;
+          min-height: 44px;
+          justify-content: center;
+          background: transparent;
+          color: #d5ded9;
+        }
+        .nav-item[aria-current='page'] .nav-icon {
+          color: var(--paper);
+        }
+        .main {
+          padding: 24px 16px 34px;
+        }
+        .page-head {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 15px;
+          margin-bottom: 18px;
+        }
+        h1 {
+          font-size: 30px;
+        }
+        .actions {
+          justify-content: flex-start;
+        }
+        .button {
+          min-height: 36px;
+          padding: 7px 10px;
+          font-size: 11px;
+        }
+        .scenario {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 5px;
+        }
+        .scenario select {
+          max-width: 100%;
+          padding-left: 0;
+        }
+        .metric {
+          padding: 13px 10px;
+        }
+        .metric-label {
+          min-height: 27px;
+          font-size: 10px;
+          line-height: 1.25;
+        }
+        .metric-value {
+          font-size: 19px;
+        }
+        .metric-note {
+          min-height: 22px;
+          font-size: 9px;
+          line-height: 1.2;
+        }
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 9px;
+        }
+        .section-title-wrap {
+          flex-wrap: wrap;
+        }
+        .table-frame {
+          overflow-x: auto;
+        }
+        .budget-table {
+          min-width: 470px;
+        }
+        .actual-table {
+          min-width: 580px;
+        }
+        .actual-actions,
+        .search {
+          width: 100%;
+        }
+        .date {
+          width: 112px;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .main {
+          animation: arrive 360ms ease-out both;
+        }
+        @keyframes arrive {
+          from {
+            opacity: 0;
+            transform: translateY(7px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Navigation du voyage">
+        <div class="trip">
+          <span class="trip-mark" aria-hidden="true">T</span
+          ><span class="trip-copy"
+            ><span class="trip-name">Toscane</span
+            ><span class="trip-date">Italie · 12–21 octobre</span></span
+          >
+        </div>
+        <nav aria-label="Pages">
+          <p class="nav-label">Voyage</p>
+          <div class="nav-list">
+            <a class="nav-item" href="#"
+              ><span class="nav-icon" aria-hidden="true">⌂</span
+              ><span class="nav-text">Accueil</span></a
+            >
+            <a class="nav-item" href="#"
+              ><span class="nav-icon" aria-hidden="true">▧</span
+              ><span class="nav-text">Hébergements</span></a
+            >
+            <a class="nav-item" href="#"
+              ><span class="nav-icon" aria-hidden="true">⌖</span
+              ><span class="nav-text">Lieux &amp; activités</span></a
+            >
+            <a class="nav-item" href="#"
+              ><span class="nav-icon" aria-hidden="true">↗</span
+              ><span class="nav-text">Transports</span></a
+            >
+            <a class="nav-item" href="#" aria-current="page"
+              ><span class="nav-icon" aria-hidden="true">€</span
+              ><span class="nav-text">Dépenses</span></a
+            >
+            <a class="nav-item" href="#"
+              ><span class="nav-icon" aria-hidden="true">◷</span
+              ><span class="nav-text">Scénarios</span></a
+            >
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="page-head">
+          <div>
+            <p class="eyebrow">Toscane · 12–21 octobre 2026</p>
+            <h1>Dépenses</h1>
+            <p class="subtitle">Budget du scénario et dépenses réelles du voyage</p>
+          </div>
+          <div class="actions">
+            <button class="button" type="button">
+              <span class="plus" aria-hidden="true">+</span> Ajouter au budget
+            </button>
+            <button class="button button-primary" type="button">
+              <span class="plus" aria-hidden="true">+</span> Dépense réelle
+            </button>
+          </div>
+        </header>
+
+        <div class="scenario">
+          <span class="scenario-label"
+            ><span class="chosen" aria-hidden="true"></span>Budget prévisionnel</span
+          >
+          <label
+            ><select aria-label="Scénario du budget">
+              <option>Scénario retenu · Toscane classique</option>
+            </select></label
+          >
+        </div>
+
+        <section class="summary" aria-label="Résumé budget et dépenses réelles">
+          <div class="metric">
+            <span class="metric-label">Budget du scénario</span
+            ><strong class="metric-value">660 €</strong
+            ><span class="metric-note">4 postes budgétés</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Dépenses réelles</span
+            ><strong class="metric-value">303 €</strong
+            ><span class="metric-note">8 dépenses datées</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Budget restant</span
+            ><strong class="metric-value">357 €</strong
+            ><span class="metric-note">Budget moins dépenses réelles</span>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="budget-title">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <h2 id="budget-title">Budget prévu</h2>
+              <span class="count">par poste du scénario</span>
+            </div>
+            <button class="button" type="button">Modifier le budget</button>
+          </div>
+          <div class="table-frame">
+            <table class="budget-table">
+              <thead>
+                <tr>
+                  <th scope="col">Poste</th>
+                  <th class="amount" scope="col">Budget</th>
+                  <th class="amount" scope="col">Réel</th>
+                  <th class="amount" scope="col">Restant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="category"
+                      ><span class="category-icon" aria-hidden="true">⛽</span
+                      ><span>Essence<span class="detail">2 dépenses réelles</span></span></span
+                    >
+                  </td>
+                  <td class="amount">180 €</td>
+                  <td class="amount">116 €</td>
+                  <td class="amount positive">64 €</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="category"
+                      ><span class="category-icon" aria-hidden="true">♨</span
+                      ><span>Repas<span class="detail">2 dépenses réelles</span></span></span
+                    >
+                  </td>
+                  <td class="amount">260 €</td>
+                  <td class="amount">90 €</td>
+                  <td class="amount positive">170 €</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="category"
+                      ><span class="category-icon" aria-hidden="true">P</span
+                      ><span>Parking<span class="detail">2 dépenses réelles</span></span></span
+                    >
+                  </td>
+                  <td class="amount">80 €</td>
+                  <td class="amount">14 €</td>
+                  <td class="amount positive">66 €</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="category"
+                      ><span class="category-icon" aria-hidden="true">⌖</span
+                      ><span>Visites<span class="detail">1 dépense réelle</span></span></span
+                    >
+                  </td>
+                  <td class="amount">140 €</td>
+                  <td class="amount">65 €</td>
+                  <td class="amount positive">75 €</td>
+                </tr>
+                <tr class="unbudgeted">
+                  <td>
+                    <span class="category"
+                      ><span class="category-icon" aria-hidden="true">＋</span
+                      ><span
+                        >Non budgétisé<span class="detail"
+                          >1 dépense réelle sans poste associé</span
+                        ></span
+                      ></span
+                    >
+                  </td>
+                  <td class="amount">—</td>
+                  <td class="amount">18 €</td>
+                  <td class="amount">—</td>
+                </tr>
+                <tr class="total">
+                  <td>Total</td>
+                  <td class="amount">660 €</td>
+                  <td class="amount">303 €</td>
+                  <td class="amount positive">357 €</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="actual-title">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <h2 id="actual-title">Dépenses réelles</h2>
+              <span class="count">8 entrées · triées par date</span>
+            </div>
+            <div class="actual-actions">
+              <input
+                class="search"
+                type="search"
+                aria-label="Rechercher une dépense"
+                placeholder="Rechercher une dépense"
+              /><button class="button button-primary" type="button">
+                <span class="plus" aria-hidden="true">+</span> Ajouter
+              </button>
+            </div>
+          </div>
+          <div class="table-frame">
+            <table class="actual-table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Dépense</th>
+                  <th scope="col">Poste budgétaire</th>
+                  <th class="amount" scope="col">Montant</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="date">12 oct. · 10:15</td>
+                  <td>
+                    <span class="expense-name">Plein d’essence</span
+                    ><span class="location">Autostrada Firenze Nord</span>
+                  </td>
+                  <td><span class="linked">Essence</span></td>
+                  <td class="amount">62 €</td>
+                </tr>
+                <tr>
+                  <td class="date">12 oct. · 19:40</td>
+                  <td>
+                    <span class="expense-name">Trattoria da Rocco</span
+                    ><span class="location">Florence</span>
+                  </td>
+                  <td><span class="linked">Repas</span></td>
+                  <td class="amount">48 €</td>
+                </tr>
+                <tr>
+                  <td class="date">13 oct. · 09:20</td>
+                  <td>
+                    <span class="expense-name">Parking Santa Maria Novella</span
+                    ><span class="location">Florence</span>
+                  </td>
+                  <td><span class="linked">Parking</span></td>
+                  <td class="amount">8 €</td>
+                </tr>
+                <tr>
+                  <td class="date">13 oct. · 13:05</td>
+                  <td>
+                    <span class="expense-name">Osteria del Borgo</span
+                    ><span class="location">Greve in Chianti</span>
+                  </td>
+                  <td><span class="linked">Repas</span></td>
+                  <td class="amount">42 €</td>
+                </tr>
+                <tr>
+                  <td class="date">14 oct. · 11:30</td>
+                  <td>
+                    <span class="expense-name">Billets du musée</span
+                    ><span class="location">Sienne · 2 entrées</span>
+                  </td>
+                  <td><span class="linked">Visites</span></td>
+                  <td class="amount">65 €</td>
+                </tr>
+                <tr>
+                  <td class="date">15 oct. · 08:50</td>
+                  <td>
+                    <span class="expense-name">Plein d’essence</span
+                    ><span class="location">Poggibonsi</span>
+                  </td>
+                  <td><span class="linked">Essence</span></td>
+                  <td class="amount">54 €</td>
+                </tr>
+                <tr>
+                  <td class="date">15 oct. · 12:10</td>
+                  <td>
+                    <span class="expense-name">Parking du marché</span
+                    ><span class="location">San Gimignano</span>
+                  </td>
+                  <td><span class="linked">Parking</span></td>
+                  <td class="amount">6 €</td>
+                </tr>
+                <tr>
+                  <td class="date">15 oct. · 16:25</td>
+                  <td>
+                    <span class="expense-name">Trousse de secours</span
+                    ><span class="location">Pharmacie · Poggibonsi</span>
+                  </td>
+                  <td><span class="linked linked-unbudgeted">Non budgétisé</span></td>
+                  <td class="amount">18 €</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <details class="section calculated">
+          <summary>
+            <span
+              ><span class="calculated-title"
+                ><span class="chevron" aria-hidden="true">›</span
+                ><strong class="calculated-heading">Calculé depuis les réservations</strong></span
+              ><span class="calculated-note"
+                >Éléments séparés du budget et des dépenses réelles</span
+              ></span
+            ><span class="calculated-total">1 284 €</span>
+          </summary>
+          <div class="calculated-row">
+            <span>Hébergements réservés</span><strong>1 040 €</strong>
+          </div>
+          <div class="calculated-row"><span>Transports réservés</span><strong>244 €</strong></div>
+        </details>
+      </main>
+    </div>
+  </body>
+</html>

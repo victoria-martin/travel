@@ -2,6 +2,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MapView } from './domains/carte/MapView';
 import { CitiesView } from './domains/cities/CitiesView';
 import { FixedCostsView } from './domains/fixed-costs/FixedCostsView';
+import { ScenarioDetailView } from './domains/scenarios/detail/ScenarioDetailView';
 import { TransportsView } from './domains/transports/TransportsView';
 
 /*
@@ -14,6 +15,7 @@ const REACT_VIEWS: Record<string, () => React.JSX.Element> = {
   charges: FixedCostsView,
   transports: TransportsView,
   carte: MapView,
+  'scenario-detail': ScenarioDetailView,
 };
 
 let root: Root | null = null;

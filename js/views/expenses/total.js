@@ -1,17 +1,24 @@
-function expensesTotal() {
-  return derivedExpensesTotal() + manualExpensesTotal();
-}
-
-function expensesTotalBlock() {
-  return /* HTML */ `<div class="acc-recap">
-    <div class="acc-recap-row">
-      <span>Calculé</span><span></span><strong>${formatEuros(derivedExpensesTotal())}</strong>
+function expensesTotalBlock(scenario) {
+  const budgetTotal = scenario ? scenarioBudgetTotal(scenario) : null;
+  const actualTotal = actualExpensesTotal();
+  const remaining = budgetTotal === null ? null : budgetTotal - actualTotal;
+  return /* HTML */ `<section class="expenses-summary" aria-label="Budget et dépenses réelles">
+    <div class="expenses-metric">
+      <span>Budget du scénario</span>
+      <strong>${budgetTotal === null ? '—' : formatEuros(budgetTotal)}</strong>
+      <small
+        >${scenario ? `${getScenarioExpenses(scenario).length} postes budgétés` : 'Aucun scénario retenu'}</small
+      >
     </div>
-    <div class="acc-recap-row">
-      <span>Saisi</span><span></span><strong>${formatEuros(manualExpensesTotal())}</strong>
+    <div class="expenses-metric">
+      <span>Dépenses réelles</span>
+      <strong>${formatEuros(actualTotal)}</strong>
+      <small>${actualExpenses().length} dépenses datées</small>
     </div>
-    <div class="acc-recap-row acc-recap-total">
-      <span>Total</span><span></span><strong>${formatEuros(expensesTotal())}</strong>
+    <div class="expenses-metric ${remaining !== null && remaining < 0 ? 'expenses-over' : ''}">
+      <span>Budget restant</span>
+      <strong>${remaining === null ? '—' : formatEuros(remaining)}</strong>
+      <small>Budget moins dépenses réelles</small>
     </div>
-  </div>`;
+  </section>`;
 }

@@ -1,0 +1,201 @@
+.expenses-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-raised);
+}
+
+.expenses-metric {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  padding: 15px 18px;
+}
+
+.expenses-metric + .expenses-metric {
+  border-left: 1px solid var(--line);
+}
+
+.expenses-metric > span,
+.expenses-metric small {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.expenses-metric strong {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.expenses-metric small {
+  font-size: 10px;
+}
+
+.expenses-metric:last-child strong,
+.expenses-under {
+  color: var(--stone);
+}
+
+.expenses-over {
+  color: var(--rust);
+}
+
+.expenses-section-subtitle {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.expenses-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-raised);
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.expenses-budget-table {
+  min-width: 790px;
+}
+
+.expenses-actual-table {
+  min-width: 720px;
+}
+
+.expenses-table th {
+  height: 36px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.expenses-table td {
+  height: 46px;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.expenses-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.expenses-number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.expenses-muted,
+.expenses-detail {
+  color: var(--ink-soft);
+}
+
+.expenses-detail {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+}
+
+.expenses-date {
+  width: 124px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.expenses-budget-link {
+  color: var(--stone-dark);
+}
+
+.expenses-actions {
+  width: 76px;
+  white-space: nowrap;
+}
+
+.expenses-unbudgeted-row td {
+  background: rgba(217, 207, 184, 0.16);
+}
+
+.expenses-total-row td {
+  height: 40px;
+  border-top: 1px solid var(--line);
+  background: var(--sage-pale);
+  font-weight: 600;
+}
+
+.expenses-calculated {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.expenses-calculated > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.expenses-calculated > summary::-webkit-details-marker {
+  display: none;
+}
+
+.expenses-calculated > summary::before {
+  width: 14px;
+  flex: 0 0 auto;
+  color: var(--stone);
+  content: '›';
+  font-size: 16px;
+}
+
+.expenses-calculated[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.expenses-calculated > summary strong {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.expenses-calculated > .expense-group {
+  margin: 12px 0 0 14px;
+}
+
+@media (max-width: 640px) {
+  .expenses-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .expenses-metric {
+    padding: 12px 9px;
+  }
+
+  .expenses-metric > span {
+    min-height: 27px;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .expenses-metric strong {
+    font-size: 18px;
+  }
+
+  .expenses-metric small {
+    min-height: 22px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+}
