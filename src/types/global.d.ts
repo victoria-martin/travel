@@ -126,6 +126,7 @@ declare global {
     phraseTranslation: (fr: string, lang: string) => string;
     editPhraseTranslation: (fr: string, lang: string) => void;
     deleteCustomPhrase: (id: string) => void;
+    deletePackingItem: (id: string) => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;
