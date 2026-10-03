@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { parseExpensesCsv, type ParsedExpenseRow } from './ImportExpensesForm/parse-csv';
+import { CloseModalButton } from '../../../shared/CloseModalButton';
+import { ImportButton } from '../../../shared/ImportButton';
 import { ImportFileField } from './ImportExpensesForm/ImportFileField';
 import { ImportRowsTable } from './ImportExpensesForm/ImportRowsTable';
-import { ImportActions } from './ImportExpensesForm/ImportActions';
+import { parseExpensesCsv, type ParsedExpenseRow } from './ImportExpensesForm/parse-csv';
 
 export function ImportExpensesForm() {
   const [fileName, setFileName] = useState('');
@@ -76,11 +77,14 @@ export function ImportExpensesForm() {
           />
         )}
       </div>
-      <ImportActions
-        hasRows={rows.length > 0}
-        selectedCount={selectedCount}
-        onImport={importSelected}
-      />
+      <div className="modal-actions">
+        <CloseModalButton />
+        <ImportButton
+          hasRows={rows.length > 0}
+          selectedCount={selectedCount}
+          onImport={importSelected}
+        />
+      </div>
     </>
   );
 }

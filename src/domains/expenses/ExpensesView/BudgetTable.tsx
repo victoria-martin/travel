@@ -1,7 +1,7 @@
 import { EditableTagsCell } from '../../../shared/cells/EditableTagsCell';
-import { LabelCell } from '../../fixed-costs/cells';
-import type { FixedCost, Scenario } from '../../../store/types';
 import { Icon } from '../../../shared/Icon';
+import type { FixedCost, Scenario } from '../../../store/types';
+import { LabelCell } from '../../fixed-costs/cells';
 
 /*
   Port de expensesBudgetList (js/views/expenses/actual.js). `LabelCell` (domaine Charges fixes)
@@ -60,7 +60,6 @@ export function BudgetTable({ scenario }: { scenario: Scenario | null }) {
                 )}
               </td>
               <td className="expenses-number">—</td>
-              <td></td>
             </tr>
           )}
           <tr className="expenses-total-row">
@@ -98,7 +97,9 @@ function BudgetRow({
     <tr>
       <td>
         <LabelCell cost={cost} />
-        {recurrence.unit && <span className="expenses-detail">{window.expenseAmountLabel(cost)}</span>}
+        {recurrence.unit && (
+          <span className="expenses-detail">{window.expenseAmountLabel(cost)}</span>
+        )}
       </td>
       <td>
         <EditableTagsCell
