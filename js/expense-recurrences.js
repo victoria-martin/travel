@@ -16,6 +16,7 @@ const EXPENSE_RECURRENCES = {
     count: (span) => span.travelers,
   },
 };
+window.EXPENSE_RECURRENCES = EXPENSE_RECURRENCES;
 
 // Une valeur inconnue — le texte libre d'avant — retombe sur la récurrence par défaut.
 function expenseRecurrenceKey(recurrence) {

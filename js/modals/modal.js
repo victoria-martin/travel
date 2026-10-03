@@ -85,7 +85,7 @@ const MODAL_TYPES = {
       scenarioId,
       payload: id ? structuredClone(getFixedCost(id)) : emptyFixedCost(),
     }),
-    body: (m) => fixedCostForm(m.payload),
+    // body : React (src/domains/fixed-costs/modal/FixedCostForm.tsx, src/forms/react-forms.ts).
     edits: true,
   },
   'import-expenses': {

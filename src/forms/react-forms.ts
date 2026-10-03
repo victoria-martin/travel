@@ -1,5 +1,6 @@
 import { ActualExpenseForm } from '../domains/expenses/modal/ActualExpenseForm';
 import { ImportExpensesForm } from '../domains/expenses/modal/ImportExpensesForm';
+import { FixedCostForm } from '../domains/fixed-costs/modal/FixedCostForm';
 
 /*
   REACT_FORMS porte les types migrés en vrai composant React (pilote : actual-expense) — le reste
@@ -10,4 +11,5 @@ import { ImportExpensesForm } from '../domains/expenses/modal/ImportExpensesForm
 export const REACT_FORMS: Record<string, (props: { payload: any }) => React.JSX.Element> = {
   'actual-expense': ActualExpenseForm,
   'import-expenses': ImportExpensesForm,
+  charge: FixedCostForm,
 };

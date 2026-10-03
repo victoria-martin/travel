@@ -230,6 +230,12 @@ declare global {
     createScenario: () => void;
     scenarioCompareCard: (scenario: import('../store/types').Scenario) => string;
     saveActualExpense: (id: string) => void;
+    saveFixedCost: (id: string) => void;
+    expenseRecurrenceKey: (recurrence: string) => string;
+    EXPENSE_RECURRENCES: Record<
+      string,
+      { label: string; emoji: string; unit: string; count: (span: unknown) => number }
+    >;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

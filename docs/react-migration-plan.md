@@ -275,10 +275,28 @@ responsabilité ») :
   reste pour l'instant le `type` technique de la modale, masqué visuellement
   (`VisuallyHidden`) — les formulaires encore en HTML injecté portent déjà leur propre `<h3>`
   visible, pas encore relié en `Dialog.Title` ; à améliorer si un libellé plus lisible devient
-  utile (lecteur d'écran). **Prochain lot** : ajuster ce patron (formulaires + Dialog) puis
-  l'appliquer
-  aux autres types — à voir si un formulaire avec champs vocabulaire/tags (ex. `charge`) demande
-  un traitement différent.
+  utile (lecteur d'écran).
+- **2026-10-03 — composants partagés entre formulaires, et deuxième/troisième type portés.**
+  [src/shared/CloseModalButton.tsx](../src/shared/CloseModalButton.tsx) : le bouton « Annuler »,
+  identique dans tous les formulaires legacy (`onclick="dismissModal()"`), sort en commun plutôt
+  que répété à chaque port — **appelle `dismissModal()`, pas `closeModal()`** : la distinction
+  compte dès qu'un type a `edits: true` (`closeModal()` fermerait en silence une saisie non
+  enregistrée, sans redemander). Trouvé une fois en trop sur un composant déjà extrait
+  (`import-expenses`, sans incidence pour lui puisqu'il n'a pas `edits: true`) — corrigé avant de
+  le réutiliser ailleurs.
+  [src/shared/TagsField.tsx](../src/shared/TagsField.tsx) : port de `tagsField` (js/views/tags-field.js),
+  **à ne pas confondre avec `EditableTagsCell`** (shared/cells/) — chrome différent, une cellule de
+  tableau ouvre un menu déroulant, un champ de modale affiche tous les tags cochés en ligne avec
+  leur croix de retrait, plus un champ libre. Seul composant de formulaire **contrôlé** pour
+  l'instant (`tags`/`onChange`) : une liste qui se modifie a besoin d'un re-rendu à chaque geste,
+  contrairement aux champs texte/select en `defaultValue` partout ailleurs — `payload.categories`
+  reste muté en parallèle du state local pour que la fonction de sauvegarde déléguée (qui la lit
+  directement sur `modal.payload`) voie la bonne valeur.
+  `charge` (Charge budgétaire) rejoint `actual-expense` —
+  [domains/fixed-costs/modal/FixedCostForm.tsx](../src/domains/fixed-costs/modal/FixedCostForm.tsx),
+  premier à utiliser `TagsField`. **Prochain lot** : continuer sur les types restants
+  (`attraction`/`accommodation*` utilisent aussi `TagsField`, bon test de réutilisation ;
+  `voyage`/`step` sont plus complexes).
 - Un écran s'écrit toujours en clair (`AccommodationsView.tsx` assemble ses briques) — pas de
   moteur générique piloté par config qui fabriquerait l'écran à la place du fichier.
 

@@ -1,3 +1,4 @@
+import { CloseModalButton } from '../../../shared/CloseModalButton';
 import type { ActualExpense } from '../../../store/types';
 
 /*
@@ -67,9 +68,7 @@ export function ActualExpenseForm({ payload }: { payload: ActualExpense }) {
         <textarea id="actual-expense-notes" rows={2} defaultValue={payload.notes} />
       </div>
       <div className="modal-actions">
-        <button type="button" className="btn btn-ghost" onClick={() => window.dismissModal()}>
-          Annuler
-        </button>
+        <CloseModalButton />
         <button
           type="button"
           className="btn"
