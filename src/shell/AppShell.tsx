@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTravelStore } from '../store/useTravelStore';
 import { AskOverlayHost } from './AskOverlayHost';
+import { Confirm } from './Confirm';
 import { MainContent } from './MainContent';
 import { MobileNav } from './MobileNav';
 import { ModalHost } from './ModalHost';
@@ -32,6 +33,7 @@ export function AppShell() {
       <MainContent />
       <Toast />
       <ModalHost />
+      <Confirm />
       <AskOverlayHost />
     </>
   );
