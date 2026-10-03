@@ -453,17 +453,17 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   navigation revue. Le React Native écarté ici (2026-09, sur un chiffre de 7397 lignes) est
   reconsidéré par **Migrer l'app sur React**, juste en-dessous.
 - **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · 🚧 en cours : passer `js/`
-  (372 fichiers, 18630 lignes, état global mutable + re-rendu `innerHTML`) sur React + TypeScript,
-  écran par écran (strangler fig), pour un code plus carré et un futur portage React Native. Plan
-  détaillé, phases et découpage dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
-  sur la branche `react-migration`. Phase 0 (mécanisme + store Zustand lecture seule) faite et
-  vérifiée à l'écran. Phase 1 en cours : `DataTable` posé sur Villes, Charges fixes et Transports.
-  Transports est câblé avec ses trois onglets (Trajets, Loueurs & compagnies, Voitures), Radix Tabs
-  et DropdownMenu. Restent sur Villes : recherche, colonnes masquables, édition en place
-  (type/statut/tags), actions de ligne ; sur les écrans migrés, formulaires React et `ModalHost`.
-  Phase 2 démarrée : le détail Scénario a son arbre React, ses hooks money/road/route et le drag
-  multi-colonnes dnd-kit — DnD vérifié à l'écran (2026-10-03) ; les blocs secondaires réutilisent
-  encore le legacy, reste à vérifier avant de considérer ce port terminé.
+  sur React + TypeScript, écran par écran (strangler fig), pour un code plus carré et un futur
+  portage React Native. Plan détaillé dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
+  sur la branche `react-migration`. Phases 0 à 4 faites : store Zustand, les 8 écrans de la Phase 3
+  portés, et depuis la Phase 4 React possède `#app` en entier (sidebar/router/modale globale/
+  toasts) — `js/` legacy reste en place, cette phase a changé qui possède le DOM, pas combien
+  d'écrans sont encore legacy. Phase 5 (nettoyage RN) : premier passage fait
+  (2026-10-03) — 3 fuites listées sans frontière `platform/` (`@dnd-kit/core`, `FileReader`,
+  `@radix-ui/*`), rien d'urgent. **Reste ouvert** : les formulaires de modale (types de
+  `MODAL_TYPES`, `js/modals/modal.js`) encore legacy se portent un par un en React — backlog et
+  patron détaillés dans [docs/react-migration-modales-plan.md](docs/react-migration-modales-plan.md),
+  une bonne moitié faite (voir ce fichier pour l'état précis).
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
