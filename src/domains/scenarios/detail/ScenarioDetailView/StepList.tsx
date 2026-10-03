@@ -1,5 +1,6 @@
 import * as dnd from '@dnd-kit/react';
-import { Fragment, useEffect, useRef } from 'react';
+import { isSortable } from '@dnd-kit/react/sortable';
+import { Fragment } from 'react';
 import { Icon } from '../../../../shared/Icon';
 import type { Scenario, Step, StepGroup } from '../../../../store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
@@ -48,21 +49,21 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
   const rows = scenarioRows(scenario);
 
   /*
-    Le `position` que dnd-kit traque en interne (event.operation.position) n'a pas résolu le bug :
-    les drops atterrissaient toujours en fin de liste, signe d'un espace de coordonnées différent
-    de celui de getBoundingClientRect() (viewport). On retraque donc le pointeur nous-mêmes, mais en
-    phase de capture sur `window` — jamais interceptable par l'overlay de drag, contrairement à un
-    onPointerMove posé en bulle sur `.step-list` — avec `clientY`, garanti dans le même repère que
-    getBoundingClientRect().
+    Une lane est soit 'main' (la liste principale), soit l'id d'une option de groupe — même valeur
+    que le `lane` passé à StepCard. On lit l'ordre pré-drag (le store n'a pas encore bougé), jamais
+    le DOM : `OptimisticSortingPlugin` de dnd-kit l'a déjà réordonné en live pendant le glisser, donc
+    une géométrie relue après coup y est en décalage avec la position que la lib a déjà résolue.
   */
-  const pointerY = useRef(0);
-  useEffect(() => {
-    function trackPointer(event: PointerEvent) {
-      pointerY.current = event.clientY;
-    }
-    window.addEventListener('pointermove', trackPointer, { capture: true });
-    return () => window.removeEventListener('pointermove', trackPointer, { capture: true });
-  }, []);
+  function laneStepIds(lane: string): string[] {
+    if (lane === 'main')
+      return rows
+        .filter((row): row is StepRow & { step: Step } => row.kind === 'step' && !!row.step?.id)
+        .map((row) => row.step.id as string);
+    return window
+      .optionSteps(scenario, lane)
+      .map((step: Step) => step.id)
+      .filter((id: string | null): id is string => !!id);
+  }
 
   function finishDrag(
     event: Parameters<
@@ -71,13 +72,13 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
   ) {
     if (event.canceled) return;
     const draggedStep = event.operation.source;
-    const targetStep = event.operation.target;
-    if (!draggedStep || !targetStep || draggedStep.id === targetStep.id) return;
-    const dropTarget = targetStep.element;
-    if (!dropTarget) return;
-    const bounds = dropTarget.getBoundingClientRect();
-    const before = pointerY.current < bounds.top + bounds.height / 2;
-    window.moveStepBefore(scenario.id, String(draggedStep.id), String(targetStep.id), before);
+    if (!draggedStep || !isSortable(draggedStep) || !draggedStep.id) return;
+    const { group: lane, index } = draggedStep.sortable;
+    const ids = laneStepIds(String(lane)).filter((id) => id !== draggedStep.id);
+    if (ids.length === 0) return;
+    const before = index < ids.length;
+    const targetId = before ? ids[index] : ids[ids.length - 1];
+    window.moveStepBefore(scenario.id, String(draggedStep.id), targetId, before);
   }
 
   if (scenario.steps.length === 0) {
