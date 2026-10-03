@@ -458,12 +458,13 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   sur la branche `react-migration`. Phases 0 à 4 faites : store Zustand, les 8 écrans de la Phase 3
   portés, et depuis la Phase 4 React possède `#app` en entier (sidebar/router/modale globale/
   toasts) — `js/` legacy reste en place, cette phase a changé qui possède le DOM, pas combien
-  d'écrans sont encore legacy. Phase 5 (nettoyage RN) : premier passage fait
-  (2026-10-03) — 3 fuites listées sans frontière `platform/` (`@dnd-kit/core`, `FileReader`,
-  `@radix-ui/*`), rien d'urgent. **Reste ouvert** : les formulaires de modale (types de
-  `MODAL_TYPES`, `js/modals/modal.js`) encore legacy se portent un par un en React — backlog et
-  patron détaillés dans [docs/react-migration-modales-plan.md](docs/react-migration-modales-plan.md),
-  une bonne moitié faite (voir ce fichier pour l'état précis).
+  d'écrans sont encore legacy. Phase 2 (Scénarios détail, dont le DnD) et Phase 5 (nettoyage RN,
+  premier passage) sont closes aussi. **Fait** : tous les formulaires de modale (types de
+  `MODAL_TYPES`, `js/modals/modal.js`) sont portés en React — backlog et patron détaillés dans
+  [docs/react-migration-modales-plan.md](docs/react-migration-modales-plan.md). **Reste ouvert** :
+  les panneaux/modales utilitaires explicitement hors scope de ce backlog (`valise-composer`,
+  `scenario-panel`, `journal-panel`, `sync`, `settings`), puis l'horizon final — suppression de
+  `js/` legacy.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
