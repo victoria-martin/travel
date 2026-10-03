@@ -2,10 +2,9 @@ import { FilterFields } from './FilterFields';
 import { SidePanel } from './SidePanel';
 
 // Colonne fixe — mêmes champs que FilterButton, voir FilterFields.
-export function FilterPanel() {
+export function MapFilterPanel() {
   return (
     <SidePanel title="Filtres">
-      <span>coucou</span>
       <FilterFields />
     </SidePanel>
   );

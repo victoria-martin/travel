@@ -1,4 +1,5 @@
 const UNSET_TRANSPORT_MODE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
+window.UNSET_TRANSPORT_MODE = UNSET_TRANSPORT_MODE;
 
 const TRANSPORT_MODES = {
   plane: { label: 'Avion', emoji: '✈️', color: '#4E7A9B' },

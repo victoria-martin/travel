@@ -64,7 +64,7 @@ const MODAL_TYPES = {
   },
   prestataire: {
     open: (id) => ({ payload: id ? structuredClone(getProvider(id)) : emptyProvider() }),
-    body: (m) => providerForm(m.payload),
+    // body : React (src/domains/transports/modal/ProviderModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   modele: {
@@ -77,7 +77,7 @@ const MODAL_TYPES = {
       scenarioId,
       payload: id ? structuredClone(getOffer(id)) : emptyOffer(),
     }),
-    body: (m) => offerForm(m.payload),
+    // body : React (src/domains/rentals/modal/OfferModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   charge: {

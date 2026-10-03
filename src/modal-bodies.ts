@@ -3,6 +3,8 @@ import { ActualExpenseModal } from './domains/expenses/modal/ActualExpenseModal'
 import { ImportExpensesModal } from './domains/expenses/modal/ImportExpensesModal';
 import { FixedCostModal } from './domains/fixed-costs/modal/FixedCostModal';
 import { PackingItemModal } from './domains/packing/modal/PackingItemModal';
+import { OfferModal } from './domains/rentals/modal/OfferModal';
+import { ProviderModal } from './domains/transports/modal/ProviderModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
 
 /*
@@ -21,4 +23,6 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'valise-catalogue': PackingItemModal,
   phrase: AddTranslationModal,
   attraction: AttractionModal,
+  voiture: OfferModal,
+  prestataire: ProviderModal,
 };

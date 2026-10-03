@@ -32,6 +32,11 @@ declare global {
     setTransportStatus: (id: string, status: string) => void;
     TRANSPORT_MODES: Record<string, { label: string; emoji: string; color: string }>;
     PROVIDER_MODES: Record<string, { label: string; emoji: string; color: string }>;
+    UNSET_TRANSPORT_MODE: { label: string; emoji: string; color: string };
+    repaintProviderModels: () => void;
+    providerOptionsField: (payload: unknown) => string;
+    providerModelsField: (payload: unknown) => string;
+    saveProvider: (id: string) => void;
     TRANSPORT_STATUSES: Record<string, { label: string; emoji: string }>;
     transportMode: (mode: string) => { label: string; emoji: string; color: string };
     providerMode: (mode: string) => { label: string; emoji: string; color: string };
@@ -43,6 +48,17 @@ declare global {
     CAR_STATUSES: Record<string, { label: string; emoji: string }>;
     UNSET_CAR_FUEL: { label: string; emoji: string };
     UNSET_CAR_GEARBOX: { label: string; emoji: string };
+    UNSET_CAR_STATUS: { label: string; emoji: string };
+    providerSelectField: (
+      id: string,
+      mode: string,
+      selectedId: string,
+      onPicked: () => void,
+    ) => string;
+    repaintOfferProvider: () => void;
+    offerModelSelect: (payload: import('../store/types').Offer) => string;
+    offerOptionsField: (payload: import('../store/types').Offer) => string;
+    saveOffer: (id: string) => void;
     carFuel: (fuel: string) => { label: string; emoji: string };
     carGearbox: (gearbox: string) => { label: string; emoji: string };
     carStatus: (status: string) => { label: string; emoji: string };

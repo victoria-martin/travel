@@ -1,3 +1,4 @@
+import { MapFilterPanel } from '@/domains/carte/MapView/MapFilterPanel';
 import { Icon } from '@/shared/Icon';
 import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
@@ -5,7 +6,6 @@ import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { LeafletMap } from '../../platform/web/LeafletMap';
 import { FilterButton } from './MapView/FilterButton';
-import { FilterPanel } from './MapView/FilterPanel';
 import { Legend } from './MapView/Legend';
 import { NewCityButton } from './MapView/NewCityButton';
 import { RouteBuilderPanel } from './MapView/RouteBuilderPanel';
@@ -76,8 +76,7 @@ export function MapView() {
         <div className="map-side" style={{ width: `${window.prefs.mapSideWidth}px` }}>
           <RouteBuilderPanel />
           <ScenarioPanel />
-          <span>coucou</span>
-          <FilterPanel />
+          <MapFilterPanel />
           <Legend />
         </div>
         <SplitHandle mapRef={mapRef} />

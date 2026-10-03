@@ -17,70 +17,7 @@ function emptyOffer() {
   };
 }
 
-function offerForm(p) {
-  return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Ajouter'} une offre</h3>
-    <div class="field-row">
-      ${providerSelectField('offer-provider', 'car', p.providerId, repaintOfferProvider)}
-      <div class="field">
-        <label>Statut</label>
-        <select id="offer-status">
-          <option value="" ${p.status ? '' : 'selected'}>
-            ${UNSET_CAR_STATUS.emoji} ${UNSET_CAR_STATUS.label}
-          </option>
-          ${wordOptions(CAR_STATUSES, p.status)}
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Modèle</label>
-      <div id="offer-model-field">${offerModelSelect(p)}</div>
-    </div>
-    <div class="field">
-      <label>Lieu de prise en charge</label
-      ><input
-        id="offer-location"
-        type="text"
-        value="${escapeHtml(p.location)}"
-      />
-    </div>
-    ${offerScheduleFields('pickup', 'Prise en charge', p.pickupDate, p.pickupTime)}
-    ${offerScheduleFields('dropoff', 'Restitution', p.dropoffDate, p.dropoffTime)}
-    ${offerOptionsField(p)}
-    <div class="field">
-      <label>Prix par jour</label
-      ><input
-        id="offer-price-day"
-        type="text"
-        value="${escapeHtml(p.pricePerDay)}"
-      />
-    </div>
-    <div class="field">
-      <label>Lien</label><input id="offer-link" type="text" value="${escapeHtml(p.link)}" />
-    </div>
-    <div class="field">
-      <label>Notes</label><textarea id="offer-notes" rows="2">${escapeHtml(p.notes)}</textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="saveOffer('${p.id || ''}')">Enregistrer</button>
-    </div>
-  `;
-}
-
-// Les dates disent sur quelle durée le tarif relevé valait : un loueur est dégressif, deux relevés
-// de durées différentes ne donnent pas le même prix par jour.
-function offerScheduleFields(side, label, date, time) {
-  return /* HTML */ `<div class="field-row">
-    <div class="field">
-      <label>${label}</label
-      ><input id="offer-${side}-date" type="date" value="${escapeHtml(date)}" />
-    </div>
-    <div class="field">
-      <label>Heure</label><input id="offer-${side}-time" type="time" value="${escapeHtml(time)}" />
-    </div>
-  </div>`;
-}
+// body : React (src/domains/rentals/modal/OfferModal.tsx, src/modal-bodies.ts).
 
 /*
   Les modèles proposés sont ceux du loueur, pas tout le catalogue du voyage ; celui que l'offre

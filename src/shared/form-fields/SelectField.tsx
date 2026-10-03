@@ -6,18 +6,19 @@ export function SelectField({
   defaultValue,
   placeholder,
   options,
+  onChange,
 }: {
   id: string;
   label: string;
   defaultValue?: string;
   placeholder?: string;
   options: { value: string; label: string }[];
+  onChange?: () => void;
 }) {
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
-      {/* TODO: composant generique dans /select ? */}
-      <select id={id} defaultValue={defaultValue}>
+      <select id={id} defaultValue={defaultValue} onChange={onChange}>
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>

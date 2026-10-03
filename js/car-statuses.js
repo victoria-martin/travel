@@ -1,4 +1,5 @@
 const UNSET_CAR_STATUS = { label: 'Non renseigné', emoji: '❔' };
+window.UNSET_CAR_STATUS = UNSET_CAR_STATUS;
 
 const CAR_STATUSES = {
   booked: { label: 'Réservé', emoji: '🔒' },
