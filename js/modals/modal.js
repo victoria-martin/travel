@@ -12,7 +12,7 @@ var modalSnapshot = null; // field values as opened, to tell whether anything wa
 const MODAL_TYPES = {
   voyage: {
     open: (id) => ({ payload: id ? structuredClone(getTravel(id)) : emptyTravel() }),
-    body: (m) => travelForm(m.payload),
+    // body : React (src/domains/travels/modal/TravelModal.tsx, src/modal-bodies.ts).
     after: (m) => paintTravelModal(m.payload.accentColor),
     edits: true,
   },

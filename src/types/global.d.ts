@@ -95,6 +95,16 @@ declare global {
     ) => import('../store/types').ProviderOption[];
     priceNumber: (value: string) => number;
     formatRate: (value: number) => string;
+    TRAVEL_STATUSES: Record<string, { label: string; emoji: string }>;
+    DEFAULT_TRAVEL_STATUS: string;
+    DEFAULT_FUEL_PRICE: number;
+    DEFAULT_TOLL_RATE: number;
+    travelEmojiPicker: (payload: import('../store/types').Travel) => string;
+    travelHeaderPlace: (payload: import('../store/types').Travel) => string;
+    travelCountriesField: (payload: import('../store/types').Travel) => string;
+    travelAccentSwatches: (payload: import('../store/types').Travel) => string;
+    commitOnEnter: (event: KeyboardEvent) => void;
+    saveTravel: (id: string) => void;
     formatEuros: (value: number) => string;
     formatGuestPoints: (value: number) => string;
     formatCosts: (value: { euros: number; guestPoints: number }) => string;

@@ -135,15 +135,24 @@ payload réel (`open` renvoie `{ text: '' }`, jamais lu) ; `pasteImportForm` éc
 `pasteImportInstructions()` (extrait, instructions/textarea/aperçu, resté en `LegacyMarkup` — texte
 dérivé de constantes legacy, aucune valeur à le recomposer en JSX) + h3/modal-actions en JSX.
 `runPasteImport` fait tout elle-même (pas un simple save délégué) mais `#f-save` garde son rôle.
+`voyage` ([TravelModal.tsx](../src/domains/travels/modal/TravelModal.tsx)) — `cfg.after` (
+`paintTravelModal`) reste tel quel dans `MODAL_TYPES.voyage` : ModalHost rappelle déjà `cfg.after`
+après toute peinture, React comprise, pas de `useEffect` nécessaire. Emoji picker, sous-titre
+dérivé et nuancier d'accent restent en `LegacyMarkup` (sous-systèmes stateful qui ne touchent jamais
+`modal.payload`, lus par `saveTravel` par id) ; `travelCountriesField` pareil mais mute
+`modal.payload.countries` comme `tagsField`.
 
-**1. `voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
-   le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
-   comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
-   inchangé si ModalHost le rappelle toujours après peinture).
+**Bug trouvé et corrigé en route** : `readTravelForm` (save.js) lisait `#travel-fuel-price`/
+`#travel-toll-rate` sans condition, mais le formulaire ne les rendait plus depuis `2c02b9d`
+(19/09) — Enregistrer plantait sur ces deux champs absents, aucun voyage ne s'enregistrait depuis
+cette modale. Restaurés dans `TravelModal.tsx` (prix du litre / péage au km, préremplis par
+`payload.fuelPrice`/`tollRate`, placeholder = défaut).
 
-**Hors scope pour cette phase** (pas des formulaires d'entité, à traiter à part si besoin) :
-`valise-composer`, `scenario-panel`, `journal-panel` (panneaux/sheets), `sync`, `settings`
-(modales utilitaires).
+## Backlog épuisé
+
+Tous les types de `MODAL_TYPES` listés ci-dessus sont portés. Restent volontairement hors scope
+(pas des formulaires d'entité) : `valise-composer`, `scenario-panel`, `journal-panel`
+(panneaux/sheets), `sync`, `settings` (modales utilitaires) — à traiter à part si besoin.
 
 ## Non résolu, ne pas investiguer dans cette phase
 

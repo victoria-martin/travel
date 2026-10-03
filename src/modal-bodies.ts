@@ -15,6 +15,7 @@ import { StepModal } from './domains/scenarios/detail/step-modal/StepModal';
 import { ProviderModal } from './domains/transports/modal/ProviderModal';
 import { TransportModal } from './domains/transports/modal/TransportModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
+import { TravelModal } from './domains/travels/modal/TravelModal';
 import { VilleModal } from './domains/villes/modal/VilleModal';
 
 /*
@@ -45,4 +46,5 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'accommodation-google-maps': GoogleMapsAccommodationModal,
   step: StepModal,
   'paste-import': PasteImportModal,
+  voyage: TravelModal,
 };

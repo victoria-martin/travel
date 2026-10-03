@@ -28,93 +28,28 @@ function emptyTravel() {
   };
 }
 
-function travelForm(p) {
-  return /* HTML */ `
-    <div class="travel-modal-header">
-      ${travelEmojiPicker(p)}
-      <div>
-        <h3>
-          <span
-            class="editable"
-            id="travel-name"
-            contenteditable="true"
-            data-placeholder="Nouveau voyage"
-            onkeydown="commitOnEnter(event)"
-            >${escapeHtml(p.name)}</span
-          >
-        </h3>
-        ${travelHeaderPlace(p)}
-      </div>
+// body : React (src/domains/travels/modal/TravelModal.tsx, src/modal-bodies.ts).
+
+function travelAccentSwatches(p) {
+  return /* HTML */ `<div class="field">
+    <label>Couleur d'accent</label>
+    <div class="accent-swatches">
+      <button
+        type="button"
+        class="accent-swatch accent-none ${p.accentColor ? '' : 'selected'}"
+        data-accent=""
+        onclick="pickTravelAccent('')"
+        title="Aucune couleur"
+      >
+        —
+      </button>
+      ${TRAVEL_ACCENTS.map(
+        (color) =>
+          `<button type="button" class="accent-swatch ${p.accentColor === color ? 'selected' : ''}" data-accent="${color}" style="background:${color};" onclick="pickTravelAccent('${color}')" title="${color}"></button>`,
+      ).join('')}
     </div>
-    <div class="field-row">
-      ${travelCountriesField(p)}
-      <div class="field">
-        <label>Région</label
-        ><input id="travel-region" type="text" value="${escapeHtml(p.region)}" />
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Début</label><input id="travel-start" type="date" value="${p.startDate || ''}" />
-      </div>
-      <div class="field">
-        <label>Fin</label><input id="travel-end" type="date" value="${p.endDate || ''}" />
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label>Statut</label>
-        <select id="travel-status">
-          ${Object.keys(TRAVEL_STATUSES)
-            .map(
-              (key) =>
-                `<option value="${key}" ${p.status === key ? 'selected' : ''}>${TRAVEL_STATUSES[key].emoji} ${TRAVEL_STATUSES[key].label}</option>`,
-            )
-            .join('')}
-        </select>
-      </div>
-      <div class="field">
-        <label>Voyageurs</label
-        ><input id="travel-travelers" type="number" min="0" value="${p.travelers || 0}" />
-      </div>
-    </div>
-    <div class="field">
-      <label>Couleur d'accent</label>
-      <div class="accent-swatches">
-        <button
-          type="button"
-          class="accent-swatch accent-none ${p.accentColor ? '' : 'selected'}"
-          data-accent=""
-          onclick="pickTravelAccent('')"
-          title="Aucune couleur"
-        >
-          —
-        </button>
-        ${TRAVEL_ACCENTS.map(
-          (color) =>
-            `<button type="button" class="accent-swatch ${p.accentColor === color ? 'selected' : ''}" data-accent="${color}" style="background:${color};" onclick="pickTravelAccent('${color}')" title="${color}"></button>`,
-        ).join('')}
-      </div>
-      <input id="travel-accent" type="hidden" value="${escapeHtml(p.accentColor)}" />
-    </div>
-    <div class="field">
-      <label>Image</label
-      ><input
-        id="travel-image"
-        type="text"
-        value="${escapeHtml(p.image)}"
-        placeholder="https://…"
-      />
-    </div>
-    <div class="field">
-      <label>Description</label
-      ><textarea id="travel-description" rows="2">${escapeHtml(p.description)}</textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="saveTravel('${p.id || ''}')">Enregistrer</button>
-    </div>
-  `;
+    <input id="travel-accent" type="hidden" value="${escapeHtml(p.accentColor)}" />
+  </div>`;
 }
 
 function travelEmojiPicker(p) {

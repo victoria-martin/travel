@@ -5,6 +5,8 @@
 */
 const DEFAULT_FUEL_PRICE = 2.3;
 const DEFAULT_TOLL_RATE = 0.08;
+window.DEFAULT_FUEL_PRICE = DEFAULT_FUEL_PRICE;
+window.DEFAULT_TOLL_RATE = DEFAULT_TOLL_RATE;
 
 function travelFuelPrice() {
   const travel = currentTravel();
