@@ -131,6 +131,8 @@ declare global {
     toggleFavorite: (id: string) => void;
     duplicateAccommodation: (id: string) => void;
     allAccommodationTags: () => string[];
+    pasteImportInstructions: () => string;
+    runPasteImport: () => void;
     outOfRangeBanner: (reason: string | null) => string;
     accommodationSearchOutOfRange: (
       acc: import('../store/types').Accommodation,

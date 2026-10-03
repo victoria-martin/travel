@@ -130,7 +130,7 @@ const MODAL_TYPES = {
   },
   'paste-import': {
     open: () => ({ payload: { text: '' } }),
-    body: () => pasteImportForm(),
+    // body : React (src/domains/accommodations/modal/PasteImportModal.tsx, src/modal-bodies.ts).
     width: '640px',
     edits: true,
   },

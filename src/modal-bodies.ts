@@ -3,6 +3,7 @@ import { AirbnbAccommodationModal } from './domains/accommodations/modal/AirbnbA
 import { BookingAccommodationModal } from './domains/accommodations/modal/BookingAccommodationModal';
 import { GoogleMapsAccommodationModal } from './domains/accommodations/modal/GoogleMapsAccommodationModal';
 import { HomeExchangeAccommodationModal } from './domains/accommodations/modal/HomeExchangeAccommodationModal';
+import { PasteImportModal } from './domains/accommodations/modal/PasteImportModal';
 import { AttractionModal } from './domains/attractions/modal/AttractionModal';
 import { CarModelModal } from './domains/car-models/modal/CarModelModal';
 import { ActualExpenseModal } from './domains/expenses/modal/ActualExpenseModal';
@@ -43,4 +44,5 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'accommodation-airbnb': AirbnbAccommodationModal,
   'accommodation-google-maps': GoogleMapsAccommodationModal,
   step: StepModal,
+  'paste-import': PasteImportModal,
 };

@@ -52,9 +52,9 @@ function headerMapping(cells) {
 //   openModal('paste-import');
 // }
 
-function pasteImportForm() {
+// body : React (src/domains/accommodations/modal/PasteImportModal.tsx, src/modal-bodies.ts).
+function pasteImportInstructions() {
   return /* HTML */ `
-    <h3>Importer depuis un tableau</h3>
     <p style="font-size:13px; color:var(--ink-soft); margin-top:-8px;">
       Copie tes lignes depuis Google Sheets ou Excel, <strong>avec la ligne d'en-tête</strong> : les
       colonnes sont reconnues par leur nom, dans n'importe quel ordre. Noms compris : <br /><strong
@@ -82,10 +82,6 @@ function pasteImportForm() {
       >
     </div>
     <div id="paste-preview" style="font-size:12.5px; color:var(--ink-soft);"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="runPasteImport()">Analyser et importer</button>
-    </div>
   `;
 }
 

@@ -129,12 +129,14 @@ simple : la modale elle-même n'a que 4 champs plats, `radio-card-field` ne la c
 trail-options/weather, note du plan obsolète). Seul `stepAttractionsField`
 (attractions-field.js, 164 lignes — recherche + navigation clavier + création à la volée, état
 module `activeAttractionResult`) reste en `LegacyMarkup`, sous-système stateful qui vit bien en
-legacy.
+legacy. `paste-import`
+([PasteImportModal.tsx](../src/domains/accommodations/modal/PasteImportModal.tsx)) — pas de
+payload réel (`open` renvoie `{ text: '' }`, jamais lu) ; `pasteImportForm` éclaté en
+`pasteImportInstructions()` (extrait, instructions/textarea/aperçu, resté en `LegacyMarkup` — texte
+dérivé de constantes legacy, aucune valeur à le recomposer en JSX) + h3/modal-actions en JSX.
+`runPasteImport` fait tout elle-même (pas un simple save délégué) mais `#f-save` garde son rôle.
 
-**1. `paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
-   (144 lignes). Pas d'`edits:true` à vérifier au cas par cas.
-
-2. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
+**1. `voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
    le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
    comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
    inchangé si ModalHost le rappelle toujours après peinture).
