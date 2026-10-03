@@ -1,26 +1,30 @@
+import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
+import { DataTable } from '@/shared/DataTable/DataTable';
+import type { Column } from '@/shared/DataTable/types';
+import { Icon } from '@/shared/Icon';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import { SearchInput } from '@/shared/SearchInput';
+import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import type { FixedCost } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useTravelStore } from '../../store/useTravelStore';
-import { DataTable } from '../../shared/DataTable/DataTable';
-import { SearchField } from '../../shared/SearchField';
-import { normalizeSearch } from '../../shared/normalizeSearch';
-import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
-import { EditableTagsCell } from '../../shared/cells/EditableTagsCell';
-import { Icon } from '../../shared/Icon';
-import type { Column } from '../../shared/DataTable/types';
-import type { FixedCost } from '../../store/types';
 import { AmountCell, LabelCell, RecurrenceBadge } from './cells';
 
 /*
   Porte js/views/fixed-costs/{fixed-costs,header,columns}.js sur DataTable — deuxième écran après
-  Villes/Cities, toute l'infra (DataTable/SearchField/ColumnPicker) est réutilisée telle quelle.
+  Villes/Cities, toute l'infra (DataTable/SearchInput/ColumnPicker) est réutilisée telle quelle.
   Clé 'charges' (view/COLUMN_SETS/prefs) inchangée, pas de renommage anglais demandé pour cet
   écran. Pas encore portés : mode cartes (listModeToggle), notes éditables, catégories éditables,
   bouton Ajouter, actions de ligne, menu ⋮ — même scope réduit que Villes/Cities.
 */
 function searchText(fixedCost: FixedCost): string {
-  return [fixedCost.label, ...fixedCost.categories, window.expenseRecurrence(fixedCost.recurrence).label]
+  return [
+    fixedCost.label,
+    ...fixedCost.categories,
+    window.expenseRecurrence(fixedCost.recurrence).label,
+  ]
     .filter(Boolean)
     .join(' ');
 }
@@ -124,7 +128,7 @@ export function FixedCostsView() {
           </p>
         </div>
         <div className="view-header-actions">
-          <SearchField value={query} onChange={setQuery} />
+          <SearchInput value={query} onChange={setQuery} />
           <ColumnPicker kind="charges" columns={columns} />
           <SettingsMenu />
         </div>

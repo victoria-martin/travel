@@ -1,5 +1,5 @@
-import type { Column } from '../../../../shared/DataTable/types';
-import type { Provider } from '../../../../store/types';
+import type { Column } from '@/shared/DataTable/types';
+import type { Provider } from '@/store/types';
 import {
   ActionsCell,
   BookingLinkCell,

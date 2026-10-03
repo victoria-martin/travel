@@ -1,15 +1,9 @@
-import { TextCell } from '../../../../shared/cells/TextCell';
-import type { Transport } from '../../../../store/types';
+import { TextCell } from '@/shared/cells/TextCell';
+import type { Transport } from '@/store/types';
 
 // Lecture seule pour ce lot : pas encore le flux « précision libre sous le lieu » pour from/to —
 // la précision s'affiche en ligne plutôt qu'en sous-ligne (.row-notes), un détail visuel à revoir.
-export function EndpointCell({
-  placeId,
-  precision,
-}: {
-  placeId: string;
-  precision: string;
-}) {
+export function EndpointCell({ placeId, precision }: { placeId: string; precision: string }) {
   const place = window.transportPlaceName(placeId);
   if (!place) return <TextCell value={precision} />;
   return (

@@ -361,6 +361,12 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 
 ## 🧩 Transverse
 
+- **Colonne « Modifié le »** <!--t:cr8t--> — 🗃️ modèle · ⏳ à faire : chaque entité porte déjà
+  `createdAt`/`updatedAt` ([storage.js](js/storage.js)), mais seuls hébergements et lieux & activités
+  affichent une colonne « Créé le » ([columns.js](js/views/accommodations/table/columns.js),
+  [columns.js](js/views/attractions/columns.js)). Ajouter « Modifié le » à ces deux tables, et
+  étendre les deux colonnes aux autres listes (prestataires, modèles, offres, charges fixes,
+  dépenses réelles, transports, scénarios…).
 - **Réordonner la barre latérale desktop** <!--t:n7wq--> — 🖼️ écran · ⏳ à faire : le tiroir mobile
   laisse déjà glisser l'ordre des pages (`prefs.mobileNavOrder`, [mobile-nav/](js/views/mobile-nav/)),
   pas la sidebar desktop qui boucle sur `NAV_ITEMS` dans un ordre fixe

@@ -1,11 +1,11 @@
-import { ModelsSection } from './CarsTab/ModelsSection';
+import { CarModelsSection } from './CarsTab/CarModelsSection';
 import { OffersSection } from './CarsTab/OffersSection';
 
 export function CarsTab() {
   return (
     <>
       <OffersSection />
-      <ModelsSection />
+      <CarModelsSection />
     </>
   );
 }

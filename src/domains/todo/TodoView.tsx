@@ -1,6 +1,6 @@
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
-import { LegacyMarkup } from '../../shared/LegacyMarkup';
-import { useTravelStore } from '../../store/useTravelStore';
 import { FreeTodoCard } from './TodoView/FreeTodoCard';
 
 /*

@@ -1,8 +1,8 @@
-import { useTravelStore } from '../../store/useTravelStore';
+import type { Travel } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { PackingCard } from './HomeView/PackingCard';
 import { ScenarioCard } from './HomeView/ScenarioCard';
 import { TodoCard } from './HomeView/TodoCard';
-import type { Travel } from '../../store/types';
 
 function formatHomeDate(date: Date): string {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });

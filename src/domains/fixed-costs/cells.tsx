@@ -1,6 +1,6 @@
-import { TagLabel } from '../../shared/TagLabel';
-import { TextCell } from '../../shared/cells/TextCell';
-import type { FixedCost } from '../../store/types';
+import { TagLabel } from '@/shared/TagLabel';
+import { TextCell } from '@/shared/cells/TextCell';
+import type { FixedCost } from '@/store/types';
 
 // Lecture seule pour ce lot : notes pas encore éditables en place (editableText, contenteditable).
 export function LabelCell({ cost }: { cost: FixedCost }) {

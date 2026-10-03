@@ -1,4 +1,4 @@
-import { Icon } from '../../../shared/Icon';
+import { Icon } from '@/shared/Icon';
 import { SidePanel } from './SidePanel';
 
 // Port de mapLegendPanel (js/views/map/legend.js).

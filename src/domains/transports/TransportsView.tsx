@@ -1,7 +1,7 @@
+import { Icon } from '@/shared/Icon';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { useTravelStore } from '@/store/useTravelStore';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Icon } from '../../shared/Icon';
-import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
-import { useTravelStore } from '../../store/useTravelStore';
 import { CarsTab } from './TransportsView/CarsTab';
 import { ProvidersTab } from './TransportsView/ProvidersTab';
 import { TransportsListTab } from './TransportsView/TransportsListTab';

@@ -1,4 +1,4 @@
-import type { Accommodation } from '../../../store/types';
+import type { Accommodation } from '@/store/types';
 import { popupName } from './popupName';
 
 // Port de accommodationPopup (js/views/map/markers.js) en chaîne HTML : Leaflet bindPopup prend du

@@ -129,6 +129,17 @@ declare global {
     deletePackingItem: (id: string) => void;
     allPackingCategories: () => string[];
     savePackingItem: (id: string) => void;
+    NEW_WORD_VALUE: string;
+    wordSelectValues: Record<string, string>;
+    wordSelectChanged: (id: string, bank: string) => void;
+    UNSET_ATTRACTION_TYPE: { label: string; emoji: string; color: string };
+    UNSET_ATTRACTION_STATUS: { label: string; emoji: string };
+    attractionAccommodations: () => import('../store/types').Accommodation[];
+    locateFields: (payload: unknown) => string;
+    attractionScenarioActions: () => string;
+    importGoogleMapsPaste: (field: HTMLInputElement, nameId: string) => void;
+    importGoogleMapsLink: (field: HTMLInputElement, nameId: string) => void;
+    saveAttraction: (id: string) => void;
     todoBuilder: () => string;
     todoListCard: (list: import('../store/types').TodoList) => string;
     setTodoSearch: (query: string) => void;

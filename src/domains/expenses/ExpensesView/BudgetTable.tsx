@@ -1,6 +1,6 @@
-import { EditableTagsCell } from '../../../shared/cells/EditableTagsCell';
-import { Icon } from '../../../shared/Icon';
-import type { FixedCost, Scenario } from '../../../store/types';
+import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
+import { Icon } from '@/shared/Icon';
+import type { FixedCost, Scenario } from '@/store/types';
 import { LabelCell } from '../../fixed-costs/cells';
 
 /*
@@ -26,6 +26,7 @@ export function BudgetTable({ scenario }: { scenario: Scenario | null }) {
   const actualTotal = window.actualExpensesTotal();
   const remaining = budgetTotal - actualTotal;
 
+  // TODO : c est une nouvelle table ?
   return (
     <div className="expenses-table-scroll">
       <table className="expenses-table expenses-budget-table">

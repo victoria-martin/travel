@@ -1,5 +1,5 @@
+import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect } from 'react';
-import { useTravelStore } from '../../../store/useTravelStore';
 import { ScenarioLegacyMarkup } from './ScenarioDetailView/ScenarioLegacyMarkup';
 
 import { useScenarioMoney } from './hooks/useScenarioMoney';

@@ -1,12 +1,12 @@
+import { DataTable } from '@/shared/DataTable/DataTable';
+import { Icon } from '@/shared/Icon';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import { SearchInput } from '@/shared/SearchInput';
+import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import type { Provider } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { DataTable } from '../../../shared/DataTable/DataTable';
-import { Icon } from '../../../shared/Icon';
-import { normalizeSearch } from '../../../shared/normalizeSearch';
-import { SearchField } from '../../../shared/SearchField';
-import { ColumnPicker } from '../../../shared/toolbar/ColumnPicker';
-import type { Provider } from '../../../store/types';
-import { useTravelStore } from '../../../store/useTravelStore';
 import { columns } from './ProvidersTab/columns';
 
 function providerSearchText(provider: Provider): string {
@@ -42,7 +42,7 @@ export function ProvidersTab() {
   return (
     <>
       <div className="view-header-actions test-red">
-        <SearchField value={query} onChange={setQuery} />
+        <SearchInput value={query} onChange={setQuery} />
         <ColumnPicker kind="prestataires" columns={columns} />
         <button
           type="button"

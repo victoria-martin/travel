@@ -1,4 +1,4 @@
-import { Icon } from '../../../shared/Icon';
+import { Icon } from '@/shared/Icon';
 import type { PhraseItem as PhraseItemType } from '../types';
 
 // Port de phraseItemHtml/phraseStatusButton (js/views/phrases.js).

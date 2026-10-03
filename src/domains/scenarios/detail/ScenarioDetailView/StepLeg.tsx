@@ -1,4 +1,4 @@
-import type { Scenario, Step } from '../../../../store/types';
+import type { Scenario, Step } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
 
 function durationLabel(seconds: number): string {

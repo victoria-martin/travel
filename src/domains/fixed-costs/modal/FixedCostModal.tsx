@@ -1,12 +1,12 @@
+import { SelectField } from '@/shared/form-fields/SelectField';
+import { TagsField } from '@/shared/form-fields/TagsField';
+import { TextField } from '@/shared/form-fields/TextField';
+import { TextareaField } from '@/shared/form-fields/TextareaField';
+import { CloseModalButton } from '@/shared/modal/CloseModalButton';
+import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
+import { ModalTitle } from '@/shared/modal/ModalTitle';
+import type { FixedCost } from '@/store/types';
 import { useState } from 'react';
-import { CloseModalButton } from '../../../shared/CloseModalButton';
-import { ModalSaveButton } from '../../../shared/ModalSaveButton';
-import { ModalTitle } from '../../../shared/ModalTitle';
-import { SelectField } from '../../../shared/SelectField';
-import { TagsField } from '../../../shared/TagsField';
-import { TextField } from '../../../shared/TextField';
-import { TextareaField } from '../../../shared/TextareaField';
-import type { FixedCost } from '../../../store/types';
 
 /*
   Port de fixedCostForm/saveFixedCost (js/views/fixed-costs/modal/{form,save}.js) — mêmes principes

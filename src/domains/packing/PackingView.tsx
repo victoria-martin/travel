@@ -1,6 +1,6 @@
+import { Icon } from '@/shared/Icon';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
-import { Icon } from '../../shared/Icon';
-import { useTravelStore } from '../../store/useTravelStore';
 import { groupPackingByCategory, UNCATEGORIZED } from './group';
 import { PackingGroup } from './PackingView/PackingGroup';
 

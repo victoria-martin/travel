@@ -1,7 +1,7 @@
+import { Icon } from '@/shared/Icon';
+import type { Scenario } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useShallow } from 'zustand/react/shallow';
-import { Icon } from '../../../shared/Icon';
-import type { Scenario } from '../../../store/types';
-import { useTravelStore } from '../../../store/useTravelStore';
 import { SidePanel } from './SidePanel';
 
 // Port de scenario-panel.js. Le tracé lui-même (drawScenarioOnMap) reste délégué au legacy, voir

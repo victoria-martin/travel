@@ -1,6 +1,6 @@
-import { Icon } from '../../../../shared/Icon';
-import { TagLabel } from '../../../../shared/TagLabel';
-import type { Provider } from '../../../../store/types';
+import { Icon } from '@/shared/Icon';
+import { TagLabel } from '@/shared/TagLabel';
+import type { Provider } from '@/store/types';
 
 export function LogoCell({ provider }: { provider: Provider }) {
   return provider.logo ? (

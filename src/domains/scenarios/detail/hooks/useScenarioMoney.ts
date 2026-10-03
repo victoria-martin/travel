@@ -1,4 +1,4 @@
-import type { Scenario } from '../../../../store/types';
+import type { Scenario } from '@/store/types';
 
 export interface ScenarioMoney {
   accommodations: {

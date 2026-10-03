@@ -1,7 +1,7 @@
+import { Icon } from '@/shared/Icon';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect } from 'react';
-import { Icon } from '../../shared/Icon';
-import { LegacyMarkup } from '../../shared/LegacyMarkup';
-import { useTravelStore } from '../../store/useTravelStore';
 import { DayCards } from './JournalView/DayCards';
 
 /*

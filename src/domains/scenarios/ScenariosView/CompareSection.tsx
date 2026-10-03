@@ -1,5 +1,5 @@
-import { LegacyMarkup } from '../../../shared/LegacyMarkup';
-import type { Scenario } from '../../../store/types';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import type { Scenario } from '@/store/types';
 
 // Port de scenarioCompare/scenarioCompareCard (js/views/scenarios/compare/{cards,card}.js) —
 // délégué : un récap financier dense, même famille que les lignes de récap du détail d'un

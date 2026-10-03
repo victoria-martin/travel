@@ -1,11 +1,11 @@
+import { DataTable } from '@/shared/DataTable/DataTable';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import { SearchInput } from '@/shared/SearchInput';
+import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import type { Transport } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { DataTable } from '../../../shared/DataTable/DataTable';
-import { normalizeSearch } from '../../../shared/normalizeSearch';
-import { SearchField } from '../../../shared/SearchField';
-import { ColumnPicker } from '../../../shared/toolbar/ColumnPicker';
-import type { Transport } from '../../../store/types';
-import { useTravelStore } from '../../../store/useTravelStore';
 import { columns } from './TransportsListTab/columns';
 
 function searchText(transport: Transport): string {
@@ -46,7 +46,7 @@ export function TransportsListTab() {
   return (
     <>
       <div className="view-header-actions">
-        <SearchField value={query} onChange={setQuery} />
+        <SearchInput value={query} onChange={setQuery} />
         <ColumnPicker kind="transports" columns={columns} />
       </div>
       {items.length === 0 ? (

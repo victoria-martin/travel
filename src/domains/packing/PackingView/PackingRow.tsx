@@ -1,6 +1,6 @@
-import { EditableTextCell } from '../../../shared/cells/EditableTextCell';
-import { Icon } from '../../../shared/Icon';
-import type { PackingItem } from '../../../store/types';
+import { EditableTextCell } from '@/shared/cells/EditableTextCell';
+import { Icon } from '@/shared/Icon';
+import type { PackingItem } from '@/store/types';
 
 // Port de packingCatalogRow (js/views/packing/catalog-list.js).
 export function PackingRow({ item }: { item: PackingItem }) {

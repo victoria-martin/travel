@@ -1,4 +1,4 @@
-import { useTravelStore } from '../../store/useTravelStore';
+import { useTravelStore } from '@/store/useTravelStore';
 import { CountryInfoCard } from './CountryInfoView/CountryInfoCard';
 
 // Porte js/views/country-info/country-info.js. Pas de sélecteur : travelCountries() dérive de

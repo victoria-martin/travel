@@ -1,11 +1,11 @@
-import { CloseModalButton } from '../../../shared/CloseModalButton';
-import { FieldRow } from '../../../shared/FieldRow';
-import { ModalSaveButton } from '../../../shared/ModalSaveButton';
-import { ModalTitle } from '../../../shared/ModalTitle';
-import { SelectField } from '../../../shared/SelectField';
-import { TextField } from '../../../shared/TextField';
-import { TextareaField } from '../../../shared/TextareaField';
-import type { ActualExpense } from '../../../store/types';
+import { SelectField } from '@/shared/form-fields/SelectField';
+import { TextField } from '@/shared/form-fields/TextField';
+import { TextareaField } from '@/shared/form-fields/TextareaField';
+import { FieldRow } from '@/shared/layout/FieldRow';
+import { CloseModalButton } from '@/shared/modal/CloseModalButton';
+import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
+import { ModalTitle } from '@/shared/modal/ModalTitle';
+import type { ActualExpense } from '@/store/types';
 
 /*
   Premier formulaire de modale porté en React (pilote, docs/react-migration-plan.md § 4) — reste
@@ -33,9 +33,20 @@ export function ActualExpenseModal({ payload }: { payload: ActualExpense }) {
   return (
     <>
       <ModalTitle isNew={!payload.id} subject="une dépense réelle" />
-      <TextField id="actual-expense-date" label="Date" type="date" defaultValue={payload.date} required />
+      <TextField
+        id="actual-expense-date"
+        label="Date"
+        type="date"
+        defaultValue={payload.date}
+        required
+      />
       <TextField id="actual-expense-label" label="Dépense" defaultValue={payload.label} required />
-      <TextField id="actual-expense-amount" label="Montant" defaultValue={payload.amount} required />
+      <TextField
+        id="actual-expense-amount"
+        label="Montant"
+        defaultValue={payload.amount}
+        required
+      />
       <SelectField
         id="actual-expense-budget"
         label="Poste budgétaire"

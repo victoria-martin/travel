@@ -1,4 +1,4 @@
-import type { Attraction } from '../../../store/types';
+import type { Attraction } from '@/store/types';
 
 export const CitiesHeader = ({
   attractions,

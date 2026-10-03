@@ -64,6 +64,7 @@ export function ModalHost() {
           </Dialog.Portal>
         )}
       </Dialog.Root>
+      {/* TODO: créer un composant à part */}
       {window.dismissAskOpen && (
         <div
           className="overlay overlay-ask"
@@ -74,11 +75,11 @@ export function ModalHost() {
           <div className="modal modal-ask">
             <h3>Enregistrer les modifications ?</h3>
             <div className="modal-actions">
-              <button type="button" className="btn btn-ghost" onClick={() => window.closeModal()}>
-                Ne pas enregistrer
-              </button>
               <button type="button" className="btn btn-ghost" onClick={() => window.keepEditing()}>
                 Annuler
+              </button>
+              <button type="button" className="btn btn-ghost" onClick={() => window.closeModal()}>
+                Ne pas enregistrer
               </button>
               <button type="button" className="btn" onClick={() => window.saveAndClose()}>
                 Enregistrer

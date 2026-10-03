@@ -6,7 +6,7 @@ import { Icon } from './Icon';
   main après chaque frappe, parce que render() reconstruit tout le DOM — React garde le même
   <input>, ce correctif n'a pas d'équivalent à écrire ici.
 */
-export function SearchField({
+export function SearchInput({
   value,
   onChange,
 }: {

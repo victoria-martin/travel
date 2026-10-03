@@ -1,5 +1,5 @@
+import type { Accommodation, Attraction, Ville } from '@/store/types';
 import type { MapMarkerData } from '../../../platform/web/LeafletMap/MapMarkerData';
-import type { Accommodation, Attraction, Ville } from '../../../store/types';
 import { accommodationPopup } from '../popups/accommodationPopup';
 import { attractionPopup } from '../popups/attractionPopup';
 import { villePopup } from '../popups/villePopup';
@@ -13,7 +13,9 @@ export function markerData(
   attractions: Attraction[],
   villes: Ville[],
 ): MapMarkerData[] {
-  const scenario = window.mapFilters.scenarioId ? window.getScenario(window.mapFilters.scenarioId) : null;
+  const scenario = window.mapFilters.scenarioId
+    ? window.getScenario(window.mapFilters.scenarioId)
+    : null;
   const chosenAccommodationIds =
     scenario && window.mapFilters.scenarioOnly ? window.scenarioAccommodationIds(scenario) : null;
 

@@ -1,12 +1,12 @@
-import { useTravelStore } from '../../store/useTravelStore';
-import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { useTravelStore } from '@/store/useTravelStore';
+import { ActualExpenseButton } from './ExpensesView/ActualExpenseButton';
 import { ActualExpensesTable } from './ExpensesView/ActualExpensesTable';
+import { AddBudgetButton } from './ExpensesView/AddBudgetButton';
 import { BudgetTable } from './ExpensesView/BudgetTable';
 import { DerivedSection } from './ExpensesView/DerivedSection';
-import { SummaryMetrics } from './ExpensesView/SummaryMetrics';
-import { AddBudgetButton } from './ExpensesView/AddBudgetButton';
-import { ActualExpenseButton } from './ExpensesView/ActualExpenseButton';
 import { ImportExpensesButton } from './ExpensesView/ImportExpensesButton';
+import { SummaryMetrics } from './ExpensesView/SummaryMetrics';
 
 /*
   Porte js/views/expenses/{expenses,header,total,actual,derived}.js, scope réduit comme ailleurs :

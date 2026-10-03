@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { defineConfig } from 'vite';
 
 /*
   Sortie en IIFE, pas en module : l'app tourne encore en file:// / scripts classiques
@@ -21,6 +22,11 @@ export default defineConfig({
       name: 'TravelReact',
       formats: ['iife'],
       fileName: () => 'react-app.js',
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

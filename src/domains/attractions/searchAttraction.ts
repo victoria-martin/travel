@@ -1,4 +1,4 @@
-import type { Attraction } from '../../store/types';
+import type { Attraction } from '@/store/types';
 
 // Port de listSearchText('attractions'/'cities') (js/views/table.js) — même entité, même texte.
 export function searchAttraction(attraction: Attraction): string {

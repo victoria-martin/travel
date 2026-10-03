@@ -1,4 +1,4 @@
-import type { PackingItem } from '../../store/types';
+import type { PackingItem } from '@/store/types';
 
 // Port de groupPackingByCategory (js/views/packing/group.js), spécialisé au catalogue — le seul
 // consommateur côté React pour l'instant (composer/onglet scénario restent legacy).

@@ -1,4 +1,4 @@
-import { SwitchField } from '../SwitchField';
+import { SwitchField } from '../form-fields/SwitchField';
 import { ToolbarPanel } from './ToolbarPanel';
 
 /*

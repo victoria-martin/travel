@@ -1,7 +1,7 @@
-import { TagDropdown } from '../../../../shared/select/TagDropdown';
-import type { CarModel } from '../../../../store/types';
+import { TagDropdown } from '@/shared/select/TagDropdown';
+import type { CarModel } from '@/store/types';
 
-// Partagés entre OffersSection et ModelsSection : même dictionnaire, même setter, que la ligne
+// Partagés entre OffersSection et CarModelsSection : même dictionnaire, même setter, que la ligne
 // soit une offre (via son modèle) ou le modèle lui-même.
 export function FuelDropdown({ model }: { model: CarModel | undefined }) {
   if (!model) return <>—</>;

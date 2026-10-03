@@ -16,6 +16,7 @@ export function SelectField({
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
+      {/* TODO: composant generique dans /select ? */}
       <select id={id} defaultValue={defaultValue}>
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (

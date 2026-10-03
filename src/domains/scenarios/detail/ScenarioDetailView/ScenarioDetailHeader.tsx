@@ -1,5 +1,5 @@
-import { Icon } from '../../../../shared/Icon';
-import type { Scenario } from '../../../../store/types';
+import { Icon } from '@/shared/Icon';
+import type { Scenario } from '@/store/types';
 import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
 
 export function ScenarioDetailHeader({

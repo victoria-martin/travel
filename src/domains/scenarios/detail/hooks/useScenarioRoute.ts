@@ -1,5 +1,5 @@
+import type { Scenario } from '@/store/types';
 import { useEffect, useState } from 'react';
-import type { Scenario } from '../../../../store/types';
 
 interface RoadLeg {
   distance: number;

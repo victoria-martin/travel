@@ -1,5 +1,5 @@
-import { Icon } from '../../../../shared/Icon';
-import type { Scenario, StepGroup } from '../../../../store/types';
+import { Icon } from '@/shared/Icon';
+import type { Scenario, StepGroup } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
 import { OptionColumn } from './OptionColumn';
 import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';

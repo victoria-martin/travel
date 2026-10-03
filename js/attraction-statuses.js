@@ -1,4 +1,5 @@
 const UNSET_ATTRACTION_STATUS = { label: 'Non renseigné', emoji: '❔' };
+window.UNSET_ATTRACTION_STATUS = UNSET_ATTRACTION_STATUS;
 
 const ATTRACTION_STATUSES = {
   toSort: { label: 'À trier', emoji: '📥' },

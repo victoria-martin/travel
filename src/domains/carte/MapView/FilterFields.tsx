@@ -1,5 +1,5 @@
-import { Icon } from '../../../shared/Icon';
-import { SwitchField } from '../../../shared/SwitchField';
+import { Icon } from '@/shared/Icon';
+import { SwitchField } from '@/shared/form-fields/SwitchField';
 import { MAP_KINDS } from './mapKinds';
 
 /*

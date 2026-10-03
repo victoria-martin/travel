@@ -1,9 +1,9 @@
+import { Icon } from '@/shared/Icon';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { LeafletMap } from '../../platform/web/LeafletMap';
-import { Icon } from '../../shared/Icon';
-import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
-import { useTravelStore } from '../../store/useTravelStore';
 import { FilterButton } from './MapView/FilterButton';
 import { FilterPanel } from './MapView/FilterPanel';
 import { Legend } from './MapView/Legend';

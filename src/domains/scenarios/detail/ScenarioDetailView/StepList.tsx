@@ -1,8 +1,8 @@
+import { Icon } from '@/shared/Icon';
+import type { Scenario, Step, StepGroup } from '@/store/types';
 import * as dnd from '@dnd-kit/react';
 import { isSortable } from '@dnd-kit/react/sortable';
 import { Fragment } from 'react';
-import { Icon } from '../../../../shared/Icon';
-import type { Scenario, Step, StepGroup } from '../../../../store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
 import { StepCard } from './StepCard';
 import { StepGroupView } from './StepGroupView';

@@ -1,7 +1,7 @@
-import { FavoriteCell } from '../../../shared/cells/FavoriteCell';
-import { Icon } from '../../../shared/Icon';
-import { LegacyMarkup } from '../../../shared/LegacyMarkup';
-import type { Scenario } from '../../../store/types';
+import { FavoriteCell } from '@/shared/cells/FavoriteCell';
+import { Icon } from '@/shared/Icon';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import type { Scenario } from '@/store/types';
 
 /*
   Port de scenarioRow (js/views/scenarios/list/row.js). La bande d'itinéraire
@@ -27,9 +27,7 @@ export function ScenarioCard({
     <div
       className={`scenario-card ${scenario.isChosen ? 'is-chosen' : ''}`}
       onClick={() =>
-        compareMode
-          ? window.toggleComparedScenario(scenario.id)
-          : window.openScenario(scenario.id)
+        compareMode ? window.toggleComparedScenario(scenario.id) : window.openScenario(scenario.id)
       }
     >
       <div className="scenario-card-body">

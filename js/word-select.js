@@ -11,7 +11,9 @@ const WORD_BANKS = {
 };
 
 const NEW_WORD_VALUE = '__new';
+window.NEW_WORD_VALUE = NEW_WORD_VALUE;
 const wordSelectValues = {};
+window.wordSelectValues = wordSelectValues;
 
 function loadCustomWords() {
   Object.entries(WORD_BANKS).forEach(([bank, { dict }]) => {

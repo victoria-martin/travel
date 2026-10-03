@@ -1,7 +1,14 @@
-import type { Column } from '../../../../../shared/DataTable/types';
-import type { CarModel, Offer } from '../../../../../store/types';
+import type { Column } from '@/shared/DataTable/types';
+import type { CarModel, Offer } from '@/store/types';
 import { FuelDropdown, GearboxDropdown } from '../cells';
-import { ActionsCell, DefaultToggleCell, LinkCell, ModelCell, OptionsCell, StatusDropdown } from './cells';
+import {
+  ActionsCell,
+  DefaultToggleCell,
+  LinkCell,
+  ModelCell,
+  OptionsCell,
+  StatusDropdown,
+} from './cells';
 
 // Prend `carModels` en argument (pas un const à plat) : le fabricant/la boîte d'une offre
 // dépendent du modèle qu'elle référence, pas de l'offre seule.

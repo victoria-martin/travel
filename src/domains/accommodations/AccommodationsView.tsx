@@ -1,11 +1,12 @@
+import { AddResourceButton } from '@/shared/buttons/AddResourceButton';
+import { DataTable } from '@/shared/DataTable/DataTable';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import { SearchInput } from '@/shared/SearchInput';
+import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { DataTable } from '../../shared/DataTable/DataTable';
-import { normalizeSearch } from '../../shared/normalizeSearch';
-import { SearchField } from '../../shared/SearchField';
-import { ColumnPicker } from '../../shared/toolbar/ColumnPicker';
-import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
-import { useTravelStore } from '../../store/useTravelStore';
 import { columns } from './AccommodationsView/columns';
 import { searchAccommodation } from './searchAccommodation';
 
@@ -42,15 +43,20 @@ export function AccommodationsView() {
           </p>
         </div>
         <div className="view-header-actions">
-          <SearchField value={query} onChange={setQuery} />
+          <SearchInput value={query} onChange={setQuery} />
           <ColumnPicker kind="hebergements" columns={columns} />
-          <button
+          <AddResourceButton
+            title="Ajouter un hébergement"
+            onClick={() => window.openModal('accommodation')}
+            label="Ajouter"
+          />
+          {/* <button
             type="button"
             className="toolbar-btn"
             onClick={() => window.openModal('accommodation')}
           >
             Ajouter
-          </button>
+          </button> */}
           <SettingsMenu />
         </div>
       </div>

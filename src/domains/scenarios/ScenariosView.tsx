@@ -1,11 +1,11 @@
+import { Icon } from '@/shared/Icon';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { Icon } from '../../shared/Icon';
-import { useTravelStore } from '../../store/useTravelStore';
-import { matchesScenarioSearch } from './searchScenario';
 import { CompareSection } from './ScenariosView/CompareSection';
 import { ScenarioCard } from './ScenariosView/ScenarioCard';
 import { scenarioRank } from './ScenariosView/utils';
+import { matchesScenarioSearch } from './searchScenario';
 
 /*
   Porte js/views/scenarios/{scenarios,header,list/list,list/row}.js. La bande d'itinéraire et les

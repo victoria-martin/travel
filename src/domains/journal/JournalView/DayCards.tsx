@@ -1,10 +1,12 @@
-import { Icon } from '../../../shared/Icon';
-import type { Scenario } from '../../../store/types';
+import { Icon } from '@/shared/Icon';
+import type { Scenario } from '@/store/types';
 
 // Port de journalDayList/journalDayCard (js/views/journal/day-cards.js).
 export function DayCards({ scenario, date }: { scenario: Scenario | null; date: string }) {
   const scenarioDays = scenario ? window.journalScenarioDays(scenario) : [];
-  const entryDays = window.journalEntriesForTravel(window.currentTravelId() || '').map((e) => e.date);
+  const entryDays = window
+    .journalEntriesForTravel(window.currentTravelId() || '')
+    .map((e) => e.date);
   const days = Array.from(new Set([...scenarioDays, ...entryDays])).sort();
 
   return (

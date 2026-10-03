@@ -1,5 +1,5 @@
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { useEffect } from 'react';
-import { LegacyMarkup } from '../../../../shared/LegacyMarkup';
 
 export function ScenarioLegacyMarkup({
   html,

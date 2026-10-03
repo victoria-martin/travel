@@ -43,7 +43,7 @@ const MODAL_TYPES = {
   },
   attraction: {
     open: (id) => ({ payload: id ? structuredClone(getAttraction(id)) : emptyAttraction() }),
-    body: (m) => attractionForm(m.payload),
+    // body : React (src/domains/attractions/modal/AttractionModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   ville: {

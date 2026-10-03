@@ -1,9 +1,9 @@
-import { CloseModalButton } from '../../../shared/CloseModalButton';
-import { ModalSaveButton } from '../../../shared/ModalSaveButton';
-import { ModalTitle } from '../../../shared/ModalTitle';
-import { TextField } from '../../../shared/TextField';
-import { TextareaField } from '../../../shared/TextareaField';
-import type { PackingItem } from '../../../store/types';
+import { TextField } from '@/shared/form-fields/TextField';
+import { TextareaField } from '@/shared/form-fields/TextareaField';
+import { CloseModalButton } from '@/shared/modal/CloseModalButton';
+import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
+import { ModalTitle } from '@/shared/modal/ModalTitle';
+import type { PackingItem } from '@/store/types';
 
 // Port de packingCatalogForm/savePackingItem (js/views/packing/modal/catalog-{form,save}.js) —
 // #f-save délègue à window.savePackingItem(id) inchangée.

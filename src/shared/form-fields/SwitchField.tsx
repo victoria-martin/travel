@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 
 // Port de switchField (js/views/switch-field.js), avec une icône optionnelle que le legacy n'a
 // pas — même slot pour tous les appelants plutôt que chacun compose icône+texte à sa façon.

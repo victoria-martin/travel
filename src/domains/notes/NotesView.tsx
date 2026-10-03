@@ -1,5 +1,5 @@
+import { useTravelStore } from '@/store/useTravelStore';
 import { useShallow } from 'zustand/react/shallow';
-import { useTravelStore } from '../../store/useTravelStore';
 
 /*
   Porte js/views/notes.js. `defaultValue`, pas `value` : la saisie ne redéclenche jamais le store

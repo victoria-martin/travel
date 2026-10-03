@@ -1,6 +1,6 @@
+import { ImportButton } from '@/shared/import/ImportButton';
+import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { useState } from 'react';
-import { CloseModalButton } from '../../../shared/CloseModalButton';
-import { ImportButton } from '../../../shared/ImportButton';
 import { ImportFileField } from './ImportExpensesModal/ImportFileField';
 import { ImportRowsTable } from './ImportExpensesModal/ImportRowsTable';
 import { parseExpensesCsv, type ParsedExpenseRow } from './ImportExpensesModal/parse-csv';

@@ -1,4 +1,5 @@
 const UNSET_ATTRACTION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#B4AFA6' };
+window.UNSET_ATTRACTION_TYPE = UNSET_ATTRACTION_TYPE;
 
 const ATTRACTION_TYPES = {
   nature: { label: 'Nature', emoji: '🌿', color: '#7C8B5E' },

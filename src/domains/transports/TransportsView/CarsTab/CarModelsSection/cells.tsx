@@ -1,5 +1,5 @@
-import { Icon } from '../../../../../shared/Icon';
-import type { CarModel } from '../../../../../store/types';
+import { Icon } from '@/shared/Icon';
+import type { CarModel } from '@/store/types';
 
 export function ConsumptionCell({ model }: { model: CarModel }) {
   if (!model.consumption) return <>—</>;

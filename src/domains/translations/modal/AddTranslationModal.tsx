@@ -1,9 +1,9 @@
-import { CloseModalButton } from '../../../shared/CloseModalButton';
-import { ModalSaveButton } from '../../../shared/ModalSaveButton';
-import { ModalTitle } from '../../../shared/ModalTitle';
-import { SelectField } from '../../../shared/SelectField';
-import { TextField } from '../../../shared/TextField';
-import { TextareaField } from '../../../shared/TextareaField';
+import { SelectField } from '@/shared/form-fields/SelectField';
+import { TextField } from '@/shared/form-fields/TextField';
+import { TextareaField } from '@/shared/form-fields/TextareaField';
+import { CloseModalButton } from '@/shared/modal/CloseModalButton';
+import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
+import { ModalTitle } from '@/shared/modal/ModalTitle';
 import type { CustomPhrase } from '../types';
 
 // Port de phraseForm/saveCustomPhrase (js/views/phrases.js) — #f-save délègue à

@@ -1,4 +1,4 @@
-import { Icon } from '../../../shared/Icon';
+import { Icon } from '@/shared/Icon';
 
 // Port de actualExpensesList/actualExpenseDate (js/views/expenses/actual.js).
 export function ActualExpensesTable() {
@@ -56,7 +56,9 @@ export function ActualExpensesTable() {
                       : 'Non budgétisé'}
                   </span>
                 </td>
-                <td className="expenses-number">{window.formatEuros(window.priceNumber(expense.amount))}</td>
+                <td className="expenses-number">
+                  {window.formatEuros(window.priceNumber(expense.amount))}
+                </td>
                 <td className="expenses-actions">
                   <button
                     type="button"

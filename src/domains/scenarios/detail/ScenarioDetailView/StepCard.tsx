@@ -1,6 +1,6 @@
+import { Icon } from '@/shared/Icon';
+import type { Scenario, Step } from '@/store/types';
 import { useSortable } from '@dnd-kit/react/sortable';
-import { Icon } from '../../../../shared/Icon';
-import type { Scenario, Step } from '../../../../store/types';
 import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
 
 export function StepCard({

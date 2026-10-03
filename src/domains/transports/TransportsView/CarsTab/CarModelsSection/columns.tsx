@@ -1,5 +1,5 @@
-import type { Column } from '../../../../../shared/DataTable/types';
-import type { CarModel } from '../../../../../store/types';
+import type { Column } from '@/shared/DataTable/types';
+import type { CarModel } from '@/store/types';
 import { FuelDropdown, GearboxDropdown } from '../cells';
 import { ActionsCell, ConsumptionCell, OffersCell, ProvidersCell } from './cells';
 

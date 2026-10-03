@@ -8,7 +8,7 @@ import { SettingsMenu } from '../toolbar/SettingsMenu';
 const HeaderActions = ({ children }: { children: ReactNode }) => {
   return (
     <div className="view-header-actions">
-      {/* <SearchField value={query} onChange={setQuery} />
+      {/* <SearchInput value={query} onChange={setQuery} />
           <ColumnPicker kind="cities" columns={columns} /> */}
       {children}
       <SettingsMenu />
@@ -21,7 +21,8 @@ export default HeaderActions;
 export const TableHeaderActions = ({ children }: { children: ReactNode }) => {
   return (
     <div className="view-header-actions">
-      {/* <SearchField value={query} onChange={setQuery} />
+      {/* <div className="list-section-actions"> */}
+      {/* <SearchInput value={query} onChange={setQuery} />
           <ColumnPicker kind="cities" columns={columns} /> */}
       {children}
       <SettingsMenu />

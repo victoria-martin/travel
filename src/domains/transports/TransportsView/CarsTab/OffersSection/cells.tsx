@@ -1,6 +1,6 @@
-import { Icon } from '../../../../../shared/Icon';
-import { TagDropdown } from '../../../../../shared/select/TagDropdown';
-import type { Offer } from '../../../../../store/types';
+import { Icon } from '@/shared/Icon';
+import { TagDropdown } from '@/shared/select/TagDropdown';
+import type { Offer } from '@/store/types';
 
 export function DefaultToggleCell({ offer }: { offer: Offer }) {
   return (

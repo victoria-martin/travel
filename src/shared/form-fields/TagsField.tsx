@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 
 /*
   Port de tagsField (js/views/tags-field.js) — champ de modale, à distinguer d'EditableTagsCell

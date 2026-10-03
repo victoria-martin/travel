@@ -1,4 +1,4 @@
-import type { Scenario } from '../../../../store/types';
+import type { Scenario } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
 import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
 

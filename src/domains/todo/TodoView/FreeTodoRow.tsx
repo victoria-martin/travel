@@ -1,16 +1,12 @@
-import { Icon } from '../../../shared/Icon';
-import { TagDropdown } from '../../../shared/select/TagDropdown';
-import type { FreeTodo } from '../../../store/types';
+import { Icon } from '@/shared/Icon';
+import { TagDropdown } from '@/shared/select/TagDropdown';
+import type { FreeTodo } from '@/store/types';
 
 // Port de freeTodoRow/freeTodoStatusTag (js/views/todo/free/{card,status-tag}.js).
 export function FreeTodoRow({ todo }: { todo: FreeTodo }) {
   return (
     <div className={`free-todo-row ${todo.done ? 'is-done' : ''}`}>
-      <input
-        type="checkbox"
-        checked={todo.done}
-        onChange={() => window.toggleFreeTodo(todo.id)}
-      />
+      <input type="checkbox" checked={todo.done} onChange={() => window.toggleFreeTodo(todo.id)} />
       <span className="free-todo-text">{todo.text}</span>
       <TagDropdown
         className="status-dropdown"

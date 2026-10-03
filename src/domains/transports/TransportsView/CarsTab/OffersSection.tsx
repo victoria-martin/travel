@@ -1,12 +1,12 @@
+import { DataTable } from '@/shared/DataTable/DataTable';
+import { Icon } from '@/shared/Icon';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import { SearchInput } from '@/shared/SearchInput';
+import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import type { CarModel, Offer } from '@/store/types';
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { DataTable } from '../../../../shared/DataTable/DataTable';
-import { Icon } from '../../../../shared/Icon';
-import { normalizeSearch } from '../../../../shared/normalizeSearch';
-import { SearchField } from '../../../../shared/SearchField';
-import { ColumnPicker } from '../../../../shared/toolbar/ColumnPicker';
-import type { CarModel, Offer } from '../../../../store/types';
-import { useTravelStore } from '../../../../store/useTravelStore';
 import { offerColumns } from './OffersSection/columns';
 
 function offerSearchText(offer: Offer, carModels: CarModel[]): string {
@@ -31,7 +31,9 @@ export function OffersSection() {
   const [query, setQuery] = useState('');
   const wanted = normalizeSearch(query);
   const items = offers
-    .filter((offer) => !wanted || normalizeSearch(offerSearchText(offer, carModels)).includes(wanted))
+    .filter(
+      (offer) => !wanted || normalizeSearch(offerSearchText(offer, carModels)).includes(wanted),
+    )
     .sort((offerA, offerB) => {
       const modelDifference = window
         .offerModelName(offerA)
@@ -51,8 +53,9 @@ export function OffersSection() {
       <div className="list-section-head">
         <h3 className="list-section-title">Offres</h3>
         <div className="list-section-actions">
-          <SearchField value={query} onChange={setQuery} />
+          <SearchInput value={query} onChange={setQuery} />
           <ColumnPicker kind="locations" columns={columns} />
+          {/* TODO: create AddCarOfferButton */}
           <button
             type="button"
             className="toolbar-btn"

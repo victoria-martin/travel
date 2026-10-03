@@ -1,5 +1,5 @@
+import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
-import { useTravelStore } from '../../store/useTravelStore';
 import { PhraseCategory } from './TranslationsView/PhraseCategory';
 
 function matchesSearch(item: { fr: string; note?: string }, lang: string, wanted: string): boolean {

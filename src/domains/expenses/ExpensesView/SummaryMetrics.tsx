@@ -1,4 +1,4 @@
-import type { Scenario } from '../../../store/types';
+import type { Scenario } from '@/store/types';
 
 // Port de expensesTotalBlock (js/views/expenses/total.js).
 export function SummaryMetrics({ scenario }: { scenario: Scenario | null }) {
@@ -22,7 +22,9 @@ export function SummaryMetrics({ scenario }: { scenario: Scenario | null }) {
         <strong>{window.formatEuros(actualTotal)}</strong>
         <small>{window.actualExpenses().length} dépenses datées</small>
       </div>
-      <div className={`expenses-metric ${remaining !== null && remaining < 0 ? 'expenses-over' : ''}`}>
+      <div
+        className={`expenses-metric ${remaining !== null && remaining < 0 ? 'expenses-over' : ''}`}
+      >
         <span>Budget restant</span>
         <strong>{remaining === null ? '—' : window.formatEuros(remaining)}</strong>
         <small>Budget moins dépenses réelles</small>

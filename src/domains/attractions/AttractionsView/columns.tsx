@@ -1,8 +1,8 @@
-import { EditableTagsCell } from '../../../shared/cells/EditableTagsCell';
-import { LinkCell } from '../../../shared/cells/LinkCell';
-import { TextCell } from '../../../shared/cells/TextCell';
-import type { Column } from '../../../shared/DataTable/types';
-import type { Attraction } from '../../../store/types';
+import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
+import { LinkCell } from '@/shared/cells/LinkCell';
+import { TextCell } from '@/shared/cells/TextCell';
+import type { Column } from '@/shared/DataTable/types';
+import type { Attraction } from '@/store/types';
 import { ActionsCell, FavoriteCell, NameCell, StatusBadge, TypeBadge } from '../cells';
 
 /*

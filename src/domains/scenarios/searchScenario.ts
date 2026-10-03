@@ -1,5 +1,5 @@
-import { normalizeSearch } from '../../shared/normalizeSearch';
-import type { Scenario } from '../../store/types';
+import { normalizeSearch } from '@/shared/normalizeSearch';
+import type { Scenario } from '@/store/types';
 
 // Port de scenarioMatchesSearch (js/views/scenarios/scenarios.js).
 export function searchScenario(scenario: Scenario): string {

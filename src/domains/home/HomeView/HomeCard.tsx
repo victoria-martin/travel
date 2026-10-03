@@ -1,5 +1,5 @@
+import { Icon } from '@/shared/Icon';
 import type { ReactNode } from 'react';
-import { Icon } from '../../../shared/Icon';
 
 // Le chrome commun aux trois cartes de l'accueil (icône, titre, lien) — le corps est écrit par
 // l'appelant (ScenarioCard/PackingCard/TodoCard), passé en children.
