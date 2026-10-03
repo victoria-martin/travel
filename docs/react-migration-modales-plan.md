@@ -97,11 +97,10 @@ pas de "＋ Ajouter", pas un `WordSelectField`), `prestataire`
 ([CarModelModal.tsx](../src/domains/car-models/modal/CarModelModal.tsx)) — fuel/boîte en
 `SelectField` ordinaire (dicts simples, pas de `WordSelectField`), « Proposé par » en `LegacyMarkup`
 comme les autres listes repeintes depuis l'extérieur de React, `TextField` gagne un `onInput`
-optionnel pour rebrancher `suggestCarConsumption()` sans la réimplémenter.
-
-**1. `ville`** — [js/views/villes/modal/form.js](../js/views/villes/modal/form.js) (48 lignes).
-   **Prochain type à faire, puis stop.** Même famille que `attraction` : géocodage via
-   `locateFields`, probable réutilisation directe du patron `AttractionModal.tsx` déjà écrit.
+optionnel pour rebrancher `suggestCarConsumption()` sans la réimplémenter. `ville`
+([VilleModal.tsx](../src/domains/villes/modal/VilleModal.tsx)) — pas de `LegacyMarkup` : sa
+recherche d'adresse (`locateVille`/`applyVilleMatch`) est assez courte pour rester en JSX direct,
+contrairement à `locateFields` (attraction/hébergement), plus massif.
 
 2. **`transport`** — [js/views/transports/modal/form.js](../js/views/transports/modal/form.js)
    (163 lignes). **Le mode décide des champs affichés** (quatre modes à compagnie vs voiture, deux

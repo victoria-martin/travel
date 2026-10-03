@@ -51,7 +51,7 @@ const MODAL_TYPES = {
       const payload = id ? structuredClone(getVille(id)) : emptyVille();
       return { payload: { ...payload, matches: [], status: villeGeocodeSummary(payload) } };
     },
-    body: (m) => villeForm(m.payload),
+    // body : React (src/domains/villes/modal/VilleModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   transport: {

@@ -37,6 +37,9 @@ declare global {
     providerOptionsField: (payload: unknown) => string;
     providerModelsField: (payload: unknown) => string;
     saveProvider: (id: string) => void;
+    locateVille: () => void;
+    applyVilleMatch: (index: number) => void;
+    saveVille: (id: string) => void;
     TRANSPORT_STATUSES: Record<string, { label: string; emoji: string }>;
     transportMode: (mode: string) => { label: string; emoji: string; color: string };
     providerMode: (mode: string) => { label: string; emoji: string; color: string };
