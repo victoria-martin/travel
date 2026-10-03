@@ -59,7 +59,7 @@ const MODAL_TYPES = {
       scenarioId,
       payload: id ? structuredClone(getTransport(id)) : emptyTransport(),
     }),
-    body: (m) => transportForm(m.payload),
+    // body : React (src/domains/transports/modal/TransportModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   prestataire: {

@@ -1,4 +1,5 @@
 const UNSET_TRANSPORT_STATUS = { label: 'Non renseigné', emoji: '❔' };
+window.UNSET_TRANSPORT_STATUS = UNSET_TRANSPORT_STATUS;
 
 const TRANSPORT_STATUSES = {
   booked: { label: 'Réservé', emoji: '🔒' },

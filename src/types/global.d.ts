@@ -41,6 +41,16 @@ declare global {
     applyVilleMatch: (index: number) => void;
     saveVille: (id: string) => void;
     TRANSPORT_STATUSES: Record<string, { label: string; emoji: string }>;
+    UNSET_TRANSPORT_STATUS: { label: string; emoji: string };
+    transportEndpointFields: (
+      side: string,
+      label: string,
+      placeId: string,
+      precision: string,
+    ) => string;
+    transportProviderFields: (payload: import('../store/types').Transport) => string;
+    repaintTransportProviderFields: () => void;
+    saveTransport: (id: string) => void;
     transportMode: (mode: string) => { label: string; emoji: string; color: string };
     providerMode: (mode: string) => { label: string; emoji: string; color: string };
     providerModeKey: (mode: string) => string;

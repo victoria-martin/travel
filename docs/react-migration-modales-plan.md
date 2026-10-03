@@ -100,15 +100,14 @@ comme les autres listes repeintes depuis l'extérieur de React, `TextField` gagn
 optionnel pour rebrancher `suggestCarConsumption()` sans la réimplémenter. `ville`
 ([VilleModal.tsx](../src/domains/villes/modal/VilleModal.tsx)) — pas de `LegacyMarkup` : sa
 recherche d'adresse (`locateVille`/`applyVilleMatch`) est assez courte pour rester en JSX direct,
-contrairement à `locateFields` (attraction/hébergement), plus massif.
+contrairement à `locateFields` (attraction/hébergement), plus massif. `transport`
+([TransportModal.tsx](../src/domains/transports/modal/TransportModal.tsx)) — mode/statut en
+`SelectField` ordinaire ; départ/arrivée et le bloc prestataire restent en `LegacyMarkup`. La note
+« le mode décide des champs affichés (voiture vs compagnie) » était obsolète : le mode `car` a
+disparu de `TRANSPORT_MODES` le 2026-09-19, il ne reste qu'un select de prestataire filtré par mode
+à repeindre, pas de bloc exclusif à basculer — pas de `useState` nécessaire.
 
-2. **`transport`** — [js/views/transports/modal/form.js](../js/views/transports/modal/form.js)
-   (163 lignes). **Le mode décide des champs affichés** (quatre modes à compagnie vs voiture, deux
-   blocs exclusifs repeints au changement — voir le journal CLAUDE.md du 2026-09-13). Garder le mode
-   en `useState` local dans le composant pour afficher le bon bloc sans dépendre d'un `render()`
-   complet.
-
-3. **`accommodation` + 4 variantes** (`accommodation-booking`, `accommodation-home-exchange`,
+**1. `accommodation` + 4 variantes** (`accommodation-booking`, `accommodation-home-exchange`,
    `accommodation-airbnb`, `accommodation-google-maps`) —
    [js/views/accommodations/modal/form.js](../js/views/accommodations/modal/form.js) (117 lignes) +
    4 fichiers de ~50 lignes chacun (`booking-form.js`, `home-exchange-form.js`, `airbnb-form.js`,
@@ -117,7 +116,7 @@ contrairement à `locateFields` (attraction/hébergement), plus massif.
    `AccommodationModal.tsx` paramétré par `type` est peut-être le bon découpage, à confirmer en
    lisant les 5 fichiers avant de coder.
 
-4. **`step`** (étape de scénario) —
+2. **`step`** (étape de scénario) —
    [js/views/scenarios/detail/step-modal/form.js](../js/views/scenarios/detail/step-modal/form.js)
    (54 lignes) + [attractions-field.js](../js/views/scenarios/detail/step-modal/attractions-field.js)
    (164 lignes, probablement à garder en `LegacyMarkup` ou à découper en sous-composant selon sa
@@ -125,10 +124,10 @@ contrairement à `locateFields` (attraction/hébergement), plus massif.
    (déjà un composant générique côté legacy, `js/views/radio-card-field.js` — vérifier s'il mérite un
    port React ou un `LegacyMarkup`).
 
-5. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
+3. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
    (144 lignes). Pas d'`edits:true` à vérifier au cas par cas.
 
-6. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
+4. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
    le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
    comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
    inchangé si ModalHost le rappelle toujours après peinture).

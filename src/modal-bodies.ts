@@ -6,6 +6,7 @@ import { FixedCostModal } from './domains/fixed-costs/modal/FixedCostModal';
 import { PackingItemModal } from './domains/packing/modal/PackingItemModal';
 import { OfferModal } from './domains/rentals/modal/OfferModal';
 import { ProviderModal } from './domains/transports/modal/ProviderModal';
+import { TransportModal } from './domains/transports/modal/TransportModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
 import { VilleModal } from './domains/villes/modal/VilleModal';
 
@@ -29,4 +30,5 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   prestataire: ProviderModal,
   modele: CarModelModal,
   ville: VilleModal,
+  transport: TransportModal,
 };
