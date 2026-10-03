@@ -456,8 +456,8 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   et DropdownMenu. Restent sur Villes : recherche, colonnes masquables, édition en place
   (type/statut/tags), actions de ligne ; sur les écrans migrés, formulaires React et `ModalHost`.
   Phase 2 démarrée : le détail Scénario a son arbre React, ses hooks money/road/route et le drag
-  multi-colonnes dnd-kit; les blocs secondaires réutilisent encore le legacy. À vérifier à l'écran
-  avant de considérer ce port terminé.
+  multi-colonnes dnd-kit — DnD vérifié à l'écran (2026-10-03) ; les blocs secondaires réutilisent
+  encore le legacy, reste à vérifier avant de considérer ce port terminé.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

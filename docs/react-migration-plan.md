@@ -357,15 +357,16 @@ manuelle). `ACCOMMODATION_TYPES`/`ACCOMMODATION_STATUSES` n'étaient jamais expo
 scénario, menu ⋮. Rien de connu en reste sur cet écran.
 Scénarios détail : parent React, hooks money/road/route, cartes, groupes/options et drag
 multi-colonnes dnd-kit branchés dans `REACT_VIEWS`, vérifié à l'écran par l'utilisatrice
-(2026-10-02) — sauf le DnD : toute étape déplacée atterrissait en fin de liste, quel que soit
-l'endroit du drop (confirmé à l'écran, pas juste lu dans le code). Deux pistes essayées : (1)
-`onPointerMove` posé en bulle sur `.step-list` — remplacé par `event.operation.position.current.y`,
-la position que dnd-kit traque en interne, **toujours cassé après ce fix**, donc cette position
-n'est probablement pas dans le même repère que `getBoundingClientRect()` (hypothèse, jamais
-confirmée côté source dnd-kit). (2) Retour à un pointeur traqué nous-mêmes, mais en phase de
-capture sur `window` avec `clientY` (repère viewport garanti, cohérent avec `getBoundingClientRect()`)
-au lieu d'un `onPointerMove` posé en bulle sur `.step-list` — build posé, **pas encore testé à
-l'écran**.
+(2026-10-02). Le DnD a eu trois pistes avant la bonne : toute étape déplacée atterrissait en fin de
+liste quel que soit l'endroit du drop, dans les deux premières — (1) `onPointerMove` posé en bulle
+sur `.step-list`, remplacé par `event.operation.position.current.y` (position interne de dnd-kit,
+toujours cassé après ce fix) ; (2) retour à un pointeur traqué nous-mêmes en phase de capture sur
+`window` avec `clientY`, toujours cassé. Les deux recalculaient before/after depuis
+`getBoundingClientRect()` — géométrie déjà en décalage, puisque `OptimisticSortingPlugin` de
+dnd-kit réordonne le DOM en live pendant le glisser et tient à jour `sortable.index`/`.group` sur
+l'entité déplacée. (3) `finishDrag` lit désormais cette position déjà résolue par la lib
+(`draggedStep.sortable.index`/`.group`) au lieu de la recalculer — confirmé à l'écran par
+l'utilisatrice (2026-10-03).
 
 **Phase 3, détail.** Notes et Infos utiles : deux écrans sans table, plus proches d'un formulaire
 que d'une liste — pas d'infra `DataTable`, juste `useTravelStore()` (sans sélecteur, le composant se
