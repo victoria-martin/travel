@@ -8,7 +8,13 @@ export function TextField({
   defaultValue,
   required,
   listOptions,
+  placeholder,
+  title,
+  hint,
   onInput,
+  onBlur,
+  onPaste,
+  onChange,
 }: {
   id: string;
   label: string;
@@ -16,7 +22,13 @@ export function TextField({
   defaultValue?: string;
   required?: boolean;
   listOptions?: string[];
+  placeholder?: string;
+  title?: string;
+  hint?: string;
   onInput?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const listId = listOptions ? `${id}-options` : undefined;
   return (
@@ -28,8 +40,14 @@ export function TextField({
         defaultValue={defaultValue}
         required={required}
         list={listId}
+        placeholder={placeholder}
+        title={title}
         onInput={onInput}
+        onBlur={onBlur}
+        onPaste={onPaste}
+        onChange={onChange}
       />
+      {hint && <small className="field-hint">{hint}</small>}
       {listOptions && (
         <datalist id={listId}>
           {listOptions.map((option) => (

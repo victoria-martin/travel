@@ -124,11 +124,25 @@ declare global {
     accommodationPriceUnit: (acc: { price: string }) => string;
     ACCOMMODATION_TYPES: Record<string, { label: string; emoji: string; color: string }>;
     ACCOMMODATION_STATUSES: Record<string, { label: string; emoji: string }>;
+    UNSET_ACCOMMODATION_TYPE: { label: string; emoji: string; color: string };
+    UNSET_ACCOMMODATION_STATUS: { label: string; emoji: string };
     setAccommodationType: (id: string, type: string) => void;
     setAccommodationStatus: (id: string, status: string) => void;
     toggleFavorite: (id: string) => void;
     duplicateAccommodation: (id: string) => void;
     allAccommodationTags: () => string[];
+    outOfRangeBanner: (reason: string | null) => string;
+    accommodationSearchOutOfRange: (
+      acc: import('../store/types').Accommodation,
+    ) => string | null;
+    applyPriceFormula: (input: HTMLInputElement) => void;
+    importHomeExchangePaste: () => void;
+    importHomeExchangeLink: () => void;
+    importAirbnbPaste: () => void;
+    importAirbnbLink: () => void;
+    importBookingPaste: () => void;
+    importBookingLink: () => void;
+    saveAccommodation: (id: string) => void;
     setTripNote: (text: string) => void;
     travelCountries: () => string[];
     countryInfoDefaults: (country: string) => {

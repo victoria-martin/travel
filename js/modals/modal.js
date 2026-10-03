@@ -18,27 +18,27 @@ const MODAL_TYPES = {
   },
   accommodation: {
     open: (id) => ({ payload: id ? structuredClone(getAccommodation(id)) : emptyAccommodation() }),
-    body: (m) => accommodationForm(m.payload),
+    // body : React (src/domains/accommodations/modal/AccommodationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'accommodation-booking': {
     open: () => ({ payload: emptyAccommodation() }),
-    body: (m) => bookingAccommodationForm(m.payload),
+    // body : React (src/domains/accommodations/modal/BookingAccommodationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'accommodation-home-exchange': {
     open: () => ({ payload: { ...emptyAccommodation(), type: 'homeExchange' } }),
-    body: (m) => homeExchangeAccommodationForm(m.payload),
+    // body : React (src/domains/accommodations/modal/HomeExchangeAccommodationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'accommodation-airbnb': {
     open: () => ({ payload: { ...emptyAccommodation(), type: 'airbnb' } }),
-    body: (m) => airbnbAccommodationForm(m.payload),
+    // body : React (src/domains/accommodations/modal/AirbnbAccommodationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'accommodation-google-maps': {
     open: () => ({ payload: emptyAccommodation() }),
-    body: (m) => googleMapsAccommodationForm(m.payload),
+    // body : React (src/domains/accommodations/modal/GoogleMapsAccommodationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   attraction: {

@@ -1,4 +1,5 @@
 const UNSET_ACCOMMODATION_STATUS = { label: 'Non renseigné', emoji: '❔' };
+window.UNSET_ACCOMMODATION_STATUS = UNSET_ACCOMMODATION_STATUS;
 
 const ACCOMMODATION_STATUSES = {
   booked: { label: 'Réservé', emoji: '🔒' },

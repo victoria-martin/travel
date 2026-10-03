@@ -2,6 +2,7 @@
 // même teinte à des clartés différentes ne se lisent pas comme deux catégories, ni sur la carte ni
 // dans la bande d'itinéraire d'un scénario.
 const UNSET_ACCOMMODATION_TYPE = { label: 'Non renseigné', emoji: '❔', color: '#C4B9A3' };
+window.UNSET_ACCOMMODATION_TYPE = UNSET_ACCOMMODATION_TYPE;
 
 const ACCOMMODATION_TYPES = {
   airbnb: {

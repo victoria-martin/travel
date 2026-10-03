@@ -105,18 +105,26 @@ contrairement à `locateFields` (attraction/hébergement), plus massif. `transpo
 `SelectField` ordinaire ; départ/arrivée et le bloc prestataire restent en `LegacyMarkup`. La note
 « le mode décide des champs affichés (voiture vs compagnie) » était obsolète : le mode `car` a
 disparu de `TRANSPORT_MODES` le 2026-09-19, il ne reste qu'un select de prestataire filtré par mode
-à repeindre, pas de bloc exclusif à basculer — pas de `useState` nécessaire.
+à repeindre, pas de bloc exclusif à basculer — pas de `useState` nécessaire. `accommodation` + 4
+variantes ([AccommodationModal.tsx](../src/domains/accommodations/modal/AccommodationModal.tsx),
+[BookingAccommodationModal.tsx](../src/domains/accommodations/modal/BookingAccommodationModal.tsx),
+[HomeExchangeAccommodationModal.tsx](../src/domains/accommodations/modal/HomeExchangeAccommodationModal.tsx),
+[AirbnbAccommodationModal.tsx](../src/domains/accommodations/modal/AirbnbAccommodationModal.tsx),
+[GoogleMapsAccommodationModal.tsx](../src/domains/accommodations/modal/GoogleMapsAccommodationModal.tsx))
+— 5 composants séparés, pas un seul paramétré : champs présents/absents, titre et ordre diffèrent
+trop d'une porte à l'autre pour une config commune (règle projet « pas de moteur piloté par
+config »). Type/statut en `WordSelectField` (mécanisme déjà existant, comme `AttractionModal`).
+`locateFields` et la bannière hors-disponibilité en `LegacyMarkup`. `TextField` gagne
+`placeholder`/`title`/`hint`/`onBlur`/`onPaste`/`onChange` optionnels (import de lien Booking/
+HomeExchange/Airbnb/Google Maps, calcul de prix `=625/4`). Les 4 formulaires de porte et
+`type-select.js`/`status-select.js`/`views/tags-field.js` (devenus entièrement morts) sont
+supprimés avec leur `<script src>`, pas juste vidés.
 
-**1. `accommodation` + 4 variantes** (`accommodation-booking`, `accommodation-home-exchange`,
-   `accommodation-airbnb`, `accommodation-google-maps`) —
-   [js/views/accommodations/modal/form.js](../js/views/accommodations/modal/form.js) (117 lignes) +
-   4 fichiers de ~50 lignes chacun (`booking-form.js`, `home-exchange-form.js`, `airbnb-form.js`,
-   `google-maps-form.js`). **Vérifier d'abord s'ils partagent une base commune** (probable : type
-   fixé par variante + mêmes champs) avant d'écrire 5 composants séparés — un seul
-   `AccommodationModal.tsx` paramétré par `type` est peut-être le bon découpage, à confirmer en
-   lisant les 5 fichiers avant de coder.
+Trois autres `const` legacy jamais exposées sur `window` corrigées au passage, même bug que
+`UNSET_CAR_STATUS`/`UNSET_TRANSPORT_STATUS` : `UNSET_ACCOMMODATION_TYPE`,
+`UNSET_ACCOMMODATION_STATUS`.
 
-2. **`step`** (étape de scénario) —
+**1. `step`** (étape de scénario) —
    [js/views/scenarios/detail/step-modal/form.js](../js/views/scenarios/detail/step-modal/form.js)
    (54 lignes) + [attractions-field.js](../js/views/scenarios/detail/step-modal/attractions-field.js)
    (164 lignes, probablement à garder en `LegacyMarkup` ou à découper en sous-composant selon sa
@@ -124,10 +132,10 @@ disparu de `TRANSPORT_MODES` le 2026-09-19, il ne reste qu'un select de prestata
    (déjà un composant générique côté legacy, `js/views/radio-card-field.js` — vérifier s'il mérite un
    port React ou un `LegacyMarkup`).
 
-3. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
+2. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
    (144 lignes). Pas d'`edits:true` à vérifier au cas par cas.
 
-4. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
+3. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
    le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
    comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
    inchangé si ModalHost le rappelle toujours après peinture).
