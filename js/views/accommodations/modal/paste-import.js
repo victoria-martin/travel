@@ -132,6 +132,8 @@ function runPasteImport() {
       bookingLink: fields.bookingLink || '',
       notes: fields.notes || '',
       favorite: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
     added++;
   });

@@ -7,6 +7,8 @@ function addTodoList() {
     kind: todoDraft.kind,
     columnKey: column.key,
     filterValues: todoDraft.values,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
   todoDraft = { kind: todoDraft.kind, columnKey: column.key, values: [] };
   saveNow();
@@ -20,6 +22,7 @@ function toggleTodoListValue(id, index) {
   list.filterValues = list.filterValues.includes(value)
     ? list.filterValues.filter((v) => v !== value)
     : [...list.filterValues, value];
+  list.updatedAt = new Date().toISOString();
   saveNow();
   showToast('Liste modifiée');
 }

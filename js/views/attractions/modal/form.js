@@ -20,6 +20,7 @@ function emptyAttraction() {
     tags: [],
     favorite: false,
     createdAt: '',
+    updatedAt: '',
   };
 }
 

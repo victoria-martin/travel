@@ -19,6 +19,7 @@ function readProviderForm(id) {
     options: modal.payload.options.filter((option) => option.label || option.amount),
     modelIds: modal.payload.modelIds || [],
     createdAt: id ? getProvider(id).createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -57,6 +58,7 @@ function createProviderNamed(name, mode) {
     name,
     mode,
     createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
   upsertProvider(item);
   showToast('Prestataire créé');

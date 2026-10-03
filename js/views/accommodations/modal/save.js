@@ -35,6 +35,7 @@ function readAccommodationForm(id) {
     tags: [...p.tags],
     favorite: favorite ? favorite.checked : p.favorite,
     createdAt: p.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

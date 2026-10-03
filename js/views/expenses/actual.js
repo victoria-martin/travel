@@ -218,6 +218,8 @@ function saveActualExpense(id) {
     subCategory: document.getElementById('actual-expense-sub-category').value.trim(),
     address: document.getElementById('actual-expense-address').value.trim(),
     notes: document.getElementById('actual-expense-notes').value.trim(),
+    createdAt: id ? getActualExpense(id).createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
   const index = state.actualExpenses.findIndex((item) => item.id === id);
   if (id) state.actualExpenses[index] = expense;

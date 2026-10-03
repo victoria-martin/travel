@@ -13,7 +13,14 @@ function attractionMatches(query, usedIds) {
 
 // Une attraction créée ici ne porte que son nom : le reste se complète depuis la page À faire.
 function createAttractionNamed(name) {
-  const item = { ...emptyAttraction(), id: uid(), travelId: currentTravelId(), name };
+  const item = {
+    ...emptyAttraction(),
+    id: uid(),
+    travelId: currentTravelId(),
+    name,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
   upsertAttraction(item);
   showToast('Lieu créé');
   return item;

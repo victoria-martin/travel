@@ -23,6 +23,7 @@ function readAttractionForm(id) {
     tags: [...modal.payload.tags],
     favorite: document.getElementById('a-favorite').checked,
     createdAt: modal.payload.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

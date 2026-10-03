@@ -18,6 +18,7 @@ function readRentalForm(id) {
     link: document.getElementById('rental-link').value.trim(),
     notes: document.getElementById('rental-notes').value.trim(),
     createdAt: id ? getRental(id).createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

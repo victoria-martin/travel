@@ -28,7 +28,17 @@ ${escapeHtml(note && note.text)}</textarea>
 // Saisie sans re-render : re-rendre arracherait le champ et le curseur à chaque frappe.
 function setTripNote(text) {
   const note = tripNote();
-  if (note) note.text = text;
-  else state.tripNotes.push({ id: uid(), travelId: currentTravelId(), text });
+  if (note) {
+    note.text = text;
+    note.updatedAt = new Date().toISOString();
+  } else {
+    state.tripNotes.push({
+      id: uid(),
+      travelId: currentTravelId(),
+      text,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
   saveNow();
 }

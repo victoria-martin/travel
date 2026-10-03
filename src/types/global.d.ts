@@ -120,13 +120,15 @@ declare global {
     currentPhraseLang: () => string;
     setPhraseLang: (lang: string) => void;
     languageLabel: (code: string) => string;
-    phraseCategoriesWithCustom: () => import('../domains/phrases/types').PhraseCategory[];
+    phraseCategoriesWithCustom: () => import('../domains/translations/types').PhraseCategory[];
     phraseTranslation: (fr: string, lang: string) => string;
     editPhraseTranslation: (fr: string, lang: string) => void;
     deleteCustomPhrase: (id: string) => void;
     PHRASE_CATEGORIES: { title: string; items: { fr: string; note?: string }[] }[];
     saveCustomPhrase: (id: string) => void;
     deletePackingItem: (id: string) => void;
+    allPackingCategories: () => string[];
+    savePackingItem: (id: string) => void;
     todoBuilder: () => string;
     todoListCard: (list: import('../store/types').TodoList) => string;
     setTodoSearch: (query: string) => void;
@@ -142,7 +144,10 @@ declare global {
     setJournalScenario: (id: string) => void;
     journalScenarioDays: (scenario: import('../store/types').Scenario) => string[];
     journalEntriesForTravel: (travelId: string) => import('../store/types').JournalEntry[];
-    getJournalEntry: (travelId: string, date: string) => import('../store/types').JournalEntry | null;
+    getJournalEntry: (
+      travelId: string,
+      date: string,
+    ) => import('../store/types').JournalEntry | null;
     selectJournalDay: (date: string) => void;
     promptJournalDay: () => void;
     journalDayPanel: (scenario: import('../store/types').Scenario, date: string) => string;
@@ -167,7 +172,11 @@ declare global {
       cost: import('../store/types').FixedCost,
       span: { nights: number; days: number; travelers: number },
     ) => number;
-    firmPrice: (entity: { amountMin?: string; amountMax?: string; budget: string }) => number | null;
+    firmPrice: (entity: {
+      amountMin?: string;
+      amountMax?: string;
+      budget: string;
+    }) => number | null;
     defaultOffer: () => import('../store/types').Offer | null;
     offerLabel: (offer: import('../store/types').Offer) => string;
     derivedExpenseGroups: () => {
@@ -214,11 +223,14 @@ declare global {
     comparedScenarios: <T extends { id: string }>(items: T[]) => T[];
     compareMode: boolean;
     activeToast: string;
-    activeAsk: { html: string; onKeydown?: (event: KeyboardEvent) => void; after?: () => void; onClose: () => void } | null;
+    activeAsk: {
+      html: string;
+      onKeydown?: (event: KeyboardEvent) => void;
+      after?: () => void;
+      onClose: () => void;
+    } | null;
     closeAskOverlay: () => void;
-    stepPlace: (
-      step: import('../store/types').Step,
-    ) => { name: string; city: string } | null;
+    stepPlace: (step: import('../store/types').Step) => { name: string; city: string } | null;
     visibleSteps: (scenario: import('../store/types').Scenario) => import('../store/types').Step[];
     scenarioRouteBar: (scenario: import('../store/types').Scenario, maxNights: number) => string;
     setChosenScenario: (id: string) => void;

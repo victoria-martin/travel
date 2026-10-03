@@ -8,6 +8,8 @@ function saveFixedCost(id) {
     categories: [...modal.payload.categories],
     recurrence: document.getElementById('cost-recurrence').value,
     notes: document.getElementById('cost-notes').value.trim(),
+    createdAt: id ? getFixedCost(id).createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   if (id) {

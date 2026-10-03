@@ -21,6 +21,7 @@ function emptyAccommodation() {
     tags: [],
     favorite: false,
     createdAt: '',
+    updatedAt: '',
   };
 }
 

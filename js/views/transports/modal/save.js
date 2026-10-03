@@ -25,6 +25,8 @@ function readTransportForm(id) {
     link: transportFieldValue('t-link'),
     notes: transportFieldValue('t-notes'),
     favorite: document.getElementById('t-favorite').checked,
+    createdAt: id ? getTransport(id).createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

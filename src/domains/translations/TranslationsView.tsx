@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import { useTravelStore } from '../../store/useTravelStore';
-import { PhraseCategory } from './PhrasesView/PhraseCategory';
+import { PhraseCategory } from './TranslationsView/PhraseCategory';
 
-function matchesSearch(
-  item: { fr: string; note?: string },
-  lang: string,
-  wanted: string,
-): boolean {
+function matchesSearch(item: { fr: string; note?: string }, lang: string, wanted: string): boolean {
   if (!wanted) return true;
   return [item.fr, window.phraseTranslation(item.fr, lang), item.note].some(
     (text) => text && text.toLowerCase().includes(wanted),
@@ -19,7 +15,8 @@ function matchesSearch(
   bloquants : style de carte (classique/duo/minimal), mode liste/cartes, formulaire d'ajout/édition
   react (openModal suffit pour l'instant, comme partout ailleurs).
 */
-export function PhrasesView() {
+
+export function TranslationsView() {
   useTravelStore();
   const [query, setQuery] = useState('');
 
@@ -48,7 +45,7 @@ export function PhrasesView() {
         <div className="view-header-actions">
           {available.length > 1 && (
             <select
-              className="phrase-lang-select"
+              className="translation-lang-select"
               value={lang}
               onChange={(event) => window.setPhraseLang(event.target.value)}
             >
@@ -65,13 +62,13 @@ export function PhrasesView() {
         </div>
       </div>
       <input
-        className="phrase-search"
+        className="translation-search"
         type="search"
         placeholder="Chercher…"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <div id="phrase-categories">
+      <div id="translation-categories">
         {!lang ? (
           <p className="hint">
             Choisis un ou plusieurs pays dans la modale du voyage pour voir les phrases traduites.

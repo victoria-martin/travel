@@ -22,6 +22,8 @@ function toggleCatalogItemInTravel(catalogId) {
       quantity: 1,
       perNight: false,
       checked: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     });
   }
   saveNow();

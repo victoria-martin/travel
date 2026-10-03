@@ -7,6 +7,8 @@ function addFreeTodo(text) {
     text: trimmed,
     done: false,
     status: '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
   saveNow();
   showToast('Tâche créée');
@@ -16,6 +18,7 @@ function addFreeTodo(text) {
 function toggleFreeTodo(id) {
   const todo = getFreeTodo(id);
   todo.done = !todo.done;
+  todo.updatedAt = new Date().toISOString();
   saveNow();
   showToast('Tâche modifiée');
 }
@@ -23,6 +26,7 @@ function toggleFreeTodo(id) {
 function setFreeTodoStatus(id, status) {
   const todo = getFreeTodo(id);
   todo.status = status;
+  todo.updatedAt = new Date().toISOString();
   saveNow();
   showToast('Tâche modifiée');
 }

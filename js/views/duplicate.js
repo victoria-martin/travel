@@ -1,6 +1,13 @@
 function duplicateAccommodation(id) {
   const a = getAccommodation(id);
-  state.accommodations.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });
+  state.accommodations.push({
+    ...a,
+    id: uid(),
+    name: `${a.name} (copie)`,
+    tags: [...a.tags],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
   saveNow();
   showToast('Hébergement créé');
 }
@@ -13,6 +20,8 @@ function duplicateOffer(id) {
     model: `${offer.model} (copie)`,
     optionIds: [...(offer.optionIds || [])],
     isDefault: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
   saveNow();
   showToast('Offre créée');
@@ -20,21 +29,39 @@ function duplicateOffer(id) {
 
 function duplicateFixedCost(id) {
   const cost = getFixedCost(id);
-  state.fixedCosts.push({ ...cost, id: uid(), label: `${cost.label} (copie)` });
+  state.fixedCosts.push({
+    ...cost,
+    id: uid(),
+    label: `${cost.label} (copie)`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
   saveNow();
   showToast('Charge créée');
 }
 
 function duplicateAttraction(id) {
   const a = getAttraction(id);
-  state.attractions.push({ ...a, id: uid(), name: `${a.name} (copie)`, tags: [...a.tags] });
+  state.attractions.push({
+    ...a,
+    id: uid(),
+    name: `${a.name} (copie)`,
+    tags: [...a.tags],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
   saveNow();
   showToast('Lieu créé');
 }
 
 function duplicateTransport(id) {
   const t = getTransport(id);
-  state.transports.push({ ...t, id: uid() });
+  state.transports.push({
+    ...t,
+    id: uid(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
   saveNow();
   showToast('Transport créé');
 }
@@ -66,6 +93,8 @@ function duplicateScenario(id) {
   copy.id = uid();
   copy.name = s.name + ' (copie)';
   copy.isChosen = false;
+  copy.createdAt = new Date().toISOString();
+  copy.updatedAt = new Date().toISOString();
   const renamed = {};
   scenarioGroups(copy).forEach((group) => {
     renamed[group.id] = uid();

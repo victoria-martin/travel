@@ -34,11 +34,14 @@ const PHRASE_CATEGORIES = [
       { fr: "L'addition, s'il vous plaît." },
       { fr: 'On a terminé, merci.' },
       { fr: 'On peut payer séparément ?' },
-      { fr: "Est-ce qu'il est possible de l'emporter ?", note: 'Utile si vous ne finissez pas un plat' },
+      {
+        fr: "Est-ce qu'il est possible de l'emporter ?",
+        note: 'Utile si vous ne finissez pas un plat',
+      },
       { fr: 'Excusez-moi, où sont les toilettes ?' },
       {
         fr: "Vous avez besoin d'autre chose ?",
-        note: 'On te la dira souvent — réponse : « Non, c\'est bon, merci »',
+        note: "On te la dira souvent — réponse : « Non, c'est bon, merci »",
       },
     ],
   },
@@ -85,7 +88,9 @@ const PHRASE_CATEGORIES = [
       { fr: 'Exactement.' },
       { fr: "Effectivement / C'est bien ça." },
       { fr: 'Si seulement ! / Avec plaisir !' },
-      { fr: "Je ne parle pas bien la langue, pouvez-vous parler plus lentement, s'il vous plaît ?" },
+      {
+        fr: "Je ne parle pas bien la langue, pouvez-vous parler plus lentement, s'il vous plaît ?",
+      },
     ],
   },
 ];
@@ -93,13 +98,13 @@ window.PHRASE_CATEGORIES = PHRASE_CATEGORIES;
 
 /*
   Trois peintures pour la même carte de phrase, testables depuis le menu Affichage sans toucher au
-  code : le HTML reste identique (phrase-item), seule la classe modifier change la mise en page en
+  code : le HTML reste identique (translation-item), seule la classe modifier change la mise en page en
   CSS — sur le modèle d'OUT_OF_RANGE_STYLES (availability-badge.js).
 */
 const PHRASE_STYLES = [
-  { key: 'classique', label: 'Classique (cartes)', modifier: 'phrase-style-classique' },
-  { key: 'duo', label: 'Duo (langue | français)', modifier: 'phrase-style-duo' },
-  { key: 'minimal', label: 'Minimal (liste sobre)', modifier: 'phrase-style-minimal' },
+  { key: 'classique', label: 'Classique (cartes)', modifier: 'translation-style-classique' },
+  { key: 'duo', label: 'Duo (langue | français)', modifier: 'translation-style-duo' },
+  { key: 'minimal', label: 'Minimal (liste sobre)', modifier: 'translation-style-minimal' },
 ];
 
 function phraseStyle() {
@@ -115,7 +120,7 @@ function setPhraseStyle(key) {
 function phraseStyleOption() {
   return radioCardField(
     'Style des phrases',
-    'phrase-style',
+    'translation-style',
     PHRASE_STYLES,
     phraseStyle().key,
     'setPhraseStyle',
@@ -128,7 +133,7 @@ function phraseStyleOption() {
   js/views/phrases-translations.generated.js pour qu'elle survive à un vidage de cache et vaille
   pour tout le monde — PHRASE_OVERRIDES gagne sur PHRASE_TRANSLATIONS dans phraseTranslation().
 */
-const PHRASE_OVERRIDES_KEY = 'voyage-toscane-phrase-overrides';
+const PHRASE_OVERRIDES_KEY = 'voyage-toscane-translation-overrides';
 let phraseOverrides = readStore(PHRASE_OVERRIDES_KEY) || {};
 
 function phraseOverride(fr, lang) {
@@ -177,9 +182,9 @@ function getCustomPhrase(id) {
 function readCustomPhraseForm(id) {
   return {
     id: id || uid(),
-    category: document.getElementById('phrase-category').value,
-    fr: document.getElementById('phrase-fr-input').value.trim(),
-    note: document.getElementById('phrase-note-input').value.trim(),
+    category: document.getElementById('translation-category').value,
+    fr: document.getElementById('translation-fr-input').value.trim(),
+    note: document.getElementById('translation-note-input').value.trim(),
   };
 }
 
@@ -200,7 +205,7 @@ function deleteCustomPhrase(id) {
   render();
 }
 
-// Formulaire : src/domains/phrases/modal/PhraseModal.tsx (docs/react-migration-plan.md § 4).
+// Formulaire : src/domains/phrases/modal/AddTranslationModal.tsx (docs/react-migration-plan.md § 4).
 
 // Les phrases en dur (PHRASE_CATEGORIES) et celles ajoutées (phraseCustomItems) partagent
 // l'affichage : une phrase custom porte juste `customId`, qui décide des boutons Modifier/Supprimer.
@@ -250,11 +255,11 @@ function setPhraseLang(lang) {
 // Deux axes indépendants sur la même carte : le mode (liste/cartes) choisit le chrome — boîte ou
 // ligne plate —, le style (Affichage) choisit la typo. Les deux se combinent toujours : changer
 // l'un ne fait jamais perdre l'autre.
-function renderPhrasesView() {
+function renderTranslationsView() {
   const mode = listViewMode.phrases;
   const available = travelPhraseLanguages();
   const lang = currentPhraseLang();
-  const containerClass = `${phraseStyle().modifier} ${mode === 'table' ? 'phrase-mode-list' : 'phrase-mode-card'}`;
+  const containerClass = `${phraseStyle().modifier} ${mode === 'table' ? 'translation-mode-list' : 'translation-mode-card'}`;
   return /* HTML */ `
     <div class="view-header">
       <div>
@@ -268,13 +273,13 @@ function renderPhrasesView() {
       </div>
     </div>
     <input
-      class="phrase-search"
+      class="translation-search"
       type="search"
       placeholder="Chercher…"
       value="${escapeHtml(phraseSearch)}"
       oninput="searchPhrases(this)"
     />
-    <div id="phrase-categories" class="${containerClass}">${phraseCategoriesHtml(lang)}</div>
+    <div id="translation-categories" class="${containerClass}">${phraseCategoriesHtml(lang)}</div>
   `;
 }
 
@@ -285,16 +290,18 @@ function phrasesSubtitle(available, lang) {
 }
 
 function phraseLangSelect(available, lang) {
-  return /* HTML */ `<select class="phrase-lang-select" onchange="setPhraseLang(this.value)">
+  return /* HTML */ `<select class="translation-lang-select" onchange="setPhraseLang(this.value)">
     ${available
-      .map((l) => `<option value="${l}" ${l === lang ? 'selected' : ''}>${languageLabel(l)}</option>`)
+      .map(
+        (l) => `<option value="${l}" ${l === lang ? 'selected' : ''}>${languageLabel(l)}</option>`,
+      )
       .join('')}
   </select>`;
 }
 
 function searchPhrases(input) {
   phraseSearch = input.value;
-  const container = document.getElementById('phrase-categories');
+  const container = document.getElementById('translation-categories');
   if (container) container.innerHTML = phraseCategoriesHtml(currentPhraseLang());
 }
 
@@ -309,10 +316,12 @@ function phraseCategoriesHtml(lang) {
   if (!lang)
     return '<p class="hint">Choisis un ou plusieurs pays dans la modale du voyage pour voir les phrases traduites.</p>';
   const wanted = phraseSearch.trim().toLowerCase();
-  const categories = phraseCategoriesWithCustom().map((category) => ({
-    ...category,
-    items: category.items.filter((item) => matchesPhraseSearch(item, lang, wanted)),
-  })).filter((category) => category.items.length > 0);
+  const categories = phraseCategoriesWithCustom()
+    .map((category) => ({
+      ...category,
+      items: category.items.filter((item) => matchesPhraseSearch(item, lang, wanted)),
+    }))
+    .filter((category) => category.items.length > 0);
   if (!categories.length) return '<p class="hint">Aucune phrase pour cette recherche.</p>';
   return categories.map((category) => phraseCategoryHtml(category, lang)).join('');
 }
@@ -326,9 +335,9 @@ function matchesPhraseSearch(item, lang, wanted) {
 
 function phraseCategoryHtml(category, lang) {
   return /* HTML */ `
-    <section class="phrase-category">
-      <h3 class="phrase-category-title">${escapeHtml(category.title)}</h3>
-      <ul class="phrase-list">
+    <section class="translation-category">
+      <h3 class="translation-category-title">${escapeHtml(category.title)}</h3>
+      <ul class="translation-list">
         ${category.items.map((item) => phraseItemHtml(item, lang)).join('')}
       </ul>
     </section>
@@ -338,35 +347,39 @@ function phraseCategoryHtml(category, lang) {
 function phraseItemHtml(item, lang) {
   const translated = phraseTranslation(item.fr, lang);
   return /* HTML */ `
-    <li class="phrase-item">
-      <div class="phrase-it-row">
-        ${translated
-          ? `<p class="phrase-it">${escapeHtml(translated)}</p>`
-          : `<p class="phrase-missing">Traduction pas encore générée pour ${languageLabel(lang)}</p>`}
+    <li class="translation-item">
+      <div class="translation-it-row">
+        ${
+          translated
+            ? `<p class="translation-it">${escapeHtml(translated)}</p>`
+            : `<p class="translation-missing">Traduction pas encore générée pour ${languageLabel(lang)}</p>`
+        }
         ${phraseStatusButton(item.fr, lang, translated)}
       </div>
-      <p class="phrase-fr">${escapeHtml(item.fr)}</p>
-      ${item.note ? /* HTML */ `<p class="phrase-note">${escapeHtml(item.note)}</p>` : ''}
-      ${item.customId
-        ? /* HTML */ `<div class="phrase-custom-actions">
-            <button
-              type="button"
-              class="icon-btn phrase-edit-btn"
-              title="Modifier / ranger cette phrase"
-              onclick="openModal('phrase', '${item.customId}')"
-            >
-              ${svgIcon('pencil')}
-            </button>
-            <button
-              type="button"
-              class="icon-btn phrase-delete-btn"
-              title="Supprimer cette phrase"
-              onclick="deleteCustomPhrase('${item.customId}')"
-            >
-              ${svgIcon('trash-2')}
-            </button>
-          </div>`
-        : ''}
+      <p class="translation-fr">${escapeHtml(item.fr)}</p>
+      ${item.note ? /* HTML */ `<p class="translation-note">${escapeHtml(item.note)}</p>` : ''}
+      ${
+        item.customId
+          ? /* HTML */ `<div class="translation-custom-actions">
+              <button
+                type="button"
+                class="icon-btn translation-edit-btn"
+                title="Modifier / ranger cette phrase"
+                onclick="openModal('phrase', '${item.customId}')"
+              >
+                ${svgIcon('pencil')}
+              </button>
+              <button
+                type="button"
+                class="icon-btn translation-delete-btn"
+                title="Supprimer cette phrase"
+                onclick="deleteCustomPhrase('${item.customId}')"
+              >
+                ${svgIcon('trash-2')}
+              </button>
+            </div>`
+          : ''
+      }
     </li>
   `;
 }
@@ -375,11 +388,11 @@ function phraseItemHtml(item, lang) {
 // cas — traduit se corrige, manquant se comble.
 function phraseStatusButton(fr, lang, translated) {
   const icon = translated ? 'circle-check' : 'circle-alert';
-  const modifier = translated ? 'phrase-status-ok' : 'phrase-status-missing';
+  const modifier = translated ? 'translation-status-ok' : 'translation-status-missing';
   const title = translated ? 'Corriger la traduction' : 'Ajouter la traduction';
   return /* HTML */ `<button
     type="button"
-    class="icon-btn phrase-status-btn ${modifier}"
+    class="icon-btn translation-status-btn ${modifier}"
     data-fr="${escapeHtml(fr)}"
     data-lang="${lang}"
     title="${title}"

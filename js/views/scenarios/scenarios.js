@@ -78,6 +78,8 @@ function blankScenario() {
     favorite: false,
     archived: false,
     steps: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 }
 

@@ -26,7 +26,15 @@ function upsertVilleByName(travelId, name) {
   const id = villeIdFromName(travelId, trimmed);
   const existing = state.villes.find((v) => v.id === id);
   if (existing) return existing;
-  const ville = { id, travelId, name: trimmed, lat: '', lng: '' };
+  const ville = {
+    id,
+    travelId,
+    name: trimmed,
+    lat: '',
+    lng: '',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
   state.villes.push(ville);
   saveNow();
   geocodeVilleInBackground(ville.id);

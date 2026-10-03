@@ -76,6 +76,8 @@ function saveOfferDraft() {
     rentalId: draftRentalId,
     modelId: model.id,
     priceTotal: document.getElementById('draft-price').value.trim(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   });
   saveNow();
   showToast('Offre créée');

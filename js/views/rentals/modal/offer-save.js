@@ -24,6 +24,7 @@ function saveOffer(id) {
     link: document.getElementById('offer-link').value.trim(),
     notes: document.getElementById('offer-notes').value.trim(),
     createdAt: existing ? existing.createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   if (id) {

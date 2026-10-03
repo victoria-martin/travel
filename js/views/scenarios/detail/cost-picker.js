@@ -16,7 +16,14 @@ function costLabel(cost) {
 
 // Une dépense créée ici ne porte que son libellé : le montant se complète depuis la page Dépenses.
 function createFixedCostNamed(label) {
-  const item = { ...emptyFixedCost(), id: uid(), travelId: currentTravelId(), label };
+  const item = {
+    ...emptyFixedCost(),
+    id: uid(),
+    travelId: currentTravelId(),
+    label,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
   state.fixedCosts.push(item);
   saveNow();
   return item;

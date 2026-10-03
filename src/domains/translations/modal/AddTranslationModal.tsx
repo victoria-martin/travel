@@ -8,7 +8,7 @@ import type { CustomPhrase } from '../types';
 
 // Port de phraseForm/saveCustomPhrase (js/views/phrases.js) — #f-save délègue à
 // window.saveCustomPhrase(id) inchangée, qui lit ces mêmes ids via readCustomPhraseForm.
-export function PhraseModal({ payload }: { payload: CustomPhrase }) {
+export function AddTranslationModal({ payload }: { payload: CustomPhrase }) {
   const categoryOptions = window.PHRASE_CATEGORIES.map((category) => ({
     value: category.title,
     label: category.title,
@@ -18,14 +18,18 @@ export function PhraseModal({ payload }: { payload: CustomPhrase }) {
     <>
       <ModalTitle isNew={!payload.id} subject="une phrase" />
       <SelectField
-        id="phrase-category"
+        id="translation-category"
         label="Catégorie"
         defaultValue={payload.category}
         placeholder="Sans catégorie — à ranger plus tard"
         options={categoryOptions}
       />
-      <TextareaField id="phrase-fr-input" label="Phrase (français)" defaultValue={payload.fr} />
-      <TextField id="phrase-note-input" label="Note (optionnel)" defaultValue={payload.note} />
+      <TextareaField
+        id="translation-fr-input"
+        label="Phrase (français)"
+        defaultValue={payload.fr}
+      />
+      <TextField id="translation-note-input" label="Note (optionnel)" defaultValue={payload.note} />
       <div className="modal-actions">
         <CloseModalButton />
         <ModalSaveButton onClick={() => window.saveCustomPhrase(payload.id || '')} />

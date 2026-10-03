@@ -2,10 +2,20 @@ function upsertJournalEntry(date, patch) {
   const travelId = currentTravelId();
   let entry = getJournalEntry(travelId, date);
   if (!entry) {
-    entry = { id: uid(), travelId, date, scenarioId: prefs.journalScenarioId || '', photos: [], text: '' };
+    entry = {
+      id: uid(),
+      travelId,
+      date,
+      scenarioId: prefs.journalScenarioId || '',
+      photos: [],
+      text: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
     state.journalEntries.push(entry);
   }
   Object.assign(entry, patch);
+  entry.updatedAt = new Date().toISOString();
   return entry;
 }
 

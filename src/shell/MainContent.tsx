@@ -10,10 +10,10 @@ import { HomeView } from '../domains/home/HomeView';
 import { JournalView } from '../domains/journal/JournalView';
 import { NotesView } from '../domains/notes/NotesView';
 import { PackingView } from '../domains/packing/PackingView';
-import { PhrasesView } from '../domains/phrases/PhrasesView';
 import { ScenariosView } from '../domains/scenarios/ScenariosView';
 import { ScenarioDetailView } from '../domains/scenarios/detail/ScenarioDetailView';
 import { TodoView } from '../domains/todo/TodoView';
+import { TranslationsView } from '../domains/translations/TranslationsView';
 import { TransportsView } from '../domains/transports/TransportsView';
 
 /*
@@ -34,7 +34,7 @@ const VIEWS: Record<string, () => React.JSX.Element> = {
   notes: NotesView,
   'infos-utiles': CountryInfoView,
   accueil: HomeView,
-  phrases: PhrasesView,
+  phrases: TranslationsView,
   valise: PackingView,
   'a-faire': TodoView,
   journal: JournalView,

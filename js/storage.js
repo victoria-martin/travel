@@ -145,6 +145,7 @@ function migrateData(data) {
   TRAVEL_COLLECTIONS.forEach((collection) => {
     (data[collection] || []).forEach((item) => {
       if (item.createdAt === undefined) item.createdAt = LEGACY_CREATED_AT;
+      if (item.updatedAt === undefined) item.updatedAt = item.createdAt;
     });
   });
   return data;

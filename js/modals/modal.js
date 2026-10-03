@@ -103,7 +103,7 @@ const MODAL_TYPES = {
   },
   'valise-catalogue': {
     open: (id) => ({ payload: id ? structuredClone(getPackingItem(id)) : emptyPackingItem() }),
-    body: (m) => packingCatalogForm(m.payload),
+    // body : React (src/domains/packing/modal/PackingItemModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'valise-composer': {
@@ -136,7 +136,7 @@ const MODAL_TYPES = {
   },
   phrase: {
     open: (id) => ({ payload: id ? structuredClone(getCustomPhrase(id)) : emptyCustomPhrase() }),
-    // body : React (src/domains/phrases/modal/PhraseModal.tsx, src/modal-bodies.ts).
+    // body : React (src/domains/phrases/modal/AddTranslationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   sync: { body: () => syncForm() },

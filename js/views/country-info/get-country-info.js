@@ -41,7 +41,19 @@ function countryInfoDefaults(country) {
 
 function setCountryInfoField(country, field, value) {
   const info = getCountryInfo(country);
-  if (info) info[field] = value;
-  else state.countryInfos.push({ id: uid(), travelId: currentTravelId(), country, ...countryInfoDefaults(country), [field]: value });
+  if (info) {
+    info[field] = value;
+    info.updatedAt = new Date().toISOString();
+  } else {
+    state.countryInfos.push({
+      id: uid(),
+      travelId: currentTravelId(),
+      country,
+      ...countryInfoDefaults(country),
+      [field]: value,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+  }
   saveNow();
 }

@@ -1345,9 +1345,12 @@ tr:hover td {
   background: var(--paper-raised);
   border-top: 1px solid var(--line);
 }
-/* La question posée par-dessus un formulaire : son fond s'ajoute à celui d'en dessous. */
+/* La question posée par-dessus un formulaire : son fond s'ajoute à celui d'en dessous. Z-index
+   au-dessus de .overlay — le Dialog.Portal de Radix s'ajoute en fin de <body>, après #app où
+   l'ask est rendu, donc à z-index égal l'ordre DOM le passerait derrière la modale. */
 .overlay-ask {
   background: rgba(36, 49, 43, 0.25);
+  z-index: 51;
 }
 .modal-ask {
   max-width: 400px;
@@ -3998,7 +4001,7 @@ tr:hover td {
 }
 
 /* ---------- Phrases ---------- */
-.phrase-search {
+.translation-search {
   width: 100%;
   max-width: 420px;
   margin-bottom: 20px;
@@ -4010,7 +4013,7 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 8px;
 }
-.phrase-lang-select {
+.translation-lang-select {
   padding: 6px 10px;
   font-family: inherit;
   font-size: 13px;
@@ -4019,32 +4022,32 @@ tr:hover td {
   border: 1px solid var(--line);
   border-radius: 8px;
 }
-.phrase-category {
+.translation-category {
   margin-bottom: 28px;
 }
-.phrase-list {
+.translation-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.phrase-note {
+.translation-note {
   color: var(--stone);
   font-size: 12px;
   font-style: italic;
   margin: 6px 0 0;
 }
-.phrase-missing {
+.translation-missing {
   color: var(--stone);
   font-style: italic;
   margin: 0;
 }
-.phrase-custom-actions {
+.translation-custom-actions {
   display: flex;
   gap: 4px;
   margin-top: 6px;
 }
-.phrase-edit-btn,
-.phrase-delete-btn {
+.translation-edit-btn,
+.translation-delete-btn {
   width: 22px;
   height: 22px;
 }
@@ -4054,50 +4057,50 @@ tr:hover td {
   style (typo du contenu). Chaque style porte donc sa mise en page interne pour les deux modes, le
   mode ne porte que le conteneur.
 */
-.phrase-mode-card .phrase-list {
+.translation-mode-card .translation-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 10px;
 }
-.phrase-mode-card .phrase-item {
+.translation-mode-card .translation-item {
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--white);
   padding: 12px 14px;
 }
-.phrase-mode-list .phrase-list {
+.translation-mode-list .translation-list {
   display: block;
 }
-.phrase-mode-list .phrase-item {
+.translation-mode-list .translation-item {
   border-bottom: 1px solid var(--line);
   padding: 8px 4px;
 }
-.phrase-mode-list .phrase-item:last-child {
+.translation-mode-list .translation-item:last-child {
   border-bottom: none;
 }
 
 /* La langue et son bouton d'état voyagent toujours ensemble, quel que soit le style. */
-.phrase-it-row {
+.translation-it-row {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.phrase-status-btn {
+.translation-status-btn {
   flex: 0 0 auto;
   width: 22px;
   height: 22px;
 }
-.phrase-status-btn.phrase-status-ok {
+.translation-status-btn.translation-status-ok {
   color: var(--good, #3a7d5c);
   border-color: currentColor;
 }
-.phrase-status-btn.phrase-status-missing {
+.translation-status-btn.translation-status-missing {
   color: var(--warn, #b3771f);
   border-color: currentColor;
 }
 
 /* Classique — langue en avant (gras), français en dessous d'un filet. */
-.phrase-style-classique .phrase-category-title {
+.translation-style-classique .translation-category-title {
   font-family: 'Fraunces', serif;
   font-weight: 600;
   font-size: 17px;
@@ -4105,13 +4108,13 @@ tr:hover td {
   padding-left: 10px;
   border-left: 3px solid var(--stone);
 }
-.phrase-style-classique .phrase-it,
-.phrase-style-classique .phrase-missing {
+.translation-style-classique .translation-it,
+.translation-style-classique .translation-missing {
   font-weight: 600;
   font-size: 15px;
   margin: 0;
 }
-.phrase-style-classique .phrase-fr {
+.translation-style-classique .translation-fr {
   color: var(--ink-soft);
   font-size: 13px;
   margin: 6px 0 0;
@@ -4120,7 +4123,7 @@ tr:hover td {
 }
 
 /* Duo — deux colonnes langue | français, séparées par un filet vertical. */
-.phrase-style-duo .phrase-category-title {
+.translation-style-duo .translation-category-title {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.07em;
@@ -4130,33 +4133,33 @@ tr:hover td {
   padding-bottom: 6px;
   border-bottom: 1px solid var(--line);
 }
-.phrase-style-duo .phrase-item {
+.translation-style-duo .translation-item {
   display: flex;
   align-items: baseline;
   gap: 14px;
 }
-.phrase-style-duo .phrase-it-row {
+.translation-style-duo .translation-it-row {
   flex: 1 1 50%;
   padding-right: 14px;
   border-right: 1px solid var(--line);
 }
-.phrase-style-duo .phrase-it,
-.phrase-style-duo .phrase-missing {
+.translation-style-duo .translation-it,
+.translation-style-duo .translation-missing {
   font-weight: 600;
   margin: 0;
 }
-.phrase-style-duo .phrase-fr {
+.translation-style-duo .translation-fr {
   color: var(--ink-soft);
   font-size: 13px;
   flex: 1 1 50%;
   margin: 0;
 }
-.phrase-style-duo .phrase-note {
+.translation-style-duo .translation-note {
   flex: 0 0 100%;
 }
 
 /* Minimal — la langue portée par la couleur plutôt que le gras, français précédé d'un tiret. */
-.phrase-style-minimal .phrase-category-title {
+.translation-style-minimal .translation-category-title {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.07em;
@@ -4164,27 +4167,27 @@ tr:hover td {
   color: var(--stone);
   margin: 0 0 6px;
 }
-.phrase-style-minimal .phrase-item {
+.translation-style-minimal .translation-item {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 10px;
 }
-.phrase-style-minimal .phrase-it,
-.phrase-style-minimal .phrase-missing {
+.translation-style-minimal .translation-it,
+.translation-style-minimal .translation-missing {
   font-weight: 400;
   color: var(--stone-dark, var(--stone));
   margin: 0;
 }
-.phrase-style-minimal .phrase-fr {
+.translation-style-minimal .translation-fr {
   color: var(--ink-soft);
   font-size: 13px;
   margin: 0;
 }
-.phrase-style-minimal .phrase-fr::before {
+.translation-style-minimal .translation-fr::before {
   content: '— ';
 }
-.phrase-style-minimal .phrase-note {
+.translation-style-minimal .translation-note {
   flex: 0 0 100%;
 }
 
