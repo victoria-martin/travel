@@ -342,6 +342,46 @@ l'arbre React, pas de composant à écrire) ; `SplitHandle` reçoit maintenant l
 scénario) et appelle `invalidateSize()` à chaque pixel du glisser, au lieu d'attendre le prochain
 changement de marqueurs.
 
+**2026-10-03 — Phase 5, premier passage.** Vérification demandée par le tableau des phases (§ 7) :
+grep de `platform/web` et de Leaflet/`window.L` dans `domains/*/hooks` et `store/` — zéro résultat,
+les seuls imports de `platform/web` sont dans `domains/carte/MapView.tsx` (le composant d'écran, le
+point de composition légitime) et un import de **type seul** (`MapMarkerData`, le contrat de props
+entre l'écran et `LeafletMap`) dans `markers.ts`. La règle « rien dans les hooks/store n'importe
+`platform/web` » tient, Carte étant le seul écran ayant un vrai composant plateforme à swapper.
+
+**Trois fuites identifiées, pas encore derrière une frontière `platform/`** (Leaflet est le seul
+sous-système qui en a une aujourd'hui) :
+- `@dnd-kit/core`, drag & drop souris des étapes de scénario
+  ([StepList.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepList.tsx),
+  [StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx)) — pointeur/DOM,
+  RN demande un mécanisme tactile différent (gesture-handler + reanimated, ou une lib dnd RN).
+- `FileReader`, lecture du CSV importé
+  ([ImportExpensesModal.tsx](../src/domains/expenses/modal/ImportExpensesModal.tsx)) — API fichier
+  du navigateur, RN n'a pas cette classe.
+- `@radix-ui/*` : `Dialog` ([ModalHost.tsx](../src/shell/ModalHost.tsx)), `DropdownMenu`
+  ([TagDropdown.tsx](../src/shared/select/TagDropdown.tsx), consommé par `EditableTagsCell.tsx`),
+  `Tabs` ([TransportsView.tsx](../src/domains/transports/TransportsView.tsx)) — ces primitives
+  n'ont pas d'équivalent RN direct (pas de portage 1:1 d'une lib web).
+
+**Ce que `platform/native/` devra fournir**, au minimum : une carte (ex. `react-native-maps`, même
+contrat `MapMarkerData[]`/`onMarkerClick`/`afterMarkers` que `LeafletMap`) ; un drag & drop tactile
+pour les étapes de scénario ; un sélecteur de fichier + lecture de contenu pour l'import CSV ; des
+primitives Dialog/DropdownMenu/Tabs (soit des libs RN dédiées, soit des composants maison avec la
+même interface que leurs équivalents Radix). Rien d'urgent — pas de RN à l'horizon proche — mais la
+liste est maintenant posée plutôt qu'à découvrir plus tard.
+
+**Mitigations mobile (web) posées dans le même tour, distinctes du sujet RN ci-dessus** — pour
+l'app mobile actuelle, pas en préparation d'un futur port natif :
+- Drag des étapes de scénario : déjà non affiché sous 640px (`.step-drag-handle{display:none}`,
+  [styles.css:3911](../styles.css#L3911)), les boutons `.step-reorder-buttons` restent. Rien à
+  faire, déjà en place avant ce tour.
+- Import CSV (`FileReader`) : bouton masqué sous 640px (`.import-expenses-btn`, TEMP — commentaire
+  dans [ImportExpensesButton.tsx](../src/domains/expenses/ExpensesView/ImportExpensesButton.tsx)),
+  pas encore adapté au tactile.
+- Dialog Radix centrée : passe plein écran sous 640px comme `.modal-sheet` le fait déjà sous
+  440px (`.overlay`/`.modal`, [styles.css:1348](../styles.css#L1348)) — exclu de `.modal-ask`/
+  `.overlay-ask` (la question de confirmation reste une petite boîte centrée, pas une sheet).
+
 ## 6. Dossiers
 
 ```
@@ -373,7 +413,7 @@ src/
 | 2 — Logique propre | Carte ✅, Scénarios (détail) 🚧 en cours                                    | Carte faite ; Scénarios détail vérifié sauf le DnD, détail ci-dessous.                                                                                                                                                                                                                                                             |
 | 3 — Terminée ✅    | Journal, Accueil, Notes, Infos utiles, Phrases, Valise, À faire, Dépenses   | détail ci-dessous.                                                                                                                                                                                                                                                                                                                 |
 | 4 — Le shell       | Sidebar ✅, router ✅, modale globale ✅, toasts ✅                         | `#app` est un seul root React (§ 1, détail complet) — `js/` reste en place : cette phase change qui possède le DOM, pas combien d'écrans sont encore legacy (`scenarios` liste, menu mobile, formulaires, panneaux complexes délégués restent à part). « `js/` legacy supprimé » reste l'horizon final, pas le livrable de ce lot. |
-| 5 — Nettoyage RN   | —                                                                           | vérifier qu'aucun import `domains/*`/`store/` ne touche `platform/web`, lister ce que `platform/native/` devra fournir                                                                                                                                                                                                             |
+| 5 — Nettoyage RN   | —                                                                           | **Premier passage fait (2026-10-03, détail § 5)** : vérif clean, 3 fuites listées (`@dnd-kit/core`, `FileReader`, `@radix-ui/*`) — rien d'urgent, pas de RN à l'horizon proche.                                                                                                                                                   |
 
 **Phase 1, détail.** Partagé : `DataTable`/`SearchInput`/`ToolbarPanel`/`SettingsMenu`/`ColumnPicker`/
 `TagDropdown`(Radix `DropdownMenu`, `shared/select/`)/`EditableTagsCell`/`EditableTextCell`/`TagLabel`/
