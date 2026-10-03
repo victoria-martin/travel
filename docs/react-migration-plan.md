@@ -247,8 +247,8 @@ responsabilité ») :
   (ouverture, dirty-check, fermeture) qui peint `cfg.body(modal)` en `dangerouslySetInnerHTML`
   pour tous les types encore legacy. **Premier formulaire porté en vrai composant React** :
   `actual-expense` (dépense réelle), pilote avant les autres —
-  [domains/expenses/modal/ActualExpenseForm.tsx](../src/domains/expenses/modal/ActualExpenseForm.tsx),
-  branché dans [src/forms/react-forms.ts](../src/forms/react-forms.ts) (table type → composant,
+  [domains/expenses/modal/ActualExpenseModal.tsx](../src/domains/expenses/modal/ActualExpenseModal.tsx),
+  branché dans [src/modal-bodies.ts](../src/modal-bodies.ts) (table type → composant,
   consultée par `ModalHost` à côté du `dangerouslySetInnerHTML` par défaut — un deuxième type,
   `import-expenses`, l'a rejoint depuis). Délibérément proche du legacy, pas une réécriture
   complète : champs **non contrôlés** (`defaultValue`), le bouton `#f-save` délègue toujours à
@@ -256,7 +256,7 @@ responsabilité ») :
   mêmes ids via `document.getElementById`, les dupliquer en TypeScript n'aurait rien apporté tout
   de suite. Seul ce qui change : le gabarit (JSX typé plutôt qu'une chaîne HTML échappée à la
   main) et, pour ce type, `MODAL_TYPES['actual-expense'].body` devenu mort (plus jamais appelé,
-  `modalBodyHtml()` n'est plus invoqué pour un type présent dans `REACT_FORMS`) — retiré avec
+  `modalBodyHtml()` n'est plus invoqué pour un type présent dans `MODAL_BODIES`) — retiré avec
   `actualExpenseForm()`. Le dirty-check (`modalIsDirty`/`modalSnapshot`) continue de fonctionner
   sans y toucher : `modalFieldsState()` lit génériquement tout `input`/`textarea`/`select` sous
   `.modal`, peu importe qui les a peints.
@@ -293,7 +293,7 @@ responsabilité ») :
   reste muté en parallèle du state local pour que la fonction de sauvegarde déléguée (qui la lit
   directement sur `modal.payload`) voie la bonne valeur.
   `charge` (Charge budgétaire) rejoint `actual-expense` —
-  [domains/fixed-costs/modal/FixedCostForm.tsx](../src/domains/fixed-costs/modal/FixedCostForm.tsx),
+  [domains/fixed-costs/modal/FixedCostModal.tsx](../src/domains/fixed-costs/modal/FixedCostModal.tsx),
   premier à utiliser `TagsField`. **Prochain lot** : continuer sur les types restants
   (`attraction`/`accommodation*` utilisent aussi `TagsField`, bon test de réutilisation ;
   `voyage`/`step` sont plus complexes).

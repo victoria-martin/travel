@@ -5,13 +5,13 @@ import type { FixedCost } from '../../../store/types';
 
 /*
   Port de fixedCostForm/saveFixedCost (js/views/fixed-costs/modal/{form,save}.js) — mêmes principes
-  que ActualExpenseForm : champs non contrôlés, #f-save délègue à window.saveFixedCost(id)
+  que ActualExpenseModal : champs non contrôlés, #f-save délègue à window.saveFixedCost(id)
   inchangée. Seul `categories` est contrôlé (TagsField) : ajouter/retirer un tag doit se voir tout
   de suite, un `defaultValue` ne suffit pas pour une liste. `payload.categories` reste mutée en
   parallèle du state local pour que saveFixedCost (qui la lit directement sur modal.payload) voie
   la bonne valeur.
 */
-export function FixedCostForm({ payload }: { payload: FixedCost }) {
+export function FixedCostModal({ payload }: { payload: FixedCost }) {
   const [categories, setCategories] = useState(payload.categories);
 
   function handleCategoriesChange(next: string[]) {

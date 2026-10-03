@@ -9,7 +9,7 @@ import type { ActualExpense } from '../../../store/types';
   via document.getElementById, aucune raison de dupliquer cette logique ici. Seul le gabarit
   change : JSX typé à la place d'une chaîne HTML échappée à la main.
 */
-export function ActualExpenseForm({ payload }: { payload: ActualExpense }) {
+export function ActualExpenseModal({ payload }: { payload: ActualExpense }) {
   const scenario = window.expenseBudgetScenario();
   const scenarioCostIds = new Set(scenario?.costIds || []);
   const allCosts = window.manualExpenses();

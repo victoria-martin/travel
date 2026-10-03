@@ -192,7 +192,7 @@ function actualExpenseDate(date) {
   return parsed ? parsed.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '—';
 }
 
-// Formulaire : src/domains/expenses/modal/ActualExpenseForm.tsx (premier type de modale porté en
+// Formulaire : src/domains/expenses/modal/ActualExpenseModal.tsx (premier type de modale porté en
 // React, docs/react-migration-plan.md § 4) — cette fonction ne reste que pour la sauvegarde, lue
 // par les mêmes ids de champs, peints maintenant par ce composant plutôt que par du HTML en chaîne.
 function saveActualExpense(id) {

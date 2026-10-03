@@ -253,7 +253,7 @@ async function pullFromSheet({ silent = false } = {}) {
 function applyRemote(rev, data) {
   const merged = sync.base ? mergeStates(data, state, sync.base) : data;
   const needsPush = !sameJson(merged, data);
-  state = merged;
+  state = migrateData(merged);
   persistState();
   persistSyncBase(rev, data);
   setSyncStatus('ok');
@@ -280,7 +280,7 @@ async function pushToSheet() {
     if (payload.conflict) {
       // Le Sheet a bougé : on fusionne entrée par entrée, puis on renvoie.
       const before = deepClone(state);
-      state = mergeStates(payload.data, state, sync.base);
+      state = migrateData(mergeStates(payload.data, state, sync.base));
       persistState();
       persistSyncBase(payload.rev, payload.data);
       renderIfChanged(before);

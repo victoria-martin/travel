@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useEffect } from 'react';
-import { REACT_FORMS } from '../forms/react-forms';
+import { MODAL_BODIES } from '../modal-bodies';
 
 /*
   Port de renderModal/dismissModal (js/modals/modal.js), maintenant sur Dialog de Radix (gratuit
@@ -21,8 +21,8 @@ import { REACT_FORMS } from '../forms/react-forms';
 
 export function ModalHost() {
   const modal = window.modal;
-  const ReactForm = modal ? REACT_FORMS[modal.type] : undefined;
-  const bodyHtml = modal && !ReactForm ? window.modalBodyHtml() : null;
+  const Body = modal ? MODAL_BODIES[modal.type] : undefined;
+  const bodyHtml = modal && !Body ? window.modalBodyHtml() : null;
 
   useEffect(() => {
     if (modal) window.onModalPainted();
@@ -49,13 +49,13 @@ export function ModalHost() {
                   window.dismissModal();
                 }}
               >
-                {/* Titre pour les lecteurs d'écran (Radix l'exige) : masqué visuellement, les
-                    formulaires portent déjà leur propre <h3> visible dans leur contenu. */}
+                {/* Titre pour les lecteurs d'écran (Radix l'exige) : masqué visuellement, le
+                    contenu porte déjà son propre <h3> visible. */}
                 <VisuallyHidden>
                   <Dialog.Title>{modal.type}</Dialog.Title>
                 </VisuallyHidden>
-                {ReactForm ? (
-                  <ReactForm payload={modal.payload} />
+                {Body ? (
+                  <Body payload={modal.payload} />
                 ) : (
                   <div dangerouslySetInnerHTML={{ __html: bodyHtml || '' }} />
                 )}

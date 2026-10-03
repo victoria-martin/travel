@@ -85,19 +85,19 @@ const MODAL_TYPES = {
       scenarioId,
       payload: id ? structuredClone(getFixedCost(id)) : emptyFixedCost(),
     }),
-    // body : React (src/domains/fixed-costs/modal/FixedCostForm.tsx, src/forms/react-forms.ts).
+    // body : React (src/domains/fixed-costs/modal/FixedCostModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'import-expenses': {
     open: () => ({ payload: {} }),
-    // body : React (src/domains/expenses/modal/ImportExpensesForm.tsx, ModalHost.REACT_FORMS).
+    // body : React (src/domains/expenses/modal/ImportExpensesModal.tsx, src/modal-bodies.ts).
     width: '860px',
   },
   'actual-expense': {
     open: (id) => ({
       payload: id ? structuredClone(getActualExpense(id)) : emptyActualExpense(),
     }),
-    // body : React (src/domains/expenses/modal/ActualExpenseForm.tsx, ModalHost.REACT_FORMS) —
+    // body : React (src/domains/expenses/modal/ActualExpenseModal.tsx, src/modal-bodies.ts) —
     // premier type de modale porté, open/edits restent ici.
     edits: true,
   },
