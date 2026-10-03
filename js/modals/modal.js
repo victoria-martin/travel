@@ -98,7 +98,8 @@ const MODAL_TYPES = {
     open: (id) => ({
       payload: id ? structuredClone(getActualExpense(id)) : emptyActualExpense(),
     }),
-    body: (m) => actualExpenseForm(m.payload),
+    // body : React (src/domains/expenses/modal/ActualExpenseForm.tsx, ModalHost.REACT_FORMS) —
+    // premier type de modale porté, open/edits restent ici.
     edits: true,
   },
   'valise-catalogue': {

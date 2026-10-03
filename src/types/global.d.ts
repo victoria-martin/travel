@@ -228,6 +228,7 @@ declare global {
     toggleCompareMode: () => void;
     createScenario: () => void;
     scenarioCompareCard: (scenario: import('../store/types').Scenario) => string;
+    saveActualExpense: (id: string) => void;
     googleMapsPlaceUrl: (query: string) => string;
     priceRange: (entity: { amountMin?: string; amountMax?: string }) => string;
     ROUTE_HELP: string;

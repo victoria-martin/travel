@@ -189,59 +189,9 @@ function actualExpenseDate(date) {
   return parsed ? parsed.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '—';
 }
 
-function actualExpenseForm(expense) {
-  const scenario = expenseBudgetScenario();
-  const scenarioCostIds = new Set((scenario && scenario.costIds) || []);
-  const budgetCosts = manualExpenses().filter((cost) => scenarioCostIds.has(cost.id));
-  const linkedCost = manualExpenses().find((cost) => cost.id === expense.fixedCostId);
-  if (linkedCost && !budgetCosts.some((cost) => cost.id === linkedCost.id)) {
-    budgetCosts.push(linkedCost);
-  }
-
-  return /* HTML */ `
-    <h3>${expense.id ? 'Modifier' : 'Ajouter'} une dépense réelle</h3>
-    <div class="field">
-      <label for="actual-expense-date">Date</label>
-      <input id="actual-expense-date" type="date" value="${escapeHtml(expense.date)}" required />
-    </div>
-    <div class="field">
-      <label for="actual-expense-label">Dépense</label>
-      <input id="actual-expense-label" type="text" value="${escapeHtml(expense.label)}" required />
-    </div>
-    <div class="field">
-      <label for="actual-expense-amount">Montant</label>
-      <input
-        id="actual-expense-amount"
-        type="text"
-        value="${escapeHtml(expense.amount)}"
-        required
-      />
-    </div>
-    <div class="field">
-      <label for="actual-expense-budget">Poste budgétaire</label>
-      <select id="actual-expense-budget">
-        <option value="">Non budgétisé</option>
-        ${budgetCosts
-          .map(
-            (cost) =>
-              `<option value="${escapeHtml(cost.id)}" ${expense.fixedCostId === cost.id ? 'selected' : ''}>${escapeHtml(cost.label || 'Sans libellé')}</option>`,
-          )
-          .join('')}
-      </select>
-    </div>
-    <div class="field">
-      <label for="actual-expense-notes">Notes</label>
-      <textarea id="actual-expense-notes" rows="2">${escapeHtml(expense.notes)}</textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="saveActualExpense('${expense.id || ''}')">
-        Enregistrer
-      </button>
-    </div>
-  `;
-}
-
+// Formulaire : src/domains/expenses/modal/ActualExpenseForm.tsx (premier type de modale porté en
+// React, docs/react-migration-plan.md § 4) — cette fonction ne reste que pour la sauvegarde, lue
+// par les mêmes ids de champs, peints maintenant par ce composant plutôt que par du HTML en chaîne.
 function saveActualExpense(id) {
   const dateField = document.getElementById('actual-expense-date');
   const labelField = document.getElementById('actual-expense-label');

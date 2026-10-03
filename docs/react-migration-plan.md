@@ -239,13 +239,28 @@ responsabilité ») :
   `EditableTagsCell` ([shared/cells/](../src/shared/cells/)) utilise aussi `DropdownMenu` en
   interne mais reste dans `cells/` : son identité première est une cellule de tableau éditable, le
   menu n'est qu'un détail d'implémentation — à rouvrir si ce découpage s'avère faux à l'usage.
-- **`ModalHost` n'a pas été nécessaire pour les actions de ligne.** `window.openModal(type, id)` /
-  `openSheet(type, id)` / `deleteItem(collection, id)` ouvrent l'overlay legacy par-dessus toute la
-  page, hors de l'arbre React monté dans `#main` — aucun conflit avec React, pas de shell à écrire.
-  Cities, Charges fixes et Transports (Providers/Cars) délèguent déjà dessus. Un vrai `ModalHost`
-  (remplaçant [modal.js](../js/modals/modal.js), shell : ouverture, dirty-check au snapshot,
-  fermeture) ne devient utile que le jour où une modale s'écrit en **formulaire React contrôlé** à
-  la place d'une legacy — pas avant, et pas pour rouvrir l'édition existante.
+- **`ModalHost` n'a pas été nécessaire pour les actions de ligne**, tant que la Phase 4 n'avait pas
+  donné `#app` à React : `window.openModal(type, id)` / `openSheet(type, id)` /
+  `deleteItem(collection, id)` ouvraient l'overlay legacy par-dessus toute la page, hors de l'arbre
+  React monté dans `#main` seulement — aucun conflit. **2026-10-02, Phase 4** —
+  [src/shell/ModalHost.tsx](../src/shell/ModalHost.tsx) existe maintenant (§ 1), shell générique
+  (ouverture, dirty-check, fermeture) qui peint `cfg.body(modal)` en `dangerouslySetInnerHTML`
+  pour tous les types encore legacy. **Premier formulaire porté en vrai composant React** :
+  `actual-expense` (dépense réelle), pilote avant les autres —
+  [domains/expenses/modal/ActualExpenseForm.tsx](../src/domains/expenses/modal/ActualExpenseForm.tsx),
+  branché dans `ModalHost.REACT_FORMS` (une table type → composant, à côté du
+  `dangerouslySetInnerHTML` par défaut). Délibérément proche du legacy, pas une réécriture
+  complète : champs **non contrôlés** (`defaultValue`), le bouton `#f-save` délègue toujours à
+  `window.saveActualExpense(id)` (js/views/expenses/actual.js) inchangée — elle lit déjà ces
+  mêmes ids via `document.getElementById`, les dupliquer en TypeScript n'aurait rien apporté tout
+  de suite. Seul ce qui change : le gabarit (JSX typé plutôt qu'une chaîne HTML échappée à la
+  main) et, pour ce type, `MODAL_TYPES['actual-expense'].body` devenu mort (plus jamais appelé,
+  `modalBodyHtml()` n'est plus invoqué pour un type présent dans `REACT_FORMS`) — retiré avec
+  `actualExpenseForm()`. Le dirty-check (`modalIsDirty`/`modalSnapshot`) continue de fonctionner
+  sans y toucher : `modalFieldsState()` lit génériquement tout `input`/`textarea`/`select` sous
+  `.modal`, peu importe qui les a peints. **Prochain lot** : ajuster ce patron puis l'appliquer
+  aux autres types — à voir si un formulaire avec champs vocabulaire/tags (ex. `charge`) demande
+  un traitement différent.
 - Un écran s'écrit toujours en clair (`AccommodationsView.tsx` assemble ses briques) — pas de
   moteur générique piloté par config qui fabriquerait l'écran à la place du fichier.
 
