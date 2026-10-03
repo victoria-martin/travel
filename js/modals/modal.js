@@ -125,7 +125,7 @@ const MODAL_TYPES = {
       options,
       payload: stepId ? structuredClone(getStep(scenarioId, stepId)) : emptyStep(),
     }),
-    body: (m) => stepForm(m.payload),
+    // body : React (src/domains/scenarios/detail/step-modal/StepModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   'paste-import': {

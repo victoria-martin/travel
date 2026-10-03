@@ -10,6 +10,7 @@ import { ImportExpensesModal } from './domains/expenses/modal/ImportExpensesModa
 import { FixedCostModal } from './domains/fixed-costs/modal/FixedCostModal';
 import { PackingItemModal } from './domains/packing/modal/PackingItemModal';
 import { OfferModal } from './domains/rentals/modal/OfferModal';
+import { StepModal } from './domains/scenarios/detail/step-modal/StepModal';
 import { ProviderModal } from './domains/transports/modal/ProviderModal';
 import { TransportModal } from './domains/transports/modal/TransportModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
@@ -41,4 +42,5 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'accommodation-home-exchange': HomeExchangeAccommodationModal,
   'accommodation-airbnb': AirbnbAccommodationModal,
   'accommodation-google-maps': GoogleMapsAccommodationModal,
+  step: StepModal,
 };

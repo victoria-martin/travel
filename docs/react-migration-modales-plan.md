@@ -124,18 +124,17 @@ Trois autres `const` legacy jamais exposées sur `window` corrigées au passage,
 `UNSET_CAR_STATUS`/`UNSET_TRANSPORT_STATUS` : `UNSET_ACCOMMODATION_TYPE`,
 `UNSET_ACCOMMODATION_STATUS`.
 
-**1. `step`** (étape de scénario) —
-   [js/views/scenarios/detail/step-modal/form.js](../js/views/scenarios/detail/step-modal/form.js)
-   (54 lignes) + [attractions-field.js](../js/views/scenarios/detail/step-modal/attractions-field.js)
-   (164 lignes, probablement à garder en `LegacyMarkup` ou à découper en sous-composant selon sa
-   complexité réelle). Flaggé "plus complexe" dans le journal — zone d'étape en `radio-card-field`
-   (déjà un composant générique côté legacy, `js/views/radio-card-field.js` — vérifier s'il mérite un
-   port React ou un `LegacyMarkup`).
+`step` ([StepModal.tsx](../src/domains/scenarios/detail/step-modal/StepModal.tsx)) — en fait
+simple : la modale elle-même n'a que 4 champs plats, `radio-card-field` ne la concerne pas (il sert
+trail-options/weather, note du plan obsolète). Seul `stepAttractionsField`
+(attractions-field.js, 164 lignes — recherche + navigation clavier + création à la volée, état
+module `activeAttractionResult`) reste en `LegacyMarkup`, sous-système stateful qui vit bien en
+legacy.
 
-2. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
+**1. `paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
    (144 lignes). Pas d'`edits:true` à vérifier au cas par cas.
 
-3. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
+2. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
    le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
    comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
    inchangé si ModalHost le rappelle toujours après peinture).
