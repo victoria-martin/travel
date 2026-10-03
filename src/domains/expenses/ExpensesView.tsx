@@ -1,9 +1,12 @@
 import { useTravelStore } from '../../store/useTravelStore';
 import { SettingsMenu } from '../../shared/toolbar/SettingsMenu';
-import { ActualTable } from './ExpensesView/ActualTable';
+import { ActualExpensesTable } from './ExpensesView/ActualExpensesTable';
 import { BudgetTable } from './ExpensesView/BudgetTable';
 import { DerivedSection } from './ExpensesView/DerivedSection';
 import { SummaryMetrics } from './ExpensesView/SummaryMetrics';
+import { AddBudgetButton } from './ExpensesView/AddBudgetButton';
+import { ActualExpenseButton } from './ExpensesView/ActualExpenseButton';
+import { ImportExpensesButton } from './ExpensesView/ImportExpensesButton';
 
 /*
   Porte js/views/expenses/{expenses,header,total,actual,derived}.js, scope réduit comme ailleurs :
@@ -24,22 +27,9 @@ export function ExpensesView() {
           <p className="view-sub">Budget du scénario et dépenses réelles du voyage</p>
         </div>
         <div className="view-header-actions">
-          <button
-            type="button"
-            className="toolbar-btn"
-            onClick={() =>
-              scenario ? window.openModal('charge', '', scenario.id) : window.openModal('charge')
-            }
-          >
-            Ajouter au budget
-          </button>
-          <button
-            type="button"
-            className="toolbar-btn"
-            onClick={() => window.openModal('actual-expense')}
-          >
-            Dépense réelle
-          </button>
+          <AddBudgetButton scenario={scenario} />
+          <ActualExpenseButton />
+          <ImportExpensesButton />
           <SettingsMenu />
         </div>
       </div>
@@ -64,7 +54,7 @@ export function ExpensesView() {
             </div>
           </div>
         </div>
-        <ActualTable />
+        <ActualExpensesTable />
       </section>
       <details className="list-section expenses-calculated">
         <summary>

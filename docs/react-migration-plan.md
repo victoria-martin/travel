@@ -248,8 +248,9 @@ responsabilité ») :
   pour tous les types encore legacy. **Premier formulaire porté en vrai composant React** :
   `actual-expense` (dépense réelle), pilote avant les autres —
   [domains/expenses/modal/ActualExpenseForm.tsx](../src/domains/expenses/modal/ActualExpenseForm.tsx),
-  branché dans `ModalHost.REACT_FORMS` (une table type → composant, à côté du
-  `dangerouslySetInnerHTML` par défaut). Délibérément proche du legacy, pas une réécriture
+  branché dans [src/forms/react-forms.ts](../src/forms/react-forms.ts) (table type → composant,
+  consultée par `ModalHost` à côté du `dangerouslySetInnerHTML` par défaut — un deuxième type,
+  `import-expenses`, l'a rejoint depuis). Délibérément proche du legacy, pas une réécriture
   complète : champs **non contrôlés** (`defaultValue`), le bouton `#f-save` délègue toujours à
   `window.saveActualExpense(id)` (js/views/expenses/actual.js) inchangée — elle lit déjà ces
   mêmes ids via `document.getElementById`, les dupliquer en TypeScript n'aurait rien apporté tout
@@ -258,7 +259,24 @@ responsabilité ») :
   `modalBodyHtml()` n'est plus invoqué pour un type présent dans `REACT_FORMS`) — retiré avec
   `actualExpenseForm()`. Le dirty-check (`modalIsDirty`/`modalSnapshot`) continue de fonctionner
   sans y toucher : `modalFieldsState()` lit génériquement tout `input`/`textarea`/`select` sous
-  `.modal`, peu importe qui les a peints. **Prochain lot** : ajuster ce patron puis l'appliquer
+  `.modal`, peu importe qui les a peints.
+- **2026-10-03 — `ModalHost` sur Radix `Dialog`** (`@radix-ui/react-dialog` +
+  `@radix-ui/react-visually-hidden`, nouvelles dépendances). Gratuit pour **tous** les types, pas
+  seulement ceux déjà portés en React : Radix ne regarde pas le contenu (`dangerouslySetInnerHTML`
+  ou composant), juste l'overlay/le focus/le clavier — focus trap, restauration du focus à la
+  fermeture, `aria-modal`, en remplacement de l'implémentation main (backdrop à la main, listener
+  clavier global). `.overlay`/`.modal` gardent leur CSS inchangée (centrage par flex du parent sur
+  l'enfant) en nichant `Dialog.Content` **dans** `Dialog.Overlay` plutôt qu'en frères comme le fait
+  l'exemple Radix par défaut — rien n'impose cette forme, `Overlay` n'est qu'un div stylé. Échap et
+  clic dehors appellent `dismissModal()` (qui vérifie la saisie non enregistrée) via
+  `preventDefault()` sur les callbacks Radix plutôt que son close automatique ; le listener Échap
+  global de `modal.js` se tait alors tout seul (`event.defaultPrevented`, déjà écrit pour ce genre
+  de coordination), pas de double dismiss. `Dialog.Title` (exigé par Radix pour l'accessibilité)
+  reste pour l'instant le `type` technique de la modale, masqué visuellement
+  (`VisuallyHidden`) — les formulaires encore en HTML injecté portent déjà leur propre `<h3>`
+  visible, pas encore relié en `Dialog.Title` ; à améliorer si un libellé plus lisible devient
+  utile (lecteur d'écran). **Prochain lot** : ajuster ce patron (formulaires + Dialog) puis
+  l'appliquer
   aux autres types — à voir si un formulaire avec champs vocabulaire/tags (ex. `charge`) demande
   un traitement différent.
 - Un écran s'écrit toujours en clair (`AccommodationsView.tsx` assemble ses briques) — pas de

@@ -137,6 +137,15 @@ function BudgetRow({
         >
           <Icon name="pencil" />
         </button>
+        <button
+          type="button"
+          className="icon-btn"
+          title="Supprimer"
+          aria-label={`Supprimer ${cost.label}`}
+          onClick={() => window.deleteItem('fixedCosts', cost.id)}
+        >
+          <Icon name="trash-2" />
+        </button>
       </td>
     </tr>
   );

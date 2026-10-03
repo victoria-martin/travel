@@ -1,22 +1,23 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useEffect } from 'react';
-import { ActualExpenseForm } from '../domains/expenses/modal/ActualExpenseForm';
+import { REACT_FORMS } from '../forms/react-forms';
 
 /*
-  Port de renderModal/dismissModal (js/modals/modal.js). La plupart des types restent peints via
-  dangerouslySetInnerHTML : tant que modal.payload ne change pas (la saisie est non contrôlée,
-  lue seulement à l'enregistrement — js/views/inline-edit.js), modalBodyHtml() rend la même
-  chaîne à chaque appel, donc React ne retouche jamais ce DOM — un dismissAskOpen qui redéclenche
-  render() ailleurs dans l'app ne perd plus la saisie en cours, contrairement au DOM manuel d'avant
-  (document.getElementById('app').appendChild(...), jamais revisité par React).
+  Port de renderModal/dismissModal (js/modals/modal.js), maintenant sur Dialog de Radix (gratuit
+  pour les ~20 types encore en dangerouslySetInnerHTML comme pour ceux déjà portés en React —
+  Radix ne regarde pas le contenu, juste l'overlay/le focus/le clavier) : focus trap, restauration
+  du focus à la fermeture, aria-modal — remplace l'implémentation main.
 
-  REACT_FORMS porte les types migrés en vrai composant React (pilote : actual-expense) — le reste
-  de la mécanique (MODAL_TYPES.open/edits, dirty-check, dismissModal, Entrée/Échap) ne change pas :
-  modalFieldsState() (modal.js) lit le DOM générique (input/textarea/select sous .modal), qui
-  existe pareil que la forme soit peinte en chaîne ou par un composant.
+  `.overlay`/`.modal` gardent leur CSS inchangée (centrage par flex du parent sur l'enfant) en
+  nichant Dialog.Content DANS Dialog.Overlay plutôt qu'en frères comme le fait l'exemple Radix par
+  défaut — rien n'impose cette forme, Overlay n'est qu'un div stylé.
+
+  Échap et clic dehors appellent dismissModal() (qui vérifie la saisie non enregistrée) via
+  preventDefault() sur les callbacks Radix, pas le close automatique — le listener Échap global de
+  modal.js se tait alors tout seul (`event.defaultPrevented`, déjà écrit pour ce genre de
+  coordination), donc pas de double dismiss.
 */
-const REACT_FORMS: Record<string, (props: { payload: any }) => React.JSX.Element> = {
-  'actual-expense': ActualExpenseForm,
-};
 
 export function ModalHost() {
   const modal = window.modal;
@@ -28,30 +29,41 @@ export function ModalHost() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal, bodyHtml]);
 
-  if (!modal) return null;
-
-  const width = window.modalPanelWidth();
+  const width = modal ? window.modalPanelWidth() : null;
 
   return (
     <>
-      <div
-        className={modal.sheet ? 'overlay overlay-sheet' : 'overlay'}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) window.dismissModal();
-        }}
-      >
-        {ReactForm ? (
-          <div className={modal.sheet ? 'modal modal-sheet' : 'modal'} style={width ? { maxWidth: width } : undefined}>
-            <ReactForm payload={modal.payload} />
-          </div>
-        ) : (
-          <div
-            className={modal.sheet ? 'modal modal-sheet' : 'modal'}
-            style={width ? { maxWidth: width } : undefined}
-            dangerouslySetInnerHTML={{ __html: bodyHtml || '' }}
-          />
+      <Dialog.Root open={!!modal} onOpenChange={(open) => !open && window.dismissModal()}>
+        {modal && (
+          <Dialog.Portal>
+            <Dialog.Overlay className={modal.sheet ? 'overlay overlay-sheet' : 'overlay'}>
+              <Dialog.Content
+                className={modal.sheet ? 'modal modal-sheet' : 'modal'}
+                style={width ? { maxWidth: width } : undefined}
+                onEscapeKeyDown={(event) => {
+                  event.preventDefault();
+                  window.dismissModal();
+                }}
+                onPointerDownOutside={(event) => {
+                  event.preventDefault();
+                  window.dismissModal();
+                }}
+              >
+                {/* Titre pour les lecteurs d'écran (Radix l'exige) : masqué visuellement, les
+                    formulaires portent déjà leur propre <h3> visible dans leur contenu. */}
+                <VisuallyHidden>
+                  <Dialog.Title>{modal.type}</Dialog.Title>
+                </VisuallyHidden>
+                {ReactForm ? (
+                  <ReactForm payload={modal.payload} />
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: bodyHtml || '' }} />
+                )}
+              </Dialog.Content>
+            </Dialog.Overlay>
+          </Dialog.Portal>
         )}
-      </div>
+      </Dialog.Root>
       {window.dismissAskOpen && (
         <div
           className="overlay overlay-ask"

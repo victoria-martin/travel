@@ -1472,6 +1472,30 @@ tr:hover td {
   gap: 8px;
   margin-top: 18px;
 }
+/* Un formulaire React au contenu long garde titre et pied fixes, et ne scrolle que son corps :
+   opt-in via .modal-body-scroll en enfant direct de .modal (le reste des modales, courtes,
+   gardent le scroll unique de .modal — pas de changement pour elles). */
+.modal:has(> .modal-body-scroll) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+.modal:has(> .modal-body-scroll) > h3 {
+  margin: 0;
+  padding: 26px 26px 16px;
+}
+.modal-body-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 26px;
+}
+.modal:has(> .modal-body-scroll) > .modal-actions {
+  flex: none;
+  margin: 0;
+  padding: 16px 26px 26px;
+}
 .attraction-scenario-trigger {
   display: inline-flex;
   align-items: center;

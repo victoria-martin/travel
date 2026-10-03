@@ -73,6 +73,7 @@ declare global {
     priceLabel: (entity: { amountMin?: string; amountMax?: string; budget: string }) => string;
     providerName: (id: string) => string;
     saveNow: () => void;
+    uid: () => string;
     render: () => void;
     duplicateAttraction: (id: string) => void;
     duplicateFixedCost: (id: string) => void;

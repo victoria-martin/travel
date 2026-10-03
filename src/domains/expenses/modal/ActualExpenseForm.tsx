@@ -44,6 +44,24 @@ export function ActualExpenseForm({ payload }: { payload: ActualExpense }) {
           ))}
         </select>
       </div>
+      <div className="field-row">
+        <div className="field">
+          <label htmlFor="actual-expense-category">Catégorie</label>
+          <input id="actual-expense-category" type="text" defaultValue={payload.category} />
+        </div>
+        <div className="field">
+          <label htmlFor="actual-expense-sub-category">Sous-catégorie</label>
+          <input
+            id="actual-expense-sub-category"
+            type="text"
+            defaultValue={payload.subCategory}
+          />
+        </div>
+      </div>
+      <div className="field">
+        <label htmlFor="actual-expense-address">Adresse</label>
+        <input id="actual-expense-address" type="text" defaultValue={payload.address} />
+      </div>
       <div className="field">
         <label htmlFor="actual-expense-notes">Notes</label>
         <textarea id="actual-expense-notes" rows={2} defaultValue={payload.notes} />

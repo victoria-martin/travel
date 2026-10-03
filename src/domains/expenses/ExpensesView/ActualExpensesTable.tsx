@@ -1,7 +1,7 @@
 import { Icon } from '../../../shared/Icon';
 
 // Port de actualExpensesList/actualExpenseDate (js/views/expenses/actual.js).
-export function ActualTable() {
+export function ActualExpensesTable() {
   const expenses = window.actualExpenses();
   if (!expenses.length) {
     return (
@@ -40,6 +40,11 @@ export function ActualTable() {
                 <td className="expenses-date">{dateLabel}</td>
                 <td>
                   <strong>{expense.label || 'Sans libellé'}</strong>
+                  {(expense.category || expense.subCategory) && (
+                    <span className="expenses-detail">
+                      {[expense.category, expense.subCategory].filter(Boolean).join(' · ')}
+                    </span>
+                  )}
                   {expense.notes && <span className="expenses-detail">{expense.notes}</span>}
                 </td>
                 <td>

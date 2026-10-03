@@ -21,6 +21,9 @@ function emptyActualExpense() {
     label: '',
     amount: '',
     fixedCostId: '',
+    category: '',
+    subCategory: '',
+    address: '',
     notes: '',
   };
 }
@@ -211,6 +214,9 @@ function saveActualExpense(id) {
     label: labelField.value.trim(),
     amount: amountField.value.trim(),
     fixedCostId: document.getElementById('actual-expense-budget').value,
+    category: document.getElementById('actual-expense-category').value.trim(),
+    subCategory: document.getElementById('actual-expense-sub-category').value.trim(),
+    address: document.getElementById('actual-expense-address').value.trim(),
     notes: document.getElementById('actual-expense-notes').value.trim(),
   };
   const index = state.actualExpenses.findIndex((item) => item.id === id);

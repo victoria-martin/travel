@@ -309,6 +309,9 @@ export interface ActualExpense {
   label: string;
   amount: string;
   fixedCostId: string;
+  category: string;
+  subCategory: string;
+  address: string;
   notes: string;
 }
 

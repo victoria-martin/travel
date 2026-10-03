@@ -89,10 +89,9 @@ const MODAL_TYPES = {
     edits: true,
   },
   'import-expenses': {
-    open: () => ({ payload: { text: '' } }),
-    body: (m) => importExpensesForm(m.payload),
-    width: '640px',
-    edits: true,
+    open: () => ({ payload: {} }),
+    // body : React (src/domains/expenses/modal/ImportExpensesForm.tsx, ModalHost.REACT_FORMS).
+    width: '860px',
   },
   'actual-expense': {
     open: (id) => ({
