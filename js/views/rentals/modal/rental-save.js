@@ -17,6 +17,7 @@ function readRentalForm(id) {
     dropoffTime: document.getElementById('rental-dropoff-time').value,
     link: document.getElementById('rental-link').value.trim(),
     notes: document.getElementById('rental-notes').value.trim(),
+    createdAt: id ? getRental(id).createdAt : new Date().toISOString(),
   };
 }
 

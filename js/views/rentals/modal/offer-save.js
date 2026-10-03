@@ -23,6 +23,7 @@ function saveOffer(id) {
     optionIds: modal.payload.optionIds,
     link: document.getElementById('offer-link').value.trim(),
     notes: document.getElementById('offer-notes').value.trim(),
+    createdAt: existing ? existing.createdAt : new Date().toISOString(),
   };
 
   if (id) {

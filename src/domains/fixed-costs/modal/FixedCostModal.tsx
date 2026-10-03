@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { CloseModalButton } from '../../../shared/CloseModalButton';
+import { ModalSaveButton } from '../../../shared/ModalSaveButton';
+import { ModalTitle } from '../../../shared/ModalTitle';
+import { SelectField } from '../../../shared/SelectField';
 import { TagsField } from '../../../shared/TagsField';
+import { TextField } from '../../../shared/TextField';
+import { TextareaField } from '../../../shared/TextareaField';
 import type { FixedCost } from '../../../store/types';
 
 /*
@@ -19,47 +24,32 @@ export function FixedCostModal({ payload }: { payload: FixedCost }) {
     payload.categories = next;
   }
 
+  const recurrenceOptions = Object.entries(window.EXPENSE_RECURRENCES).map(([key, recurrence]) => ({
+    value: key,
+    label: `${recurrence.emoji} ${recurrence.label}`,
+  }));
+
   return (
     <>
-      <h3>{payload.id ? 'Modifier' : 'Ajouter'} une charge budgétaire</h3>
-      <div className="field">
-        <label htmlFor="cost-label">Libellé</label>
-        <input id="cost-label" type="text" defaultValue={payload.label} />
-      </div>
-      <div className="field">
-        <label htmlFor="cost-amount">Montant</label>
-        <input id="cost-amount" type="text" defaultValue={payload.amount} />
-      </div>
+      <ModalTitle isNew={!payload.id} subject="une charge budgétaire" />
+      <TextField id="cost-label" label="Libellé" defaultValue={payload.label} />
+      <TextField id="cost-amount" label="Montant" defaultValue={payload.amount} />
       <TagsField
         label="Catégories"
         tags={categories}
         vocabulary={window.allFixedCostCategories()}
         onChange={handleCategoriesChange}
       />
-      <div className="field">
-        <label htmlFor="cost-recurrence">Récurrence</label>
-        <select id="cost-recurrence" defaultValue={window.expenseRecurrenceKey(payload.recurrence)}>
-          {Object.entries(window.EXPENSE_RECURRENCES).map(([key, recurrence]) => (
-            <option key={key} value={key}>
-              {recurrence.emoji} {recurrence.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="field">
-        <label htmlFor="cost-notes">Notes</label>
-        <textarea id="cost-notes" rows={2} defaultValue={payload.notes} />
-      </div>
+      <SelectField
+        id="cost-recurrence"
+        label="Récurrence"
+        defaultValue={window.expenseRecurrenceKey(payload.recurrence)}
+        options={recurrenceOptions}
+      />
+      <TextareaField id="cost-notes" label="Notes" defaultValue={payload.notes} />
       <div className="modal-actions">
         <CloseModalButton />
-        <button
-          type="button"
-          className="btn"
-          id="f-save"
-          onClick={() => window.saveFixedCost(payload.id || '')}
-        >
-          Enregistrer
-        </button>
+        <ModalSaveButton onClick={() => window.saveFixedCost(payload.id || '')} />
       </div>
     </>
   );

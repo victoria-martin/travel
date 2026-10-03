@@ -22,6 +22,7 @@ function readAttractionForm(id) {
     amountMax: document.getElementById('a-amount-max').value.trim(),
     tags: [...modal.payload.tags],
     favorite: document.getElementById('a-favorite').checked,
+    createdAt: modal.payload.createdAt || new Date().toISOString(),
   };
 }
 

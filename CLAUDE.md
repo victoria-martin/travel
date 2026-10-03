@@ -40,6 +40,22 @@ les doublons d'un coup d'œil au lieu de les laisser se recréer sous des noms d
 un doublon dès sa création : `VocabularyDropdown.tsx`, recréé à l'identique de `TagDropdown.tsx`
 par une session parallèle qui ignorait le renommage — supprimé.
 
+## Un champ de formulaire de modale vit dans `shared/`, créé avant le deuxième consommateur
+
+Le balisage `.field`/`.field-row` d'un champ de modale (label + input/textarea/select, titre
+Ajouter/Modifier, bouton d'enregistrement) ne se réécrit jamais en clair dans le formulaire d'une
+entité : il passe par un composant générique de [src/shared/](src/shared/) —
+[TextField.tsx](src/shared/TextField.tsx), [TextareaField.tsx](src/shared/TextareaField.tsx),
+[SelectField.tsx](src/shared/SelectField.tsx), [FieldRow.tsx](src/shared/FieldRow.tsx),
+[ModalSaveButton.tsx](src/shared/ModalSaveButton.tsx), [ModalTitle.tsx](src/shared/ModalTitle.tsx)
+— à compléter dès qu'un nouveau type de champ apparaît. **Exception explicite à « un fichier
+n'existe que s'il est utilisé par d'autres fichiers »** : la migration va porter ~20 types de
+modale (`MODAL_TYPES`, [js/modals/modal.js](js/modals/modal.js)), donc un deuxième consommateur est
+certain à l'avance — attendre qu'il apparaisse pour généraliser coûte juste un aller-retour pour
+rien, le même principe que pour le renommage `*Form` → `*Modal`. Repéré sur `FixedCostModal.tsx`,
+écrit avec son propre `.field`/`<select>`/bouton de sauvegarde en dur alors qu'`ActualExpenseModal`
+avait déjà le même balisage juste avant.
+
 ## Un fichier = une responsabilité
 
 - `<vue>.js` — le `render…View`, rien d'autre.
@@ -86,6 +102,14 @@ Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `
 - il ne tourne pas → je demande si elle veut voir les changements, et j'ouvre.
 
 ## Journal
+
+- **2026-10-03** — les champs d'un formulaire de modale React (`ActualExpenseModal.tsx`,
+  `FixedCostModal.tsx`) se composent désormais depuis six briques génériques de
+  [src/shared/](src/shared/) — `TextField`, `TextareaField`, `SelectField`, `FieldRow`,
+  `ModalSaveButton`, `ModalTitle` — plutôt que du balisage `.field`/`<select>`/bouton
+  d'enregistrement écrit en clair dans chaque formulaire (voir « Un champ de formulaire de modale
+  vit dans `shared/` » plus haut). Les deux formulaires déjà portés ont été réécrits pour les
+  consommer.
 
 - **2026-10-02** — un choix fermé à peu d'options (zone d'étape, style météo, style de phrase,
   indicateur hors dispo) se pose désormais en rangée de cartes via un seul composant partagé,

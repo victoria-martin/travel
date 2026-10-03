@@ -20,6 +20,7 @@ function emptyAccommodation() {
     notes: '',
     tags: [],
     favorite: false,
+    createdAt: '',
   };
 }
 

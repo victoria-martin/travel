@@ -18,6 +18,7 @@ function readProviderForm(id) {
     notes: document.getElementById('prov-notes').value.trim(),
     options: modal.payload.options.filter((option) => option.label || option.amount),
     modelIds: modal.payload.modelIds || [],
+    createdAt: id ? getProvider(id).createdAt : new Date().toISOString(),
   };
 }
 
@@ -49,7 +50,14 @@ function forgetProviderOptions(optionIds) {
 // Créé depuis un trajet ou une voiture, un prestataire ne porte que son nom et son mode : le
 // reste se complète dans l'onglet.
 function createProviderNamed(name, mode) {
-  const item = { ...emptyProvider(), id: uid(), travelId: currentTravelId(), name, mode };
+  const item = {
+    ...emptyProvider(),
+    id: uid(),
+    travelId: currentTravelId(),
+    name,
+    mode,
+    createdAt: new Date().toISOString(),
+  };
   upsertProvider(item);
   showToast('Prestataire créé');
   return item;

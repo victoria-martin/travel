@@ -5,6 +5,9 @@
 
 const LOCAL_KEY = 'voyage-toscane-local-data';
 
+// Date de création arbitraire posée sur les hébergements/lieux déjà existants avant ce champ.
+const LEGACY_CREATED_AT = '2026-09-21T00:00:00.000Z';
+
 const TRAVEL_COLLECTIONS = [
   'accommodations',
   'providers',
@@ -138,6 +141,11 @@ function migrateData(data) {
     if (!Array.isArray(s.transportIds)) s.transportIds = [];
     if (s.favorite === undefined) s.favorite = false;
     adoptScenarioSteps(s);
+  });
+  TRAVEL_COLLECTIONS.forEach((collection) => {
+    (data[collection] || []).forEach((item) => {
+      if (item.createdAt === undefined) item.createdAt = LEGACY_CREATED_AT;
+    });
   });
   return data;
 }

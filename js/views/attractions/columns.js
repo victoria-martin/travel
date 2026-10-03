@@ -129,6 +129,14 @@ COLUMN_SETS.attractions = [
     hiddenByDefault: true,
     cell: attractionPhoneCell,
   },
+  {
+    key: 'createdAt',
+    label: 'Créé le',
+    hiddenByDefault: true,
+    nowrap: true,
+    cell: attractionCreatedAtCell,
+    sortValue: (a) => a.createdAt || '',
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'googleMaps', label: 'Google Maps', cell: (a) => googleMapsCell(a.address || a.name) },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
@@ -203,6 +211,10 @@ function attractionHoursCell(a) {
 
 function attractionPhoneCell(a) {
   return textCell(a.phone);
+}
+
+function attractionCreatedAtCell(a) {
+  return textCell(createdAtDate(a.createdAt));
 }
 
 function attractionActionsCell(a) {

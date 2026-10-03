@@ -1,4 +1,10 @@
 import { CloseModalButton } from '../../../shared/CloseModalButton';
+import { FieldRow } from '../../../shared/FieldRow';
+import { ModalSaveButton } from '../../../shared/ModalSaveButton';
+import { ModalTitle } from '../../../shared/ModalTitle';
+import { SelectField } from '../../../shared/SelectField';
+import { TextField } from '../../../shared/TextField';
+import { TextareaField } from '../../../shared/TextareaField';
 import type { ActualExpense } from '../../../store/types';
 
 /*
@@ -6,8 +12,9 @@ import type { ActualExpense } from '../../../store/types';
   volontairement proche du legacy : champs non contrôlés (defaultValue, comme EditableTextCell
   ailleurs), bouton #f-save gardé (submitModal()/Entrée le cliquent programmatiquement, voir
   modal.js) qui délègue à window.saveActualExpense(id), inchangée — elle lit déjà ces mêmes ids
-  via document.getElementById, aucune raison de dupliquer cette logique ici. Seul le gabarit
-  change : JSX typé à la place d'une chaîne HTML échappée à la main.
+  via document.getElementById, aucune raison de dupliquer cette logique ici. Le gabarit est
+  composé de champs génériques (shared/TextField, SelectField…) plutôt que du balisage `.field`
+  répété à la main.
 */
 export function ActualExpenseModal({ payload }: { payload: ActualExpense }) {
   const scenario = window.expenseBudgetScenario();
@@ -18,65 +25,37 @@ export function ActualExpenseModal({ payload }: { payload: ActualExpense }) {
   if (linkedCost && !budgetCosts.some((cost) => cost.id === linkedCost.id)) {
     budgetCosts.push(linkedCost);
   }
+  const budgetOptions = budgetCosts.map((cost) => ({
+    value: cost.id,
+    label: cost.label || 'Sans libellé',
+  }));
 
   return (
     <>
-      <h3>{payload.id ? 'Modifier' : 'Ajouter'} une dépense réelle</h3>
-      <div className="field">
-        <label htmlFor="actual-expense-date">Date</label>
-        <input id="actual-expense-date" type="date" defaultValue={payload.date} required />
-      </div>
-      <div className="field">
-        <label htmlFor="actual-expense-label">Dépense</label>
-        <input id="actual-expense-label" type="text" defaultValue={payload.label} required />
-      </div>
-      <div className="field">
-        <label htmlFor="actual-expense-amount">Montant</label>
-        <input id="actual-expense-amount" type="text" defaultValue={payload.amount} required />
-      </div>
-      <div className="field">
-        <label htmlFor="actual-expense-budget">Poste budgétaire</label>
-        <select id="actual-expense-budget" defaultValue={payload.fixedCostId}>
-          <option value="">Non budgétisé</option>
-          {budgetCosts.map((cost) => (
-            <option key={cost.id} value={cost.id}>
-              {cost.label || 'Sans libellé'}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="field-row">
-        <div className="field">
-          <label htmlFor="actual-expense-category">Catégorie</label>
-          <input id="actual-expense-category" type="text" defaultValue={payload.category} />
-        </div>
-        <div className="field">
-          <label htmlFor="actual-expense-sub-category">Sous-catégorie</label>
-          <input
-            id="actual-expense-sub-category"
-            type="text"
-            defaultValue={payload.subCategory}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <label htmlFor="actual-expense-address">Adresse</label>
-        <input id="actual-expense-address" type="text" defaultValue={payload.address} />
-      </div>
-      <div className="field">
-        <label htmlFor="actual-expense-notes">Notes</label>
-        <textarea id="actual-expense-notes" rows={2} defaultValue={payload.notes} />
-      </div>
+      <ModalTitle isNew={!payload.id} subject="une dépense réelle" />
+      <TextField id="actual-expense-date" label="Date" type="date" defaultValue={payload.date} required />
+      <TextField id="actual-expense-label" label="Dépense" defaultValue={payload.label} required />
+      <TextField id="actual-expense-amount" label="Montant" defaultValue={payload.amount} required />
+      <SelectField
+        id="actual-expense-budget"
+        label="Poste budgétaire"
+        defaultValue={payload.fixedCostId}
+        placeholder="Non budgétisé"
+        options={budgetOptions}
+      />
+      <FieldRow>
+        <TextField id="actual-expense-category" label="Catégorie" defaultValue={payload.category} />
+        <TextField
+          id="actual-expense-sub-category"
+          label="Sous-catégorie"
+          defaultValue={payload.subCategory}
+        />
+      </FieldRow>
+      <TextField id="actual-expense-address" label="Adresse" defaultValue={payload.address} />
+      <TextareaField id="actual-expense-notes" label="Notes" defaultValue={payload.notes} />
       <div className="modal-actions">
         <CloseModalButton />
-        <button
-          type="button"
-          className="btn"
-          id="f-save"
-          onClick={() => window.saveActualExpense(payload.id || '')}
-        >
-          Enregistrer
-        </button>
+        <ModalSaveButton onClick={() => window.saveActualExpense(payload.id || '')} />
       </div>
     </>
   );

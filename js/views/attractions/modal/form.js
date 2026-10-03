@@ -19,6 +19,7 @@ function emptyAttraction() {
     amountMax: '',
     tags: [],
     favorite: false,
+    createdAt: '',
   };
 }
 

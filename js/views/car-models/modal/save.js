@@ -13,6 +13,7 @@ function saveCarModel(id) {
     fuel: carFuelKey(document.getElementById('model-fuel').value),
     gearbox: carGearboxKey(document.getElementById('model-gearbox').value),
     consumption: document.getElementById('model-consumption').value.trim(),
+    createdAt: id ? getCarModel(id).createdAt : new Date().toISOString(),
   };
   linkCarModelProviders(model.id, modal.payload.providerIds || []);
   upsertCarModel(model);
@@ -49,6 +50,7 @@ function createCarModelNamed(name, fuel, gearbox) {
     fuel,
     gearbox,
     consumption: suggestion.consumption || '',
+    createdAt: new Date().toISOString(),
   };
   upsertCarModel(model);
   return model;

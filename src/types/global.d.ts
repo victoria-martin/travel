@@ -124,6 +124,8 @@ declare global {
     phraseTranslation: (fr: string, lang: string) => string;
     editPhraseTranslation: (fr: string, lang: string) => void;
     deleteCustomPhrase: (id: string) => void;
+    PHRASE_CATEGORIES: { title: string; items: { fr: string; note?: string }[] }[];
+    saveCustomPhrase: (id: string) => void;
     deletePackingItem: (id: string) => void;
     todoBuilder: () => string;
     todoListCard: (list: import('../store/types').TodoList) => string;

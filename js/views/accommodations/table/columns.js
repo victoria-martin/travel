@@ -103,6 +103,14 @@ const ACCOMMODATION_COLUMNS = [
     ellipsis: true,
     cell: accommodationNotesCell,
   },
+  {
+    key: 'createdAt',
+    label: 'Créé le',
+    hiddenByDefault: true,
+    nowrap: true,
+    cell: accommodationCreatedAtCell,
+    sortValue: (a) => a.createdAt || '',
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
   {
@@ -190,6 +198,10 @@ function accommodationAvailableToCell(a) {
 
 function accommodationNotesCell(a) {
   return notesEditable(a);
+}
+
+function accommodationCreatedAtCell(a) {
+  return textCell(createdAtDate(a.createdAt));
 }
 
 function accommodationBookingLinkCell(a) {

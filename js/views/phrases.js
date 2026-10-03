@@ -89,6 +89,7 @@ const PHRASE_CATEGORIES = [
     ],
   },
 ];
+window.PHRASE_CATEGORIES = PHRASE_CATEGORIES;
 
 /*
   Trois peintures pour la même carte de phrase, testables depuis le menu Affichage sans toucher au
@@ -199,33 +200,7 @@ function deleteCustomPhrase(id) {
   render();
 }
 
-function phraseForm(p) {
-  return /* HTML */ `
-    <h3>${p.id ? 'Modifier' : 'Ajouter'} une phrase</h3>
-    <div class="field">
-      <label>Catégorie</label>
-      <select id="phrase-category">
-        <option value="" ${p.category ? '' : 'selected'}>${PHRASE_NO_CATEGORY} — à ranger plus tard</option>
-        ${PHRASE_CATEGORIES.map(
-          (c) =>
-            `<option value="${escapeHtml(c.title)}" ${p.category === c.title ? 'selected' : ''}>${escapeHtml(c.title)}</option>`,
-        ).join('')}
-      </select>
-    </div>
-    <div class="field">
-      <label>Phrase (français)</label>
-      <textarea id="phrase-fr-input" rows="2">${escapeHtml(p.fr)}</textarea>
-    </div>
-    <div class="field">
-      <label>Note (optionnel)</label
-      ><input id="phrase-note-input" type="text" value="${escapeHtml(p.note)}" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
-      <button class="btn" id="f-save" onclick="saveCustomPhrase('${p.id || ''}')">Enregistrer</button>
-    </div>
-  `;
-}
+// Formulaire : src/domains/phrases/modal/PhraseModal.tsx (docs/react-migration-plan.md § 4).
 
 // Les phrases en dur (PHRASE_CATEGORIES) et celles ajoutées (phraseCustomItems) partagent
 // l'affichage : une phrase custom porte juste `customId`, qui décide des boutons Modifier/Supprimer.

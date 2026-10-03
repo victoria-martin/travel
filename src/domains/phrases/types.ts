@@ -10,3 +10,10 @@ export interface PhraseCategory {
   title: string;
   items: PhraseItem[];
 }
+
+export interface CustomPhrase {
+  id: string | null;
+  category: string;
+  fr: string;
+  note: string;
+}

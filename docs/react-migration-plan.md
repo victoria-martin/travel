@@ -294,9 +294,19 @@ responsabilité ») :
   directement sur `modal.payload`) voie la bonne valeur.
   `charge` (Charge budgétaire) rejoint `actual-expense` —
   [domains/fixed-costs/modal/FixedCostModal.tsx](../src/domains/fixed-costs/modal/FixedCostModal.tsx),
-  premier à utiliser `TagsField`. **Prochain lot** : continuer sur les types restants
-  (`attraction`/`accommodation*` utilisent aussi `TagsField`, bon test de réutilisation ;
-  `voyage`/`step` sont plus complexes).
+  premier à utiliser `TagsField`.
+- **2026-10-03** — repéré sur `FixedCostModal.tsx` : le balisage `.field`/`<select>`/bouton
+  d'enregistrement se réécrivait en clair à chaque formulaire plutôt que de se généraliser dès le
+  deuxième consommateur. Six briques génériques dans `src/shared/` couvrent maintenant tous les
+  champs d'un formulaire de modale — `TextField`, `TextareaField`, `SelectField`, `FieldRow`,
+  `ModalSaveButton`, `ModalTitle` — et les deux formulaires déjà portés les consomment (voir
+  CLAUDE.md « Un champ de formulaire de modale vit dans `shared/` »). Troisième type porté avec ces
+  briques : `phrase` —
+  [domains/phrases/modal/PhraseModal.tsx](../src/domains/phrases/modal/PhraseModal.tsx), délégué à
+  `window.saveCustomPhrase(id)` inchangée. **Prochain lot** : continuer sur les types restants
+  (`attraction`/`accommodation*` utilisent aussi `TagsField`, bon test de réutilisation — attendre
+  que la session parallèle finisse d'y ajouter `createdAt` avant d'y toucher ; `voyage`/`step` sont
+  plus complexes).
 - Un écran s'écrit toujours en clair (`AccommodationsView.tsx` assemble ses briques) — pas de
   moteur générique piloté par config qui fabriquerait l'écran à la place du fichier.
 

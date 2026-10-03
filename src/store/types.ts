@@ -51,6 +51,7 @@ export interface Accommodation extends PlaceLevels {
   notes: string;
   tags: string[];
   favorite: boolean;
+  createdAt: string;
 }
 
 // Une « ville » est un lieu de type ville — pas d'entité à soi (atelier/PLAN.md, « Tranché »).
@@ -74,6 +75,7 @@ export interface Attraction extends PlaceLevels {
   amountMax: string;
   tags: string[];
   favorite: boolean;
+  createdAt: string;
 }
 
 // Pas la page Villes (dérivée d'Attraction, state.attractions) : une liste légère de noms de

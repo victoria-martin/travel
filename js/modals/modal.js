@@ -136,7 +136,7 @@ const MODAL_TYPES = {
   },
   phrase: {
     open: (id) => ({ payload: id ? structuredClone(getCustomPhrase(id)) : emptyCustomPhrase() }),
-    body: (m) => phraseForm(m.payload),
+    // body : React (src/domains/phrases/modal/PhraseModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   sync: { body: () => syncForm() },

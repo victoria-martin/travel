@@ -1,6 +1,7 @@
 import { ActualExpenseModal } from './domains/expenses/modal/ActualExpenseModal';
 import { ImportExpensesModal } from './domains/expenses/modal/ImportExpensesModal';
 import { FixedCostModal } from './domains/fixed-costs/modal/FixedCostModal';
+import { PhraseModal } from './domains/phrases/modal/PhraseModal';
 
 /*
   Le corps d'une modale, par type — ce que ModalHost pose dans Dialog.Content. Pas que des
@@ -15,4 +16,5 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'actual-expense': ActualExpenseModal,
   'import-expenses': ImportExpensesModal,
   charge: FixedCostModal,
+  phrase: PhraseModal,
 };
