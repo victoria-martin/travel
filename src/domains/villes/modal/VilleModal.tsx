@@ -1,8 +1,8 @@
+import { TextField } from '@/shared/form-fields/TextField';
+import { FieldRow } from '@/shared/layout/FieldRow';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
-import { FieldRow } from '@/shared/layout/FieldRow';
-import { TextField } from '@/shared/form-fields/TextField';
 import type { Ville } from '@/store/types';
 
 type VillePayload = Ville & {
@@ -21,7 +21,12 @@ export function VilleModal({ payload }: { payload: VillePayload }) {
       <ModalTitle isNew={!payload.id} subject="une ville" />
       <TextField id="ville-name" label="Nom" defaultValue={payload.name} />
       <div className="locate-row">
-        <button type="button" className="btn btn-ghost btn-small" onClick={() => window.locateVille()}>
+        {/* TODO: creer button */}
+        <button
+          type="button"
+          className="btn btn-ghost btn-small"
+          onClick={() => window.locateVille()}
+        >
           Localiser
         </button>
       </div>
