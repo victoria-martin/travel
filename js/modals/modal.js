@@ -69,7 +69,7 @@ const MODAL_TYPES = {
   },
   modele: {
     open: (id) => ({ payload: id ? structuredClone(getCarModel(id)) : emptyCarModel() }),
-    body: (m) => carModelForm(m.payload),
+    // body : React (src/domains/car-models/modal/CarModelModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
   voiture: {

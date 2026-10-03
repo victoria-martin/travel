@@ -93,24 +93,23 @@ loueur, mécanisme stateful déjà en place), statut en `SelectField` ordinaire 
 pas de "＋ Ajouter", pas un `WordSelectField`), `prestataire`
 ([ProviderModal.tsx](../src/domains/transports/modal/ProviderModal.tsx)) — même mécanisme
 `LegacyMarkup` pour options/modèles proposés, `SelectField` gagne un `onChange` optionnel pour
-`repaintProviderModels()`.
+`repaintProviderModels()`, `modele`
+([CarModelModal.tsx](../src/domains/car-models/modal/CarModelModal.tsx)) — fuel/boîte en
+`SelectField` ordinaire (dicts simples, pas de `WordSelectField`), « Proposé par » en `LegacyMarkup`
+comme les autres listes repeintes depuis l'extérieur de React, `TextField` gagne un `onInput`
+optionnel pour rebrancher `suggestCarConsumption()` sans la réimplémenter.
 
-**1. `modele`** (voiture) — [js/views/car-models/modal/form.js](../js/views/car-models/modal/form.js)
-   (48 lignes). **Prochain type à faire, puis stop.** Fuel/boîte en `WordSelectField`-like (vérifier si même mécanisme `word-select.js` ou
-   un vocabulaire à part), suggestion de consommation (effet au changement du nom, cf.
-   `consumption-suggest.js` — garder délégué si stateful).
+**1. `ville`** — [js/views/villes/modal/form.js](../js/views/villes/modal/form.js) (48 lignes).
+   **Prochain type à faire, puis stop.** Même famille que `attraction` : géocodage via
+   `locateFields`, probable réutilisation directe du patron `AttractionModal.tsx` déjà écrit.
 
-3. **`ville`** — [js/views/villes/modal/form.js](../js/views/villes/modal/form.js) (48 lignes).
-   Même famille que `attraction` : géocodage via `locateFields`, probable réutilisation directe du
-   patron `AttractionModal.tsx` déjà écrit.
-
-4. **`transport`** — [js/views/transports/modal/form.js](../js/views/transports/modal/form.js)
+2. **`transport`** — [js/views/transports/modal/form.js](../js/views/transports/modal/form.js)
    (163 lignes). **Le mode décide des champs affichés** (quatre modes à compagnie vs voiture, deux
    blocs exclusifs repeints au changement — voir le journal CLAUDE.md du 2026-09-13). Garder le mode
    en `useState` local dans le composant pour afficher le bon bloc sans dépendre d'un `render()`
    complet.
 
-5. **`accommodation` + 4 variantes** (`accommodation-booking`, `accommodation-home-exchange`,
+3. **`accommodation` + 4 variantes** (`accommodation-booking`, `accommodation-home-exchange`,
    `accommodation-airbnb`, `accommodation-google-maps`) —
    [js/views/accommodations/modal/form.js](../js/views/accommodations/modal/form.js) (117 lignes) +
    4 fichiers de ~50 lignes chacun (`booking-form.js`, `home-exchange-form.js`, `airbnb-form.js`,
@@ -119,7 +118,7 @@ pas de "＋ Ajouter", pas un `WordSelectField`), `prestataire`
    `AccommodationModal.tsx` paramétré par `type` est peut-être le bon découpage, à confirmer en
    lisant les 5 fichiers avant de coder.
 
-6. **`step`** (étape de scénario) —
+4. **`step`** (étape de scénario) —
    [js/views/scenarios/detail/step-modal/form.js](../js/views/scenarios/detail/step-modal/form.js)
    (54 lignes) + [attractions-field.js](../js/views/scenarios/detail/step-modal/attractions-field.js)
    (164 lignes, probablement à garder en `LegacyMarkup` ou à découper en sous-composant selon sa
@@ -127,10 +126,10 @@ pas de "＋ Ajouter", pas un `WordSelectField`), `prestataire`
    (déjà un composant générique côté legacy, `js/views/radio-card-field.js` — vérifier s'il mérite un
    port React ou un `LegacyMarkup`).
 
-7. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
+5. **`paste-import`** — [js/views/accommodations/modal/paste-import.js](../js/views/accommodations/modal/paste-import.js)
    (144 lignes). Pas d'`edits:true` à vérifier au cas par cas.
 
-8. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
+6. **`voyage`** — [js/views/travels/modal/form.js](../js/views/travels/modal/form.js) (209 lignes,
    le plus gros). A un callback `after: (m) => paintTravelModal(m.payload.accentColor)` — vérifier
    comment le reproduire (probablement un `useEffect` dans le composant, ou garder `cfg.after`
    inchangé si ModalHost le rappelle toujours après peinture).

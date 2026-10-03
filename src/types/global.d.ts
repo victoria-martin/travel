@@ -59,6 +59,9 @@ declare global {
     offerModelSelect: (payload: import('../store/types').Offer) => string;
     offerOptionsField: (payload: import('../store/types').Offer) => string;
     saveOffer: (id: string) => void;
+    suggestCarConsumption: () => void;
+    carModelProvidersField: (payload: import('../store/types').CarModel) => string;
+    saveCarModel: (id: string) => void;
     carFuel: (fuel: string) => { label: string; emoji: string };
     carGearbox: (gearbox: string) => { label: string; emoji: string };
     carStatus: (status: string) => { label: string; emoji: string };

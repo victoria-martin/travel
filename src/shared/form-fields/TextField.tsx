@@ -8,6 +8,7 @@ export function TextField({
   defaultValue,
   required,
   listOptions,
+  onInput,
 }: {
   id: string;
   label: string;
@@ -15,12 +16,20 @@ export function TextField({
   defaultValue?: string;
   required?: boolean;
   listOptions?: string[];
+  onInput?: () => void;
 }) {
   const listId = listOptions ? `${id}-options` : undefined;
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
-      <input id={id} type={type} defaultValue={defaultValue} required={required} list={listId} />
+      <input
+        id={id}
+        type={type}
+        defaultValue={defaultValue}
+        required={required}
+        list={listId}
+        onInput={onInput}
+      />
       {listOptions && (
         <datalist id={listId}>
           {listOptions.map((option) => (
