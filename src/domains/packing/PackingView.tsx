@@ -30,7 +30,7 @@ export function PackingView() {
         [item.label, item.category || ''].some((value) => value.toLowerCase().includes(needle))
       );
     });
-  const groups = groupPackingByCategory(filtered);
+  const groups = groupPackingByCategory(filtered, (item) => item.category);
 
   return (
     <>

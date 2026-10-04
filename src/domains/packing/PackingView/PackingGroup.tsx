@@ -1,3 +1,4 @@
+import type { PackingItem } from '@/store/types';
 import type { PackingGroup as PackingGroupType } from '../group';
 import { PackingRow } from './PackingRow';
 
@@ -6,7 +7,7 @@ import { PackingRow } from './PackingRow';
   jamais persisté (même en legacy) : un <details> non contrôlé suffit, pas besoin de réimplémenter
   packingClosedGroups.
 */
-export function PackingGroup({ group }: { group: PackingGroupType }) {
+export function PackingGroup({ group }: { group: PackingGroupType<PackingItem> }) {
   return (
     <details className="packing-group" open>
       <summary>

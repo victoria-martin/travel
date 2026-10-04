@@ -122,8 +122,21 @@ attractions comme avant.
   ajoutée en G1.
 `pnpm react:typecheck` propre.
 
-**G5. Onglet Valise — effort medium.** Vérifier d'abord la réutilisation de `PackingView/` ; sinon
-porter `scenarioPackingBlock` et son formulaire.
+**G5. Onglet Valise — ✅ fait.** [PackingTab.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/ScenarioSidePanel/PackingTab.tsx)
++ `PackingTab/` (`PackingLineGroup`, `PackingLineRow`, `PackingAddForm`), menu de quantité dans
+[shared/select/PackingQuantityDropdown.tsx](../../src/shared/select/PackingQuantityDropdown.tsx).
+`PackingView` n'était pas réutilisable tel quel (il liste le catalogue, `packingItems`, l'onglet les
+lignes du voyage, `packingListItems`), mais son regroupement par catégorie est la même règle :
+[group.ts](../../src/domains/packing/group.ts) devient générique (`categoryOf`, comme son modèle
+legacy). Le pli d'un groupe reste l'état de session legacy (`isPackingGroupOpen`), partagé avec le
+composeur.
+- **Bug corrigé :** `togglePackingChecked` avait été supprimée en `8e27ffd` alors que l'onglet
+  l'appelait encore — cocher un item levait une erreur et ne faisait rien (déduit du code, pas
+  observé). Restaurée dans [travel-lines.js](../../js/views/packing/travel-lines.js) avec
+  `addTravelPackingItem`, l'ajout qui lisait le DOM devenu une action à arguments.
+- Legacy supprimé : `packing-block.js` (fichier + `<script src>`), `packingQuantityDropdown`,
+  `packingCategoryField`, `MAX_PACKING_QUANTITY` (legacy).
+`pnpm react:typecheck` propre. **Sous-plan épuisé.**
 
 **G6. Sheet mobile — ✅ fait.**
 [ScenarioPanelModal.tsx](../../src/domains/scenarios/detail/panel-modal/ScenarioPanelModal.tsx),

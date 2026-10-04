@@ -18,8 +18,6 @@ function packingLineCategory(item) {
   return (source ? source.category : item.category) || '';
 }
 
-const MAX_PACKING_QUANTITY = 20;
-
 // Décidé : la quantité vaut soit un nombre fixe, soit une par nuit du scénario retenu.
 function packingItemQuantity(item) {
   if (!item.perNight) return parseInt(item.quantity) || 0;

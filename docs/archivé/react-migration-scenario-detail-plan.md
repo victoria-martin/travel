@@ -200,8 +200,10 @@ monté par `ScenarioDetailView` sous `weatherBannerShown()`.
 `global.d.ts` : retrait de `scenarioRouteTrail`/`scenarioRouteStrip`, ajout de
 `stepStatusBackground`. `pnpm react:typecheck` propre.
 
-**G. Panneau latéral (carte/transports/argent/valise) + split handle** — découpé en 6 lots dans
+**G. Panneau latéral (carte/transports/argent/valise) + split handle — ✅ fait.** Découpé en 6 lots dans
 [react-migration-scenario-side-panel-plan.md](react-migration-scenario-side-panel-plan.md).
+
+**Backlog épuisé** — plus aucun bloc du détail scénario en `ScenarioLegacyMarkup`.
 
 ## Hors scope ici
 

@@ -11,17 +11,3 @@ function allPackingCategories() {
   state.packingListItems.forEach((i) => i.category && set.add(i.category));
   return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
 }
-
-// Champ catégorie partagé par les deux formulaires (catalogue, item de voyage) : texte libre
-// suggéré par datalist, jamais une liste figée.
-function packingCategoryField(inputId, value) {
-  return /* HTML */ `<div class="field">
-    <label>Catégorie</label>
-    <input id="${inputId}" type="text" list="${inputId}-options" value="${escapeHtml(value || '')}" />
-    <datalist id="${inputId}-options">
-      ${allPackingCategories()
-        .map((c) => `<option value="${escapeHtml(c)}"></option>`)
-        .join('')}
-    </datalist>
-  </div>`;
-}

@@ -1,26 +1,27 @@
-import type { PackingItem } from '@/store/types';
-
-// Port de groupPackingByCategory (js/views/packing/group.js), spécialisé au catalogue — le seul
-// consommateur côté React pour l'instant (composer/onglet scénario restent legacy).
+// Port de groupPackingByCategory (js/views/packing/group.js) : le catalogue et la valise d'un voyage
+// ne lisent pas leur catégorie au même endroit, d'où `categoryOf`.
 export const UNCATEGORIZED = 'Sans catégorie';
 
-export interface PackingGroup {
+export interface PackingGroup<T> {
   category: string;
-  items: PackingItem[];
+  items: T[];
 }
 
-export function groupPackingByCategory(items: PackingItem[]): PackingGroup[] {
-  const groups = new Map<string, PackingItem[]>();
+export function groupPackingByCategory<T>(
+  items: T[],
+  categoryOf: (item: T) => string,
+): PackingGroup<T>[] {
+  const groups = new Map<string, T[]>();
   items.forEach((item) => {
-    const category = item.category || UNCATEGORIZED;
+    const category = categoryOf(item) || UNCATEGORIZED;
     if (!groups.has(category)) groups.set(category, []);
     groups.get(category)?.push(item);
   });
   return Array.from(groups.entries())
-    .sort(([a], [b]) => {
-      if (a === UNCATEGORIZED) return 1;
-      if (b === UNCATEGORIZED) return -1;
-      return a.localeCompare(b, 'fr');
+    .sort(([categoryA], [categoryB]) => {
+      if (categoryA === UNCATEGORIZED) return 1;
+      if (categoryB === UNCATEGORIZED) return -1;
+      return categoryA.localeCompare(categoryB, 'fr');
     })
     .map(([category, groupItems]) => ({ category, items: groupItems }));
 }

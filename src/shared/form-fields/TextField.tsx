@@ -1,6 +1,6 @@
 // Port du bloc `.field` répété dans chaque formulaire de modale (label + input texte/date).
-// `listOptions` couvre le texte libre + suggestions (un `<datalist>`, comme packingCategoryField
-// avant son port) — une saisie libre qui peut aussi se compléter, pas un choix fermé (SelectField).
+// `listOptions` couvre le texte libre + suggestions (un `<datalist>`) — une saisie libre qui peut
+// aussi se compléter, pas un choix fermé (SelectField).
 export function TextField({
   id,
   label,

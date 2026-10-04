@@ -462,8 +462,11 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   premier passage) sont closes aussi. **Fait** : tous les formulaires de modale (types de
   `MODAL_TYPES`, `js/modals/modal.js`) sont portés en React — backlog et patron détaillés dans
   [docs/archivé/react-migration-modales-plan.md](docs/archivé/react-migration-modales-plan.md).
-  **Reste ouvert** : les 5 panneaux/modales utilitaires explicitement hors scope de ce backlog
-  (`valise-composer`, `scenario-panel`, `journal-panel`, `sync`, `settings`) — backlog et patron
+  **Fait** : le détail d'un scénario n'a plus aucun bloc legacy, panneau latéral et sheet mobile
+  compris — [docs/archivé/react-migration-scenario-detail-plan.md](docs/archivé/react-migration-scenario-detail-plan.md)
+  et [docs/archivé/react-migration-scenario-side-panel-plan.md](docs/archivé/react-migration-scenario-side-panel-plan.md).
+  **Reste ouvert** : 4 panneaux/modales utilitaires explicitement hors scope de ce backlog
+  (`valise-composer`, `journal-panel`, `sync`, `settings`) — backlog et patron
   détaillés dans [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md)
   — puis l'horizon final : suppression de `js/` legacy.
 

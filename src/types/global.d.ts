@@ -498,7 +498,22 @@ declare global {
     providersOfMode: (mode: string) => import('../store/types').Provider[];
     getProvider: (id: string) => import('../store/types').Provider | undefined;
     optionAmount: (option: import('../store/types').ProviderOption, days: number) => number;
-    scenarioPackingBlock: () => string;
+    packingItemQuantity: (item: import('../store/types').PackingListItem) => number;
+    packingQuantityLabel: (item: import('../store/types').PackingListItem) => string;
+    packingLineLabel: (item: import('../store/types').PackingListItem) => string;
+    packingLineCategory: (item: import('../store/types').PackingListItem) => string;
+    setPackingPerNight: (id: string) => void;
+    setPackingQuantity: (id: string, quantity: number) => void;
+    togglePackingChecked: (id: string) => void;
+    removeFromTravelPacking: (id: string) => void;
+    isPackingGroupOpen: (category: string) => boolean;
+    setPackingGroupOpen: (category: string, isOpen: boolean) => void;
+    addTravelPackingItem: (line: {
+      label: string;
+      category: string;
+      quantity: number;
+      alsoInCatalog: boolean;
+    }) => void;
     toolbarSeparator: () => string;
     toolbarMenu: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
