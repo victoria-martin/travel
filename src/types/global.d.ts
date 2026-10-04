@@ -387,6 +387,26 @@ declare global {
     renameStep: (scenarioId: string, stepId: string, name: string) => void;
     setStepBudget: (scenarioId: string, stepId: string, budget: string) => void;
     setStepNights: (scenarioId: string, stepId: string, nights: string) => void;
+    setStepAccommodationType: (scenarioId: string, stepId: string, type: string) => void;
+    setStepPlace: (scenarioId: string, stepId: string, value: string) => void;
+    setStepPlaceDate: (scenarioId: string, stepId: string, date: string) => void;
+    NIGHTS_OPTIONS: number[];
+    placeMatches: (
+      place: import('../store/types').Accommodation | import('../store/types').Attraction,
+      needle: string,
+    ) => boolean;
+    placeLevelsLabel: (place: import('../store/types').PlaceLevels) => string;
+    attractionTypeKey: (type: string) => string;
+    openAccommodationSheet: (id: string) => void;
+    emptyAttraction: () => Omit<import('../store/types').Attraction, 'id'> & { id: string | null };
+    upsertAttraction: (item: import('../store/types').Attraction) => void;
+    stepSheetButton: (step: import('../store/types').Step) => string;
+    stepStatusTag: (step: import('../store/types').Step) => string;
+    stepAvailabilityTag: (
+      step: import('../store/types').Step,
+      arrival: Date | null,
+    ) => string;
+    stepCheckInTimeTag: (step: import('../store/types').Step) => string;
     groupOptions: (
       group: import('../store/types').StepGroup,
     ) => import('../store/types').StepGroupOption[];
@@ -444,21 +464,71 @@ declare global {
     toolbarSeparator: () => string;
     toolbarMenu: () => string;
     scenarioWeatherToggleButton: () => string;
-    stepLine: (
-      scenario: import('../store/types').Scenario,
-      step: import('../store/types').Step,
-      arrival: Date | null,
-    ) => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
     stepLetter: (rank: number) => string;
     stepOutReason: (
       scenario: import('../store/types').Scenario,
       step: import('../store/types').Step,
     ) => string;
-    extrasBlock: (
-      scenario: import('../store/types').Scenario,
+    holderExtras: (
       holder: import('../store/types').Step | import('../store/types').StepGroup,
-    ) => string;
+    ) => import('../store/types').Extra[];
+    extrasTotal: (holder: import('../store/types').Step | import('../store/types').StepGroup) => number;
+    attachExtraAttraction: (scenarioId: string, holderId: string, attractionId: string) => void;
+    attachExtraCost: (scenarioId: string, holderId: string, costId: string) => void;
+    createAttractionNamed: (name: string) => import('../store/types').Attraction;
+    createFixedCostNamed: (label: string) => import('../store/types').FixedCost;
+    extraStatusTag: (extra: import('../store/types').Extra) => string;
+    extraLabel: (extra: import('../store/types').Extra) => string;
+    extraCount: (extra: import('../store/types').Extra) => number;
+    extraCountLabel: (n: number) => string;
+    extraAmount: (extra: import('../store/types').Extra) => number;
+    EXTRA_COUNTS: number[];
+    extraSiblingIds: (
+      holder: import('../store/types').Step | import('../store/types').StepGroup,
+      line: import('../store/types').Extra,
+      field: 'attractionId' | 'costId',
+    ) => string[];
+    hasPriceValue: (value: string) => boolean;
+    getAttraction: (id: string) => import('../store/types').Attraction | undefined;
+    getFixedCost: (id: string) => import('../store/types').FixedCost | undefined;
+    costLabel: (cost: import('../store/types').FixedCost) => string;
+    costMatches: (query: string, usedIds: string[]) => import('../store/types').FixedCost[];
+    attractionMatches: (
+      query: string,
+      usedIds: string[],
+    ) => import('../store/types').Attraction[];
+    setExtraDate: (
+      scenarioId: string,
+      holderId: string,
+      lineId: string,
+      date: string,
+    ) => void;
+    setExtraBudget: (
+      scenarioId: string,
+      holderId: string,
+      lineId: string,
+      budget: string,
+    ) => void;
+    setExtraCount: (
+      scenarioId: string,
+      holderId: string,
+      lineId: string,
+      count: number,
+    ) => void;
+    setExtraAttraction: (
+      scenarioId: string,
+      holderId: string,
+      lineId: string,
+      attractionId: string,
+    ) => void;
+    setExtraCost: (
+      scenarioId: string,
+      holderId: string,
+      lineId: string,
+      costId: string,
+    ) => void;
+    detachExtra: (scenarioId: string, holderId: string, lineId: string) => void;
     stepStatus: (
       scenario: import('../store/types').Scenario,
       step: import('../store/types').Step,

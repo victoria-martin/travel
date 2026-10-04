@@ -2,12 +2,10 @@ function emptyExtra() {
   return { id: uid(), attractionId: '', costId: '', date: '', count: 1, budget: '' };
 }
 
-// La recherche reste ouverte après un ajout : on rattache souvent plusieurs lignes d'affilée.
 function pushExtra(scenarioId, holderId, reference) {
   holderExtras(getExtraHolder(scenarioId, holderId)).push({ ...emptyExtra(), ...reference });
   saveNow();
   render();
-  focusExtraSearch(holderId);
 }
 
 function attachExtraAttraction(scenarioId, holderId, attractionId) {

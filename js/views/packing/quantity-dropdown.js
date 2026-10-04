@@ -1,4 +1,5 @@
-// Sur le modèle d'extraCountDropdown : un nombre fixe, ou « 1 par nuit » du scénario retenu.
+// Sur le modèle de l'ancien extraCountDropdown (depuis porté en JSX) : un nombre fixe, ou « 1 par
+// nuit » du scénario retenu.
 function packingQuantityDropdown(item) {
   const current = packingItemQuantity(item);
   return inlineDropdown(

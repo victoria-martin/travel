@@ -1,5 +1,6 @@
 const MAX_STEP_NIGHTS = 14;
 const NIGHTS_OPTIONS = Array.from({ length: MAX_STEP_NIGHTS + 1 }, (_, n) => n);
+window.NIGHTS_OPTIONS = NIGHTS_OPTIONS;
 
 function nightsLabel(n) {
   const nights = parseInt(n) || 0;

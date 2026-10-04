@@ -72,24 +72,79 @@ par `StepCard.tsx`/`StepGroupView.tsx`. `pnpm react:typecheck`/`react:build` pro
   src>` sont supprimés (plus seulement vidé). `global.d.ts` : ajout de `getAccommodation`/
   `hasStepBudget`/`formatAccommodationCost` (`stepAccommodationCost`/`setStepBudget` l'étaient déjà).
   `pnpm react:typecheck`/`react:build` propres.
-- `stepLine` ([step-line.js](../js/views/scenarios/detail/step-line.js), 55 lignes) — **pas fait,
-  sous-estimé au départ.** Ce n'est pas un simple affichage : elle délègue à
-  [step-type-dropdown.js](../js/views/scenarios/detail/step-type-dropdown.js) (43 l.),
-  [step-place-dropdown.js](../js/views/scenarios/detail/step-place-dropdown.js) (223 l., le plus
-  gros — recherche + sélection d'hébergement/lieu),
-  [step-nights-dropdown.js](../js/views/scenarios/detail/step-nights-dropdown.js) (24 l.),
-  plus `attraction-picker.js`/`cost-picker.js` (27+30 l.) en dépendance — ~450 lignes de widgets
-  interactifs au total, pas « medium ». À resegmenter en sous-clusters avant de porter (probablement
-  un par dropdown), pas enchaîné d'un bloc.
+- `stepLine` — **✅ fait, en mixte justifié.** `attraction-picker.js`/`cost-picker.js` ne sont en
+  fait PAS dans sa chaîne (dépendance d'Extras/du modal étape, erreur de ma première lecture,
+  basée sur l'ordre des `<script>` et pas sur les call-sites réels). La vraie chaîne :
+  - **Portés en JSX réel**, nouveau dossier
+    [ScenarioDetailView/StepLine/](../src/domains/scenarios/detail/ScenarioDetailView/StepLine/) +
+    [StepLine.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepLine.tsx) : `stepTypeDropdown`
+    → `StepTypeDropdown` (43 l., même forme que `TagDropdown` déjà utilisé ailleurs — étendu avec
+    `placeholder`/`beforeItems`, deux slots génériques, pas des flags métier), `stepNightsDropdown`
+    → `StepNightsDropdown` (24 l., liste de nombres donc pas `TagDropdown` — son propre petit
+    Radix), `stepPlaceDateField` → un simple `<input type="date">` inline dans `StepLine.tsx`.
+    Nouveau [OpenResourceMenuItem](../src/shared/select/OpenResourceMenuItem.tsx), partagé par les
+    deux dropdowns. `step-type-dropdown.js`/`step-nights-dropdown.js` supprimés en entier (fichiers
+    + `<script src>`), `stepLine`/`stepPlaceDateField` retirés de `step-line.js`.
+  - **`stepPlaceDropdown` — ✅ fait aussi, corrigé après coup.** D'abord classé « reste en
+    LegacyMarkup, même famille que `valise-composer` » — jugement trop rapide, sur la seule taille
+    du fichier (223 l.) sans comparer à ce que `extraAddDropdown` (cluster C) venait de montrer
+    portable. Porté dans
+    [StepLine/StepPlaceDropdown.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepLine/StepPlaceDropdown.tsx) :
+    recherche (`useState`), repli de groupe par type (`useState<Set>` local — pas le `Set` global
+    legacy, qui n'a plus de raison d'être partagé entre étapes une fois que React porte son propre
+    état), tri favoris-d'abord, création de ville à la volée (`emptyAttraction`/`uid`/
+    `upsertAttraction`, primitives pures réutilisées telles quelles). `step-place-dropdown.js`
+    supprimé en entier (fichier + `<script src>`) — tout ce qu'il contenait n'avait plus d'autre
+    appelant.
+  - **Restent en `ScenarioLegacyMarkup`**, délibérément : `stepStatusTag`/`stepAvailabilityTag`/
+    `stepCheckInTimeTag`/`stepSheetButton` (délèguent à `accommodationStatusTag`/
+    `outOfRangeIndicator`/`accommodationSheetButton`, eux-mêmes pas encore portés — hors scope de
+    ce cluster, aucun n'est un combobox).
+  `global.d.ts` : ajout de `setStepAccommodationType`/`setStepPlace`/`setStepPlaceDate`/
+  `NIGHTS_OPTIONS`/`placeMatches`/`placeLevelsLabel`/`attractionTypeKey`/`openAccommodationSheet`/
+  `emptyAttraction`/`upsertAttraction`/`stepSheetButton`/`stepStatusTag`/`stepAvailabilityTag`/
+  `stepCheckInTimeTag`, retrait de `stepLine`/`stepPlaceDropdown` (mortes). `pnpm react:typecheck`/
+  `react:build` propres.
+  **Bug trouvé pendant C, corrigé ici :** `NIGHTS_OPTIONS` est un `const`, jamais exposé sur
+  `window` ([nights.js](../js/views/scenarios/nights.js)) — `StepNightsDropdown` aurait planté au
+  premier rendu (`window.NIGHTS_OPTIONS.map` sur `undefined`). Le typecheck ne l'a pas vu (il ne
+  vérifie que le type déclaré, pas l'existence runtime) ; seul le même bug reproduit sur
+  `EXTRA_COUNTS` pendant C a fait remonter le pattern.
 
-**C. Extras** (lignes de coût éditables sous une étape/un groupe) —
-[extras/](../js/views/scenarios/detail/extras/) (9 fichiers : `add`, `amount`, `count`,
-`get-extras`, `label`, `line-menu`, `list`, `row`, `total`, `write`). Une vraie sous-fonctionnalité
-CRUD (ajouter/éditer/retirer une ligne), pas un simple affichage — consommé par
+**C. Extras — ✅ fait.** Nouveau
+[ExtrasBlock.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ExtrasBlock.tsx) +
+[ExtrasBlock/](../src/domains/scenarios/detail/ScenarioDetailView/ExtrasBlock/) (`ExtraRow`,
+`ExtraMenu`, `ExtraCountDropdown`), branché dans
 [StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx) et
 [StepGroupView.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepGroupView.tsx) (même
-`extrasBlock`, deux porteurs différents — étape ou groupe). À traiter comme son propre chantier,
-pas enchaîné après B sans repause.
+composant, deux porteurs — étape ou groupe).
+- **Portés en JSX réel :** le conteneur (`extrasBlock`/`list.js`, fichier supprimé — entièrement
+  mort une fois le mapping en React), la ligne (`extraRow`/`extraDateField`/`extraAutoPrice`
+  retirés de `row.js`), la pastille d'alternatives (`extraMenu` et ses satellites retirés de
+  `line-menu.js`, ne garde que `extraSiblingIds` encore lu par `ExtraMenu`), le compteur
+  (`extraCountDropdown`/`pickExtraCount` retirés de `count.js`). `extraMenu`'s trigger réutilise
+  `extraLabel` (legacy, inchangée — un second appelant existant dans `recap-row.js` l'empêchait
+  d'être reconstruite en JSX) via `ScenarioLegacyMarkup`, pas une réécriture.
+- **Corrigé en cours de route :** `extraAddRow`/`extraAddDropdown` (`add.js`) avaient d'abord été
+  classés « même famille que `stepPlaceDropdown`, reste en LegacyMarkup » — faux par
+  pattern-matching trop rapide. Contrairement à `stepPlaceDropdown`, pas de repli de groupes ni de
+  tri par favoris : juste une recherche sur deux listes plates (`attractionMatches`/`costMatches`,
+  déjà pures et réutilisables). Portés en JSX réel —
+  [ExtrasBlock/ExtraAddRow.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ExtrasBlock/ExtraAddRow.tsx) +
+  [ExtraAddDropdown.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ExtrasBlock/ExtraAddDropdown.tsx) —
+  état de recherche en `useState` local, le menu reste ouvert après un rattachement
+  (`event.preventDefault()` dans `onSelect`, comme le faisait le commentaire legacy « on rattache
+  souvent plusieurs lignes d'affilée »). `add.js` entièrement mort, supprimé avec son
+  `<script src>` ; `write.js` perd l'appel à `focusExtraSearch` dans `pushExtra`, devenu un
+  no-op (plus aucun input ne porte cet id) — le nouveau composant gère son propre focus.
+- **Reste en `ScenarioLegacyMarkup`, délibérément :** `extraStatusTag` (`row.js`) — délègue à
+  `attractionStatusTag`, pas encore porté.
+`global.d.ts` : ajout de `holderExtras`/`extraStatusTag`/`extraLabel`/`extraCount`/
+`extraCountLabel`/`extraAmount`/`EXTRA_COUNTS`/`extraSiblingIds`/`hasPriceValue`/`getAttraction`/
+`getFixedCost`/`costLabel`/`costMatches`/`attractionMatches`/`extrasTotal`/
+`attachExtraAttraction`/`attachExtraCost`/`createAttractionNamed`/`createFixedCostNamed`/les
+setters d'extra, retrait d'`extrasBlock`/`extraAddRow` (mortes). `pnpm react:typecheck`/
+`react:build` propres.
 
 **D. Chrome de l'en-tête** —
 [weather.js](../js/views/scenarios/detail/weather.js) (`scenarioWeatherToggleButton`, le bouton),

@@ -1,13 +1,5 @@
-// La ligne d'une étape : ce qu'on y cherche, où l'on dort, où en est la réservation, et combien
-// de nuits.
-function stepLine(scenario, step, arrival) {
-  return /* HTML */ `${stepTypeDropdown(scenario, step)}
-    <div class="step-place">
-      ${stepPlaceDropdown(scenario, step)}${stepSheetButton(step)}${stepPlaceDateField(scenario, step)}
-    </div>
-    ${stepStatusTag(step)} ${stepAvailabilityTag(step, arrival)} ${stepCheckInTimeTag(step)}
-    ${stepNightsDropdown(scenario, step)}`;
-}
+// La ligne d'une étape est portée en JSX :
+// src/domains/scenarios/detail/ScenarioDetailView/StepLine.tsx.
 
 // L'heure d'arrivée n'a de sens qu'une fois la réservation faite : avant, elle ne fait que
 // promettre un horaire qui n'est pas garanti.
@@ -21,17 +13,6 @@ function stepCheckInTimeTag(step) {
       placeholder: '',
     })}
   </span>`;
-}
-
-function stepPlaceDateField(scenario, step) {
-  if (!step.attractionId) return '';
-  return `<input
-    class="step-place-date"
-    type="date"
-    value="${escapeHtml(step.placeDate || '')}"
-    onchange="setStepPlaceDate('${scenario.id}','${step.id}', this.value)"
-    aria-label="Date du lieu"
-  />`;
 }
 
 // Le ↗ ouvre la fiche du lieu retenu, sans rouvrir le menu pour aller la chercher. Une étape

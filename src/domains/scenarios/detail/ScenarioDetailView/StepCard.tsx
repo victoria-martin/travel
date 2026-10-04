@@ -1,7 +1,9 @@
 import { Icon } from '@/shared/Icon';
 import type { Scenario, Step } from '@/store/types';
 import { useSortable } from '@dnd-kit/react/sortable';
+import { ExtrasBlock } from './ExtrasBlock';
 import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
+import { StepLine } from './StepLine';
 
 export function StepCard({
   scenario,
@@ -104,9 +106,9 @@ export function StepCard({
           <StepDetailLine step={step} />
           <div className="step-stay">
             <div className="step-acc">
-              <ScenarioLegacyMarkup html={window.stepLine(scenario, step, arrival)} />
+              <StepLine scenario={scenario} step={step} arrival={arrival} />
             </div>
-            <ScenarioLegacyMarkup html={window.extrasBlock(scenario, step)} />
+            <ExtrasBlock scenario={scenario} holder={step} />
           </div>
         </div>
       </div>

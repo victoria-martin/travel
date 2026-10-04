@@ -1,8 +1,8 @@
 import { Icon } from '@/shared/Icon';
 import type { Scenario, StepGroup } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
+import { ExtrasBlock } from './ExtrasBlock';
 import { OptionColumn } from './OptionColumn';
-import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
 
 export function StepGroupView({
   scenario,
@@ -96,7 +96,7 @@ export function StepGroupView({
         >
           <Icon name="plus" /> option
         </button>
-        <ScenarioLegacyMarkup html={window.extrasBlock(scenario, group)} />
+        <ExtrasBlock scenario={scenario} holder={group} />
       </div>
     </section>
   );
