@@ -1,5 +1,6 @@
 /*
-  Le select d'un prestataire, partagé par la modale d'une offre et celle d'un transport : il ne
+  Le select d'un prestataire, encore lu par la modale de location de la page Locations endormie
+  (rental-form.js) — offres et transports passent par ProviderSelectField (React). Il ne
   propose que ceux de son mode, et son dernier item crée celui qui manque. La valeur choisie se
   retient ici, pour la reposer si la création est annulée — l'item ＋ est une valeur du select.
   L'appelant qui a du contenu suspendu au prestataire — les modèles et les options d'une offre —
@@ -35,7 +36,7 @@ function providerSelectChanged(id, mode) {
     return providerPicked(id);
   }
   select.value = providerSelectValues[id];
-  askNewProvider(id, mode);
+  askNewProvider(mode, (provider) => selectCreatedProvider(id, provider));
 }
 
 // Le prestataire créé rejoint le select ouvert et s'y sélectionne, devant l'item ＋ qui ferme la

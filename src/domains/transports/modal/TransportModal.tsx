@@ -1,5 +1,4 @@
 import { Icon } from '@/shared/Icon';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { TextareaField } from '@/shared/form-fields/TextareaField';
@@ -7,19 +6,16 @@ import { FieldRow } from '@/shared/layout/FieldRow';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
+import { ProviderSelectField } from '@/shared/form-fields/ProviderSelectField';
 import type { Transport } from '@/store/types';
+import { useState } from 'react';
+import { TransportEndpointFields } from './TransportModal/TransportEndpointFields';
 
-/*
-  Port de transportForm/saveTransport (js/views/transports/modal/{form,save}.js). Mode et statut
-  sont des dicts simples (TRANSPORT_MODES/TRANSPORT_STATUSES, pas de "＋ Ajouter") : SelectField
-  ordinaire. Départ/arrivée (transportEndpointFields, select de lieu groupé par villes/autres lieux)
-  et le bloc prestataire (transportProviderFields, filtré par mode) restent en LegacyMarkup — ce
-  dernier se repeint depuis l'extérieur de React au changement de mode
-  (repaintTransportProviderFields), même mécanisme que pour l'offre/le modèle de voiture. Le mode
-  "voiture" a disparu de TRANSPORT_MODES (CLAUDE.md 2026-09-19) : plus de bloc exclusif à basculer,
-  juste ce select filtré à repeindre.
-*/
+// Port de transportForm/saveTransport (js/views/transports/modal/{form,save}.js) — saveTransport
+// (inchangée) lit les champs par id. Le select de compagnie suit le mode choisi.
 export function TransportModal({ payload }: { payload: Transport }) {
+  const [mode, setMode] = useState(payload.mode);
+  const [providerId, setProviderId] = useState(payload.providerId);
   const modeOptions = Object.entries(window.TRANSPORT_MODES).map(([key, mode]) => ({
     value: key,
     label: `${mode.emoji} ${mode.label}`,
@@ -39,7 +35,10 @@ export function TransportModal({ payload }: { payload: Transport }) {
           defaultValue={payload.mode}
           placeholder={`${window.UNSET_TRANSPORT_MODE.emoji} ${window.UNSET_TRANSPORT_MODE.label}`}
           options={modeOptions}
-          onChange={() => window.repaintTransportProviderFields()}
+          onChange={(event) => {
+            payload.mode = event.target.value;
+            setMode(payload.mode);
+          }}
         />
         <SelectField
           id="t-status"
@@ -49,34 +48,48 @@ export function TransportModal({ payload }: { payload: Transport }) {
           options={statusOptions}
         />
       </FieldRow>
-      <LegacyMarkup
-        html={window.transportEndpointFields(
-          'from',
-          'Départ',
-          payload.fromAttractionId,
-          payload.fromPrecision,
-        )}
+      <TransportEndpointFields
+        side="from"
+        label="Départ"
+        placeId={payload.fromAttractionId}
+        precision={payload.fromPrecision}
       />
-      <LegacyMarkup
-        html={window.transportEndpointFields(
-          'to',
-          'Arrivée',
-          payload.toAttractionId,
-          payload.toPrecision,
-        )}
+      <TransportEndpointFields
+        side="to"
+        label="Arrivée"
+        placeId={payload.toAttractionId}
+        precision={payload.toPrecision}
       />
       <FieldRow>
-        <TextField id="t-depart-date" label="Part le" type="date" defaultValue={payload.departDate} />
+        <TextField
+          id="t-depart-date"
+          label="Part le"
+          type="date"
+          defaultValue={payload.departDate}
+        />
         <TextField id="t-depart-time" label="Heure" type="time" defaultValue={payload.departTime} />
       </FieldRow>
       <FieldRow>
-        <TextField id="t-arrive-date" label="Arrive le" type="date" defaultValue={payload.arriveDate} />
+        <TextField
+          id="t-arrive-date"
+          label="Arrive le"
+          type="date"
+          defaultValue={payload.arriveDate}
+        />
         <TextField id="t-arrive-time" label="Heure" type="time" defaultValue={payload.arriveTime} />
       </FieldRow>
-      <div
-        id="t-provider-block"
-        dangerouslySetInnerHTML={{ __html: window.transportProviderFields(payload) }}
-      />
+      <FieldRow>
+        <ProviderSelectField
+          id="t-provider"
+          mode={mode}
+          value={providerId}
+          onChange={(id) => {
+            payload.providerId = id;
+            setProviderId(id);
+          }}
+        />
+        <TextField id="t-reference" label="Numéro / référence" defaultValue={payload.reference} />
+      </FieldRow>
       <FieldRow>
         <TextField id="t-budget" label="Budget" defaultValue={payload.budget} />
         <TextField id="t-amount-min" label="Prix mini" defaultValue={payload.amountMin} />

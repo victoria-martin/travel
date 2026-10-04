@@ -2,20 +2,18 @@ import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
 import { FieldRow } from '@/shared/layout/FieldRow';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { TextareaField } from '@/shared/form-fields/TextareaField';
 import type { Provider } from '@/store/types';
+import { useState } from 'react';
+import { ProviderModelsField } from './ProviderModal/ProviderModelsField';
+import { ProviderOptionsField } from './ProviderModal/ProviderOptionsField';
 
-/*
-  Port de providerForm/saveProvider (js/views/providers/modal/{form,save}.js) — #f-save délègue à
-  window.saveProvider(id) inchangée. `options`/`modelIds` restent en LegacyMarkup
-  (providerOptionsField/providerModelsField) : ces blocs mutent modal.payload directement et se
-  repeignent depuis l'extérieur de React (repaintProviderModels), même mécanisme déjà validé sur
-  OfferModal pour les offres/modèles.
-*/
+// Port de providerForm/saveProvider (js/views/providers/modal/{form,save}.js) — #f-save délègue à
+// window.saveProvider(id) inchangée. Seule la voiture a des modèles : le bloc suit le mode choisi.
 export function ProviderModal({ payload }: { payload: Provider }) {
+  const [mode, setMode] = useState(payload.mode);
   const modeOptions = Object.entries(window.PROVIDER_MODES).map(([key, mode]) => ({
     value: key,
     label: `${mode.emoji} ${mode.label}`,
@@ -31,7 +29,10 @@ export function ProviderModal({ payload }: { payload: Provider }) {
           defaultValue={payload.mode}
           placeholder={`${window.UNSET_TRANSPORT_MODE.emoji} ${window.UNSET_TRANSPORT_MODE.label}`}
           options={modeOptions}
-          onChange={() => window.repaintProviderModels()}
+          onChange={(event) => {
+            payload.mode = event.target.value;
+            setMode(payload.mode);
+          }}
         />
         <TextField id="prov-name" label="Nom" defaultValue={payload.name} />
       </FieldRow>
@@ -40,8 +41,8 @@ export function ProviderModal({ payload }: { payload: Provider }) {
         <TextField id="prov-site" label="Site" defaultValue={payload.site} />
         <TextField id="prov-booking" label="Réservation" defaultValue={payload.bookingUrl} />
       </FieldRow>
-      <LegacyMarkup html={window.providerOptionsField(payload)} />
-      <LegacyMarkup html={window.providerModelsField(payload)} />
+      <ProviderOptionsField payload={payload} />
+      {mode === 'car' && <ProviderModelsField payload={payload} />}
       <TextareaField id="prov-notes" label="Notes" defaultValue={payload.notes} />
       <div className="modal-actions">
         <CloseModalButton />

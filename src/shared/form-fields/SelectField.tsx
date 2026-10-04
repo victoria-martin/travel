@@ -13,7 +13,7 @@ export function SelectField({
   defaultValue?: string;
   placeholder?: string;
   options: { value: string; label: string }[];
-  onChange?: () => void;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
   return (
     <div className="field">

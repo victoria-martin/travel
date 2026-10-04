@@ -1,4 +1,3 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { TextareaField } from '@/shared/form-fields/TextareaField';
@@ -6,19 +5,17 @@ import { FieldRow } from '@/shared/layout/FieldRow';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
+import { ProviderSelectField } from '@/shared/form-fields/ProviderSelectField';
 import type { Offer } from '@/store/types';
+import { useState } from 'react';
+import { OfferModelField } from './OfferModal/OfferModelField';
+import { OfferOptionsField } from './OfferModal/OfferOptionsField';
 
-/*
-  Port d'offerForm/saveOffer (js/views/rentals/modal/{offer-form,offer-save}.js). Trois blocs
-  restent délégués en LegacyMarkup, pas réimplémentés ici : le select loueur (providerSelectField,
-  création rapide inline), le select modèle et les options du loueur — chacun se repeint depuis
-  l'extérieur de React (repaintOfferProvider/-Model/-Options, js/views/rentals/modal/{offer-form,
-  options-field}.js) au changement de loueur, un mécanisme stateful déjà en place qu'on ne recâble
-  pas. Le statut, lui, est un dict simple sans "＋ Ajouter" (CAR_STATUSES) : un SelectField ordinaire
-  suffit, pas de WordSelectField. Tout le reste est non contrôlé, saveOffer (inchangée) lit les ids
-  par getElementById.
-*/
+// Port d'offerForm/saveOffer (js/views/rentals/modal/{offer-form,offer-save}.js) — saveOffer
+// (inchangée) lit les champs par id. Le loueur décide des modèles et des options proposés : en
+// changer vide les options cochées, comme avant.
 export function OfferModal({ payload }: { payload: Offer }) {
+  const [providerId, setProviderId] = useState(payload.providerId);
   const statusOptions = Object.entries(window.CAR_STATUSES).map(([key, status]) => ({
     value: key,
     label: `${status.emoji} ${status.label}`,
@@ -28,13 +25,15 @@ export function OfferModal({ payload }: { payload: Offer }) {
     <>
       <ModalTitle isNew={!payload.id} subject="une offre" />
       <FieldRow>
-        <LegacyMarkup
-          html={window.providerSelectField(
-            'offer-provider',
-            'car',
-            payload.providerId,
-            window.repaintOfferProvider,
-          )}
+        <ProviderSelectField
+          id="offer-provider"
+          mode="car"
+          value={providerId}
+          onChange={(id) => {
+            payload.providerId = id;
+            payload.optionIds = [];
+            setProviderId(id);
+          }}
         />
         <SelectField
           id="offer-status"
@@ -44,10 +43,7 @@ export function OfferModal({ payload }: { payload: Offer }) {
           options={statusOptions}
         />
       </FieldRow>
-      <div className="field">
-        <label>Modèle</label>
-        <div id="offer-model-field" dangerouslySetInnerHTML={{ __html: window.offerModelSelect(payload) }} />
-      </div>
+      <OfferModelField payload={payload} providerId={providerId} />
       <TextField
         id="offer-location"
         label="Lieu de prise en charge"
@@ -60,7 +56,12 @@ export function OfferModal({ payload }: { payload: Offer }) {
           type="date"
           defaultValue={payload.pickupDate}
         />
-        <TextField id="offer-pickup-time" label="Heure" type="time" defaultValue={payload.pickupTime} />
+        <TextField
+          id="offer-pickup-time"
+          label="Heure"
+          type="time"
+          defaultValue={payload.pickupTime}
+        />
       </FieldRow>
       <FieldRow>
         <TextField
@@ -76,7 +77,7 @@ export function OfferModal({ payload }: { payload: Offer }) {
           defaultValue={payload.dropoffTime}
         />
       </FieldRow>
-      <LegacyMarkup html={window.offerOptionsField(payload)} />
+      <OfferOptionsField key={providerId} payload={payload} providerId={providerId} />
       <TextField id="offer-price-day" label="Prix par jour" defaultValue={payload.pricePerDay} />
       <TextField id="offer-link" label="Lien" defaultValue={payload.link} />
       <TextareaField id="offer-notes" label="Notes" rows={2} defaultValue={payload.notes} />

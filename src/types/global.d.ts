@@ -33,23 +33,12 @@ declare global {
     TRANSPORT_MODES: Record<string, { label: string; emoji: string; color: string }>;
     PROVIDER_MODES: Record<string, { label: string; emoji: string; color: string }>;
     UNSET_TRANSPORT_MODE: { label: string; emoji: string; color: string };
-    repaintProviderModels: () => void;
-    providerOptionsField: (payload: unknown) => string;
-    providerModelsField: (payload: unknown) => string;
     saveProvider: (id: string) => void;
     locateVille: () => void;
     applyVilleMatch: (index: number) => void;
     saveVille: (id: string) => void;
     TRANSPORT_STATUSES: Record<string, { label: string; emoji: string }>;
     UNSET_TRANSPORT_STATUS: { label: string; emoji: string };
-    transportEndpointFields: (
-      side: string,
-      label: string,
-      placeId: string,
-      precision: string,
-    ) => string;
-    transportProviderFields: (payload: import('../store/types').Transport) => string;
-    repaintTransportProviderFields: () => void;
     saveTransport: (id: string) => void;
     transportMode: (mode: string) => { label: string; emoji: string; color: string };
     providerMode: (mode: string) => { label: string; emoji: string; color: string };
@@ -68,12 +57,8 @@ declare global {
       selectedId: string,
       onPicked: () => void,
     ) => string;
-    repaintOfferProvider: () => void;
-    offerModelSelect: (payload: import('../store/types').Offer) => string;
-    offerOptionsField: (payload: import('../store/types').Offer) => string;
     saveOffer: (id: string) => void;
     suggestCarConsumption: () => void;
-    carModelProvidersField: (payload: import('../store/types').CarModel) => string;
     saveCarModel: (id: string) => void;
     carFuel: (fuel: string) => { label: string; emoji: string };
     carGearbox: (gearbox: string) => { label: string; emoji: string };
@@ -85,6 +70,22 @@ declare global {
     setDefaultOffer: (id: string) => void;
     duplicateOffer: (id: string) => void;
     carModelProviders: (modelId: string) => import('../store/types').Provider[];
+    createProviderNamed: (name: string, mode: string) => import('../store/types').Provider;
+    createCarModelNamed: (
+      name: string,
+      fuel: string,
+      gearbox: string,
+    ) => import('../store/types').CarModel;
+    travelCarModels: () => import('../store/types').CarModel[];
+    providerNoun: (mode: string) => { label: string; indefinite: string };
+    askNewProvider: (
+      mode: string,
+      onCreate: (provider: import('../store/types').Provider) => void,
+    ) => void;
+    getCarModel: (id: string) => import('../store/types').CarModel | undefined;
+    upsertProvider: (provider: import('../store/types').Provider) => void;
+    providerOptionLabel: (option: import('../store/types').ProviderOption) => string;
+    PROVIDER_OPTION_UNITS: Record<string, { label: string; suffix: string; per: string }>;
     carModelOffers: (modelId: string) => import('../store/types').Offer[];
     offerModelName: (offer: import('../store/types').Offer) => string;
     offerDatesLabel: (offer: import('../store/types').Offer) => string[];

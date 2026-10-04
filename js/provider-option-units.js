@@ -12,6 +12,8 @@ const PROVIDER_OPTION_UNITS = {
   perTrip: { label: 'Par trajet', suffix: '/ trajet', per: '' },
 };
 
+window.PROVIDER_OPTION_UNITS = PROVIDER_OPTION_UNITS;
+
 function providerOptionUnit(key) {
   return PROVIDER_OPTION_UNITS[key] || PROVIDER_OPTION_UNITS.flat;
 }

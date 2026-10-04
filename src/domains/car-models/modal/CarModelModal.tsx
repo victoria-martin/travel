@@ -1,19 +1,16 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { FieldRow } from '@/shared/layout/FieldRow';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
+import { CarModelProvidersField } from './CarModelModal/CarModelProvidersField';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
 import type { CarModel } from '@/store/types';
 
 /*
   Port de carModelForm/saveCarModel (js/views/car-models/modal/{form,save}.js). Fuel et boîte sont
   des dicts simples sans "＋ Ajouter" (CAR_FUELS/CAR_GEARBOXES), comme le statut d'OfferModal : un
-  SelectField ordinaire suffit, pas de WordSelectField. « Proposé par » reste en LegacyMarkup
-  (carModelProvidersField) : multi-select + création de loueur inline, repeint depuis l'extérieur de
-  React (repaintCarModelProviders), même mécanisme que les options/modèles d'OfferModal et
-  ProviderModal. La suggestion de consommation (suggestCarConsumption) lit/écrit directement les
+  SelectField ordinaire suffit, pas de WordSelectField. La suggestion de consommation (suggestCarConsumption) lit/écrit directement les
   champs fuel/consommation/boîte par id au fil de la frappe du nom — non réimplémentée, juste
   rebranchée via `onInput`.
 */
@@ -59,7 +56,7 @@ export function CarModelModal({ payload }: { payload: CarModel }) {
           options={gearboxOptions}
         />
       </FieldRow>
-      <LegacyMarkup html={window.carModelProvidersField(payload)} />
+      <CarModelProvidersField payload={payload} />
       <div className="modal-actions">
         <CloseModalButton />
         <ModalSaveButton onClick={() => window.saveCarModel(payload.id || '')} />
