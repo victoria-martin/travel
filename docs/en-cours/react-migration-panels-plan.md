@@ -85,7 +85,10 @@ types, deux absents de l'inventaire vont probablement servir :
    avant de supposer qu'on peut s'en passer. Fichier cible : `src/shell/SettingsModal.tsx` (pas un
    domaine d'entité).
 
-2. **`valise-composer`** — [js/views/packing/compose.js](../js/views/packing/compose.js)
+2. **`valise-composer`** — ✅ fait (2026-10-04) : [PackingComposerModal.tsx](../../src/domains/packing/modal/PackingComposerModal.tsx),
+   porté en entier plutôt qu'en `LegacyMarkup` — la recherche en `useState` rend inutile le repeint
+   à la main de `#packing-compose-list` ; `compose.js` supprimé, ses deux actions rejoignent
+   `js/views/packing/travel-lines.js`. Description d'origine : [js/views/packing/compose.js](../js/views/packing/compose.js)
    (102 lignes). Recherche + checklist par catégories dépliables (`<details>`), même patron que les
    listes à cocher déjà rencontrées (`offerOptionsField`, `carModelProvidersField`) : garder la
    liste (`packingComposeList`/recherche) en `LegacyMarkup`, sous-système stateful qui repeint sa
@@ -96,7 +99,9 @@ types, deux absents de l'inventaire vont probablement servir :
    Fichier cible : `src/domains/packing/modal/PackingComposerModal.tsx` (le domaine `packing/`
    existe déjà, `PackingItemModal.tsx` y est).
 
-3. **`sync`** — [js/sync.js](../js/sync.js) (426 lignes au total, mais `syncForm`/`saveSyncUrl`/
+3. **`sync`** — ✅ fait (2026-10-04) : [SyncModal.tsx](../../src/shell/SyncModal.tsx), `window.sync`
+   exposé dans `sync.js`, bouton « Connecter » écrit en clair avec `id="f-save"` (`ModalSaveButton`
+   porte toujours « Enregistrer »). Description d'origine : [js/sync.js](../js/sync.js) (426 lignes au total, mais `syncForm`/`saveSyncUrl`/
    `resolveSyncChoice` seulement concernés, ~40 lignes). `sync` est une globale mutable **hors**
    store React (pas dans Zustand, pas dans `state`) : à vérifier avant de coder, mais a priori sans
    risque de réactivité nouveau — `setSyncStatus` ne repeint déjà pas le corps de cette modale en
@@ -109,7 +114,10 @@ types, deux absents de l'inventaire vont probablement servir :
    (Déconnecter conditionnel, Fermer, Connecter) se portent directement, sans `LegacyMarkup`.
    Fichier cible : `src/shell/SyncModal.tsx`.
 
-4. **`journal-panel`** — [js/views/journal/side-tabs.js](../js/views/journal/side-tabs.js)
+4. **`journal-panel`** — ✅ fait (2026-10-04) : [JournalPanelModal.tsx](../../src/domains/journal/modal/JournalPanelModal.tsx)
+   monte une vraie `LeafletMap` des lieux du jour au lieu de `journalMapBlock` + `initJournalMap`,
+   dont le canevas à id fixe aurait doublonné celui du panneau desktop (resté dans
+   `journalDayPanel`, délégué). Description d'origine : [js/views/journal/side-tabs.js](../js/views/journal/side-tabs.js)
    (41 lignes, dont `journalPanelSheet` ~7 lignes). Un seul onglet (`Carte`,
    `journalMapBlock(date)`) : le wrapper (`<h3>{label}</h3>` + bouton Fermer) se porte en JSX,
    `journalMapBlock(date)` reste en `LegacyMarkup` (init Leaflet, hors scope — cf. note RN § 5 de
