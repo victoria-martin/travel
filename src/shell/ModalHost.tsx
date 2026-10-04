@@ -4,9 +4,9 @@ import { useEffect } from 'react';
 import { MODAL_BODIES } from '../modal-bodies';
 
 /*
-  Port de renderModal/dismissModal (js/modals/modal.js), maintenant sur Dialog de Radix (gratuit
-  pour les ~20 types encore en dangerouslySetInnerHTML comme pour ceux déjà portés en React —
-  Radix ne regarde pas le contenu, juste l'overlay/le focus/le clavier) : focus trap, restauration
+  Port de renderModal/dismissModal (js/modals/modal.js), maintenant sur Dialog de Radix (le corps
+  vient de MODAL_BODIES, ou d'un `cfg.body` legacy en dangerouslySetInnerHTML pour un type pas
+  encore porté — Radix ne regarde pas le contenu, juste l'overlay/le focus/le clavier) : focus trap, restauration
   du focus à la fermeture, aria-modal — remplace l'implémentation main.
 
   `.overlay`/`.modal` gardent leur CSS inchangée (centrage par flex du parent sur l'enfant) en

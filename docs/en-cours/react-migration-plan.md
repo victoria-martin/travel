@@ -556,37 +556,39 @@ reste hors scope ici.
 
 ## 10. Ce qui reste legacy — où et pourquoi
 
-Relevé du 2026-10-04 (`git grep "LegacyMarkup html=\|dangerouslySetInnerHTML" -- src`, plus les
-`body:` restants de `MODAL_TYPES`). C'est le backlog vers « `js/` legacy supprimé ».
+Relevé du 2026-10-04, après les lots A–E de la même journée (`git grep "LegacyMarkup
+html=\|dangerouslySetInnerHTML" -- src`, plus les `body:` restants de `MODAL_TYPES`). C'est le
+backlog vers « `js/` legacy supprimé ».
 
-**Modales encore peintes en legacy** — [react-migration-panels-plan.md](react-migration-panels-plan.md) :
-`settings` (en cours, côté utilisatrice), `sync`, `valise-composer`, `journal-panel`.
-
-**Fragments legacy dans des modales React** — laissés délégués par
-[react-migration-modales-plan.md](../archivé/react-migration-modales-plan.md), sous-systèmes avec
-leur propre état ou recherche : `locateFields` (6 modales, recherche d'adresse/géocodage),
-`attractionScenarioActions`, `pasteImportInstructions`, `carModelProvidersField`,
-`offerModelSelect`/`offerOptionsField`, `providerOptionsField`/`providerModelsField`,
-`transportProviderFields`, les quatre champs de `TravelModal` (emoji, lieu d'en-tête, pays,
-couleurs), `stepAttractionsField` (modale d'étape).
-
-**Fragments legacy dans des écrans** :
+**Encore legacy, et pourquoi :**
+- Modale `settings` et bouton Réglages de la barre latérale (`settingsButton`) — chantier en cours
+  côté utilisatrice ([react-migration-panels-plan.md](react-migration-panels-plan.md) § 1), pas
+  touché pour ne pas croiser son travail.
 - Journal — `journalDayPanel` : bloc impératif autour d'un seul `<textarea>` et de son caret (§ 7,
-  Phase 3).
+  Phase 3). Le sheet mobile du panneau (`journal-panel`) est porté, pas le panneau desktop, resté
+  dans ce bloc.
 - À faire — `todoBuilder` : registre colonnes-par-kind à réécrire en entier (§ 7, Phase 3).
 - Carte — `RouteBuilderPanel`, `NewCityButton` : état + async dans des globales de module (§ 5).
-- Scénarios (liste) — `scenarioRouteBar` (bande d'une ligne) et `scenarioCompareCard` (carte de
-  comparaison). La raison donnée pour la carte (« même famille que les lignes de récap du détail,
-  elles-mêmes en LegacyMarkup ») ne tient plus : ces lignes sont en React depuis le 2026-10-04
-  (`TotalBlock/AccommodationDetailRows`, `RecapRow`), la carte peut les réutiliser — c'est aussi ce
-  qui libérerait la dernière chaîne legacy du récap (`accommodationDetailRows`, `recapRow`,
-  `scenarioRecapRow`, `recapLegRow`… dans `js/views/scenarios/detail/`).
-- Shell — `mobileNavBar`/`mobileNavPlusSheet` (glisser pour réordonner), et dans la barre latérale
-  `travelSelector`/`syncStatusHtml`/`settingsButton` (widgets autonomes, § 1).
+- Questions posées par-dessus une modale (`askNewWord`, `askNewProvider`) : HTML legacy peint par
+  `OverlayHost`. Les menus React les appellent avec un rappel (`onCreate`).
+- Page **Locations** endormie (journal CLAUDE.md 2026-09-16) : ses fichiers restent sur le disque,
+  volontairement — son formulaire garde le `providerSelectField` legacy (adapté à la nouvelle
+  signature d'`askNewProvider`). Déjà cassée avant cette passe : `offerPriceLabels` et
+  `rentalDatesLabel`, qu'elle appelle, ont disparu en `0dfb035`. Avec React propriétaire de `#app`
+  (Phase 4), la rallumer demande de toute façon un port, plus un simple retour de balises.
 
-**Manques connus des ports déjà faits** :
-- `TagDropdown` n'a pas « ＋ Ajouter un statut/type » (`askNewWord`) : absent des tables
-  Hébergements/Lieux et des menus de statut du détail scénario.
+**Fait le 2026-10-04 (lots A–E)** : liste Scénarios (carte de comparaison, bande d'itinéraire —
+avec suppression de toute la chaîne legacy liste/récap), modales `sync`/`valise-composer`/
+`journal-panel`, « ＋ Ajouter un type/statut » dans `TagDropdown` (`afterItems` +
+`AddWordMenuItem`), barre latérale (sélecteur de voyage, état de synchro) et barre mobile, tous les
+fragments legacy des modales React (`LocateFields`, `ProviderSelectField`, `MultiSelectField`,
+`AddByNameRow`, champs de l'offre/du loueur/du modèle/du trajet/du voyage, actions « Ajouter à un
+scénario » d'un lieu, instructions d'import collé, champ Activités d'une étape).
+
+**Manques et points connus :**
+- La modale d'import collé (`paste-import`) n'est ouverte que par l'en-tête legacy des
+  Hébergements, dont le bouton « Importer » n'est pas porté (§ 7, Phase 1) : son corps React existe,
+  rien ne l'ouvre aujourd'hui.
 - Non vérifié, déduit du CSS : sous 1100px, le fil du trajet et la bannière météo du détail
   scénario collent tous deux à `--view-header-h` ; affichés ensemble, la bannière (z-index 18)
   recouvrirait le fil (15).
