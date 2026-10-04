@@ -125,7 +125,7 @@ declare global {
     showButtonLabels: () => boolean;
     toggleButtonLabels: () => void;
     L: any;
-    createLeafletMap: (elementId: string) => any;
+    createLeafletMap: (element: string | HTMLElement) => any;
     fitToPoints: (map: any, points: [number, number][]) => void;
     keptOnMap: (kind: 'hebergements' | 'attractions', item: { favorite: boolean }) => boolean;
     accType: (type: string) => { label: string; emoji: string; color: string };
@@ -488,7 +488,6 @@ declare global {
     outOfRangeStyle: () => { key: string; label: string; modifier: string; showText: boolean };
     setOutOfRangeStyle: (key: string) => void;
     onScenarioPanelToggle: (scenarioId: string, key: string) => void;
-    scenarioMapBlock: (scenario: import('../store/types').Scenario, id: string) => string;
     getScenarioOffer: (
       scenario: import('../store/types').Scenario,
     ) => import('../store/types').Offer | null;
@@ -500,9 +499,6 @@ declare global {
     getProvider: (id: string) => import('../store/types').Provider | undefined;
     optionAmount: (option: import('../store/types').ProviderOption, days: number) => number;
     scenarioPackingBlock: () => string;
-    invalidateScenarioDetailMaps: () => void;
-    initScenarioDetailMaps: () => void;
-    destroyScenarioDetailMaps: () => void;
     toolbarSeparator: () => string;
     toolbarMenu: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
@@ -613,7 +609,7 @@ declare global {
       scenario: import('../store/types').Scenario,
       noticeId: string,
       idleMessage: string,
-    ) => void;
+    ) => [number, number][];
     scenarioAccommodationIds: (scenario: import('../store/types').Scenario) => Set<string>;
     prefs: { mapSideWidth: number; [key: string]: any };
     persistPrefs: () => void;

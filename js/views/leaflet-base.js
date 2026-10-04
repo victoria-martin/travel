@@ -1,8 +1,8 @@
 const MAP_DEFAULT_CENTER = [44.3, 9.5];
 const MAP_DEFAULT_ZOOM = 7;
 
-function createLeafletMap(elementId) {
-  const map = L.map(elementId).setView(MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM);
+function createLeafletMap(element) {
+  const map = L.map(element).setView(MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
     maxZoom: 18,

@@ -1,7 +1,7 @@
 /*
   La carte du jour ne montre que ce que la journée concerne : l'hébergement et les activités
   planifiées ce jour-là dans le scénario choisi, plus les lieux référencés dans le texte. Un canevas
-  par jour affiché, comme scenarioMapBlock — mais sans tracé, la route est l'affaire du scénario.
+  par jour affiché — mais sans tracé, la route est l'affaire du scénario.
 */
 let journalMap = null;
 

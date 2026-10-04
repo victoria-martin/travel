@@ -81,6 +81,7 @@ export function MapView() {
         </div>
         <SplitHandle mapRef={mapRef} />
         <LeafletMap
+          id="map"
           markers={markers}
           onMarkerClick={
             window.routeBuilder.active

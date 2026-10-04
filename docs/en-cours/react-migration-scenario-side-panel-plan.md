@@ -107,10 +107,20 @@ tous ses montants.
   (`recapRow`, `scenarioRecapRow`, `recapPlaceLabel`, `recapIconLabel`, `recapLegRow`).
 `pnpm react:typecheck` propre.
 
-**G4. Onglet Carte — effort high.** `LeafletMap` gagne une prop `id` ; l'onglet monte un
-`LeafletMap` avec les attractions en marqueurs et le tracé via `afterMarkers`. Retire
-`initializeMaps` de `ScenarioLegacyMarkup` et `detail-map.js`. Le split invalide la taille via une
-ref à la carte au lieu de `window.scenarioDetailMaps`.
+**G4. Onglet Carte — ✅ fait.** [MapTab.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/ScenarioSidePanel/MapTab.tsx)
+monte [LeafletMap](../../src/platform/web/LeafletMap.tsx) avec les attractions du voyage en
+marqueurs (`MapTab/scenarioMapMarkers.ts`, popup = `attractionPopup` du domaine `carte`) et le
+tracé via `afterMarkers` (`drawScenarioOnMap`, legacy inchangé), puis recadre sur tracé +
+attractions comme avant.
+- `LeafletMap` crée son instance depuis son propre élément (`createLeafletMap` accepte un élément)
+  et prend `id`/`className` : `MapView` passe `id="map"`, l'onglet `className="scenario-map-canvas"`.
+  Deux cartes peuvent donc coexister (panneau + sheet mobile) sans se partager un id.
+- `useLeafletMap` observe la taille de son conteneur (`ResizeObserver` → `invalidateSize`) : le
+  split du détail n'a plus besoin d'atteindre la carte. Le `SplitHandle` de la page Carte appelle
+  encore `invalidateSize` lui-même, désormais redondant — pas touché.
+- Legacy supprimé : `detail-map.js` (fichier + `<script src>`), et `invalidateScenarioDetailMaps`
+  ajoutée en G1.
+`pnpm react:typecheck` propre.
 
 **G5. Onglet Valise — effort medium.** Vérifier d'abord la réutilisation de `PackingView/` ; sinon
 porter `scenarioPackingBlock` et son formulaire.

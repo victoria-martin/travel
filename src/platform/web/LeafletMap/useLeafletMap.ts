@@ -11,8 +11,9 @@ export function useLeafletMap(
   afterMarkers?: (map: any) => void,
 ) {
   useEffect(() => {
-    if (!containerRef.current) return;
-    const map = window.createLeafletMap('map');
+    const container = containerRef.current;
+    if (!container) return;
+    const map = window.createLeafletMap(container);
     const bounds: [number, number][] = [];
 
     markers.forEach((marker) => {
@@ -22,7 +23,14 @@ export function useLeafletMap(
     window.fitToPoints(map, bounds);
     afterMarkers?.(map);
 
-    return () => map.remove();
+    // A split handle resizes the container without re-rendering: Leaflet must re-measure itself.
+    const resizeObserver = new ResizeObserver(() => map.invalidateSize());
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+      map.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markers]);
 }

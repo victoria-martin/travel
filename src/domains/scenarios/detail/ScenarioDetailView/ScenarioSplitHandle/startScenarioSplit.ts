@@ -2,7 +2,8 @@ import { scenarioRailHidden } from '../scenarioRailHidden';
 import { scenarioSplitColumns } from '../scenarioSplitColumns';
 import { SCENARIO_SPLIT_SIZES } from '../scenarioSplitSizes';
 
-// Dragging writes the grid on the element instead of re-rendering: a render per pixel would remount Leaflet.
+// Dragging writes the grid on the element instead of re-rendering: a render per pixel would remount Leaflet,
+// which re-measures itself through its own ResizeObserver.
 export function startScenarioSplit(event: React.PointerEvent<HTMLDivElement>) {
   const columns = event.currentTarget.closest<HTMLElement>('.scenario-detail-cols');
   const tabKey = window.prefs.scenarioSidePanel;
@@ -18,7 +19,6 @@ export function startScenarioSplit(event: React.PointerEvent<HTMLDivElement>) {
     const percent = ((box.right - rail - move.clientX) / box.width) * 100;
     window.prefs.scenarioSideWidth[tabKey] = Math.min(Math.max(percent, minPercent), maxPercent);
     columns.style.gridTemplateColumns = scenarioSplitColumns();
-    window.invalidateScenarioDetailMaps();
   };
   const onUp = () => {
     document.removeEventListener('pointermove', onMove);

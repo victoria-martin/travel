@@ -263,7 +263,7 @@ function modalPanelWidth() {
 }
 
 // Rappelé par ModalHost une fois le corps peint dans le DOM (cfg.after lit des champs qui doivent
-// déjà exister), comme initScenarioDetailMaps après ScenarioLegacyMarkup.
+// déjà exister).
 function onModalPainted() {
   const cfg = MODAL_TYPES[modal.type];
   if (cfg.after) cfg.after(modal);

@@ -11,10 +11,14 @@ import type { MapMarkerData } from './LeafletMap/MapMarkerData';
   connaître (tracé de scénario, ligne d'itinéraire), sur le modèle d'initMap() legacy.
 */
 export function LeafletMap({
+  id,
+  className,
   markers,
   onMarkerClick,
   afterMarkers,
 }: {
+  id?: string;
+  className?: string;
   markers: MapMarkerData[];
   onMarkerClick?: (data: MapMarkerData) => void;
   afterMarkers?: (map: any) => void;
@@ -22,7 +26,5 @@ export function LeafletMap({
   const containerRef = useRef<HTMLDivElement>(null);
   useLeafletMap(containerRef, markers, onMarkerClick, afterMarkers);
 
-  // id fixe pour l'instant (`#map` : même CSS que la carte legacy) — à généraliser (prop `id`) le
-  // jour où un deuxième consommateur (ex. carte du détail scénario) coexiste sur la même page.
-  return <div id="map" ref={containerRef} />;
+  return <div id={id} className={className} ref={containerRef} />;
 }
