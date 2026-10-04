@@ -26,29 +26,61 @@ suivant — l'ordre ci-dessous n'est qu'une proposition, pas un enchaînement au
   nombre qu'elle affiche est déjà calculé par un hook, plutôt que de dupliquer le calcul.
 - Toute const/let legacy lue depuis React a besoin d'un `window.X = X;` explicite ; chaque nouveau
   membre `window.*` va dans [global.d.ts](../src/types/global.d.ts).
-- Une fonction legacy devenue morte après un port se vérifie (call-sites) avant suppression, et se
-  remplace par un commentaire d'une ligne pointant vers le nouveau composant.
-- `step-card.js` mélange des fonctions à porter (`stepOrderBadge`, `stepStatusBadge`,
-  `stepPlaceSuffix`, `stepDetailLine`, `stepMoney`) et d'autres qui servent peut-être encore ailleurs
-  (`stepOutReason`, `stepCardPaint`, `makeGroupButton`, l'ancien `stepCard` lui-même) — vérifier
-  casse par casse, ne pas supposer tout le fichier mort une fois les 5 premières portées.
+- Une fonction legacy devenue morte après un port se vérifie (call-sites) avant suppression ; si
+  elle n'a plus aucun appelant, la supprimer (pas juste un commentaire) — et si le fichier devient
+  vide, le supprimer lui-même avec son `<script src>` (précédent : `step-card.js`, cluster A/B).
+  Vérifier casse par casse avant de supposer tout un fichier mort — un helper du même fichier peut
+  encore servir ailleurs (précédent : `stepMoveButtons`/`groupMoveButtons` morts avec `stepCard`/
+  `groupRow`, mais `moveStep`/`moveGroup`/`moveUnit` du même fichier `row-move.js` vivants).
 
 ## Backlog ordonné
 
-**A. Badges de carte d'étape** — [step-card.js](../js/views/scenarios/detail/step-card.js) (163
-lignes, 5 des 9 fonctions concernées). **Premier cluster, puis stop.**
-- `stepOrderBadge(scenario, step, rank)` — la pastille de rang (lettre/numéro).
-- `stepStatusBadge(scenario, step)` — pastille de statut.
-- `stepPlaceSuffix(step)` — complément de nom de lieu.
-- `stepDetailLine(step)` — ligne de détail sous le titre.
-Fragments d'affichage, pas de state ni d'async repéré à la lecture — bon premier cluster, risque
-faible. Tous les 4 consommés uniquement par
-[StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx).
+**A. Badges de carte d'étape — ✅ fait.** `step-card.js` → 4 composants locaux dans
+[StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx) (`StepOrderBadge`,
+`StepPlaceSuffix`, `StepDetailLine`, `StepStatusBadge`, non exportés — un seul consommateur). Les 4
+fonctions legacy portées, plus `stepCard`/`makeGroupButton`/`stepCardPaint`/`STEP_TITLE_LEVELS`
+(devenues mortes par cascade : `stepCard()` ne pouvait plus tourner sans elles, et n'avait déjà plus
+aucun appelant vivant — voir « Trouvé en route » plus bas) ont été supprimées. `global.d.ts` :
+retrait de 5 déclarations mortes
+(`stepOrderBadge`/`stepPlaceSuffix`/`stepDetailLine`/`stepStatusBadge`/`stepCardPaint`), ajout de 3
+nouvelles (`coordsFor`, `stepLetter`, `stepOutReason`), et correction du type de `stepPlace` qui ne
+déclarait pas `region` (utilisé par `stepPlaceSuffix` depuis toujours, juste jamais typé).
+`pnpm react:typecheck`/`react:build` propres.
 
-**B. Argent d'une étape** — `stepMoney(scenario, step)` dans le même fichier, plus `stepLine`
-([step-line.js](../js/views/scenarios/detail/step-line.js), 55 lignes, ligne hébergement de
-l'étape). Vérifier d'abord ce que `useScenarioMoney` expose déjà pour l'étape avant de retraduire
-`stepAccommodationCost`/`hasStepBudget`/`formatAccommodationCost` en JSX.
+## Trouvé en route — nettoyé
+
+En traçant les call-sites de `stepCard()` avant suppression : toute la chaîne de rendu legacy du
+détail scénario était morte, pas seulement les 4 fonctions du cluster A — `renderScenarioDetailView()`
+([detail.js](../js/views/scenarios/detail/detail.js)) n'avait plus aucun appelant nulle part, l'arbre
+React (`ScenarioDetailView.tsx`) l'ayant remplacée sans qu'elle soit retirée. Supprimés en cascade,
+tous confirmés sans appelant vivant ailleurs avant suppression :
+[step-list.js](../js/views/scenarios/detail/step-list.js),
+[group-row.js](../js/views/scenarios/detail/group-row.js) et
+[option-column.js](../js/views/scenarios/detail/option-column.js) (fichiers entiers + leur `<script
+src>`), `renderScenarioDetailView` seule dans `detail.js` (le reste du fichier — `renameStep`,
+`insertStep`, `deleteStep`… — reste vivant, appelé depuis React), et dans
+[row-move.js](../js/views/scenarios/detail/row-move.js) les trois bâtisseurs de boutons HTML
+`stepMoveButtons`/`groupMoveButtons`/`moveButtons`, orphelins depuis la suppression de
+`stepCard`/`groupRow` (leurs seuls appelants) — `moveStep`/`moveGroup`/`moveUnit` restent, utilisés
+par `StepCard.tsx`/`StepGroupView.tsx`. `pnpm react:typecheck`/`react:build` propres après coup.
+
+**B. Argent d'une étape.**
+- `stepMoney(scenario, step)` — **✅ fait.** Vérifié : `useScenarioMoney` n'expose que des totaux
+  de scénario (nuits/charges/transport/attractions/total), rien au niveau étape — pas de doublon.
+  Porté en `StepMoney` dans [StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx),
+  `stepMoney` supprimée ; `step-card.js` étant alors entièrement vide, le fichier et son `<script
+  src>` sont supprimés (plus seulement vidé). `global.d.ts` : ajout de `getAccommodation`/
+  `hasStepBudget`/`formatAccommodationCost` (`stepAccommodationCost`/`setStepBudget` l'étaient déjà).
+  `pnpm react:typecheck`/`react:build` propres.
+- `stepLine` ([step-line.js](../js/views/scenarios/detail/step-line.js), 55 lignes) — **pas fait,
+  sous-estimé au départ.** Ce n'est pas un simple affichage : elle délègue à
+  [step-type-dropdown.js](../js/views/scenarios/detail/step-type-dropdown.js) (43 l.),
+  [step-place-dropdown.js](../js/views/scenarios/detail/step-place-dropdown.js) (223 l., le plus
+  gros — recherche + sélection d'hébergement/lieu),
+  [step-nights-dropdown.js](../js/views/scenarios/detail/step-nights-dropdown.js) (24 l.),
+  plus `attraction-picker.js`/`cost-picker.js` (27+30 l.) en dépendance — ~450 lignes de widgets
+  interactifs au total, pas « medium ». À resegmenter en sous-clusters avant de porter (probablement
+  un par dropdown), pas enchaîné d'un bloc.
 
 **C. Extras** (lignes de coût éditables sous une étape/un groupe) —
 [extras/](../js/views/scenarios/detail/extras/) (9 fichiers : `add`, `amount`, `count`,
@@ -99,4 +131,4 @@ A-F soient faits et validés.
   (`scenarioRouteBar`) sont un écran différent (`ScenariosView`, pas `ScenarioDetailView`) — pas
   dans ce plan.
 - `RouteBuilderPanel`/`NewCityButton` (Carte générale) restent délégués par décision déjà actée
-  (docs/react-migration-plan.md § 5) — ne pas les toucher ici.
+  (react-migration-plan.md § 5) — ne pas les toucher ici.

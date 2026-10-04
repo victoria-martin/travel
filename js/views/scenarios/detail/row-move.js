@@ -19,40 +19,6 @@ function neighbourUnit(units, unit, dir) {
   return units[units.indexOf(unit) + dir] || null;
 }
 
-function moveButtons(units, unit, call) {
-  const moveButton = (dir, label, title) =>
-    /* HTML */ `<button
-      class="icon-btn step-move-btn"
-      ${neighbourUnit(units, unit, dir) ? '' : 'disabled'}
-      onclick="${call(dir)}"
-      title="${title}"
-    >
-      ${label}
-    </button>`;
-  return (
-    moveButton(-1, svgIcon('arrow-up'), 'Monter') +
-    moveButton(1, svgIcon('arrow-down'), 'Descendre')
-  );
-}
-
-function stepMoveButtons(scenario, step) {
-  const units = stepUnits(scenario, step);
-  return moveButtons(
-    units,
-    units.find((unit) => unit.includes(step)),
-    (dir) => `moveStep('${scenario.id}','${step.id}',${dir})`,
-  );
-}
-
-function groupMoveButtons(scenario, group) {
-  const units = rowUnits(scenario);
-  return moveButtons(
-    units,
-    units.find((unit) => unit[0].groupId === group.id),
-    (dir) => `moveGroup('${scenario.id}','${group.id}',${dir})`,
-  );
-}
-
 // Les deux unités échangent leurs places : leurs rangs sont repris dans l'ordre du scénario, et
 // remplis par la seconde puis la première.
 function moveUnit(scenario, unit, neighbour, dir) {

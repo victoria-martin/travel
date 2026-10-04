@@ -299,7 +299,9 @@ declare global {
       onClose: () => void;
     } | null;
     closeAskOverlay: () => void;
-    stepPlace: (step: import('../store/types').Step) => { name: string; city: string } | null;
+    stepPlace: (
+      step: import('../store/types').Step,
+    ) => import('../store/types').Accommodation | import('../store/types').Attraction | null;
     visibleSteps: (scenario: import('../store/types').Scenario) => import('../store/types').Step[];
     scenarioRouteBar: (scenario: import('../store/types').Scenario, maxNights: number) => string;
     setChosenScenario: (id: string) => void;
@@ -407,6 +409,14 @@ declare global {
       option: import('../store/types').StepGroupOption,
     ) => { euros: number; guestPoints: number };
     stepAccommodationCost: (step: import('../store/types').Step) => number;
+    hasStepBudget: (step: import('../store/types').Step) => boolean;
+    getAccommodation: (
+      id: string | null,
+    ) => import('../store/types').Accommodation | undefined;
+    formatAccommodationCost: (
+      acc: import('../store/types').Accommodation | undefined,
+      amount: number,
+    ) => string;
     scenarioRoadPoints: (scenario: import('../store/types').Scenario) => [number, number][];
     scenarioRoadKm: (scenario: import('../store/types').Scenario) => number | null;
     scenarioRoadTotal: (scenario: import('../store/types').Scenario) => number;
@@ -434,27 +444,14 @@ declare global {
     toolbarSeparator: () => string;
     toolbarMenu: () => string;
     scenarioWeatherToggleButton: () => string;
-    stepOrderBadge: (
-      scenario: import('../store/types').Scenario,
-      step: import('../store/types').Step,
-      rank: number | null,
-    ) => string;
-    stepPlaceSuffix: (step: import('../store/types').Step) => string;
-    stepDetailLine: (step: import('../store/types').Step) => string;
     stepLine: (
       scenario: import('../store/types').Scenario,
       step: import('../store/types').Step,
       arrival: Date | null,
     ) => string;
-    stepStatusBadge: (
-      scenario: import('../store/types').Scenario,
-      step: import('../store/types').Step,
-    ) => string;
-    stepMoney: (
-      scenario: import('../store/types').Scenario,
-      step: import('../store/types').Step,
-    ) => string;
-    stepCardPaint: (
+    coordsFor: (step: import('../store/types').Step) => [number, number] | null;
+    stepLetter: (rank: number) => string;
+    stepOutReason: (
       scenario: import('../store/types').Scenario,
       step: import('../store/types').Step,
     ) => string;

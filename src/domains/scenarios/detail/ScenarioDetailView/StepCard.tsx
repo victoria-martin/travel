@@ -77,7 +77,7 @@ export function StepCard({
         </button>
       </div>
       <div className="step-main">
-        <ScenarioLegacyMarkup html={window.stepOrderBadge(scenario, step, rank)} />
+        <StepOrderBadge scenario={scenario} step={step} rank={rank} />
         <div className="step-body">
           <div className="step-title">
             <span
@@ -98,10 +98,10 @@ export function StepCard({
             >
               {step.name || ''}
             </span>
-            <ScenarioLegacyMarkup html={window.stepPlaceSuffix(step)} />
+            <StepPlaceSuffix step={step} />
             <span className="step-title-dates">{displayedDate}</span>
           </div>
-          <ScenarioLegacyMarkup html={window.stepDetailLine(step)} />
+          <StepDetailLine step={step} />
           <div className="step-stay">
             <div className="step-acc">
               <ScenarioLegacyMarkup html={window.stepLine(scenario, step, arrival)} />
@@ -111,8 +111,8 @@ export function StepCard({
         </div>
       </div>
       <div className="step-side">
-        <ScenarioLegacyMarkup html={window.stepStatusBadge(scenario, step)} />
-        <ScenarioLegacyMarkup html={window.stepMoney(scenario, step)} />
+        <StepStatusBadge scenario={scenario} step={step} />
+        <StepMoney scenario={scenario} step={step} />
       </div>
       <div className="step-actions">
         <button
@@ -159,5 +159,105 @@ export function StepCard({
         </button>
       )}
     </article>
+  );
+}
+
+function StepOrderBadge({
+  scenario,
+  step,
+  rank,
+}: {
+  scenario: Scenario;
+  step: Step;
+  rank: number | null;
+}) {
+  if (rank === null) {
+    return (
+      <div
+        className="step-order step-order-hidden"
+        title={`${window.stepOutReason(scenario, step)} — hors des dates, des totaux et de la carte`}
+      >
+        •
+      </div>
+    );
+  }
+  if (window.coordsFor(step)) {
+    return <div className="step-order">{window.stepLetter(rank)}</div>;
+  }
+  return (
+    <div
+      className="step-order step-order-unmapped"
+      title="Pas de lieu géolocalisé — absente de la carte"
+    >
+      {window.stepLetter(rank)}
+    </div>
+  );
+}
+
+const STEP_TITLE_LEVELS: Array<'city' | 'region'> = ['city', 'region'];
+
+function StepPlaceSuffix({ step }: { step: Step }) {
+  const place = window.stepPlace(step);
+  if (!place) return null;
+  const alreadySaid = [step.name, place.name].join(' ').toLowerCase();
+  const levels = STEP_TITLE_LEVELS.map((key) => place[key]).filter(
+    (value) => value && !alreadySaid.includes(value.toLowerCase()),
+  );
+  if (!levels.length) return null;
+  return (
+    <>
+      {' '}
+      <span className="step-title-place">· {levels.reverse().join(' · ')}</span>
+    </>
+  );
+}
+
+function StepDetailLine({ step }: { step: Step }) {
+  const parts = [step.arrivalDate ? `arrivée le ${step.arrivalDate}` : '', step.notes || ''].filter(
+    Boolean,
+  );
+  if (!parts.length) return null;
+  return <div className="step-detail">{parts.join(' · ')}</div>;
+}
+
+function StepStatusBadge({ scenario, step }: { scenario: Scenario; step: Step }) {
+  const status = window.stepStatusInfo(window.stepStatus(scenario, step));
+  return (
+    <span className="step-status" title="Statut déduit de celui de l’hébergement choisi">
+      {status.emoji} {status.label}
+    </span>
+  );
+}
+
+function StepMoney({ scenario, step }: { scenario: Scenario; step: Step }) {
+  const acc = window.getAccommodation(step.accommodationId);
+  const auto = window.stepAccommodationCost(step);
+  const hasBudget = window.hasStepBudget(step);
+  return (
+    <span className="step-total">
+      {!hasBudget && auto ? (
+        <span className="step-total-auto">{window.formatAccommodationCost(acc, auto)}</span>
+      ) : null}
+      <span className={`step-budget${hasBudget ? ' step-budget-set' : ''}`}>
+        <span
+          className="editable"
+          contentEditable
+          suppressContentEditableWarning
+          data-placeholder="Budget…"
+          onKeyDown={(event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            event.currentTarget.blur();
+          }}
+          onBlur={(event) => {
+            if (!step.id) return;
+            window.setStepBudget(scenario.id, step.id, event.currentTarget.innerText);
+          }}
+        >
+          {step.budget || ''}
+        </span>
+        {hasBudget ? ' €' : ''}
+      </span>
+    </span>
   );
 }

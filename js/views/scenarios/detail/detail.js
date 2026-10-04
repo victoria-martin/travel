@@ -1,37 +1,3 @@
-function renderScenarioDetailView() {
-  const s = getScenario(activeScenarioId);
-  if (!s) {
-    view = 'scenarios';
-    return renderScenariosView();
-  }
-  if (s.steps.length === 0) {
-    return (
-      scenarioDetailHeader(s) +
-      emptyState('Aucune étape', 'Ajoute une première étape à ce scénario.') +
-      stepAppendRow(s)
-    );
-  }
-  // laisser ce comm TEST
-  // on a enlevé scenarioRouteTrails temportairement
-  // ${scenarioDetailHeader(s)} ${scenarioRouteTrail(s)}
-  // sous <div class="scenario-detail-cols"> pour à gauche et au dessus pr dessus
-  return /* HTML */ `
-    ${scenarioDetailHeader(s)} ${scenarioWeatherBanner(s)}
-    ${trailShown() ? scenarioRouteTrail(s) + scenarioRouteStrip(s) : ''}
-    <div class="scenario-detail-cols" style="${scenarioSplitStyle()}">
-      <div class="scenario-detail-main view-scroller">
-        ${stepList(s)}
-        <div class="scenario-detail-money">
-          ${scenarioOfferBlock(s)} ${scenarioTransportsBlock(s)} ${scenarioExpensesBlock(s)}
-          ${scenarioTotalBlock(s)}
-        </div>
-      </div>
-      ${prefs.scenarioSidePanel ? scenarioSplitHandle() + scenarioSidePanel(s) : ''}
-      ${scenarioSideTabsRail(s.id)}
-    </div>
-  `;
-}
-
 function renameScenario(id, name) {
   const s = getScenario(id);
   s.name = name.trim() || s.name;
