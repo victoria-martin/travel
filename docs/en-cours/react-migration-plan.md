@@ -474,9 +474,9 @@ ailleurs ne s'applique pas. Catégories en dur + phrases custom (localStorage, h
 `types.ts` du domaine, pas `store/types.ts`), traduction + correction (déléguée à `window.prompt`
 via `editPhraseTranslation`), sélecteur de langue. Restent : style de carte (classique/duo/minimal),
 mode liste/cartes, formulaire d'ajout/édition React.
-Valise (`domains/packing/`) : seul le **catalogue** (page `valise`) est porté — composer la valise
-du voyage (`openSheet('valise-composer')`) et l'onglet Valise d'un scénario (`packing-block.js`)
-restent des overlays/fragments legacy, pas concernés. `<details>` non contrôlé pour le repli des
+Valise (`domains/packing/`) : le **catalogue** (page `valise`) est porté ; l'onglet Valise d'un
+scénario aussi depuis (2026-10-04, [react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md)
+§ G5). Composer la valise du voyage (`openSheet('valise-composer')`) reste un overlay legacy (§ 10). `<details>` non contrôlé pour le repli des
 groupes (`open` littéral, jamais recalculé — React ne retouche l'attribut que si la prop change
 entre deux rendus, donc un clic utilisateur n'est jamais écrasé) plutôt que de réimplémenter
 `packingClosedGroups` : le repli est un geste de session, jamais persisté, même en legacy.
@@ -507,8 +507,11 @@ entité (`FixedCost`) que la page Charges fixes. Nouveau type `ActualExpense`
 panneau de tri (`sortPanel`), menu ⋮ complet (seule la préférence transverse `SettingsMenu` est
 reprise, comme partout ailleurs).
 
-**Phase 3 terminée.** Les 8 écrans legacy identifiés sont portés. Reste ouvert, hors de cette
-phase : le DnD de `StepList.tsx` (Phase 2, toujours cassé), puis la Phase 4 (le shell).
+**Phase 3 terminée.** Les 8 écrans legacy identifiés sont portés. Le DnD de `StepList.tsx` et la
+Phase 4 (le shell), restés ouverts à ce moment-là, sont faits depuis (voir leurs lignes du tableau).
+Le détail d'un scénario n'a plus aucun `LegacyMarkup` depuis le 2026-10-04 :
+[react-migration-scenario-detail-plan.md](../archivé/react-migration-scenario-detail-plan.md) et
+[react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md).
 
 **Découvrir / catalogue ([catalogue-plan.md](catalogue-plan.md)) n'est pas une étape de cette
 séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme `REACT_VIEWS` /
@@ -550,3 +553,40 @@ pas avoir à redéfaire le store le jour où cette initiative démarre pour de v
 voir [catalogue-plan.md](catalogue-plan.md). Scope volontairement réduit (pas d'auth, ajout au
 voyage = copie) — le reste (villes/activités au catalogue, import, scraping, multi-tenant réel)
 reste hors scope ici.
+
+## 10. Ce qui reste legacy — où et pourquoi
+
+Relevé du 2026-10-04 (`git grep "LegacyMarkup html=\|dangerouslySetInnerHTML" -- src`, plus les
+`body:` restants de `MODAL_TYPES`). C'est le backlog vers « `js/` legacy supprimé ».
+
+**Modales encore peintes en legacy** — [react-migration-panels-plan.md](react-migration-panels-plan.md) :
+`settings` (en cours, côté utilisatrice), `sync`, `valise-composer`, `journal-panel`.
+
+**Fragments legacy dans des modales React** — laissés délégués par
+[react-migration-modales-plan.md](../archivé/react-migration-modales-plan.md), sous-systèmes avec
+leur propre état ou recherche : `locateFields` (6 modales, recherche d'adresse/géocodage),
+`attractionScenarioActions`, `pasteImportInstructions`, `carModelProvidersField`,
+`offerModelSelect`/`offerOptionsField`, `providerOptionsField`/`providerModelsField`,
+`transportProviderFields`, les quatre champs de `TravelModal` (emoji, lieu d'en-tête, pays,
+couleurs), `stepAttractionsField` (modale d'étape).
+
+**Fragments legacy dans des écrans** :
+- Journal — `journalDayPanel` : bloc impératif autour d'un seul `<textarea>` et de son caret (§ 7,
+  Phase 3).
+- À faire — `todoBuilder` : registre colonnes-par-kind à réécrire en entier (§ 7, Phase 3).
+- Carte — `RouteBuilderPanel`, `NewCityButton` : état + async dans des globales de module (§ 5).
+- Scénarios (liste) — `scenarioRouteBar` (bande d'une ligne) et `scenarioCompareCard` (carte de
+  comparaison). La raison donnée pour la carte (« même famille que les lignes de récap du détail,
+  elles-mêmes en LegacyMarkup ») ne tient plus : ces lignes sont en React depuis le 2026-10-04
+  (`TotalBlock/AccommodationDetailRows`, `RecapRow`), la carte peut les réutiliser — c'est aussi ce
+  qui libérerait la dernière chaîne legacy du récap (`accommodationDetailRows`, `recapRow`,
+  `scenarioRecapRow`, `recapLegRow`… dans `js/views/scenarios/detail/`).
+- Shell — `mobileNavBar`/`mobileNavPlusSheet` (glisser pour réordonner), et dans la barre latérale
+  `travelSelector`/`syncStatusHtml`/`settingsButton` (widgets autonomes, § 1).
+
+**Manques connus des ports déjà faits** :
+- `TagDropdown` n'a pas « ＋ Ajouter un statut/type » (`askNewWord`) : absent des tables
+  Hébergements/Lieux et des menus de statut du détail scénario.
+- Non vérifié, déduit du CSS : sous 1100px, le fil du trajet et la bannière météo du détail
+  scénario collent tous deux à `--view-header-h` ; affichés ensemble, la bannière (z-index 18)
+  recouvrirait le fil (15).
