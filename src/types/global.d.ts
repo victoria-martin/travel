@@ -142,7 +142,9 @@ declare global {
     toggleFavorite: (id: string) => void;
     duplicateAccommodation: (id: string) => void;
     allAccommodationTags: () => string[];
-    pasteImportInstructions: () => string;
+    IMPORT_FIELDS: { key: string; labels: string[] }[];
+    PASTE_COLUMN_ORDER: string[];
+    fieldLabel: (key: string) => string;
     runPasteImport: () => void;
     accommodationSearchOutOfRange: (
       acc: import('../store/types').Accommodation,

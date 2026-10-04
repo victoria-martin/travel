@@ -19,6 +19,9 @@ const IMPORT_FIELDS = [
 
 const PASTE_COLUMN_ORDER = ['type', 'name', 'city', 'county', 'price', 'dates', 'link', 'notes'];
 
+window.IMPORT_FIELDS = IMPORT_FIELDS;
+window.PASTE_COLUMN_ORDER = PASTE_COLUMN_ORDER;
+
 function fieldLabel(key) {
   const field = IMPORT_FIELDS.find((f) => f.key === key);
   const label = field ? field.labels[0] : key;
@@ -51,39 +54,6 @@ function headerMapping(cells) {
 // function openPasteImport() {
 //   openModal('paste-import');
 // }
-
-// body : React (src/domains/accommodations/modal/PasteImportModal.tsx, src/modal-bodies.ts).
-function pasteImportInstructions() {
-  return /* HTML */ `
-    <p style="font-size:13px; color:var(--ink-soft); margin-top:-8px;">
-      Copie tes lignes depuis Google Sheets ou Excel, <strong>avec la ligne d'en-tête</strong> : les
-      colonnes sont reconnues par leur nom, dans n'importe quel ordre. Noms compris : <br /><strong
-        >${IMPORT_FIELDS.map((f) => f.labels[0][0].toUpperCase() + f.labels[0].slice(1)).join(
-          ' · ',
-        )}</strong
-      ><br />
-      Sans en-tête, l'ordre attendu est
-      <strong>${PASTE_COLUMN_ORDER.map((key) => fieldLabel(key)).join(' · ')}</strong>. Type accepte
-      ${Object.values(ACCOMMODATION_TYPES)
-        .map((t) => `"${t.label}"`)
-        .join(', ')}
-      (laissé vide si la colonne ne correspond à rien).
-    </p>
-    <div class="field">
-      <textarea
-        id="paste-area"
-        rows="10"
-        placeholder="${PASTE_COLUMN_ORDER.map(fieldLabel).join('\t')}"
-        style="font-family:monospace; font-size:12px;"
-      ></textarea>
-      <small class="field-hint"
-        >ex. hotel&nbsp;&nbsp;Antico Casale&nbsp;&nbsp;Sarzana&nbsp;&nbsp;Ligurie&nbsp;&nbsp;152&nbsp;&nbsp;21/09&nbsp;&nbsp;https://...&nbsp;&nbsp;Super,
-        pack remboursable</small
-      >
-    </div>
-    <div id="paste-preview" style="font-size:12.5px; color:var(--ink-soft);"></div>
-  `;
-}
 
 function runPasteImport() {
   const raw = document.getElementById('paste-area').value;
