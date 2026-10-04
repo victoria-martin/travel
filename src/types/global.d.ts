@@ -442,7 +442,6 @@ declare global {
       line: [number, number][];
       legs: { distance: number; duration: number }[];
     }>;
-    scenarioWeatherBanner: (scenario: import('../store/types').Scenario) => string;
     scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioTransportsBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
@@ -549,6 +548,9 @@ declare global {
     formatStepDate: (date: Date) => string;
     formatStepDay: (date: Date) => string;
     isoToDate: (iso: string) => Date | null;
+    dateToIso: (date: Date | null) => string;
+    scenarioStart: (scenario: import('../store/types').Scenario) => Date | null;
+    totalDays: (scenario: import('../store/types').Scenario) => number;
     formatGuestPoints: (amount: number) => string;
     totalNights: (scenario: import('../store/types').Scenario) => number;
     accommodationTotals: (scenario: import('../store/types').Scenario) => {

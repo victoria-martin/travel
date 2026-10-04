@@ -7,6 +7,7 @@ import { useScenarioRoad } from './hooks/useScenarioRoad';
 import { useScenarioRoute } from './hooks/useScenarioRoute';
 import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';
 import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
+import { ScenarioWeatherBanner } from './ScenarioDetailView/ScenarioWeatherBanner';
 import { StepList } from './ScenarioDetailView/StepList';
 
 export function ScenarioDetailView() {
@@ -32,7 +33,7 @@ export function ScenarioDetailView() {
   return (
     <>
       <ScenarioDetailHeader scenario={scenario} money={money.total} />
-      <ScenarioLegacyMarkup html={window.scenarioWeatherBanner(scenario)} />
+      {window.weatherBannerShown() && <ScenarioWeatherBanner scenario={scenario} />}
       {window.trailShown() && (
         <>
           <ScenarioLegacyMarkup html={window.scenarioRouteTrail(scenario)} />

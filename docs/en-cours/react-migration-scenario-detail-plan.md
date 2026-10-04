@@ -164,10 +164,25 @@ assemble en JSX : bouton météo, séparateur, 4 boutons d'onglet (`ScenarioDeta
   à fusionner quand G portera le panneau.
 - `pnpm react:typecheck` / `react:build` propres.
 
-**E. Bannière météo** — [weather.js](../js/views/scenarios/detail/weather.js) (240 lignes, le plus
-gros fichier de tout le détail scénario) : `scenarioWeatherBanner(scenario)`. Probablement un appel
-API externe (prévisions météo) + cache — à lire en entier avant d'estimer, ne pas sous-évaluer sur
-la seule taille du fichier.
+**E. Bannière météo — ✅ fait.** Nouveau
+[ScenarioWeatherBanner.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ScenarioWeatherBanner.tsx) +
+[ScenarioWeatherBanner/](../src/domains/scenarios/detail/ScenarioDetailView/ScenarioWeatherBanner/)
+(`WeatherDay`, `weatherSummary`, `weatherDays`, `useWeatherForecasts`, `fetchWeatherForecast`),
+monté par `ScenarioDetailView` sous `weatherBannerShown()`.
+- Le remplissage asynchrone par `querySelectorAll` (`loadScenarioWeather`/`updateWeatherLocation`)
+  devient un état React : `useWeatherForecasts` garde une prévision par lieu, absente = en chargement,
+  échec = prévision vide. Le cache Open-Meteo (une requête par lieu et par jour) reste un `Map` de
+  module dans `fetchWeatherForecast`. `weatherCodeInfo` devient une table de codes.
+- `weatherDateString` doublonnait `dateToIso` ([dates.js](../js/dates.js)) : supprimée, React lit
+  `dateToIso`.
+- Écart assumé : un jour sans date ne lance plus de requête et reste sur « Date à renseigner » (le
+  legacy fetchait quand même, puis réécrivait « Prévision indisponible à cette date »).
+- **Restent legacy :** `weatherBannerShown`/`weatherBannerStyle`/`toggleWeatherBanner`/
+  `setWeatherBannerStyle`/`WEATHER_BANNER_STYLES` (prefs, lus par l'en-tête React) et
+  `weatherBannerStyleOption` (lu par `trailOptions` → `pageSettingsBlock`, modale Réglages legacy —
+  cf. [react-migration-panels-plan.md](react-migration-panels-plan.md) § 1).
+`global.d.ts` : retrait de `scenarioWeatherBanner`, ajout de `dateToIso`/`scenarioStart`/`totalDays`.
+`pnpm react:typecheck` propre.
 
 **F. Itinéraire** — [route-trail.js](../js/views/scenarios/detail/route-trail.js) (48 lignes) et
 [route-strip.js](../js/views/scenarios/detail/route-strip.js) (34 lignes), `scenarioRouteTrail`/

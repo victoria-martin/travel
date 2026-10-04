@@ -22,8 +22,9 @@ export function TransportsView() {
         <div className="view-header-actions">
           <SettingsMenu />
         </div>
-        {/* create subcomponent */}
+        {/* TransportsTabsList */}
         <Tabs.List className="view-tabs" aria-label="Sections Transports">
+          {/* TransportsTrajetsTab */}
           <Tabs.Trigger className="view-tab" value="trajets">
             <span className="view-tab-icon">
               <Icon name="plane" />
@@ -31,6 +32,7 @@ export function TransportsView() {
             <span>Trajets</span>
             <span className="view-tab-count">{transportCount}</span>
           </Tabs.Trigger>
+          {/* TransportsTrajetsTab prestataires */}
           <Tabs.Trigger className="view-tab" value="prestataires">
             <span className="view-tab-icon">
               <Icon name="building-2" />
@@ -38,6 +40,7 @@ export function TransportsView() {
             <span>Loueurs &amp; compagnies</span>
             <span className="view-tab-count">{providerCount}</span>
           </Tabs.Trigger>
+          {/* TransportsTrajetsTab voitures */}
           <Tabs.Trigger className="view-tab" value="voitures">
             <span className="view-tab-icon">
               <Icon name="car" />
