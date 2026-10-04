@@ -68,13 +68,30 @@ lue par les boutons du header, le panneau et le
   et `activeSideTab` de `side-tabs.js`. `SCENARIO_SIDE_TABS` legacy reste pour le sheet mobile (G6).
 `pnpm react:typecheck` propre.
 
-**G2. Blocs Argent — effort high.** Offre, transports, dépenses, total en composants React, montés
-par l'onglet Argent **et** par `ScenarioSummary`. Chaque montant se compare d'abord à
-`useScenarioMoney`/`useScenarioRoad` avant d'être recalculé. Découpable en 4 sous-lots (un par
-bloc) si un bloc s'avère lourd.
+**G2. Blocs Argent — ✅ fait** (un commit par bloc). `OfferBlock`, `TransportsBlock`,
+`ExpensesBlock`, `TotalBlock` (+ dossiers du même nom) à plat dans `ScenarioDetailView/`, montés
+par `MoneyTab` **et** `ScenarioSummary`, qui n'ont plus de `LegacyMarkup`. `OfferBlock` sert aussi
+`TransportsTab`. Les trois menus déroulants vont dans [src/shared/select/](../../src/shared/select/)
+(règle « un menu déroulant vit dans `shared/select/` ») : `ScenarioOfferDropdown`,
+`ScenarioTransportDropdown`, `ScenarioExpenseDropdown`. `TotalBlock` lit `useScenarioMoney` pour
+tous ses montants.
+- **Restent legacy :** les lignes de détail du total (`accommodationDetailRows`,
+  `chargeDetailRows`, `transportDetailRows`, `attractionDetailRows`), injectées dans `RecapGroup` —
+  elles tirent `roadDetailRows` (G3) et `accommodationDetailRows` est aussi lue par la carte de
+  comparaison (`compare/card.js`, hors scope).
+- **Pas supprimé, encore lu par le sheet mobile** (`SCENARIO_SIDE_TABS` legacy) :
+  `scenarioOfferBlock` et ses satellites (`offer-dropdown.js`, `scenarioOfferOptionsBlock`),
+  `scenarioTransportsRecap`, `scenarioTransportsBlock`, `scenarioExpensesBlock`,
+  `scenarioTotalBlock`/`recapGroup`. Tout tombe en G6.
+- **À vérifier à l'écran — déduit du code, pas observé :** les lignes « 🚗 » entre deux lieux du
+  détail Hébergements (`recapLegRow` → `stepLegRecapSlot`) ne sont remplies que par
+  `fillStepLegs`, que le détail n'appelle pas (seul `ScenariosView` le fait). Même cause que la
+  bande d'itinéraire corrigée au cluster F. À porter avec les lignes de détail.
 
-**G3. Onglet Transports — effort medium.** Bloc offre (issu de G2) + lignes péage/essence
-(`road-rows.js`, vérifier `useScenarioRoad`).
+**G3. Lignes de route + détail du total — effort high.** `OfferBlock` est déjà monté par
+`TransportsTab` (G2). Reste : `roadTollCostRow`/`roadFuelCostRow`/`roadDetailRows`
+([road-rows.js](../../js/views/scenarios/detail/road-rows.js), vérifier `useScenarioRoad`) et les
+quatre lignes de détail du total, avec la route des lignes « 🚗 » lue sur `useScenarioRoute`.
 
 **G4. Onglet Carte — effort high.** `LeafletMap` gagne une prop `id` ; l'onglet monte un
 `LeafletMap` avec les attractions en marqueurs et le tracé via `afterMarkers`. Retire

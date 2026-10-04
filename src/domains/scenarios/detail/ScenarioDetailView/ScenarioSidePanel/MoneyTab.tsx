@@ -1,7 +1,7 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import type { Scenario } from '@/store/types';
 import { OfferBlock } from '../OfferBlock';
 import { ExpensesBlock } from '../ExpensesBlock';
+import { TotalBlock } from '../TotalBlock';
 import { TransportsBlock } from '../TransportsBlock';
 
 export function MoneyTab({ scenario }: { scenario: Scenario }) {
@@ -10,7 +10,7 @@ export function MoneyTab({ scenario }: { scenario: Scenario }) {
       <OfferBlock scenario={scenario} />
       <TransportsBlock scenario={scenario} />
       <ExpensesBlock scenario={scenario} />
-      <LegacyMarkup html={window.scenarioTotalBlock(scenario)} />
+      <TotalBlock scenario={scenario} />
     </>
   );
 }

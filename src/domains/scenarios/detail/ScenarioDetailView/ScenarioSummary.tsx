@@ -2,8 +2,8 @@ import type { Scenario } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
 import { OfferBlock } from './OfferBlock';
 import { ExpensesBlock } from './ExpensesBlock';
+import { TotalBlock } from './TotalBlock';
 import { TransportsBlock } from './TransportsBlock';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
 export function ScenarioSummary({ scenario, route }: { scenario: Scenario; route: ScenarioRoute }) {
   return (
@@ -11,7 +11,7 @@ export function ScenarioSummary({ scenario, route }: { scenario: Scenario; route
       <OfferBlock scenario={scenario} />
       <TransportsBlock scenario={scenario} />
       <ExpensesBlock scenario={scenario} />
-      <LegacyMarkup html={window.scenarioTotalBlock(scenario)} />
+      <TotalBlock scenario={scenario} />
       {route.status === 'error' && <p role="status">Tronçons routiers indisponibles.</p>}
     </div>
   );

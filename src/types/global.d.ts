@@ -449,9 +449,13 @@ declare global {
     attachScenarioTransport: (scenarioId: string, transportId: string) => void;
     detachScenarioTransport: (scenarioId: string, transportId: string) => void;
     fixedCostsTotal: (scenario: import('../store/types').Scenario) => number;
+    accommodationDetailRows: (scenario: import('../store/types').Scenario) => string;
+    chargeDetailRows: (scenario: import('../store/types').Scenario) => string;
+    transportDetailRows: (scenario: import('../store/types').Scenario) => string;
+    attractionDetailRows: (scenario: import('../store/types').Scenario) => string;
+    setRecapFold: (key: string, open: boolean) => void;
     attachScenarioExpense: (scenarioId: string, costId: string) => void;
     detachScenarioExpense: (scenarioId: string, costId: string) => void;
-    scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
     trailShown: () => boolean;
     toggleTrailShown: () => void;
     trailColorByType: () => boolean;
