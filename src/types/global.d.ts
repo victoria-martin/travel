@@ -442,7 +442,12 @@ declare global {
       line: [number, number][];
       legs: { distance: number; duration: number }[];
     }>;
-    scenarioTransportsBlock: (scenario: import('../store/types').Scenario) => string;
+    getScenarioTransports: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').Transport[];
+    transportLegLabel: (transport: import('../store/types').Transport) => string;
+    attachScenarioTransport: (scenarioId: string, transportId: string) => void;
+    detachScenarioTransport: (scenarioId: string, transportId: string) => void;
     scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
     trailShown: () => boolean;
