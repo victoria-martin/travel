@@ -117,7 +117,7 @@ types, deux absents de l'inventaire vont probablement servir :
    frontière `platform/`). Fichier cible :
    `src/domains/journal/modal/JournalPanelModal.tsx`.
 
-5. **`scenario-panel`** — **déplacé** dans le lot G6 de
+5. **`scenario-panel`** — ✅ fait, **déplacé** dans le lot G6 de
    [react-migration-scenario-side-panel-plan.md](react-migration-scenario-side-panel-plan.md) : les
    corps d'onglet y passent en React, le sheet monte ces composants. Description d'origine : [js/views/scenarios/detail/side-tabs.js](../js/views/scenarios/detail/side-tabs.js)
    (98 lignes, dont `scenarioPanelSheet` ~8 lignes). Même wrapper que `journal-panel`, mais 4 onglets

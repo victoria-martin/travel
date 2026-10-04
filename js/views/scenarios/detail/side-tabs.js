@@ -1,42 +1,3 @@
-/*
-  La colonne de droite montre une chose à la fois, ou rien : la table dit laquelle, sous quelle
-  icône et ce qu'elle rend. Le toggle-group du header en est la bascule, sur le patron des autres
-  groupes « lire la vue » — recliquer celui qui est allumé referme le panneau, d'où un seul état
-  retenu d'une session à l'autre, `null` quand rien n'est ouvert. Sous 640px, où la colonne de
-  droite n'a plus la place de s'afficher à côté des étapes, le même bouton ouvre le contenu en
-  sheet plutôt que de le pousser en dessous.
-*/
-const SCENARIO_SIDE_TABS = [
-  {
-    key: 'map',
-    icon: svgIcon('map'),
-    label: 'Carte',
-    body: (s) => scenarioMapBlock(s, 'scenario-side-map'),
-  },
-  {
-    key: 'transports',
-    icon: svgIcon('plane'),
-    label: 'Transports',
-    body: (s) => scenarioTransportsRecap(s),
-  },
-  {
-    key: 'money',
-    icon: svgIcon('euro'),
-    label: 'Argent',
-    body: (s) =>
-      scenarioOfferBlock(s) +
-      scenarioTransportsBlock(s) +
-      scenarioExpensesBlock(s) +
-      scenarioTotalBlock(s),
-  },
-  {
-    key: 'valise',
-    icon: svgIcon('luggage'),
-    label: 'Valise',
-    body: () => scenarioPackingBlock(),
-  },
-];
-
 // En dessous de 640px, la grille du détail n'a plus de colonne de droite (elle repasse à une
 // seule colonne) : le même bouton ouvre alors le panneau en sheet plutôt que de le pousser sous
 // les étapes.
@@ -49,14 +10,4 @@ function toggleScenarioSidePanel(key) {
   prefs.scenarioSidePanel = prefs.scenarioSidePanel === key ? null : key;
   persistPrefs();
   renderWithTransition();
-}
-
-function scenarioPanelSheet(m) {
-  const scenario = getScenario(m.scenarioId);
-  const tab = SCENARIO_SIDE_TABS.find((t) => t.key === m.payload.key);
-  return /* HTML */ `<h3>${escapeHtml(tab.label)}</h3>
-    ${tab.body(scenario)}
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Fermer</button>
-    </div>`;
 }

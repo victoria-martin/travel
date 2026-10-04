@@ -111,8 +111,8 @@ const MODAL_TYPES = {
     body: () => packingComposerSheet(),
   },
   'scenario-panel': {
-    open: (scenarioId, key) => ({ scenarioId, payload: { key } }),
-    body: (m) => scenarioPanelSheet(m),
+    open: (scenarioId, key) => ({ scenarioId, payload: { scenarioId, key } }),
+    // body : React (src/domains/scenarios/detail/panel-modal/ScenarioPanelModal.tsx, src/modal-bodies.ts).
   },
   'journal-panel': {
     open: (date, key) => ({ payload: { date, key } }),

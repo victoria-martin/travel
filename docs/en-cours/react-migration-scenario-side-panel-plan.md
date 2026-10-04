@@ -101,9 +101,23 @@ ref à la carte au lieu de `window.scenarioDetailMaps`.
 **G5. Onglet Valise — effort medium.** Vérifier d'abord la réutilisation de `PackingView/` ; sinon
 porter `scenarioPackingBlock` et son formulaire.
 
-**G6. Sheet mobile — effort medium.** Absorbe le § 5 de react-migration-panels-plan.md : le sheet
-monte les corps React des onglets. `SCENARIO_SIDE_TABS`, `scenarioPanelSheet`, `side-panel.js`,
-`side-tabs.js` deviennent morts.
+**G6. Sheet mobile — ✅ fait.**
+[ScenarioPanelModal.tsx](../../src/domains/scenarios/detail/panel-modal/ScenarioPanelModal.tsx),
+branché dans `MODAL_BODIES` : titre + corps React de l'onglet (même `SCENARIO_SIDE_TABS` que le
+panneau) + Fermer. `MODAL_TYPES['scenario-panel']` passe le `scenarioId` dans le `payload`.
+- `MapTab` donne un id unique à son canevas (`useId`) : panneau et sheet peuvent tous deux en
+  porter un, et `createLeafletMap` les cherche par id. `initScenarioDetailMaps` (re)crée encore
+  toutes les cartes à la fois et `destroyScenarioDetailMaps` les détruit toutes : fermer le sheet
+  détruit aussi celle du panneau — masqué sous 640px, donc sans effet visible. G4 remplace ce
+  mécanisme.
+- Legacy supprimé : `SCENARIO_SIDE_TABS`/`scenarioPanelSheet` (`side-tabs.js` ne garde que
+  `onScenarioPanelToggle`/`toggleScenarioSidePanel`), `transports-recap.js`, `offer-dropdown.js`,
+  `transports-dropdown.js`, `expenses-dropdown.js` (fichiers + `<script src>`), les blocs et lignes
+  legacy d'`offer-block.js`/`offer-options.js`/`transports-block.js`/`expenses-block.js`/`total.js`
+  (ne restent que les actions : `setScenarioOffer`, `toggleScenarioOfferOption`,
+  `attach`/`detachScenario*`, `transportLegLabel`, `setRecapFold`), et `offerSheetButton`
+  (`rentals/sheet.js`), sans plus aucun appelant.
+`pnpm react:typecheck` propre.
 
 ## Tranché
 
