@@ -1,5 +1,5 @@
 /*
-  Phase 4 (docs/react-migration-plan.md § 1) : React possède #app en entier (src/shell/AppShell.tsx,
+  Phase 4 (docs/en-cours/react-migration-plan.md § 1) : React possède #app en entier (src/shell/AppShell.tsx,
   monté une fois dans src/main.tsx). render() ne reconstruit plus rien ici — il notifie
   __reactStateSubscribers, la même liste que useTravelStore, et laisse React se re-rendre lui-même.
   Conséquence : react-dist/react-app.js devient une dépendance dure, pas un filet de secours — s'il

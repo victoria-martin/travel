@@ -5,7 +5,7 @@ function settingsForm() {
     <h3>Réglages</h3>
     ${settingsBlocks()}
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
+      <button class="btn btn-outline" onclick="closeModal()">Fermer</button>
     </div>
   `;
 }

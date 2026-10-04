@@ -4,7 +4,7 @@
   coordonnées choisies vivent dans modal.payload le temps de la saisie, comme les autres champs
   sans <input> dédié (ex. searchDate d'un hébergement).
 */
-// Formulaire : src/domains/villes/modal/VilleModal.tsx (docs/react-migration-plan.md § 4).
+// Formulaire : src/domains/villes/modal/VilleModal.tsx (docs/en-cours/react-migration-plan.md § 4).
 
 function villeGeocodeSummary(p) {
   if (p.lat && p.lng) return '📍 Positionnée';

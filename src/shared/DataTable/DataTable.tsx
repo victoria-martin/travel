@@ -6,7 +6,7 @@ type SortDir = 'asc' | 'desc';
 type Sort = { key: string; dir: SortDir } | null;
 
 /*
-  Chrome seul (docs/react-migration-plan.md § 4) : tri un seul niveau, cycle asc → desc → aucun,
+  Chrome seul (docs/en-cours/react-migration-plan.md § 4) : tri un seul niveau, cycle asc → desc → aucun,
   sur le modèle de toggleSort (js/sort.js) mais en état local — pas encore persisté dans prefs, pas
   encore de tri multi-niveaux ni de colonnes masquables. Le contenu de chaque cellule est composé
   par l'appelant via `column.render`.

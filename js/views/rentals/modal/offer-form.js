@@ -41,7 +41,7 @@ function offerModelSelect(p) {
     </select>
     <div class="provider-option-row">
       <input id="offer-model-name" type="text" placeholder="Nouveau modèle" />
-      <button type="button" class="btn btn-small" onclick="addOfferModelNamed()">
+      <button type="button" class="btn btn-secondary btn-small" onclick="addOfferModelNamed()">
         ${svgIcon('plus')}
       </button>
     </div>`;

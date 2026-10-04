@@ -8,10 +8,10 @@ export const Confirm = () => {
       <div className="modal modal-ask">
         <h3>Enregistrer les modifications ?</h3>
         <div className="modal-actions">
-          <button type="button" className="btn btn-ghost" onClick={() => window.keepEditing()}>
+          <button type="button" className="btn btn-outline" onClick={() => window.keepEditing()}>
             Annuler
           </button>
-          <button type="button" className="btn btn-ghost" onClick={() => window.closeModal()}>
+          <button type="button" className="btn btn-outline" onClick={() => window.closeModal()}>
             Ne pas enregistrer
           </button>
           <button type="button" className="btn" onClick={() => window.saveAndClose()}>

@@ -93,6 +93,18 @@ le demande :
 
 Le [pre-push](.githooks/pre-push) refuse un push qui touche l'app sans toucher `PLAN.md` ni `docs/`.
 
+## Un plan d'exécution vit dans `docs/en-cours/`, puis dans `docs/archivé/`
+
+Un fichier « plan d'exécution pour un agent » (`docs/*-plan.md`) se range selon son avancement :
+[docs/en-cours/](docs/en-cours/) tant qu'il reste du backlog, [docs/archivé/](docs/archivé/) une
+fois son backlog épuisé — jamais supprimé, voir § précédent. Quand un agent termine le dernier item
+d'un plan (son « Backlog épuisé »/« Fait » dans PLAN.md), il déplace le fichier de `en-cours/` vers
+`archivé/` dans le même tour que la mise à jour PLAN.md/spec, et met à jour tous les liens croisés
+qui le référencent (PLAN.md, les autres plans, les commentaires de code `docs/en-cours/xxx-plan.md
+§ N`) — un chemin réécrit se résout, pas seulement se devine.
+
+
+
 ## Le board se recharge tout seul — je ne le relance pas
 
 `pnpm plan` tourne en `node --watch`, et l'écran se rafraîchit par SSE. Après une modif de

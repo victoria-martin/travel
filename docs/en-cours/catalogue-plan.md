@@ -25,7 +25,7 @@ Décisions actées :
   ouvert pour plus tard.
 - **Page à part** : « Découvrir » n'est pas un onglet d'Hébergements — donnée de nature différente
   (catalogue global vs données du voyage), même critère que les autres domaines de l'app
-  ([CLAUDE.md](../CLAUDE.md), « un dossier = un domaine »).
+  ([CLAUDE.md](../../CLAUDE.md), « un dossier = un domaine »).
 
 ## 1. Schéma Postgres
 

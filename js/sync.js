@@ -360,7 +360,7 @@ function syncForm() {
             </p>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn" onclick="resolveSyncChoice('remote')">Prendre le Sheet</button>
-              <button class="btn btn-ghost" onclick="resolveSyncChoice('local')">
+              <button class="btn btn-outline" onclick="resolveSyncChoice('local')">
                 Envoyer mes données locales
               </button>
             </div>
@@ -369,7 +369,7 @@ function syncForm() {
     }
     <div class="modal-actions">
       ${syncActive() ? `<button class="btn btn-danger" onclick="disconnectSync()">Déconnecter</button>` : ''}
-      <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
+      <button class="btn btn-outline" onclick="closeModal()">Fermer</button>
       <button class="btn" id="f-save" onclick="saveSyncUrl()">Connecter</button>
     </div>
   `;

@@ -19,7 +19,7 @@ function scenariosHeader() {
         active: showArchivedScenarios,
       })}
       ${toolbarSeparator()}
-      ${toolbarButton({ icon: svgIcon('plus'), label: 'Nouveau scénario', onclick: 'createScenario()' })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Nouveau scénario', onclick: 'createScenario()', primary: true })}
     </div>
   </div>`;
 }

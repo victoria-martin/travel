@@ -32,7 +32,7 @@ function providerOptionsField(p) {
 
 function providerOptionsRows(options) {
   return /* HTML */ `${options.map(providerOptionRow).join('')}
-    <button type="button" class="btn btn-ghost btn-small" onclick="addProviderOption()">
+    <button type="button" class="btn btn-secondary btn-small" onclick="addProviderOption()">
       ${svgIcon('plus')} Ajouter une option
     </button>`;
 }

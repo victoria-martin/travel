@@ -11,7 +11,7 @@
 function attractionScenarioActions() {
   return /* HTML */ `<div class="field-row">
     ${attractionScenarioDropdown()}
-    <button type="button" class="btn btn-ghost" onclick="addAttractionToPlan()">
+    <button type="button" class="btn btn-outline" onclick="addAttractionToPlan()">
       Ajouter au plan
     </button>
   </div>`;
@@ -21,7 +21,7 @@ function attractionScenarioDropdown() {
   return inlineDropdown(
     'attraction-scenario',
     'attraction-scenario-dropdown',
-    /* HTML */ `<summary class="btn btn-ghost attraction-scenario-trigger">
+    /* HTML */ `<summary class="btn btn-outline attraction-scenario-trigger">
         Ajouter à un scénario
       </summary>
       <div class="inline-menu">${scenarioStepPickerGroups('attachAttractionToStep')}</div>`,

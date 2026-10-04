@@ -4,13 +4,13 @@
 */
 let openToolbarPanel = null;
 
-function toolbarPanel({ key, icon, label, count, body, align, wide }) {
+function toolbarPanel({ key, icon, label, count, body, align, wide, primary }) {
   return /* HTML */ `<details
     class="toolbar-panel"
     ${openToolbarPanel === key ? 'open' : ''}
     ontoggle="openToolbarPanel = this.open ? '${key}' : null"
   >
-    <summary class="toolbar-btn" title="${escapeHtml(label)}">
+    <summary class="btn ${primary ? '' : 'btn-outline'} btn-small" title="${escapeHtml(label)}">
       ${toolbarFace(icon, label)}${count ? `<span class="toolbar-count">${count}</span>` : ''}
     </summary>
     <div

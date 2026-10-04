@@ -97,7 +97,7 @@ function scenarioPackingAddForm() {
       Ajouter aussi au catalogue
     </label>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="toggleScenarioPackingForm()">Annuler</button>
+      <button class="btn btn-outline" onclick="toggleScenarioPackingForm()">Annuler</button>
       <button class="btn" onclick="addScenarioPackingItem()">Ajouter</button>
     </div>
   </div>`;

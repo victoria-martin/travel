@@ -58,7 +58,7 @@ export function OffersSection() {
           {/* TODO: create AddCarOfferButton */}
           <button
             type="button"
-            className="toolbar-btn"
+            className="btn btn-small"
             title="Ajouter une offre"
             onClick={() => window.openModal('voiture')}
           >

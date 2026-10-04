@@ -18,6 +18,7 @@ function newCityPanel() {
     key: 'new-city',
     icon: svgIcon('plus'),
     label: 'Ville',
+    primary: true,
     body: /* HTML */ `<div class="new-city">
       <div class="locate-row">
         <input
@@ -27,7 +28,7 @@ function newCityPanel() {
           placeholder="Nom de la ville"
           onkeydown="newCityKeydown(event)"
         />
-        <button type="button" class="btn btn-ghost btn-small" onclick="locateNewCity()">
+        <button type="button" class="btn btn-secondary btn-small" onclick="locateNewCity()">
           Localiser
         </button>
       </div>

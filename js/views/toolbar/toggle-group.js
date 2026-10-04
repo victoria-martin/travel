@@ -3,7 +3,7 @@ function toolbarToggleGroup(options) {
     ${options
       .map(
         (o) => `<button
-          class="toolbar-btn ${o.active ? 'active' : ''}"
+          class="btn btn-outline btn-small ${o.active ? 'active' : ''}"
           onclick="${o.onclick}"
           title="${escapeHtml(o.label)}"
           aria-label="${escapeHtml(o.label)}"

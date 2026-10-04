@@ -57,7 +57,7 @@ function rentalForm(p) {
       <label>Notes</label><textarea id="rental-notes" rows="2">${escapeHtml(p.notes)}</textarea>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="dismissModal()">Annuler</button>
+      <button class="btn btn-outline" onclick="dismissModal()">Annuler</button>
       <button class="btn" id="f-save" onclick="saveRental('${p.id || ''}')">Enregistrer</button>
     </div>
   `;

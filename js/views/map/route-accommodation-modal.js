@@ -63,7 +63,7 @@ function routeAccommodationAskForm(scenarioId, stepId, points) {
       </select>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeRouteAccommodationChoice()">Annuler</button>
+      <button class="btn btn-outline" onclick="closeRouteAccommodationChoice()">Annuler</button>
       <button class="btn" onclick="confirmRouteAccommodationChoice('${scenarioId}','${stepId || ''}')">
         Valider
       </button>

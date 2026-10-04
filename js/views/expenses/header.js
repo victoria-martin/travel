@@ -9,8 +9,8 @@ function expensesHeader(scenario) {
     </div>
     <div class="view-header-actions">
       ${sortPanel('charges')} ${toolbarSeparator()}
-      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter au budget', onclick: addBudgetAction })}
-      ${toolbarButton({ icon: svgIcon('plus'), label: 'Dépense réelle', onclick: "openModal('actual-expense')" })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter au budget', onclick: addBudgetAction, primary: true })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Dépense réelle', onclick: "openModal('actual-expense')", primary: true })}
       ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;

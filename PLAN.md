@@ -357,7 +357,7 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 
 - **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · ⚙️ infra · ⏳ à faire : catalogue
   global d'hébergements (Hasura Cloud + Postgres, Apollo côté front), avec un bouton qui copie une
-  entrée dans le voyage ouvert. Plan détaillé : [catalogue-plan.md](docs/catalogue-plan.md).
+  entrée dans le voyage ouvert. Plan détaillé : [catalogue-plan.md](docs/en-cours/catalogue-plan.md).
 
 ## 🧩 Transverse
 
@@ -454,17 +454,18 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   reconsidéré par **Migrer l'app sur React**, juste en-dessous.
 - **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · 🚧 en cours : passer `js/`
   sur React + TypeScript, écran par écran (strangler fig), pour un code plus carré et un futur
-  portage React Native. Plan détaillé dans [docs/react-migration-plan.md](docs/react-migration-plan.md),
+  portage React Native. Plan détaillé dans [docs/en-cours/react-migration-plan.md](docs/en-cours/react-migration-plan.md),
   sur la branche `react-migration`. Phases 0 à 4 faites : store Zustand, les 8 écrans de la Phase 3
   portés, et depuis la Phase 4 React possède `#app` en entier (sidebar/router/modale globale/
   toasts) — `js/` legacy reste en place, cette phase a changé qui possède le DOM, pas combien
   d'écrans sont encore legacy. Phase 2 (Scénarios détail, dont le DnD) et Phase 5 (nettoyage RN,
   premier passage) sont closes aussi. **Fait** : tous les formulaires de modale (types de
   `MODAL_TYPES`, `js/modals/modal.js`) sont portés en React — backlog et patron détaillés dans
-  [docs/react-migration-modales-plan.md](docs/react-migration-modales-plan.md). **Reste ouvert** :
-  les panneaux/modales utilitaires explicitement hors scope de ce backlog (`valise-composer`,
-  `scenario-panel`, `journal-panel`, `sync`, `settings`), puis l'horizon final — suppression de
-  `js/` legacy.
+  [docs/archivé/react-migration-modales-plan.md](docs/archivé/react-migration-modales-plan.md).
+  **Reste ouvert** : les 5 panneaux/modales utilitaires explicitement hors scope de ce backlog
+  (`valise-composer`, `scenario-panel`, `journal-panel`, `sync`, `settings`) — backlog et patron
+  détaillés dans [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md)
+  — puis l'horizon final : suppression de `js/` legacy.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

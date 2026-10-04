@@ -28,7 +28,7 @@ function ScopeToggle() {
     <div className="toggle-group">
       <button
         type="button"
-        className={`toolbar-btn ${!window.mapFilters.scenarioOnly ? 'active' : ''}`}
+        className={`btn btn-outline btn-small ${!window.mapFilters.scenarioOnly ? 'active' : ''}`}
         title="Tous les lieux"
         aria-label="Tous les lieux"
         onClick={() => window.setMapScenarioOnly(false)}
@@ -40,7 +40,7 @@ function ScopeToggle() {
       </button>
       <button
         type="button"
-        className={`toolbar-btn ${window.mapFilters.scenarioOnly ? 'active' : ''}`}
+        className={`btn btn-outline btn-small ${window.mapFilters.scenarioOnly ? 'active' : ''}`}
         title="Lieux du scénario"
         aria-label="Lieux du scénario"
         onClick={() => window.setMapScenarioOnly(true)}

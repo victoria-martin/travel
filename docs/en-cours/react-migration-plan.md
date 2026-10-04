@@ -24,7 +24,7 @@ baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalog
   projets), ce qui permet un vrai build Vite (ESM, dev server, HMR) une fois `js/` legacy supprimé.
   Détail en § 1.
 
-Référence du protocole de synchro, inchangé par cette migration : [protocole-sync-sheet.md](protocole-sync-sheet.md).
+Référence du protocole de synchro, inchangé par cette migration : [protocole-sync-sheet.md](../protocole-sync-sheet.md).
 
 ## 1. Le mécanisme de cohabitation
 
@@ -530,7 +530,7 @@ préférée malgré tout.
 
 ## 8. Ce qui ne bouge pas
 
-- Le protocole de synchro Google Sheet ([protocole-sync-sheet.md](protocole-sync-sheet.md)) est
+- Le protocole de synchro Google Sheet ([protocole-sync-sheet.md](../protocole-sync-sheet.md)) est
   inchangé — seul son appelant (`sync.ts` au lieu de `sync.js`) change de forme.
 - `styles.css` reste la seule source de style pendant toute la migration.
 - Leaflet reste la lib carte web ; son remplacement RN (`react-native-maps` ou équivalent) est hors

@@ -8,6 +8,7 @@ function accommodationAddMenu() {
     key: 'add-accommodation',
     icon: svgIcon('plus'),
     label: 'Ajouter',
+    primary: true,
     body: /* HTML */ `<div class="filter-block">
       <p class="filter-title">Ajouter un hébergement</p>
       <button class="panel-action" onclick="openAccommodationDoor('accommodation-booking')">

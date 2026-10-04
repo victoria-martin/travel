@@ -53,7 +53,7 @@ export function ScenariosView() {
           </label>
           <button
             type="button"
-            className={`toolbar-btn ${compareMode ? 'active' : ''}`}
+            className={`btn btn-outline btn-small ${compareMode ? 'active' : ''}`}
             onClick={() => window.toggleCompareMode()}
           >
             <span className="toolbar-icon">
@@ -63,7 +63,7 @@ export function ScenariosView() {
           </button>
           <button
             type="button"
-            className={`toolbar-btn ${showArchived ? 'active' : ''}`}
+            className={`btn btn-outline btn-small ${showArchived ? 'active' : ''}`}
             onClick={() => window.toggleArchivedScenarios()}
           >
             <span className="toolbar-icon">
@@ -71,7 +71,7 @@ export function ScenariosView() {
             </span>
             <span className="toolbar-label">Archivés</span>
           </button>
-          <button type="button" className="toolbar-btn" onClick={() => window.createScenario()}>
+          <button type="button" className="btn btn-small" onClick={() => window.createScenario()}>
             <span className="toolbar-icon">
               <Icon name="plus" />
             </span>

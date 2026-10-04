@@ -15,7 +15,7 @@ import { markerData } from './MapView/markers';
 
 /*
   Porte js/views/map/{map,markers,leaflet-base}.js — premier découpage platform/web
-  (docs/react-migration-plan.md § 5), câblé dans src/shell/MainContent.tsx. Délégués au legacy, pas
+  (docs/en-cours/react-migration-plan.md § 5), câblé dans src/shell/MainContent.tsx. Délégués au legacy, pas
   réimplémentés (RouteBuilderPanel, NewCityButton) : état+async dans des globales de module, drag
   HTML5 — dupliquer cette logique n'apporterait rien tant que ce mode n'est pas une priorité à part.
   Le tracé d'un scénario choisi (drawScenarioOnMap) reste aussi délégué : il dépend des
@@ -44,7 +44,7 @@ export function MapView() {
           <FilterButton />
           <button
             type="button"
-            className={`toolbar-btn ${window.routeBuilder.active ? 'active' : ''}`}
+            className={`btn btn-outline btn-small ${window.routeBuilder.active ? 'active' : ''}`}
             title="Itinéraire"
             onClick={() => window.toggleRouteBuilderMode()}
           >
@@ -59,7 +59,7 @@ export function MapView() {
           <FilterButton />
           <button
             type="button"
-            className={`toolbar-btn ${window.routeBuilder.active ? 'active' : ''}`}
+            className={`btn btn-outline btn-small ${window.routeBuilder.active ? 'active' : ''}`}
             title="Itinéraire"
             onClick={() => window.toggleRouteBuilderMode()}
           >

@@ -50,7 +50,7 @@ export function JournalView() {
           </select>
           <button
             type="button"
-            className={`toolbar-btn ${window.prefs.journalSidePanel === 'map' ? 'active' : ''}`}
+            className={`btn btn-outline btn-small ${window.prefs.journalSidePanel === 'map' ? 'active' : ''}`}
             title="Carte"
             onClick={() => window.onJournalPanelToggle(date || '', 'map')}
           >

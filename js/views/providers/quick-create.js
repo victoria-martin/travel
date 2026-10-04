@@ -16,7 +16,7 @@ function askNewProvider(selectId, mode) {
       <input id="new-provider-name" type="text" />
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeProviderAsk()">Annuler</button>
+      <button class="btn btn-outline" onclick="closeProviderAsk()">Annuler</button>
       <button class="btn" onclick="confirmNewProvider('${selectId}','${mode}')">Créer</button>
     </div>
   </div>`;

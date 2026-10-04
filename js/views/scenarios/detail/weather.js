@@ -215,7 +215,7 @@ function scenarioWeatherBanner(scenario) {
           <span>${totalDaysCount} jours · prévisions jusqu’à 16 jours</span>
         </div>
       </div>
-      <button class="btn btn-small btn-ghost" onclick="toggleWeatherBanner()">
+      <button class="btn btn-small btn-outline" onclick="toggleWeatherBanner()">
         ${svgIcon('cloud')} Masquer
       </button>
     </div>

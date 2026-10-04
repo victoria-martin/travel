@@ -1,9 +1,9 @@
 # Phase modales — plan d'exécution pour un agent
 
-Porter les types de `MODAL_TYPES` ([js/modals/modal.js](../js/modals/modal.js)) restants en
+Porter les types de `MODAL_TYPES` ([js/modals/modal.js](../../js/modals/modal.js)) restants en
 composants React, un par un, en suivant exactement le patron déjà établi sur `actual-expense`,
 `import-expenses`, `charge`, `phrase`, `valise-catalogue`, `attraction` (voir
-[react-migration-plan.md](react-migration-plan.md) § 4 pour l'historique).
+[react-migration-plan.md](../en-cours/react-migration-plan.md) § 4 pour l'historique).
 
 **Effort recommandé : medium.** Le travail est répétitif (même recette à chaque type), mais chaque
 modale demande de vérifier précisément les ids de champs contre son `save.js` avant de brancher —
@@ -27,11 +27,11 @@ avant de passer au suivant. Ne pas enchaîner plusieurs types dans la même sess
 - Avant de supprimer la fonction string-builder legacy (`xxxForm()`) d'un formulaire porté, grepper
   ses call-sites : si elle n'a plus d'appelant que l'entrée `MODAL_TYPES`, la retirer et la
   remplacer par un commentaire d'une ligne pointant vers le nouveau fichier React (voir le patron
-  dans [js/views/fixed-costs/modal/form.js](../js/views/fixed-costs/modal/form.js)).
+  dans [js/views/fixed-costs/modal/form.js](../../js/views/fixed-costs/modal/form.js)).
 - Toute const/let legacy lue depuis React a besoin d'un `window.X = X;` explicite (les déclarations
   de fonction sont déjà sur `window` automatiquement, pas les const/let).
 - Chaque nouveau membre `window.*` lu ou exposé va dans
-  [src/types/global.d.ts](../src/types/global.d.ts).
+  [src/types/global.d.ts](../../src/types/global.d.ts).
 
 ## La recette, étape par étape (pour CHAQUE type)
 
@@ -87,30 +87,30 @@ généralisé dès qu'un deuxième type va forcément le redemander, pas après.
 
 Fait, ne pas retoucher : `actual-expense`, `import-expenses`, `charge`, `phrase`
 (`AddTranslationModal`), `valise-catalogue`, `attraction`, `voiture`
-([OfferModal.tsx](../src/domains/rentals/modal/OfferModal.tsx)) — select loueur, select modèle et
+([OfferModal.tsx](../../src/domains/rentals/modal/OfferModal.tsx)) — select loueur, select modèle et
 options du loueur restés en `LegacyMarkup` (repeints depuis l'extérieur de React au changement de
 loueur, mécanisme stateful déjà en place), statut en `SelectField` ordinaire (`CAR_STATUSES` n'a
 pas de "＋ Ajouter", pas un `WordSelectField`), `prestataire`
-([ProviderModal.tsx](../src/domains/transports/modal/ProviderModal.tsx)) — même mécanisme
+([ProviderModal.tsx](../../src/domains/transports/modal/ProviderModal.tsx)) — même mécanisme
 `LegacyMarkup` pour options/modèles proposés, `SelectField` gagne un `onChange` optionnel pour
 `repaintProviderModels()`, `modele`
-([CarModelModal.tsx](../src/domains/car-models/modal/CarModelModal.tsx)) — fuel/boîte en
+([CarModelModal.tsx](../../src/domains/car-models/modal/CarModelModal.tsx)) — fuel/boîte en
 `SelectField` ordinaire (dicts simples, pas de `WordSelectField`), « Proposé par » en `LegacyMarkup`
 comme les autres listes repeintes depuis l'extérieur de React, `TextField` gagne un `onInput`
 optionnel pour rebrancher `suggestCarConsumption()` sans la réimplémenter. `ville`
-([VilleModal.tsx](../src/domains/villes/modal/VilleModal.tsx)) — pas de `LegacyMarkup` : sa
+([VilleModal.tsx](../../src/domains/villes/modal/VilleModal.tsx)) — pas de `LegacyMarkup` : sa
 recherche d'adresse (`locateVille`/`applyVilleMatch`) est assez courte pour rester en JSX direct,
 contrairement à `locateFields` (attraction/hébergement), plus massif. `transport`
-([TransportModal.tsx](../src/domains/transports/modal/TransportModal.tsx)) — mode/statut en
+([TransportModal.tsx](../../src/domains/transports/modal/TransportModal.tsx)) — mode/statut en
 `SelectField` ordinaire ; départ/arrivée et le bloc prestataire restent en `LegacyMarkup`. La note
 « le mode décide des champs affichés (voiture vs compagnie) » était obsolète : le mode `car` a
 disparu de `TRANSPORT_MODES` le 2026-09-19, il ne reste qu'un select de prestataire filtré par mode
 à repeindre, pas de bloc exclusif à basculer — pas de `useState` nécessaire. `accommodation` + 4
-variantes ([AccommodationModal.tsx](../src/domains/accommodations/modal/AccommodationModal.tsx),
-[BookingAccommodationModal.tsx](../src/domains/accommodations/modal/BookingAccommodationModal.tsx),
-[HomeExchangeAccommodationModal.tsx](../src/domains/accommodations/modal/HomeExchangeAccommodationModal.tsx),
-[AirbnbAccommodationModal.tsx](../src/domains/accommodations/modal/AirbnbAccommodationModal.tsx),
-[GoogleMapsAccommodationModal.tsx](../src/domains/accommodations/modal/GoogleMapsAccommodationModal.tsx))
+variantes ([AccommodationModal.tsx](../../src/domains/accommodations/modal/AccommodationModal.tsx),
+[BookingAccommodationModal.tsx](../../src/domains/accommodations/modal/BookingAccommodationModal.tsx),
+[HomeExchangeAccommodationModal.tsx](../../src/domains/accommodations/modal/HomeExchangeAccommodationModal.tsx),
+[AirbnbAccommodationModal.tsx](../../src/domains/accommodations/modal/AirbnbAccommodationModal.tsx),
+[GoogleMapsAccommodationModal.tsx](../../src/domains/accommodations/modal/GoogleMapsAccommodationModal.tsx))
 — 5 composants séparés, pas un seul paramétré : champs présents/absents, titre et ordre diffèrent
 trop d'une porte à l'autre pour une config commune (règle projet « pas de moteur piloté par
 config »). Type/statut en `WordSelectField` (mécanisme déjà existant, comme `AttractionModal`).
@@ -124,18 +124,18 @@ Trois autres `const` legacy jamais exposées sur `window` corrigées au passage,
 `UNSET_CAR_STATUS`/`UNSET_TRANSPORT_STATUS` : `UNSET_ACCOMMODATION_TYPE`,
 `UNSET_ACCOMMODATION_STATUS`.
 
-`step` ([StepModal.tsx](../src/domains/scenarios/detail/step-modal/StepModal.tsx)) — en fait
+`step` ([StepModal.tsx](../../src/domains/scenarios/detail/step-modal/StepModal.tsx)) — en fait
 simple : la modale elle-même n'a que 4 champs plats, `radio-card-field` ne la concerne pas (il sert
 trail-options/weather, note du plan obsolète). Seul `stepAttractionsField`
 (attractions-field.js, 164 lignes — recherche + navigation clavier + création à la volée, état
 module `activeAttractionResult`) reste en `LegacyMarkup`, sous-système stateful qui vit bien en
 legacy. `paste-import`
-([PasteImportModal.tsx](../src/domains/accommodations/modal/PasteImportModal.tsx)) — pas de
+([PasteImportModal.tsx](../../src/domains/accommodations/modal/PasteImportModal.tsx)) — pas de
 payload réel (`open` renvoie `{ text: '' }`, jamais lu) ; `pasteImportForm` éclaté en
 `pasteImportInstructions()` (extrait, instructions/textarea/aperçu, resté en `LegacyMarkup` — texte
 dérivé de constantes legacy, aucune valeur à le recomposer en JSX) + h3/modal-actions en JSX.
 `runPasteImport` fait tout elle-même (pas un simple save délégué) mais `#f-save` garde son rôle.
-`voyage` ([TravelModal.tsx](../src/domains/travels/modal/TravelModal.tsx)) — `cfg.after` (
+`voyage` ([TravelModal.tsx](../../src/domains/travels/modal/TravelModal.tsx)) — `cfg.after` (
 `paintTravelModal`) reste tel quel dans `MODAL_TYPES.voyage` : ModalHost rappelle déjà `cfg.after`
 après toute peinture, React comprise, pas de `useEffect` nécessaire. Emoji picker, sous-titre
 dérivé et nuancier d'accent restent en `LegacyMarkup` (sous-systèmes stateful qui ne touchent jamais

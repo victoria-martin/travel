@@ -14,7 +14,7 @@ function locateFields(p) {
           value="${escapeHtml(p.address || '')}"
           onkeydown="if (event.key === 'Enter') { event.preventDefault(); locateAddress(); }"
         />
-        <button type="button" class="btn btn-ghost btn-small" onclick="locateAddress()">
+        <button type="button" class="btn btn-secondary btn-small" onclick="locateAddress()">
           Localiser
         </button>
       </div>

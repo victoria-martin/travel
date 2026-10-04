@@ -35,7 +35,7 @@ function askNewWord(bank, onCreate) {
     </div>
     ${color ? wordSwatchesField() : ''}
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeWordAsk()">Annuler</button>
+      <button class="btn btn-outline" onclick="closeWordAsk()">Annuler</button>
       <button class="btn" onclick="confirmNewWord('${bank}')">Créer</button>
     </div>
   </div>`;

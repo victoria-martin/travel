@@ -1,6 +1,6 @@
-function toolbarButton({ icon, label, onclick, active }) {
+function toolbarButton({ icon, label, onclick, active, primary }) {
   return /* HTML */ `<button
-    class="toolbar-btn ${active ? 'active' : ''}"
+    class="btn ${primary ? '' : 'btn-outline'} btn-small ${active ? 'active' : ''}"
     onclick="${onclick}"
     title="${escapeHtml(label)}"
     aria-label="${escapeHtml(label)}"

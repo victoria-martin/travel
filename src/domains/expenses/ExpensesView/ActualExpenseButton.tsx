@@ -2,7 +2,7 @@ export function ActualExpenseButton() {
   return (
     <button
       type="button"
-      className="toolbar-btn"
+      className="btn btn-small"
       onClick={() => window.openModal('actual-expense')}
     >
       Dépense réelle

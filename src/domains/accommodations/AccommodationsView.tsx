@@ -1,9 +1,10 @@
 import { AddResourceButton } from '@/shared/buttons/AddResourceButton';
 import { DataTable } from '@/shared/DataTable/DataTable';
 import { normalizeSearch } from '@/shared/normalizeSearch';
+import { HeaderActions } from '@/shared/header/HeaderActions';
+import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -42,24 +43,24 @@ export function AccommodationsView() {
             {items.length} enregistré{items.length > 1 ? 's' : ''}
           </p>
         </div>
-        <div className="view-header-actions">
-          <SearchInput value={query} onChange={setQuery} />
-          <ColumnPicker kind="hebergements" columns={columns} />
-          <AddResourceButton
-            title="Ajouter un hébergement"
-            onClick={() => window.openModal('accommodation')}
-            label="Ajouter"
-          />
-          {/* <button
-            type="button"
-            className="toolbar-btn"
-            onClick={() => window.openModal('accommodation')}
-          >
-            Ajouter
-          </button> */}
-          <SettingsMenu />
-        </div>
+        <HeaderActions />
       </div>
+      <TableHeaderActions>
+        <SearchInput value={query} onChange={setQuery} />
+        <ColumnPicker kind="hebergements" columns={columns} />
+        <AddResourceButton
+          title="Ajouter un hébergement"
+          onClick={() => window.openModal('accommodation')}
+          label="Ajouter"
+        />
+        {/* <button
+          type="button"
+          className="btn btn-outline btn-small"
+          onClick={() => window.openModal('accommodation')}
+        >
+          Ajouter
+        </button> */}
+      </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucun hébergement</strong>

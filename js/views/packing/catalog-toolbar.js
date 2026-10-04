@@ -31,7 +31,7 @@ function packingCatalogToolbar() {
     />
     ${packingCatalogChips()}
     <div class="packing-toolbar-spacer"></div>
-    <button class="btn btn-ghost" onclick="openModal('valise-catalogue')">
+    <button class="btn btn-outline" onclick="openModal('valise-catalogue')">
       ${svgIcon('plus')} Nouvel item
     </button>
     <button class="btn" onclick="openSheet('valise-composer')">

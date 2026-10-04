@@ -24,7 +24,7 @@ export function VilleModal({ payload }: { payload: VillePayload }) {
         {/* TODO: creer button */}
         <button
           type="button"
-          className="btn btn-ghost btn-small"
+          className="btn btn-secondary btn-small"
           onClick={() => window.locateVille()}
         >
           Localiser

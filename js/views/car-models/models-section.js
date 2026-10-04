@@ -7,7 +7,7 @@ function carModelsSection() {
       <div class="list-section-actions">
         ${listSearchField('modeles')} ${sortPanel('modeles')} ${columnPicker('modeles')}
         ${toolbarSeparator()}
-        ${toolbarButton({ icon: svgIcon('plus'), label: 'Modèle', onclick: "openModal('modele')" })}
+        ${toolbarButton({ icon: svgIcon('plus'), label: 'Modèle', onclick: "openModal('modele')", primary: true })}
       </div>
     </div>
     ${

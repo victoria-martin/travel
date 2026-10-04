@@ -36,7 +36,7 @@ function tagsCellBody(item) {
             placeholder="Nouveau tag…"
             onkeydown="tagsCellKeydown(event, '${item.id}')"
           />
-          <button type="button" class="btn btn-small" onclick="addTagFromCell('${item.id}')">
+          <button type="button" class="btn btn-secondary btn-small" onclick="addTagFromCell('${item.id}')">
             ${svgIcon('plus')}
           </button>
         </div>

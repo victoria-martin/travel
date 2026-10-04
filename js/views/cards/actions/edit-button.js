@@ -1,6 +1,6 @@
 function cardEditButton(modalKind, id) {
   return /* HTML */ `<button
-    class="btn-ghost btn btn-small"
+    class="btn-outline btn btn-small"
     onclick="openModal('${modalKind}','${id}')"
   >
     Modifier

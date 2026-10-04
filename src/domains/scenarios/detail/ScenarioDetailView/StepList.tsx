@@ -90,14 +90,14 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
         </div>
         <button
           type="button"
-          className="btn btn-ghost btn-small"
+          className="btn btn-outline btn-small"
           onClick={() => window.insertStep(scenario.id, 0)}
         >
           <Icon name="plus" /> Créer une étape
         </button>
         <button
           type="button"
-          className="btn btn-ghost btn-small"
+          className="btn btn-outline btn-small"
           onClick={() => window.insertStepGroup(scenario.id, 0)}
         >
           <Icon name="plus" /> Créer une étape avec options
@@ -172,14 +172,14 @@ export function StepList({ scenario, route }: { scenario: Scenario; route: Scena
         <div className="step-append">
           <button
             type="button"
-            className="btn btn-ghost btn-small"
+            className="btn btn-outline btn-small"
             onClick={() => window.insertStep(scenario.id, scenario.steps.length)}
           >
             <Icon name="plus" /> Ajouter une étape
           </button>
           <button
             type="button"
-            className="btn btn-ghost btn-small"
+            className="btn btn-outline btn-small"
             onClick={() => window.insertStepGroup(scenario.id, scenario.steps.length)}
           >
             Étape avec options

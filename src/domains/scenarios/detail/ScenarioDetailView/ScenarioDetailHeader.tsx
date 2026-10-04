@@ -18,7 +18,7 @@ export function ScenarioDetailHeader({
         <div className="scenario-header-name-text">
           <button
             type="button"
-            className="btn-ghost btn btn-square"
+            className="btn-outline btn btn-square"
             onClick={() => window.goTo('scenarios')}
           >
             <Icon name="arrow-left" />
@@ -44,7 +44,7 @@ export function ScenarioDetailHeader({
           </h2>
           <button
             type="button"
-            className="btn-ghost btn btn-square"
+            className="btn-outline btn btn-square"
             title={scenario.favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
             onClick={() => window.toggleScenarioFavorite(scenario.id)}
           >

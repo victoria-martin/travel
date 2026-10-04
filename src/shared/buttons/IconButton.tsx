@@ -1,15 +1,16 @@
 import { Icon } from '@/shared/Icon';
 
-type IconButtonProps = {
+type ButtonWithIconProps = {
   title: string;
   onClick: () => void;
   icon: string;
   label: string;
 };
 
-export const IconButton = ({ title, onClick, icon, label }: IconButtonProps) => {
+// est ce quon garde ca ou est ce qu on le remplace par un Button avec icon
+export const ButtonWithIcon = ({ title, onClick, icon, label }: ButtonWithIconProps) => {
   return (
-    <button type="button" className="toolbar-btn" title={title} onClick={onClick}>
+    <button type="button" className="btn btn-small" title={title} onClick={onClick}>
       <span className="toolbar-icon">
         <Icon name={icon} />
       </span>

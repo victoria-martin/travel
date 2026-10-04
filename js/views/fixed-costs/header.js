@@ -16,7 +16,7 @@ function fixedCostsHeader(items) {
           : ''
       }
       ${listModeToggle('charges', mode)} ${toolbarSeparator()}
-      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('charge')" })}
+      ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('charge')", primary: true })}
       ${toolbarSeparator()} ${toolbarMenu()}
     </div>
   </div>`;

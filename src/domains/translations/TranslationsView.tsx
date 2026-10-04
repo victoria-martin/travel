@@ -56,7 +56,7 @@ export function TranslationsView() {
               ))}
             </select>
           )}
-          <button type="button" className="toolbar-btn" onClick={() => window.openModal('phrase')}>
+          <button type="button" className="btn btn-small" onClick={() => window.openModal('phrase')}>
             Phrase
           </button>
         </div>

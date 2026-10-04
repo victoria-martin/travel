@@ -46,7 +46,7 @@ export function ProvidersTab() {
         <ColumnPicker kind="prestataires" columns={columns} />
         <button
           type="button"
-          className="toolbar-btn"
+          className="btn btn-small"
           title="Ajouter un prestataire"
           onClick={() => window.openModal('prestataire')}
         >

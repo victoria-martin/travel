@@ -74,7 +74,7 @@ export function PackingView() {
         <div className="packing-toolbar-spacer" />
         <button
           type="button"
-          className="btn btn-ghost"
+          className="btn btn-outline"
           onClick={() => window.openModal('valise-catalogue')}
         >
           <Icon name="plus" /> Nouvel item

@@ -3,7 +3,7 @@ import { useLeafletMap } from './LeafletMap/useLeafletMap';
 import type { MapMarkerData } from './LeafletMap/MapMarkerData';
 
 /*
-  Port de leaflet-base.js + markers.js (addMapPinMarker) — frontière RN (docs/react-migration-plan.md
+  Port de leaflet-base.js + markers.js (addMapPinMarker) — frontière RN (docs/en-cours/react-migration-plan.md
   § 5) : ce fichier est le seul de l'app à toucher `L` (Leaflet, global chargé par CDN dans
   index.html). Les hooks/domaines qui l'appellent ne lui donnent que des données (points, icônes,
   popups en HTML) et des callbacks, jamais un objet Leaflet — `afterMarkers` est l'exception

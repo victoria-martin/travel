@@ -11,7 +11,7 @@ function carOffersSection() {
       <div class="list-section-actions">
         ${listSearchField('locations')} ${sortPanel('locations')} ${columnPicker('locations')}
         ${toolbarSeparator()}
-        ${toolbarButton({ icon: svgIcon('plus'), label: 'Offre', onclick: "openModal('voiture')" })}
+        ${toolbarButton({ icon: svgIcon('plus'), label: 'Offre', onclick: "openModal('voiture')", primary: true })}
       </div>
     </div>
     ${

@@ -138,7 +138,7 @@ function sortPanel(kind) {
       }
       ${
         canAdd
-          ? `<button class="btn-ghost btn sort-add" onclick="addSortLevel('${kind}')">+ Ajouter un niveau</button>`
+          ? `<button class="btn-secondary btn sort-add" onclick="addSortLevel('${kind}')">+ Ajouter un niveau</button>`
           : ''
       }
     </div>`,

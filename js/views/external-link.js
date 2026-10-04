@@ -8,7 +8,7 @@ function externalLink(url, label) {
 }
 
 function linkButton(url, label) {
-  return externalAnchor(url, label, 'btn-ghost btn btn-small');
+  return externalAnchor(url, label, 'btn-outline btn btn-small');
 }
 
 function googleMapsCell(query) {

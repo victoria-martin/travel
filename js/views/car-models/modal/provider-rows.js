@@ -30,7 +30,7 @@ function carModelProvidersBody(p) {
     }
     <div class="provider-option-row">
       <input id="model-provider-name" type="text" placeholder="Nouveau loueur" />
-      <button type="button" class="btn btn-small" onclick="addCarModelProviderNamed()">
+      <button type="button" class="btn btn-secondary btn-small" onclick="addCarModelProviderNamed()">
         ${svgIcon('plus')}
       </button>
     </div>`;

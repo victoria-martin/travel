@@ -4,7 +4,7 @@ export function ImportExpensesButton() {
   return (
     <button
       type="button"
-      className="toolbar-btn import-expenses-btn"
+      className="btn btn-outline btn-small import-expenses-btn"
       onClick={() => window.openModal('import-expenses')}
     >
       Importer un fichier

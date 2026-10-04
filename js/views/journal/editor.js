@@ -41,7 +41,7 @@ function journalEditorToolbar(date) {
     ${buttons
       .map(
         (b) => /* HTML */ `<button
-          class="toolbar-btn"
+          class="btn btn-outline btn-small"
           title="${b.label}"
           aria-label="${b.label}"
           onmousedown="event.preventDefault(); journalWrapSelection('${b.wrap[0]}', '${b.wrap[1]}', ${!!b.line}, '${date}')"
@@ -51,7 +51,7 @@ function journalEditorToolbar(date) {
       )
       .join('')}
     ${toolbarSeparator()}
-    <label class="toolbar-btn journal-photo-btn" title="Ajouter des photos">
+    <label class="btn btn-outline btn-small journal-photo-btn" title="Ajouter des photos">
       <span class="toolbar-icon">${svgIcon('camera')}</span>
       <input type="file" accept="image/*" multiple hidden onchange="onJournalPhotoPicked(this, '${date}')" />
     </label>

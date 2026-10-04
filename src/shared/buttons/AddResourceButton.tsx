@@ -1,4 +1,5 @@
-import { IconButton } from '@/shared/buttons/IconButton';
+import { Icon } from '@/shared/Icon';
+import { Button } from '@/shared/buttons/Button';
 
 type AddResourceButtonProps = {
   title: string;
@@ -7,5 +8,10 @@ type AddResourceButtonProps = {
 };
 
 export const AddResourceButton = ({ title, onClick, label }: AddResourceButtonProps) => {
-  return <IconButton icon="plus" title={title} onClick={onClick} label={label} />;
+  return (
+    <Button variant="primary" onClick={onClick}>
+      <Icon name="plus" />
+      {label}
+    </Button>
+  );
 };

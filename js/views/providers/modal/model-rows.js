@@ -29,7 +29,7 @@ function providerModelsBody(p) {
     }
     <div class="provider-option-row">
       <input id="provider-model-name" type="text" placeholder="Nouveau modèle" />
-      <button type="button" class="btn btn-small" onclick="addProviderModelNamed()">
+      <button type="button" class="btn btn-secondary btn-small" onclick="addProviderModelNamed()">
         ${svgIcon('plus')}
       </button>
     </div>

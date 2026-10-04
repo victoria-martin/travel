@@ -19,5 +19,5 @@ function transportsCount() {
 function transportsHeaderActions() {
   return /* HTML */ `${listSearchField('transports')} ${sortPanel('transports')}
   ${columnPicker('transports')} ${toolbarSeparator()}
-  ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('transport')" })}`;
+  ${toolbarButton({ icon: svgIcon('plus'), label: 'Ajouter', onclick: "openModal('transport')", primary: true })}`;
 }

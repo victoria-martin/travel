@@ -1,31 +1,9 @@
-import type { ReactNode } from 'react';
 import { SettingsMenu } from '../toolbar/SettingsMenu';
 
-{
-  /* pas sur de cette implem mais laisson spr l instant */
+export function HeaderActions() {
+  return (
+    <div className="view-header-actions">
+      <SettingsMenu />
+    </div>
+  );
 }
-
-const HeaderActions = ({ children }: { children: ReactNode }) => {
-  return (
-    <div className="view-header-actions">
-      {/* <SearchInput value={query} onChange={setQuery} />
-          <ColumnPicker kind="cities" columns={columns} /> */}
-      {children}
-      <SettingsMenu />
-    </div>
-  );
-};
-
-export default HeaderActions;
-
-export const TableHeaderActions = ({ children }: { children: ReactNode }) => {
-  return (
-    <div className="view-header-actions">
-      {/* <div className="list-section-actions"> */}
-      {/* <SearchInput value={query} onChange={setQuery} />
-          <ColumnPicker kind="cities" columns={columns} /> */}
-      {children}
-      <SettingsMenu />
-    </div>
-  );
-};

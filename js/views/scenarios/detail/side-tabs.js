@@ -62,7 +62,7 @@ function scenarioSideTabsRail(scenarioId) {
     ${SCENARIO_SIDE_TABS.map(
       (tab) =>
         /* HTML */ `<button
-          class="toolbar-btn ${tab.key === prefs.scenarioSidePanel ? 'active' : ''}"
+          class="btn btn-outline btn-small ${tab.key === prefs.scenarioSidePanel ? 'active' : ''}"
           onclick="onScenarioPanelToggle('${scenarioId}','${tab.key}')"
           title="${escapeHtml(tab.label)}"
           aria-label="${escapeHtml(tab.label)}"

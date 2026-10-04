@@ -31,7 +31,7 @@ function offerOptionsBody(p) {
       <select id="offer-option-unit">
         ${wordUnitOptions()}
       </select>
-      <button type="button" class="btn btn-small" onclick="addOfferOption()">
+      <button type="button" class="btn btn-secondary btn-small" onclick="addOfferOption()">
         ${svgIcon('plus')}
       </button>
     </div>

@@ -1,5 +1,6 @@
 import { ImportButton } from '@/shared/import/ImportButton';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
+import { ModalHeader } from '@/shared/modal/ModalHeader';
 import { useState } from 'react';
 import { ImportFileField } from './ImportExpensesModal/ImportFileField';
 import { ImportRowsTable } from './ImportExpensesModal/ImportRowsTable';
@@ -64,7 +65,9 @@ export function ImportExpensesModal() {
 
   return (
     <>
-      <h3>Importer des dépenses depuis un fichier</h3>
+      <ModalHeader>
+        <h3>Importer des dépenses depuis un fichier</h3>
+      </ModalHeader>
       <div className="modal-body-scroll">
         {rows.length === 0 ? (
           <ImportFileField error={error} onFile={handleFile} />

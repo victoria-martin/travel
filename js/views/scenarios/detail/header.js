@@ -2,7 +2,7 @@ function scenarioDetailHeader(s) {
   const count = visibleSteps(s).length;
   return /* HTML */ `<div class="view-header scenario-header">
     <div class="scenario-header-identity">
-      <button class="btn-ghost btn btn-small back-link" onclick="goTo('scenarios')">
+      <button class="btn-outline btn btn-small back-link" onclick="goTo('scenarios')">
         ${svgIcon('arrow-left')} Tous les scénarios
       </button>
       <div class="scenario-header-name">

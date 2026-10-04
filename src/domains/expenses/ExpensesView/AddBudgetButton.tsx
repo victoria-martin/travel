@@ -12,7 +12,7 @@ export function AddBudgetButton({ scenario }: { scenario: Scenario | null }) {
       >Ajouter au budget</Button> */}
       <button
         type="button"
-        className="toolbar-btn"
+        className="btn btn-small"
         onClick={() =>
           scenario ? window.openModal('charge', '', scenario.id) : window.openModal('charge')
         }

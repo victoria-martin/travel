@@ -1,9 +1,12 @@
 // dismissModal() (pas closeModal()) : redemande « enregistrer les modifications ? » si le
+
+import { Button } from '@/shared/buttons/Button';
+
 // formulaire a `edits: true` et que quelque chose a été tapé — closeModal() fermerait en silence.
 export function CloseModalButton() {
   return (
-    <button type="button" className="btn btn-ghost" onClick={() => window.dismissModal()}>
+    <Button variant="outline" onClick={() => window.dismissModal()}>
       Annuler
-    </button>
+    </Button>
   );
 }

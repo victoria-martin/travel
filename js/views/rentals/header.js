@@ -13,6 +13,7 @@ function rentalsHeader(rentals) {
         icon: svgIcon('plus'),
         label: 'Nouvelle recherche',
         onclick: "openModal('location')",
+        primary: true,
       })}
       ${toolbarSeparator()} ${toolbarMenu()}
     </div>

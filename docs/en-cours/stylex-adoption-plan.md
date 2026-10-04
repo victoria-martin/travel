@@ -4,7 +4,7 @@ Objectif : remplacer les classes CSS écrites à la main dans les composants Rea
 compilés StyleX (`stylex.create`), pour que le compilateur garantisse qu'une classe utilisée existe
 réellement — plutôt que de continuer à passer des chaînes de caractères (`clsx`, template strings)
 non vérifiées. Migration progressive, composant par composant, en parallèle du portage modales en
-cours ([react-migration-modales-plan.md](react-migration-modales-plan.md)) — pas un chantier séparé.
+cours ([react-migration-modales-plan.md](../archivé/react-migration-modales-plan.md)) — pas un chantier séparé.
 
 ## Règle d'arrêt — à respecter strictement
 

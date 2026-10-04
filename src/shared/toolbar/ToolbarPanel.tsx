@@ -23,7 +23,7 @@ export function ToolbarPanel({
 }) {
   return (
     <details className="toolbar-panel">
-      <summary className="toolbar-btn" title={label}>
+      <summary className="btn btn-outline btn-small" title={label}>
         <span className="toolbar-icon">
           <Icon name={icon} />
         </span>
