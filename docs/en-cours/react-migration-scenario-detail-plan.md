@@ -200,18 +200,8 @@ monté par `ScenarioDetailView` sous `weatherBannerShown()`.
 `global.d.ts` : retrait de `scenarioRouteTrail`/`scenarioRouteStrip`, ajout de
 `stepStatusBackground`. `pnpm react:typecheck` propre.
 
-**G. Panneau latéral (carte/transports/argent/valise) + split handle** —
-[side-panel.js](../js/views/scenarios/detail/side-panel.js) (14 lignes, dispatcher) +
-[side-tabs.js](../js/views/scenarios/detail/side-tabs.js) (98 lignes, `SCENARIO_SIDE_TABS`,
-4 onglets) + [split.js](../js/views/scenarios/detail/split.js) (53 lignes). Le plus gros chantier :
-l'onglet Carte réutilise Leaflet (`initScenarioDetailMaps()`, rappelé par `ScenarioLegacyMarkup` via
-sa prop `initializeMaps` — regarder comment [platform/web/LeafletMap.tsx](../src/platform/web/LeafletMap.tsx)
-a déjà résolu ce problème pour la Carte générale avant d'improviser une seconde solution), l'onglet
-Argent concatène 4 blocs de calcul (`scenarioOfferBlock`/`scenarioTransportsBlock`/
-`scenarioExpensesBlock`/`scenarioTotalBlock`, encore des candidats à vérifier contre
-`useScenarioMoney`), l'onglet Valise délègue à `scenarioPackingBlock()`. À découper en sous-plan à
-part plutôt qu'un seul composant — probablement le dernier cluster de cette liste, pas avant que
-A-F soient faits et validés.
+**G. Panneau latéral (carte/transports/argent/valise) + split handle** — découpé en 6 lots dans
+[react-migration-scenario-side-panel-plan.md](react-migration-scenario-side-panel-plan.md).
 
 ## Hors scope ici
 
