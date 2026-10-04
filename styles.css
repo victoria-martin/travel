@@ -2308,7 +2308,9 @@ tr:hover td {
 /* Un champ vide se remplit d'un clic : sa pastille se montre creuse plutôt que de s'effacer. */
 /* Réservé est le seul statut peint : les autres se lisent, celui-là se repère. */
 .inline-tag-booked,
-.inline-tag-booked:hover {
+.inline-tag-booked:hover,
+.status-dropdown-booked .inline-tag,
+.status-dropdown-booked .inline-tag:hover {
   border-color: var(--sage);
   background: var(--sage);
   color: var(--white);

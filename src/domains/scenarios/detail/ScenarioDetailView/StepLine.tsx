@@ -1,14 +1,12 @@
+import { Icon } from '@/shared/Icon';
 import type { Scenario, Step } from '@/store/types';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import { StepAvailabilityBadge } from './StepLine/StepAvailabilityBadge';
+import { StepCheckInTime } from './StepLine/StepCheckInTime';
 import { StepNightsDropdown } from './StepLine/StepNightsDropdown';
 import { StepPlaceDropdown } from './StepLine/StepPlaceDropdown';
+import { StepStatusDropdown } from './StepLine/StepStatusDropdown';
 import { StepTypeDropdown } from './StepLine/StepTypeDropdown';
 
-/*
-  stepStatusTag/stepAvailabilityTag/stepCheckInTimeTag/stepSheetButton délèguent à des fonctions
-  (accommodationStatusTag, outOfRangeIndicator…) elles-mêmes pas encore portées, donc restent en
-  LegacyMarkup.
-*/
 export function StepLine({
   scenario,
   step,
@@ -19,12 +17,22 @@ export function StepLine({
   arrival: Date | null;
 }) {
   const stepId = step.id;
+  const accommodation = window.getAccommodation(step.accommodationId);
   return (
     <>
       <StepTypeDropdown scenario={scenario} step={step} />
       <div className="step-place">
         <StepPlaceDropdown scenario={scenario} step={step} />
-        <LegacyMarkup html={window.stepSheetButton(step)} />
+        {accommodation && (
+          <button
+            type="button"
+            className="sheet-btn"
+            title="Ouvrir la fiche"
+            onClick={() => window.openAccommodationSheet(accommodation.id)}
+          >
+            <Icon name="arrow-up-right" />
+          </button>
+        )}
         {step.attractionId && stepId ? (
           <input
             className="step-place-date"
@@ -35,9 +43,17 @@ export function StepLine({
           />
         ) : null}
       </div>
-      <LegacyMarkup html={window.stepStatusTag(step)} />
-      <LegacyMarkup html={window.stepAvailabilityTag(step, arrival)} />
-      <LegacyMarkup html={window.stepCheckInTimeTag(step)} />
+      {accommodation && <StepStatusDropdown accommodation={accommodation} />}
+      <StepAvailabilityBadge
+        reason={
+          accommodation
+            ? window.stepOutOfRange(accommodation, arrival, window.stepNights(step))
+            : null
+        }
+      />
+      {accommodation && window.isBookedAccommodation(accommodation) && (
+        <StepCheckInTime accommodation={accommodation} />
+      )}
       <StepNightsDropdown scenario={scenario} step={step} />
     </>
   );

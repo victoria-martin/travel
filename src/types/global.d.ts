@@ -396,13 +396,6 @@ declare global {
     openAccommodationSheet: (id: string) => void;
     emptyAttraction: () => Omit<import('../store/types').Attraction, 'id'> & { id: string | null };
     upsertAttraction: (item: import('../store/types').Attraction) => void;
-    stepSheetButton: (step: import('../store/types').Step) => string;
-    stepStatusTag: (step: import('../store/types').Step) => string;
-    stepAvailabilityTag: (
-      step: import('../store/types').Step,
-      arrival: Date | null,
-    ) => string;
-    stepCheckInTimeTag: (step: import('../store/types').Step) => string;
     groupOptions: (
       group: import('../store/types').StepGroup,
     ) => import('../store/types').StepGroupOption[];
@@ -450,6 +443,13 @@ declare global {
     detachScenarioTransport: (scenarioId: string, transportId: string) => void;
     fixedCostsTotal: (scenario: import('../store/types').Scenario) => number;
     setRecapFold: (key: string, open: boolean) => void;
+    setAccommodationCheckInTime: (id: string, checkInTime: string) => void;
+    isBookedAccommodation: (accommodation: import('../store/types').Accommodation | undefined) => boolean;
+    stepOutOfRange: (
+      accommodation: import('../store/types').Accommodation,
+      arrival: Date | null,
+      nights: number,
+    ) => string | null;
     nightsByPlace: (scenario: import('../store/types').Scenario) => {
       place: import('../store/types').Attraction | null;
       acc: import('../store/types').Accommodation | null;
@@ -530,8 +530,6 @@ declare global {
     attachExtraCost: (scenarioId: string, holderId: string, costId: string) => void;
     createAttractionNamed: (name: string) => import('../store/types').Attraction;
     createFixedCostNamed: (label: string) => import('../store/types').FixedCost;
-    extraStatusTag: (extra: import('../store/types').Extra) => string;
-    extraLabel: (extra: import('../store/types').Extra) => string;
     extraCount: (extra: import('../store/types').Extra) => number;
     extraCountLabel: (n: number) => string;
     extraAmount: (extra: import('../store/types').Extra) => number;

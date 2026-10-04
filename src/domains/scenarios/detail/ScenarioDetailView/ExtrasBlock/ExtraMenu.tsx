@@ -3,16 +3,10 @@ import { Icon } from '@/shared/Icon';
 import { TagLabel } from '@/shared/TagLabel';
 import { OpenResourceMenuItem } from '@/shared/select/OpenResourceMenuItem';
 import type { Extra, Scenario, Step, StepGroup } from '@/store/types';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import { ExtraLabel } from '../ExtraLabel';
 
 // La pastille d'une ligne ouvre ses alternatives du même genre : une activité se remplace par une
-// activité, une dépense par une dépense. extraLabel reste la fonction legacy (icône/émoji + nom,
-// ou « supprimée » sur une référence morte) : réutilisée pour le trigger et la ligne sélectionnée,
-// pas reconstruite en JSX.
-function ExtraLabel({ line }: { line: Extra }) {
-  return <LegacyMarkup html={window.extraLabel(line)} />;
-}
-
+// activité, une dépense par une dépense.
 export function ExtraMenu({
   scenario,
   holder,

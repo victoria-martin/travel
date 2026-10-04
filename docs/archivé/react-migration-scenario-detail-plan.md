@@ -203,7 +203,21 @@ monté par `ScenarioDetailView` sous `weatherBannerShown()`.
 **G. Panneau latéral (carte/transports/argent/valise) + split handle — ✅ fait.** Découpé en 6 lots dans
 [react-migration-scenario-side-panel-plan.md](react-migration-scenario-side-panel-plan.md).
 
-**Backlog épuisé** — plus aucun bloc du détail scénario en `ScenarioLegacyMarkup`.
+**Finitions — ✅ fait.** Les derniers fragments `LegacyMarkup` de la ligne d'étape et des extras :
+- [StepLine.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/StepLine.tsx) : ↗ de la fiche
+  d'hébergement, `StepStatusDropdown` (`TagDropdown` + « Ouvrir la ressource », pastille pleine
+  quand réservé via `.status-dropdown-booked`), `StepAvailabilityBadge`, `StepCheckInTime`
+  (seulement une fois réservé). `step-line.js` supprimé, `accommodationSheetButton` aussi.
+- [ExtraLabel.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/ExtraLabel.tsx), lu par
+  `ExtraMenu` et `ExtraRecapRow` ; `ExtrasBlock/ExtraStatusDropdown.tsx` pour le statut d'une
+  activité. `extras/label.js` et `extras/row.js` supprimés.
+- Comme les cellules de statut des tables déjà portées, le menu de statut n'a pas « ＋ Ajouter un
+  statut » (`TagDropdown` ne le porte pas encore).
+
+**Backlog épuisé** — plus aucun `LegacyMarkup` dans `ScenarioDetailView/`. Reste en dehors : le
+champ Activités de la modale d'étape (`stepAttractionsField`, décision de
+[react-migration-modales-plan.md](react-migration-modales-plan.md)), et les réglages de page lus
+par la modale Réglages legacy (`trailOptions`, chantier `settings`).
 
 ## Hors scope ici
 
