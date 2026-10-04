@@ -4,6 +4,7 @@
   synchronisée — chacun réorganise sa propre barre.
 */
 const MOBILE_NAV_PRIMARY_COUNT = 4;
+window.MOBILE_NAV_PRIMARY_COUNT = MOBILE_NAV_PRIMARY_COUNT;
 
 // Réconcilie l'ordre enregistré avec NAV_ITEMS : une page retirée du code disparaît, une page
 // ajoutée depuis atterrit en fin de tiroir plutôt que de casser la préférence stockée.
@@ -37,7 +38,7 @@ function moveMobileNavItemBefore(draggedKey, targetKey, before) {
 }
 
 var mobileNavPlusOpen = false;
-let mobileNavReordering = false;
+var mobileNavReordering = false;
 
 function toggleMobileNavPlus() {
   mobileNavPlusOpen = !mobileNavPlusOpen;

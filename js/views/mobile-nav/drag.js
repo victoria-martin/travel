@@ -1,5 +1,5 @@
-// Glisser une ligne du tiroir Plus en mode réorganisation, sur le patron de step-drag.js — la
-// ligne survolée porte le trait de dépôt via markDrop/overTopHalf (js/views/drag.js).
+// Glisser une ligne du tiroir Plus en mode réorganisation : la ligne survolée porte le trait de
+// dépôt via markDrop/overTopHalf (js/views/drag.js).
 let mobileNavDraggedKey = '';
 
 function startMobileNavDrag(event, key) {

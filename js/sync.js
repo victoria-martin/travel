@@ -59,29 +59,7 @@ function clearSyncBase() {
 function setSyncStatus(status, message) {
   sync.status = status;
   sync.message = message || '';
-  const el = document.getElementById('sync-status');
-  if (el) el.outerHTML = syncStatusHtml();
-}
-
-function syncStatusHtml() {
-  const states = {
-    off: { icon: 'circle', tone: 'sync-off', label: 'Sheet non connecté' },
-    pulling: { icon: 'refresh-cw', tone: 'sync-busy', label: 'Lecture du Sheet…' },
-    pushing: { icon: 'refresh-cw', tone: 'sync-busy', label: 'Envoi au Sheet…' },
-    ok: { icon: 'circle-check', tone: 'sync-ok', label: 'Sheet synchronisé' },
-    choice: { icon: 'circle-alert', tone: 'sync-choice', label: 'Choix à faire' },
-    error: { icon: 'circle-x', tone: 'sync-error', label: sync.message || 'Sheet injoignable' },
-  };
-  const current = states[sync.status] || states.off;
-  return /* HTML */ `<button
-    class="nav-btn"
-    id="sync-status"
-    onclick="openSyncModal()"
-    title="${escapeHtml(sync.message)}"
-  >
-    <span class="nav-icon">${svgIcon(current.icon, { className: current.tone })}</span
-    ><span class="nav-label">${escapeHtml(current.label)}</span>
-  </button>`;
+  render();
 }
 
 // La réponse du Sheet ne change souvent rien : re-rendre écraserait le DOM sous la souris
