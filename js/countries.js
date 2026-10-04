@@ -202,6 +202,8 @@ const COUNTRIES = [
   { code: 'ZW', label: 'Zimbabwe' },
 ].sort((a, b) => a.label.localeCompare(b.label));
 
+window.COUNTRIES = COUNTRIES;
+
 function countryFlag(code) {
   return code
     .toUpperCase()

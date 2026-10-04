@@ -100,10 +100,6 @@ declare global {
     DEFAULT_TRAVEL_STATUS: string;
     DEFAULT_FUEL_PRICE: number;
     DEFAULT_TOLL_RATE: number;
-    travelEmojiPicker: (payload: import('../store/types').Travel) => string;
-    travelHeaderPlace: (payload: import('../store/types').Travel) => string;
-    travelCountriesField: (payload: import('../store/types').Travel) => string;
-    travelAccentSwatches: (payload: import('../store/types').Travel) => string;
     commitOnEnter: (event: KeyboardEvent) => void;
     saveTravel: (id: string) => void;
     formatEuros: (value: number) => string;
@@ -299,6 +295,10 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    COUNTRIES: { code: string; label: string }[];
+    countryLabel: (code: string) => string;
+    countryFlag: (code: string) => string;
+    paintTravelModal: (color: string) => void;
     attachAttractionToStep: (scenarioId: string, stepId: string) => void;
     addAttractionToPlan: () => void;
     askNewWord: (

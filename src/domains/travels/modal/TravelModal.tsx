@@ -1,4 +1,3 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { TextareaField } from '@/shared/form-fields/TextareaField';
@@ -6,21 +5,26 @@ import { FieldRow } from '@/shared/layout/FieldRow';
 import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import type { Travel } from '@/store/types';
+import { TravelAccentSwatches } from './TravelModal/TravelAccentSwatches';
+import { TravelCountriesField } from './TravelModal/TravelCountriesField';
+import { TravelEmojiPicker } from './TravelModal/TravelEmojiPicker';
 
 /*
   Port de travelForm/saveTravel (js/views/travels/modal/{form,save}.js), délègue à
   window.saveTravel(id) inchangée. `MODAL_TYPES.voyage.after` (paintTravelModal) reste tel quel
   dans modal.js : ModalHost rappelle déjà `cfg.after` après toute peinture, React comprise, pas
-  besoin d'un useEffect ici. Emoji picker, sous-titre dérivé (pays/région) et nuancier d'accent
-  restent en LegacyMarkup : trois sous-systèmes stateful qui ne touchent jamais modal.payload (ils
-  lisent/écrivent leurs propres champs par id, lus par saveTravel au clic) ; `travelCountriesField`
-  pareil, mais mute modal.payload.countries comme tagsField.
+  besoin d'un useEffect ici. Emoji et couleur d'accent écrivent leur valeur dans un champ que
+  saveTravel lit par id (#travel-emoji, #travel-accent) ; les pays mutent modal.payload.countries.
 
   `#travel-fuel-price`/`#travel-toll-rate` sont restaurés ici : `readTravelForm` (save.js) les lit
   sans condition, mais le formulaire legacy ne les rendait plus depuis `2c02b9d` (19/09) — Enregistrer
   plantait sur ces deux champs absents à chaque sauvegarde de voyage. Fix fait au passage.
 */
 export function TravelModal({ payload }: { payload: Travel }) {
+  // The destination doubles as a subtitle only once it is filled in.
+  const travelPlace = [...(payload.countries || []).map(window.countryLabel), payload.region]
+    .filter(Boolean)
+    .join(' · ');
   const statusOptions = Object.entries(window.TRAVEL_STATUSES).map(([key, status]) => ({
     value: key,
     label: `${status.emoji} ${status.label}`,
@@ -29,7 +33,7 @@ export function TravelModal({ payload }: { payload: Travel }) {
   return (
     <>
       <div className="travel-modal-header">
-        <LegacyMarkup html={window.travelEmojiPicker(payload)} />
+        <TravelEmojiPicker initialEmoji={payload.emoji} />
         <div>
           <h3>
             <span
@@ -43,11 +47,11 @@ export function TravelModal({ payload }: { payload: Travel }) {
               {payload.name}
             </span>
           </h3>
-          <LegacyMarkup html={window.travelHeaderPlace(payload)} />
+          {travelPlace && <p className="travel-modal-place">{travelPlace}</p>}
         </div>
       </div>
       <FieldRow>
-        <LegacyMarkup html={window.travelCountriesField(payload)} />
+        <TravelCountriesField payload={payload} />
         <TextField id="travel-region" label="Région" defaultValue={payload.region} />
       </FieldRow>
       <FieldRow>
@@ -63,10 +67,15 @@ export function TravelModal({ payload }: { payload: Travel }) {
         />
         <div className="field">
           <label htmlFor="travel-travelers">Voyageurs</label>
-          <input id="travel-travelers" type="number" min={0} defaultValue={payload.travelers || 0} />
+          <input
+            id="travel-travelers"
+            type="number"
+            min={0}
+            defaultValue={payload.travelers || 0}
+          />
         </div>
       </FieldRow>
-      <LegacyMarkup html={window.travelAccentSwatches(payload)} />
+      <TravelAccentSwatches initialAccent={payload.accentColor} />
       <FieldRow>
         <TextField
           id="travel-fuel-price"
