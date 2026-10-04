@@ -442,7 +442,6 @@ declare global {
       line: [number, number][];
       legs: { distance: number; duration: number }[];
     }>;
-    scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioTransportsBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
@@ -462,7 +461,18 @@ declare global {
     setOutOfRangeStyle: (key: string) => void;
     onScenarioPanelToggle: (scenarioId: string, key: string) => void;
     scenarioMapBlock: (scenario: import('../store/types').Scenario, id: string) => string;
-    scenarioTransportsRecap: (scenario: import('../store/types').Scenario) => string;
+    getScenarioOffer: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').Offer | null;
+    scenarioOfferTotal: (scenario: import('../store/types').Scenario) => number;
+    setScenarioOffer: (scenarioId: string, offerId: string) => void;
+    toggleScenarioOfferOption: (scenarioId: string, optionId: string) => void;
+    openOfferSheet: (offerId: string) => void;
+    providersOfMode: (mode: string) => import('../store/types').Provider[];
+    getProvider: (id: string) => import('../store/types').Provider | undefined;
+    optionAmount: (option: import('../store/types').ProviderOption, days: number) => number;
+    roadTollCostRow: (scenario: import('../store/types').Scenario) => string;
+    roadFuelCostRow: (scenario: import('../store/types').Scenario) => string;
     scenarioPackingBlock: () => string;
     invalidateScenarioDetailMaps: () => void;
     initScenarioDetailMaps: () => void;
@@ -542,7 +552,6 @@ declare global {
     stepStatusInfo: (status: string) => { label: string; emoji: string; color: string };
     travelerCount: () => number;
     dateAfter: (date: Date | null, nights: number) => Date | null;
-    scenarioOfferBlock: (scenario: import('../store/types').Scenario) => string;
     dateRangeLabel: (arrival: Date | null, nights: number) => string;
     formatStepDate: (date: Date) => string;
     formatStepDay: (date: Date) => string;
