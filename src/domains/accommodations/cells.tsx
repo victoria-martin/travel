@@ -1,6 +1,7 @@
 import { EditableTextCell } from '@/shared/cells/EditableTextCell';
 import { FavoriteCell as SharedFavoriteCell } from '@/shared/cells/FavoriteCell';
 import { Icon } from '@/shared/Icon';
+import { AddWordMenuItem } from '@/shared/select/AddWordMenuItem';
 import { TagDropdown } from '@/shared/select/TagDropdown';
 import type { Accommodation } from '@/store/types';
 
@@ -37,6 +38,13 @@ export function TypeBadge({ accommodation }: { accommodation: Accommodation }) {
       className="type-dropdown"
       dict={window.ACCOMMODATION_TYPES}
       current={window.accType(accommodation.type)}
+      afterItems={
+        <AddWordMenuItem
+          bank="accommodationTypes"
+          label="Ajouter un type"
+          onCreate={(key) => window.setAccommodationType(accommodation.id, key)}
+        />
+      }
       onPick={(key) => window.setAccommodationType(accommodation.id, key)}
     />
   );
@@ -48,6 +56,13 @@ export function StatusBadge({ accommodation }: { accommodation: Accommodation })
       className="status-dropdown"
       dict={window.ACCOMMODATION_STATUSES}
       current={window.accStatus(accommodation.status)}
+      afterItems={
+        <AddWordMenuItem
+          bank="accommodationStatuses"
+          label="Ajouter un statut"
+          onCreate={(key) => window.setAccommodationStatus(accommodation.id, key)}
+        />
+      }
       onPick={(key) => window.setAccommodationStatus(accommodation.id, key)}
     />
   );

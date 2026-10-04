@@ -1,13 +1,13 @@
 import { FavoriteCell as SharedFavoriteCell } from '@/shared/cells/FavoriteCell';
 import { Icon } from '@/shared/Icon';
+import { AddWordMenuItem } from '@/shared/select/AddWordMenuItem';
 import { TagDropdown } from '@/shared/select/TagDropdown';
 import type { Attraction } from '@/store/types';
 
 /*
   Cellules de l'entité Attraction — deux consommateurs, Cities (villes-table/columns.tsx) et
   AttractionsView, mêmes rendus (CLAUDE.md, journal 2026-09-20). Pas encore portés : le tri sur
-  type/statut (ordre de vocabulaire, pas alphabétique), « Ouvrir la ressource » et « ＋ Ajouter un
-  type/statut » dans le menu TagDropdown (askNewWord est tout un flux à part).
+  type/statut (ordre de vocabulaire, pas alphabétique) et « Ouvrir la ressource » dans le menu.
 */
 
 export function FavoriteCell({ attraction }: { attraction: Attraction }) {
@@ -38,6 +38,13 @@ export function TypeBadge({ attraction }: { attraction: Attraction }) {
       className="type-dropdown"
       dict={window.ATTRACTION_TYPES}
       current={window.attractionType(attraction.type)}
+      afterItems={
+        <AddWordMenuItem
+          bank="attractionTypes"
+          label="Ajouter un type"
+          onCreate={(key) => window.setAttractionType(attraction.id, key)}
+        />
+      }
       onPick={(key) => window.setAttractionType(attraction.id, key)}
     />
   );
@@ -49,6 +56,13 @@ export function StatusBadge({ attraction }: { attraction: Attraction }) {
       className="status-dropdown"
       dict={window.ATTRACTION_STATUSES}
       current={window.attractionStatus(attraction.status)}
+      afterItems={
+        <AddWordMenuItem
+          bank="attractionStatuses"
+          label="Ajouter un statut"
+          onCreate={(key) => window.setAttractionStatus(attraction.id, key)}
+        />
+      }
       onPick={(key) => window.setAttractionStatus(attraction.id, key)}
     />
   );

@@ -283,6 +283,10 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    askNewWord: (
+      bank: string,
+      onCreate: (word: { key: string; label: string; emoji: string }) => void,
+    ) => void;
     sync: {
       url: string;
       lastUrl: string;

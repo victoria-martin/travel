@@ -4,9 +4,9 @@ import { TagLabel } from '../TagLabel';
 /*
   Forme commune à attractionTypeDropdown/attractionStatusTag/transportModeDropdown/
   transportStatusTag (legacy) : un dictionnaire {emoji,label}, la valeur courante, un choix.
-  `placeholder` couvre le cas où rien n'est choisi (`current` nul) et `beforeItems` les entrées de
-  menu hors dictionnaire (ex. « Ouvrir la ressource ») — toujours fournies par l'appelant, jamais
-  un flag dédié ici. Pas encore « ＋ Ajouter un mot » (askNewWord).
+  `placeholder` couvre le cas où rien n'est choisi (`current` nul) et `beforeItems`/`afterItems` les
+  entrées de menu hors dictionnaire (« Ouvrir la ressource », « ＋ Ajouter un statut ») — toujours
+  fournies par l'appelant, jamais un flag dédié ici.
 */
 export function TagDropdown<V extends { label: string; emoji: string }>({
   className,
@@ -15,6 +15,7 @@ export function TagDropdown<V extends { label: string; emoji: string }>({
   placeholder,
   emptyOption,
   beforeItems,
+  afterItems,
   onPick,
 }: {
   className: string;
@@ -23,6 +24,7 @@ export function TagDropdown<V extends { label: string; emoji: string }>({
   placeholder?: React.ReactNode;
   emptyOption?: V;
   beforeItems?: React.ReactNode;
+  afterItems?: React.ReactNode;
   onPick: (key: string) => void;
 }) {
   return (
@@ -65,6 +67,7 @@ export function TagDropdown<V extends { label: string; emoji: string }>({
                 </button>
               </DropdownMenu.Item>
             ))}
+            {afterItems}
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>

@@ -1,4 +1,5 @@
 import { OpenResourceMenuItem } from '@/shared/select/OpenResourceMenuItem';
+import { AddWordMenuItem } from '@/shared/select/AddWordMenuItem';
 import { TagDropdown } from '@/shared/select/TagDropdown';
 import type { Accommodation } from '@/store/types';
 
@@ -12,6 +13,13 @@ export function StepStatusDropdown({ accommodation }: { accommodation: Accommoda
       current={window.accStatus(accommodation.status)}
       beforeItems={
         <OpenResourceMenuItem onSelect={() => window.openAccommodationSheet(accommodation.id)} />
+      }
+      afterItems={
+        <AddWordMenuItem
+          bank="accommodationStatuses"
+          label="Ajouter un statut"
+          onCreate={(key) => window.setAccommodationStatus(accommodation.id, key)}
+        />
       }
       onPick={(key) => window.setAccommodationStatus(accommodation.id, key)}
     />
