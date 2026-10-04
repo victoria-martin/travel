@@ -1,4 +1,3 @@
-import stylexPlugin from '@stylexjs/unplugin';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { defineConfig } from 'vite';
@@ -10,10 +9,6 @@ import { defineConfig } from 'vite';
 */
 export default defineConfig({
   plugins: [
-    stylexPlugin.vite({
-      unstable_moduleResolution: { type: 'commonJS' },
-      filename: 'react-app.stylex.css',
-    }),
     react(),
   ],
   // React/Radix référencent process.env.NODE_ENV (code mort en prod, mais évalué quand même par
