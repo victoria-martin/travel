@@ -283,6 +283,17 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    sync: {
+      url: string;
+      lastUrl: string;
+      status: string;
+      message: string;
+      pendingRemote: unknown;
+    };
+    syncActive: () => boolean;
+    saveSyncUrl: () => void;
+    resolveSyncChoice: (side: 'remote' | 'local') => void;
+    disconnectSync: () => void;
     saveAndClose: () => void;
     applyTravelAccent: () => void;
     applyTravelTab: () => void;

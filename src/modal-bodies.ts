@@ -20,6 +20,7 @@ import { TransportModal } from './domains/transports/modal/TransportModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
 import { TravelModal } from './domains/travels/modal/TravelModal';
 import { VilleModal } from './domains/villes/modal/VilleModal';
+import { SyncModal } from './shell/SyncModal';
 
 /*
   Le corps d'une modale, par type — ce que ModalHost pose dans Dialog.Content. Pas que des
@@ -51,6 +52,7 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'scenario-panel': ScenarioPanelModal,
   'journal-panel': JournalPanelModal,
   'valise-composer': PackingComposerModal,
+  sync: SyncModal,
   'paste-import': PasteImportModal,
   voyage: TravelModal,
 };

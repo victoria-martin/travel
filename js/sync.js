@@ -23,6 +23,8 @@ let sync = {
   pendingRemote: null,
 };
 
+window.sync = sync;
+
 function syncActive() {
   return !!sync.url;
 }
@@ -332,47 +334,6 @@ async function initSync() {
 function openSyncModal() {
   modal = { type: 'sync', payload: {} };
   render();
-}
-
-function syncForm() {
-  const choice = sync.status === 'choice' && sync.pendingRemote;
-  return /* HTML */ `
-    <h3>Synchro Google Sheets</h3>
-    <p style="font-size:13px; color:var(--ink-soft); margin-top:-8px;">
-      Colle l'URL de ton application web Apps Script (celle qui finit par <strong>/exec</strong>).
-      Voir <strong>apps-script/Code.js</strong> et le README pour la mise en place.
-    </p>
-    <div class="field">
-      <label>URL de l'application web</label>
-      <input id="sync-url" type="text" value="${escapeHtml(sync.url || sync.lastUrl)}" />
-    </div>
-    <p style="font-size:12.5px; color:var(--ink-soft);">
-      État : ${escapeHtml(sync.message || sync.status)}
-    </p>
-    ${
-      choice
-        ? /* HTML */ ` <div
-            style="border-top:1px solid var(--line); padding-top:12px; margin-top:4px;"
-          >
-            <p style="font-size:13px;">
-              <strong>Tes données locales et celles du Sheet diffèrent.</strong> Que garde-t-on
-              comme point de départ ?
-            </p>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn" onclick="resolveSyncChoice('remote')">Prendre le Sheet</button>
-              <button class="btn btn-outline" onclick="resolveSyncChoice('local')">
-                Envoyer mes données locales
-              </button>
-            </div>
-          </div>`
-        : ''
-    }
-    <div class="modal-actions">
-      ${syncActive() ? `<button class="btn btn-danger" onclick="disconnectSync()">Déconnecter</button>` : ''}
-      <button class="btn btn-outline" onclick="closeModal()">Fermer</button>
-      <button class="btn" id="f-save" onclick="saveSyncUrl()">Connecter</button>
-    </div>
-  `;
 }
 
 function saveSyncUrl() {

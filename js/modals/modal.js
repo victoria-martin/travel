@@ -139,7 +139,8 @@ const MODAL_TYPES = {
     // body : React (src/domains/phrases/modal/AddTranslationModal.tsx, src/modal-bodies.ts).
     edits: true,
   },
-  sync: { body: () => syncForm() },
+  // body : React (src/shell/SyncModal.tsx, src/modal-bodies.ts).
+  sync: {},
   settings: { body: () => settingsForm() },
 };
 window.MODAL_TYPES = MODAL_TYPES;
