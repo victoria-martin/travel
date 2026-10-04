@@ -3,6 +3,8 @@ const STEP_AREA_SHAPES = [
   { key: 'rectangle', label: 'Rectangle' },
 ];
 
+window.STEP_AREA_SHAPES = STEP_AREA_SHAPES;
+
 function stepAreaShapeOption() {
   const options = STEP_AREA_SHAPES.map((shape) => ({
     key: shape.key,

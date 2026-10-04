@@ -41,20 +41,6 @@ function activeSideTab() {
   return SCENARIO_SIDE_TABS.find((tab) => tab.key === prefs.scenarioSidePanel);
 }
 
-// Des boutons séparés, pas un toggle-group : la pilule soudée de toolbarToggleGroup dit « un seul
-// choix parmi N, toujours actif » (Tableau/Cartes) — ici recliquer l'actif referme le panneau, un
-// état de plus qu'un toggle-group ne sait pas montrer.
-function scenarioSideTabsButtons(scenarioId) {
-  return SCENARIO_SIDE_TABS.map((tab) =>
-    toolbarButton({
-      icon: tab.icon,
-      label: tab.label,
-      active: tab.key === prefs.scenarioSidePanel,
-      onclick: `onScenarioPanelToggle('${scenarioId}','${tab.key}')`,
-    }),
-  ).join('');
-}
-
 // Rail vertical, dupliqué du toggle-group du header pour comparer les deux emplacements à l'usage
 // — bord droit de la page, toujours visible, sur le même state que le header.
 function scenarioSideTabsRail(scenarioId) {

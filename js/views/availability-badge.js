@@ -8,6 +8,8 @@ const OUT_OF_RANGE_STYLES = [
   { key: 'subtle', label: 'Icône seule', modifier: 'oor-subtle', showText: false },
 ];
 
+window.OUT_OF_RANGE_STYLES = OUT_OF_RANGE_STYLES;
+
 function outOfRangeStyle() {
   return OUT_OF_RANGE_STYLES.find((s) => s.key === prefs.outOfRangeStyle) || OUT_OF_RANGE_STYLES[0];
 }

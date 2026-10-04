@@ -452,9 +452,22 @@ declare global {
     scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
     scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
     trailShown: () => boolean;
+    toggleTrailShown: () => void;
+    trailColorByType: () => boolean;
+    toggleTrailColor: () => void;
+    STEP_AREA_SHAPES: { key: string; label: string }[];
+    setStepAreaShape: (shape: string) => void;
+    weatherBannerShown: () => boolean;
+    weatherBannerStyle: () => string;
+    toggleWeatherBanner: () => void;
+    setWeatherBannerStyle: (style: string) => void;
+    WEATHER_BANNER_STYLES: { key: string; label: string }[];
+    OUT_OF_RANGE_STYLES: { key: string; label: string; modifier: string; showText: boolean }[];
+    outOfRangeStyle: () => { key: string; label: string; modifier: string; showText: boolean };
+    setOutOfRangeStyle: (key: string) => void;
+    onScenarioPanelToggle: (scenarioId: string, key: string) => void;
     scenarioRouteTrail: (scenario: import('../store/types').Scenario) => string;
     scenarioRouteStrip: (scenario: import('../store/types').Scenario) => string;
-    scenarioSideTabsButtons: (scenarioId: string) => string;
     scenarioSideTabsRail: (scenarioId: string) => string;
     scenarioSidePanel: (scenario: import('../store/types').Scenario) => string;
     scenarioSplitStyle: () => string;
@@ -463,7 +476,6 @@ declare global {
     destroyScenarioDetailMaps: () => void;
     toolbarSeparator: () => string;
     toolbarMenu: () => string;
-    scenarioWeatherToggleButton: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
     stepLetter: (rank: number) => string;
     stepOutReason: (

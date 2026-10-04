@@ -39,12 +39,14 @@ type ButtonProps = {
     | 'link';
   size?: 'default' | 'small' | 'square';
   className?: string;
+  title?: string;
 };
 
-export const Button = ({ children, onClick, variant, size, className }: ButtonProps) => {
+export const Button = ({ children, onClick, variant, size, className, title }: ButtonProps) => {
   return (
     <button
       type="button"
+      title={title}
       onClick={onClick}
       className={button({ variant, size }) + (className ? ` ${className}` : '')}
     >

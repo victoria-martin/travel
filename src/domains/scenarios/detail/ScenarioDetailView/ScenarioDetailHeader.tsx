@@ -1,6 +1,9 @@
 import { Icon } from '@/shared/Icon';
+import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
 import type { Scenario } from '@/store/types';
-import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
+import { ScenarioDetailSettings } from './ScenarioDetailHeader/ScenarioDetailSettings';
+import { ScenarioSideTabsButtons } from './ScenarioDetailHeader/ScenarioSideTabsButtons';
+import { ScenarioWeatherToggle } from './ScenarioDetailHeader/ScenarioWeatherToggle';
 
 export function ScenarioDetailHeader({
   scenario,
@@ -54,9 +57,13 @@ export function ScenarioDetailHeader({
       </div>
 
       <div className="view-header-actions">
-        <ScenarioLegacyMarkup
-          html={`${window.scenarioWeatherToggleButton()} ${window.toolbarSeparator()} ${window.scenarioSideTabsButtons(scenario.id)} ${window.toolbarSeparator()} ${window.toolbarMenu()}`}
-        />
+        <ScenarioWeatherToggle />
+        <span className="toolbar-separator" />
+        <ScenarioSideTabsButtons scenarioId={scenario.id} />
+        <span className="toolbar-separator" />
+        <SettingsMenu>
+          <ScenarioDetailSettings />
+        </SettingsMenu>
       </div>
 
       <div className="view-sub" style={{ marginLeft: 44 }}>

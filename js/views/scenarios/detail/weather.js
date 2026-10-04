@@ -153,6 +153,8 @@ const WEATHER_BANNER_STYLES = [
   { key: 'line', label: 'Lignes' },
 ];
 
+window.WEATHER_BANNER_STYLES = WEATHER_BANNER_STYLES;
+
 function weatherBannerStyleOption() {
   return /* HTML */ `
     <div class="page-submenu">
@@ -230,11 +232,3 @@ function scenarioWeatherBanner(scenario) {
   </div>`;
 }
 
-function scenarioWeatherToggleButton() {
-  return toolbarButton({
-    icon: svgIcon('cloud'),
-    label: 'Météo',
-    active: weatherBannerShown(),
-    onclick: 'toggleWeatherBanner()',
-  });
-}

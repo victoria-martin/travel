@@ -146,15 +146,23 @@ composant, deux porteurs — étape ou groupe).
 setters d'extra, retrait d'`extrasBlock`/`extraAddRow` (mortes). `pnpm react:typecheck`/
 `react:build` propres.
 
-**D. Chrome de l'en-tête** —
-[weather.js](../js/views/scenarios/detail/weather.js) (`scenarioWeatherToggleButton`, le bouton),
-[side-tabs.js](../js/views/scenarios/detail/side-tabs.js) (`scenarioSideTabsButtons`, les 3
-boutons Carte/Argent/Valise), [menu.js](../js/views/toolbar/menu.js) (`toolbarMenu`, le ⋮ —
-vérifier s'il existe déjà un équivalent React, `SettingsMenu`/`ToolbarPanel` dans
-[shared/toolbar/](../src/shared/toolbar/), avant de le reporter). Les trois sont assemblés en une
-seule chaîne concatenée dans
-[ScenarioDetailHeader.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ScenarioDetailHeader.tsx) —
-à séparer en 3 composants assemblés en JSX plutôt qu'une concaténation de chaînes.
+**D. Chrome de l'en-tête — ✅ fait** (patron `shared/buttons/` : `Button` + `ToolbarFace`, pas de
+StyleX). [ScenarioDetailHeader.tsx](../src/domains/scenarios/detail/ScenarioDetailView/ScenarioDetailHeader.tsx)
+assemble en JSX : bouton météo, séparateur, 4 boutons d'onglet (`ScenarioDetailHeader/ScenarioWeatherToggle.tsx`,
+`ScenarioSideTabsButtons.tsx`), séparateur, ⋮ (`SettingsMenu` + `ScenarioDetailSettings.tsx`).
+- `SettingsMenu` était un port partiel (manquaient l'indicateur hors dispo et les réglages de page) :
+  complété — indicateur hors dispo via un nouveau [RadioCardField](../src/shared/form-fields/RadioCardField.tsx)
+  partagé, et un slot `children` pour les réglages propres à la page, comme le legacy `pageSettingsBlock`.
+  Effet de bord voulu : les autres pages qui utilisent `SettingsMenu` retrouvent le même réglage que leur ⋮ legacy.
+- `Button` accepte un `title` (passthrough additif).
+- Legacy retiré : `scenarioWeatherToggleButton`, `scenarioSideTabsButtons`, `scenarioDetailHeader` et
+  ses deux helpers (`header.js` ne garde que `setScenarioStartDate`).
+- Constantes exposées sur `window` : `WEATHER_BANNER_STYLES`, `STEP_AREA_SHAPES`, `OUT_OF_RANGE_STYLES`.
+- **Restent legacy, hors D :** `scenarioSideTabsRail` (rail droit, cluster G), `toolbarMenu`/`toolbarSeparator`
+  (encore utilisés par les autres headers legacy), `trailOptions` (encore lu par la modale Réglages legacy).
+  Les 4 onglets sont listés deux fois (legacy `SCENARIO_SIDE_TABS` pour les corps, React pour les boutons) —
+  à fusionner quand G portera le panneau.
+- `pnpm react:typecheck` / `react:build` propres.
 
 **E. Bannière météo** — [weather.js](../js/views/scenarios/detail/weather.js) (240 lignes, le plus
 gros fichier de tout le détail scénario) : `scenarioWeatherBanner(scenario)`. Probablement un appel
