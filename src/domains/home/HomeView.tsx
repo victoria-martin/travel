@@ -30,7 +30,7 @@ export function HomeView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">{title}</h2>
-          <p className="view-sub">{homeDatesLabel(travel)}</p>
+          <span className="view-sub">{homeDatesLabel(travel)}</span>
         </div>
       </div>
       <div className="home-cards">

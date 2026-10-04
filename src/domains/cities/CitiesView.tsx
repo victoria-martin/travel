@@ -1,3 +1,4 @@
+import { HeaderActions } from '@/shared/header/HeaderActions';
 import { DataTable } from '@/shared/DataTable/DataTable';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { useTravelStore } from '@/store/useTravelStore';
@@ -36,19 +37,22 @@ export function CitiesView() {
     <>
       <div className="view-header">
         <CitiesHeader attractions={attractions} items={items} />
-        <CitiesHeaderActions query={query} setQuery={setQuery} />
+        <HeaderActions />
       </div>
+      <CitiesHeaderActions query={query} setQuery={setQuery} />
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucun lieu</strong>
           Ajoute une ville, un village, un premier lieu depuis Lieux & activités.
         </div>
       ) : (
-        <DataTable
-          columns={visibleColumns}
-          items={items}
-          onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
-        />
+        <div className="table-scroll">
+          <DataTable
+            columns={visibleColumns}
+            items={items}
+            onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
+          />
+        </div>
       )}
     </>
   );

@@ -37,7 +37,7 @@ export function MapView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Carte</h2>
-          <p className="view-sub">{window.ROUTE_HELP}</p>
+          <span className="view-sub">{window.ROUTE_HELP}</span>
         </div>
         {/* pas sur de cette implem mais laisson spr l instant */}
         {/* <HeaderActions>

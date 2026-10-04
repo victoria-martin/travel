@@ -40,7 +40,7 @@ export function ScenariosView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Scénarios</h2>
-          <p className="view-sub">Compare différentes versions de ton itinéraire</p>
+          <span className="view-sub">Compare différentes versions de ton itinéraire</span>
         </div>
         <div className="view-header-actions">
           <label className="list-search" title="Rechercher">

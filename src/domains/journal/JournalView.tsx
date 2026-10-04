@@ -33,7 +33,7 @@ export function JournalView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Journal</h2>
-          <p className="view-sub">Un carnet de bord, jour par jour</p>
+          <span className="view-sub">Un carnet de bord, jour par jour</span>
         </div>
         <div className="view-header-actions">
           <select

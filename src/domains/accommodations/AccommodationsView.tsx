@@ -1,8 +1,8 @@
 import { AddResourceButton } from '@/shared/buttons/AddResourceButton';
 import { DataTable } from '@/shared/DataTable/DataTable';
-import { normalizeSearch } from '@/shared/normalizeSearch';
 import { HeaderActions } from '@/shared/header/HeaderActions';
 import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
+import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
 import { useTravelStore } from '@/store/useTravelStore';
@@ -39,9 +39,9 @@ export function AccommodationsView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Hébergements</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             {items.length} enregistré{items.length > 1 ? 's' : ''}
-          </p>
+          </span>
         </div>
         <HeaderActions />
       </div>
@@ -53,13 +53,6 @@ export function AccommodationsView() {
           onClick={() => window.openModal('accommodation')}
           label="Ajouter"
         />
-        {/* <button
-          type="button"
-          className="btn btn-outline btn-small"
-          onClick={() => window.openModal('accommodation')}
-        >
-          Ajouter
-        </button> */}
       </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
@@ -67,11 +60,13 @@ export function AccommodationsView() {
           Ajoute tes premiers hébergements pour pouvoir les rattacher à tes étapes.
         </div>
       ) : (
-        <DataTable
-          columns={visibleColumns}
-          items={items}
-          onRowClick={(accommodation) => window.openSheet('accommodation', accommodation.id)}
-        />
+        <div className="table-scroll">
+          <DataTable
+            columns={visibleColumns}
+            items={items}
+            onRowClick={(accommodation) => window.openSheet('accommodation', accommodation.id)}
+          />
+        </div>
       )}
     </>
   );

@@ -1,4 +1,5 @@
 import { DataTable } from '@/shared/DataTable/DataTable';
+import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
@@ -45,17 +46,19 @@ export function TransportsListTab() {
 
   return (
     <>
-      <div className="view-header-actions">
+      <TableHeaderActions>
         <SearchInput value={query} onChange={setQuery} />
         <ColumnPicker kind="transports" columns={columns} />
-      </div>
+      </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucun transport</strong>
           Ajoute un premier trajet.
         </div>
       ) : (
-        <DataTable columns={visibleColumns} items={items} />
+        <div className="table-scroll">
+          <DataTable columns={visibleColumns} items={items} />
+        </div>
       )}
     </>
   );

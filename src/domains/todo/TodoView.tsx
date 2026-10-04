@@ -27,10 +27,10 @@ export function TodoView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">À faire</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             {lists.length} liste{lists.length > 1 ? 's' : ''} — {itemCount} ligne
             {itemCount > 1 ? 's' : ''} à traiter
-          </p>
+          </span>
         </div>
         <div className="view-header-actions">
           <label className="list-search" title="Rechercher">

@@ -36,11 +36,11 @@ export function TranslationsView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Phrases clé</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             {available.length
               ? `Pratique pour le voyage, par contexte — ${window.languageLabel(lang)}`
               : 'Aucun pays choisi pour ce voyage — ajoute-les dans la modale du voyage.'}
-          </p>
+          </span>
         </div>
         <div className="view-header-actions">
           {available.length > 1 && (

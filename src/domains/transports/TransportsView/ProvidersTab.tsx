@@ -1,5 +1,6 @@
 import { DataTable } from '@/shared/DataTable/DataTable';
 import { Icon } from '@/shared/Icon';
+import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
@@ -41,7 +42,7 @@ export function ProvidersTab() {
 
   return (
     <>
-      <div className="view-header-actions test-red">
+      <TableHeaderActions>
         <SearchInput value={query} onChange={setQuery} />
         <ColumnPicker kind="prestataires" columns={columns} />
         <button
@@ -55,18 +56,20 @@ export function ProvidersTab() {
           </span>
           <span className="toolbar-label">Ajouter</span>
         </button>
-      </div>
+      </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucun loueur ni compagnie</strong>
           Ajoute un premier prestataire, ou crée-le depuis un trajet.
         </div>
       ) : (
-        <DataTable
-          columns={visibleColumns}
-          items={items}
-          onRowClick={(provider) => window.openSheet('prestataire', provider.id)}
-        />
+        <div className="table-scroll">
+          <DataTable
+            columns={visibleColumns}
+            items={items}
+            onRowClick={(provider) => window.openSheet('prestataire', provider.id)}
+          />
+        </div>
       )}
     </>
   );

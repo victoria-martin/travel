@@ -24,7 +24,7 @@ export function ExpensesView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Dépenses</h2>
-          <p className="view-sub">Budget du scénario et dépenses réelles du voyage</p>
+          <span className="view-sub">Budget du scénario et dépenses réelles du voyage</span>
         </div>
         <div className="view-header-actions">
           <AddBudgetButton scenario={scenario} />

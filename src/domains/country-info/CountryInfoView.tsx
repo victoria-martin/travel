@@ -13,7 +13,7 @@ export function CountryInfoView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Infos utiles</h2>
-          <p className="view-sub">Numéros d&apos;urgence et ambassade, par pays du voyage</p>
+          <span className="view-sub">Numéros d&apos;urgence et ambassade, par pays du voyage</span>
         </div>
       </div>
       {countries.length ? (

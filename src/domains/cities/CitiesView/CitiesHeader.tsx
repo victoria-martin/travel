@@ -12,10 +12,10 @@ export const CitiesHeader = ({
   return (
     <div>
       <h2 className="view-title">Villes</h2>
-      <p className="view-sub">
+      <span className="view-sub">
         {cities.size} ville{cities.size > 1 ? 's' : ''} — {items.length} lieu
         {items.length > 1 ? 'x' : ''}
-      </p>
+      </span>
     </div>
   );
 };

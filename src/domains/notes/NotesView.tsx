@@ -16,7 +16,7 @@ export function NotesView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Notes</h2>
-          <p className="view-sub">Bloc-notes libre, partagé via le Sheet</p>
+          <span className="view-sub">Bloc-notes libre, partagé via le Sheet</span>
         </div>
       </div>
       <textarea

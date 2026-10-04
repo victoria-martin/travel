@@ -2,10 +2,11 @@ import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
 import { DataTable } from '@/shared/DataTable/DataTable';
 import type { Column } from '@/shared/DataTable/types';
 import { Icon } from '@/shared/Icon';
+import { HeaderActions } from '@/shared/header/HeaderActions';
+import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
 import type { FixedCost } from '@/store/types';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
@@ -122,24 +123,26 @@ export function FixedCostsView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Charges fixes</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             Péages, assurances, abonnements liés au voyage — {items.length} enregistrée
             {items.length > 1 ? 's' : ''}
-          </p>
+          </span>
         </div>
-        <div className="view-header-actions">
-          <SearchInput value={query} onChange={setQuery} />
-          <ColumnPicker kind="charges" columns={columns} />
-          <SettingsMenu />
-        </div>
+        <HeaderActions />
       </div>
+      <TableHeaderActions>
+        <SearchInput value={query} onChange={setQuery} />
+        <ColumnPicker kind="charges" columns={columns} />
+      </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucune charge</strong>
           Ajoute un péage, une assurance ou un abonnement.
         </div>
       ) : (
-        <DataTable columns={visibleColumns} items={items} />
+        <div className="table-scroll">
+          <DataTable columns={visibleColumns} items={items} />
+        </div>
       )}
     </>
   );

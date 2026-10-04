@@ -37,10 +37,10 @@ export function PackingView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Valise</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             {items.length} item{items.length > 1 ? 's' : ''} au catalogue · {categories.length}{' '}
             catégorie{categories.length > 1 ? 's' : ''}
-          </p>
+          </span>
         </div>
       </div>
       <div className="packing-toolbar">

@@ -1,8 +1,9 @@
 import { DataTable } from '@/shared/DataTable/DataTable';
+import { HeaderActions } from '@/shared/header/HeaderActions';
+import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
 import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -34,27 +35,29 @@ export function AttractionsView() {
       <div className="view-header">
         <div>
           <h2 className="view-title">Lieux &amp; activités</h2>
-          <p className="view-sub">
+          <span className="view-sub">
             {items.length} lieu{items.length > 1 ? 'x' : ''}
-          </p>
+          </span>
         </div>
-        <div className="view-header-actions">
-          <SearchInput value={query} onChange={setQuery} />
-          <ColumnPicker kind="attractions" columns={columns} />
-          <SettingsMenu />
-        </div>
+        <HeaderActions />
       </div>
+      <TableHeaderActions>
+        <SearchInput value={query} onChange={setQuery} />
+        <ColumnPicker kind="attractions" columns={columns} />
+      </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
           <strong>Aucun lieu</strong>
           Ajoute une ville, un village, un premier lieu à visiter.
         </div>
       ) : (
-        <DataTable
-          columns={visibleColumns}
-          items={items}
-          onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
-        />
+        <div className="table-scroll">
+          <DataTable
+            columns={visibleColumns}
+            items={items}
+            onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
+          />
+        </div>
       )}
     </>
   );

@@ -1078,6 +1078,39 @@ tr:hover td {
   /* display: block; */
 }
 
+.main:has(.table-scroll) {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.main:has(.table-scroll) .view-header,
+.main:has(.table-scroll) .table-header-actions {
+  flex-shrink: 0;
+}
+.table-scroll {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.table-scroll .table-wrap {
+  min-height: 0;
+  overflow: auto;
+}
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.main:has(.table-scroll) > .transports-react-view,
+.transports-react-view:has(.table-scroll) > [role='tabpanel'] {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .table-wrap-hebergements .row-openable {
   display: table-row;
   /* align-content: center; */
@@ -4371,6 +4404,7 @@ tr:hover td {
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 8px;
+  width: 100%;
 }
 .expense-group {
   margin-bottom: 10px;
