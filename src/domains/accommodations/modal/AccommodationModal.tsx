@@ -1,5 +1,5 @@
+import { LocateFields } from '@/shared/form-fields/LocateFields';
 import { Icon } from '@/shared/Icon';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { WordSelectField } from '@/shared/WordSelectField';
 import { TagsField } from '@/shared/form-fields/TagsField';
 import { TextField } from '@/shared/form-fields/TextField';
@@ -10,6 +10,7 @@ import { ModalHeader } from '@/shared/modal/ModalHeader';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
 import type { Accommodation } from '@/store/types';
+import { OutOfRangeBanner } from './AccommodationModal/OutOfRangeBanner';
 import { useState } from 'react';
 
 /*
@@ -19,8 +20,7 @@ import { useState } from 'react';
   (BookingAccommodationModal, …) plutôt qu'un seul composant paramétré : champs présents, titre et
   ordre diffèrent trop d'une porte à l'autre pour une config commune
   (docs/archivé/react-migration-modales-plan.md). Type/statut passent par le mécanisme word-select existant
-  (WordSelectField), comme AttractionModal. `locateFields` et la bannière hors-disponibilité
-  restent en LegacyMarkup.
+  (WordSelectField), comme AttractionModal.
 */
 export function AccommodationModal({ payload }: { payload: Accommodation }) {
   window.wordSelectValues['f-type'] = payload.type || '';
@@ -39,9 +39,7 @@ export function AccommodationModal({ payload }: { payload: Accommodation }) {
         <ModalTitle isNew={!payload.id} subject="un hébergement" />
       </ModalHeader>
       <div className="modal-body-scroll">
-        <LegacyMarkup
-          html={window.outOfRangeBanner(window.accommodationSearchOutOfRange(payload))}
-        />
+        <OutOfRangeBanner reason={window.accommodationSearchOutOfRange(payload)} />
         <FieldRow>
           <WordSelectField
             id="f-type"
@@ -70,7 +68,7 @@ export function AccommodationModal({ payload }: { payload: Accommodation }) {
           vocabulary={window.allAccommodationTags()}
           onChange={handleTagsChange}
         />
-        <LegacyMarkup html={window.locateFields(payload)} />
+        <LocateFields payload={payload} />
         <FieldRow>
           <TextField
             id="f-price"

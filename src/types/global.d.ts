@@ -144,7 +144,6 @@ declare global {
     allAccommodationTags: () => string[];
     pasteImportInstructions: () => string;
     runPasteImport: () => void;
-    outOfRangeBanner: (reason: string | null) => string;
     accommodationSearchOutOfRange: (
       acc: import('../store/types').Accommodation,
     ) => string | null;
@@ -194,8 +193,8 @@ declare global {
     UNSET_ATTRACTION_TYPE: { label: string; emoji: string; color: string };
     UNSET_ATTRACTION_STATUS: { label: string; emoji: string };
     attractionAccommodations: () => import('../store/types').Accommodation[];
-    locateFields: (payload: unknown) => string;
-    attractionScenarioActions: () => string;
+    PLACE_LEVELS: { key: string; label: string }[];
+    locateAddress: () => void;
     importGoogleMapsPaste: (field: HTMLInputElement, nameId: string) => void;
     importGoogleMapsLink: (field: HTMLInputElement, nameId: string) => void;
     saveAttraction: (id: string) => void;
@@ -298,6 +297,8 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    attachAttractionToStep: (scenarioId: string, stepId: string) => void;
+    addAttractionToPlan: () => void;
     askNewWord: (
       bank: string,
       onCreate: (word: { key: string; label: string; emoji: string }) => void,

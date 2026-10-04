@@ -8,26 +8,6 @@
   est géographiquement le plus proche (nearestAccommodationStep).
 */
 
-function attractionScenarioActions() {
-  return /* HTML */ `<div class="field-row">
-    ${attractionScenarioDropdown()}
-    <button type="button" class="btn btn-outline" onclick="addAttractionToPlan()">
-      Ajouter au plan
-    </button>
-  </div>`;
-}
-
-function attractionScenarioDropdown() {
-  return inlineDropdown(
-    'attraction-scenario',
-    'attraction-scenario-dropdown',
-    /* HTML */ `<summary class="btn btn-outline attraction-scenario-trigger">
-        Ajouter à un scénario
-      </summary>
-      <div class="inline-menu">${scenarioStepPickerGroups('attachAttractionToStep')}</div>`,
-  );
-}
-
 function attachAttractionToStep(scenarioId, stepId) {
   closeOpenInlineMenu();
   const attractionId = ensureAttractionSaved();
@@ -51,15 +31,13 @@ function addAttractionToPlan() {
 
 /*
   Enregistre l'activité en cours d'édition sans fermer la modale, pour que les deux boutons
-  marchent aussi bien pendant une création qu'une édition. Le bouton Enregistrer est réécrit sur
-  l'id obtenu : sans ça, il resterait câblé sur l'id vide d'origine et un second clic créerait un
-  doublon au lieu de mettre à jour.
+  marchent aussi bien pendant une création qu'une édition. Le bouton Enregistrer (AttractionModal)
+  lit l'id dans modal.payload au clic : il met à jour celle qu'on vient de créer.
 */
 function ensureAttractionSaved() {
   const item = readAttractionForm(modal.payload.id);
   upsertAttraction(item);
   modal.payload = structuredClone(item);
-  document.getElementById('f-save')?.setAttribute('onclick', `saveAttraction('${item.id}')`);
   modalSnapshot = modalFieldsState();
   return item.id;
 }

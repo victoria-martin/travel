@@ -1,5 +1,5 @@
+import { LocateFields } from '@/shared/form-fields/LocateFields';
 import { Icon } from '@/shared/Icon';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { WordSelectField } from '@/shared/WordSelectField';
 import { SelectField } from '@/shared/form-fields/SelectField';
 import { TagsField } from '@/shared/form-fields/TagsField';
@@ -10,13 +10,14 @@ import { CloseModalButton } from '@/shared/modal/CloseModalButton';
 import { ModalSaveButton } from '@/shared/modal/ModalSaveButton';
 import { ModalTitle } from '@/shared/modal/ModalTitle';
 import type { Attraction } from '@/store/types';
+import { AttractionScenarioActions } from './AttractionModal/AttractionScenarioActions';
 import { useState } from 'react';
 
 /*
-  Port d'attractionForm/saveAttraction (js/views/attractions/modal/{form,save}.js). Deux blocs
-  restent délégués en LegacyMarkup, pas réimplémentés ici : `locateFields` (recherche d'adresse +
-  géocodage, sous-système à lui) et `attractionScenarioActions` (ajout à un scénario). `tags` est
-  contrôlé (TagsField) comme pour FixedCostModal ; tout le reste est non contrôlé.
+  Port d'attractionForm/saveAttraction (js/views/attractions/modal/{form,save}.js). `tags` est
+  contrôlé (TagsField) comme pour FixedCostModal ; tout le reste est non contrôlé. Enregistrer lit
+  l'id du payload courant : « Ajouter à un scénario » enregistre une activité neuve en cours de
+  saisie, et lui donne un id que le clic suivant doit mettre à jour, pas recréer.
 */
 export function AttractionModal({ payload }: { payload: Attraction }) {
   // wordSelectChanged lit cette valeur pour remettre le select en l'état si "＋ Ajouter…" est
@@ -72,7 +73,7 @@ export function AttractionModal({ payload }: { payload: Attraction }) {
         vocabulary={window.allAttractionTags()}
         onChange={handleTagsChange}
       />
-      <LegacyMarkup html={window.locateFields(payload)} />
+      <LocateFields payload={payload} />
       <SelectField
         id="a-accommodation"
         label="Hébergement"
@@ -109,10 +110,10 @@ export function AttractionModal({ payload }: { payload: Attraction }) {
         <input type="checkbox" id="a-favorite" defaultChecked={payload.favorite} />
         <Icon name="star" fill /> Coup de cœur
       </label>
-      <LegacyMarkup html={window.attractionScenarioActions()} />
+      <AttractionScenarioActions />
       <div className="modal-actions">
         <CloseModalButton />
-        <ModalSaveButton onClick={() => window.saveAttraction(payload.id || '')} />
+        <ModalSaveButton onClick={() => window.saveAttraction(window.modal?.payload.id || '')} />
       </div>
     </>
   );

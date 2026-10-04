@@ -12,6 +12,8 @@ const PLACE_LEVELS = [
   { key: 'city', label: 'Ville' },
 ];
 
+window.PLACE_LEVELS = PLACE_LEVELS;
+
 const PLACE_LEVEL_KEYS = PLACE_LEVELS.map((level) => level.key);
 
 function placeLevelsOf(source) {

@@ -1,4 +1,4 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import { LocateFields } from '@/shared/form-fields/LocateFields';
 import { WordSelectField } from '@/shared/WordSelectField';
 import { TextField } from '@/shared/form-fields/TextField';
 import { TextareaField } from '@/shared/form-fields/TextareaField';
@@ -37,7 +37,7 @@ export function AirbnbAccommodationModal({ payload }: { payload: Accommodation }
         unset={window.UNSET_ACCOMMODATION_STATUS}
         addLabel="Ajouter un statut"
       />
-      <LegacyMarkup html={window.locateFields(payload)} />
+      <LocateFields payload={payload} />
       <FieldRow>
         <TextField
           id="f-price"

@@ -46,11 +46,3 @@ function outOfRangeIndicator(reason) {
   </span>`;
 }
 
-// La bannière d'une fiche : la raison s'y lit toujours en clair, quel que soit le style choisi.
-function outOfRangeBanner(reason) {
-  if (!reason) return '';
-  const style = outOfRangeStyle();
-  return /* HTML */ `<div class="oor-banner ${style.modifier}">
-    ${svgIcon('triangle-alert')} ${escapeHtml(reason)}
-  </div>`;
-}
