@@ -448,7 +448,9 @@ declare global {
     transportLegLabel: (transport: import('../store/types').Transport) => string;
     attachScenarioTransport: (scenarioId: string, transportId: string) => void;
     detachScenarioTransport: (scenarioId: string, transportId: string) => void;
-    scenarioExpensesBlock: (scenario: import('../store/types').Scenario) => string;
+    fixedCostsTotal: (scenario: import('../store/types').Scenario) => number;
+    attachScenarioExpense: (scenarioId: string, costId: string) => void;
+    detachScenarioExpense: (scenarioId: string, costId: string) => void;
     scenarioTotalBlock: (scenario: import('../store/types').Scenario) => string;
     trailShown: () => boolean;
     toggleTrailShown: () => void;
