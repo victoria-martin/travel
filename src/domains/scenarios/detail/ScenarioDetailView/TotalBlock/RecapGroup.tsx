@@ -1,4 +1,4 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
+import type { ReactNode } from 'react';
 import { RecapRow } from './RecapRow';
 
 // A family folds on its own; its amount reads on its title whether open or not, and again at its foot.
@@ -6,12 +6,12 @@ export function RecapGroup({
   foldKey,
   title,
   total,
-  rowsHtml,
+  children,
 }: {
   foldKey: string;
   title: string;
   total: string;
-  rowsHtml: string;
+  children: ReactNode;
 }) {
   return (
     <details
@@ -24,7 +24,7 @@ export function RecapGroup({
         <span></span>
         <strong>{total}</strong>
       </summary>
-      <LegacyMarkup html={rowsHtml} />
+      {children}
       <RecapRow
         label={`Total ${title.toLowerCase()}`}
         amount={total}

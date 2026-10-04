@@ -1,6 +1,7 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import type { Scenario } from '@/store/types';
 import { OfferBlock } from '../OfferBlock';
+import { RoadFuelCostRow } from '../RoadFuelCostRow';
+import { RoadTollCostRow } from '../RoadTollCostRow';
 
 export function TransportsTab({ scenario }: { scenario: Scenario }) {
   return (
@@ -8,7 +9,8 @@ export function TransportsTab({ scenario }: { scenario: Scenario }) {
       <div className="acc-recap-title">Transports</div>
       <OfferBlock scenario={scenario} />
       <div className="acc-recap">
-        <LegacyMarkup html={window.roadTollCostRow(scenario) + window.roadFuelCostRow(scenario)} />
+        <RoadTollCostRow scenario={scenario} />
+        <RoadFuelCostRow scenario={scenario} />
       </div>
     </>
   );

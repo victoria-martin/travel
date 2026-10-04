@@ -88,10 +88,24 @@ tous ses montants.
   `fillStepLegs`, que le détail n'appelle pas (seul `ScenariosView` le fait). Même cause que la
   bande d'itinéraire corrigée au cluster F. À porter avec les lignes de détail.
 
-**G3. Lignes de route + détail du total — effort high.** `OfferBlock` est déjà monté par
-`TransportsTab` (G2). Reste : `roadTollCostRow`/`roadFuelCostRow`/`roadDetailRows`
-([road-rows.js](../../js/views/scenarios/detail/road-rows.js), vérifier `useScenarioRoad`) et les
-quatre lignes de détail du total, avec la route des lignes « 🚗 » lue sur `useScenarioRoute`.
+**G3. Lignes de route + détail du total — ✅ fait.** Lignes de route à plat dans
+`ScenarioDetailView/` (`RoadCostRow`, `RoadFuelCostRow`, `RoadTollCostRow` — lues par
+`TransportsTab` et le détail du total) ; budget saisi via `EditableTextCell` →
+`setScenarioRoadBudget`. Détail du total dans `TotalBlock/` : `AccommodationDetailRows` (+ dossier :
+`StayRow`, `PassageRow`, `LegRow`, `RecapIconLabel`, `recapStops`), `ChargeDetailRows`,
+`TransportDetailRows`, `AttractionDetailRows`, `RoadDetailRows`, `RoadRow`, `ExtraRecapRow`.
+`RecapGroup` prend ses lignes en `children` au lieu d'une chaîne HTML.
+- `TotalBlock` lit la route via `useScenarioRoad` + `useScenarioRoute` (le cache de `fetchRoute`
+  évite une seconde requête) : les lignes « 🚗 » du détail Hébergements affichent enfin durée,
+  essence et péage du tronçon, que rien ne remplissait dans le détail.
+- `Scenario` (types.ts) gagne `fuelBudget?`/`tollBudget?`, champs déjà persistés et lus par
+  `road.js`.
+- Legacy supprimé : `charge-rows.js`, `transport-rows.js`, `attraction-rows.js` (fichiers +
+  `<script src>`), les lignes de `road-rows.js` (ne reste que `setScenarioRoadBudget`),
+  `recapSubRow`/`extraRecapRow`/`extraDateLabel` de `recap-row.js`. **Restent** pour la carte de
+  comparaison (`compare/card.js`, hors scope) : `accommodationDetailRows` et sa chaîne
+  (`recapRow`, `scenarioRecapRow`, `recapPlaceLabel`, `recapIconLabel`, `recapLegRow`).
+`pnpm react:typecheck` propre.
 
 **G4. Onglet Carte — effort high.** `LeafletMap` gagne une prop `id` ; l'onglet monte un
 `LeafletMap` avec les attractions en marqueurs et le tracé via `afterMarkers`. Retire

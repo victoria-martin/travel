@@ -8,10 +8,6 @@ function recapRow(label, amount, className) {
   </div>`;
 }
 
-function recapSubRow(label, amount) {
-  return recapRow(label, amount, 'acc-recap-sub');
-}
-
 function scenarioRecapRow(r) {
   const cost = placeCost(r);
   return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
@@ -37,23 +33,6 @@ function recapPlaceLabel(r) {
 // porte une icône ou non, et le chiffre d'une ligne de route tombe sur eux.
 function recapIconLabel(icon, label) {
   return `<span class="acc-recap-icon">${icon}</span>${label}`;
-}
-
-// Une ligne d'extra se lit pareil dans les deux familles : son libellé, son nombre s'il dépasse un,
-// son montant.
-function extraRecapRow(line) {
-  const count = extraCount(line);
-  return /* HTML */ `<div class="acc-recap-row acc-recap-sub">
-    <span>${extraLabel(line)}</span>
-    <span class="acc-recap-nights"
-      >${extraDateLabel(line)}${extraDateLabel(line) && count > 1 ? ' · ' : ''}${count > 1 ? extraCountLabel(count) : ''}</span
-    >
-    <strong>${formatEuros(extraAmount(line))}</strong>
-  </div>`;
-}
-
-function extraDateLabel(line) {
-  return line.date ? scenarioDateLabel(line.date) : '';
 }
 
 // Entre deux lieux, la route qu'on conduit de l'un à l'autre : sa propre ligne, sans montant, donc

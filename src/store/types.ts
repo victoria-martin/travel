@@ -235,6 +235,8 @@ export interface Scenario {
   startDate: string;
   offerId: string | null;
   offerOptionIds: string[];
+  fuelBudget?: string;
+  tollBudget?: string;
   costIds: string[];
   transportIds: string[];
   favorite: boolean;
