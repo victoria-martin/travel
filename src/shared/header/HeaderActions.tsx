@@ -1,4 +1,4 @@
-import { SettingsMenu } from '../toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/settings/SettingsMenu';
 
 export function HeaderActions() {
   return (

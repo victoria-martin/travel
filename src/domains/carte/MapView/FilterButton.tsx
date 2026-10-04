@@ -1,4 +1,4 @@
-import { ToolbarPanel } from '@/shared/toolbar/ToolbarPanel';
+import { ToolbarPanel } from '@/shared/select/ToolbarPanel';
 import { FilterFields } from './FilterFields';
 import { MAP_KINDS } from './mapKinds';
 

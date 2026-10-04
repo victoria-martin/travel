@@ -1,5 +1,5 @@
 import { Icon } from '@/shared/Icon';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/settings/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import * as Tabs from '@radix-ui/react-tabs';
 import { CarsTab } from './TransportsView/CarsTab';

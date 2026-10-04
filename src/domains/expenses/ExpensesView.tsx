@@ -1,4 +1,4 @@
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/settings/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { ActualExpenseButton } from './ExpensesView/ActualExpenseButton';
 import { ActualExpensesTable } from './ExpensesView/ActualExpensesTable';

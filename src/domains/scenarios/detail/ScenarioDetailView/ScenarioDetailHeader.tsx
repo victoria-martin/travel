@@ -1,5 +1,5 @@
 import { Icon } from '@/shared/Icon';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/settings/SettingsMenu';
 import type { Scenario } from '@/store/types';
 import { ScenarioDetailSettings } from './ScenarioDetailHeader/ScenarioDetailSettings';
 import { ScenarioSideTabsButtons } from './ScenarioDetailHeader/ScenarioSideTabsButtons';
@@ -61,9 +61,12 @@ export function ScenarioDetailHeader({
         <span className="toolbar-separator" />
         <ScenarioSideTabsButtons scenarioId={scenario.id} />
         <span className="toolbar-separator" />
-        <SettingsMenu>
-          <ScenarioDetailSettings />
-        </SettingsMenu>
+        {/* ICI */}
+        <div className="test-red">
+          <SettingsMenu>
+            <ScenarioDetailSettings />
+          </SettingsMenu>
+        </div>
       </div>
 
       <div className="view-sub" style={{ marginLeft: 44 }}>

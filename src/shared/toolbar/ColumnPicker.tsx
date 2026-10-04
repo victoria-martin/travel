@@ -1,5 +1,5 @@
-import { ToolbarPanel } from './ToolbarPanel';
 import type { Column } from '../DataTable/types';
+import { ToolbarPanel } from '../select/ToolbarPanel';
 
 /*
   Port de columnPicker (js/columns.js), délégué au getter/setter legacy (prefs.hiddenColumns,
@@ -13,7 +13,7 @@ export function ColumnPicker<T>({ kind, columns }: { kind: string; columns: Colu
     <ToolbarPanel
       icon="columns-3"
       label="Colonnes"
-      count={options.filter((column) => hidden.includes(column.key)).length}
+      // count={options.filter((column) => hidden.includes(column.key)).length}
     >
       {options.map((column) => (
         <label className="filter-option" key={column.key}>

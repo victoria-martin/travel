@@ -1,6 +1,6 @@
 import { MapFilterPanel } from '@/domains/carte/MapView/MapFilterPanel';
 import { Icon } from '@/shared/Icon';
-import { SettingsMenu } from '@/shared/toolbar/SettingsMenu';
+import { SettingsMenu } from '@/shared/settings/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';

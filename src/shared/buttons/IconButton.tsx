@@ -1,20 +1,21 @@
+import { Button } from '@/shared/buttons/Button';
 import { Icon } from '@/shared/Icon';
 
-type ButtonWithIconProps = {
-  title: string;
+type IconButtonProps = {
+  // children: React.ReactNode;
   onClick: () => void;
+  variant?: 'primary' | 'outline' | 'danger' | 'ghost';
+  // size?: 'default' | 'small' | 'square';
   icon: string;
-  label: string;
 };
 
-// est ce quon garde ca ou est ce qu on le remplace par un Button avec icon
-export const ButtonWithIcon = ({ title, onClick, icon, label }: ButtonWithIconProps) => {
+// un bouton avec juste une icône - on veut garder, à tester
+export const IconButton = ({ onClick, variant, icon }: IconButtonProps) => {
   return (
-    <button type="button" className="btn btn-small" title={title} onClick={onClick}>
+    <Button onClick={onClick} size="square" variant={variant}>
       <span className="toolbar-icon">
         <Icon name={icon} />
       </span>
-      <span className="toolbar-label">{label}</span>
-    </button>
+    </Button>
   );
 };

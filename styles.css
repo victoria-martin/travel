@@ -312,9 +312,11 @@ body {
 /* ---------- Main ---------- */
 .main {
   flex: 1;
-  padding: 0 var(--main-pad-x) var(--main-pad-y);
+  /* padding: 0 var(--main-pad-x) var(--main-pad-y); */
+  padding: var(--main-pad-y) var(--main-pad-x);
   min-width: 0;
   overflow-y: auto;
+  gap: 8px;
 }
 .view-header {
   position: sticky;
@@ -323,8 +325,8 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 0 calc(var(--main-pad-x) * -1) 14px;
-  padding: var(--main-pad-y) var(--main-pad-x) 8px;
+  /* margin: 0 calc(var(--main-pad-x) * -1) 14px; */
+  /* padding: var(--main-pad-y) var(--main-pad-x) 8px; */
   gap: 16px;
   flex-wrap: wrap;
   background: var(--paper);
@@ -400,7 +402,7 @@ body {
 }
 .scenario-weather-banner {
   position: sticky;
-  top: 84px;
+  top: var(--view-header-h, 0px);
   z-index: 18;
   width: calc(100% + (var(--main-pad-x) * 2));
   margin: 0 calc(var(--main-pad-x) * -1) 16px;
@@ -797,6 +799,7 @@ summary.btn::-webkit-details-marker {
   opacity: 0.7;
 }
 .toolbar-panel[open] > .btn-outline,
+.btn-outline[data-state='open'],
 .btn-outline.active {
   background: color-mix(in srgb, var(--stone) 14%, var(--paper-raised));
   color: var(--stone-dark);
@@ -821,6 +824,22 @@ summary.btn::-webkit-details-marker {
 .toolbar-panel-body-wide {
   min-width: 480px;
   max-height: min(70vh, calc(100dvh - 100px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.toolbar-menu {
+  z-index: 20;
+  min-width: 180px;
+  padding: 10px 14px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(36, 49, 43, 0.14);
+}
+.toolbar-menu-wide {
+  min-width: 480px;
+  max-width: calc(100vw - 16px);
+  max-height: min(70vh, var(--radix-dropdown-menu-content-available-height));
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -2676,13 +2695,26 @@ tr:hover td {
   column-gap: 6px;
 }
 .scenario-split {
+  position: relative;
   cursor: col-resize;
-  border-radius: 3px;
   touch-action: none;
+  width: 9px;
 }
-.scenario-split:hover,
-.scenario-split:active {
-  background: var(--ink-soft);
+.scenario-split::before,
+.scenario-split::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 4px;
+  border-left: 1px dashed var(--ink-soft);
+}
+.scenario-split::after {
+  border-left-style: solid;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.scenario-split:hover::after,
+.scenario-split:active::after {
+  opacity: 1;
 }
 /* D'un mode à l'autre, les deux colonnes se suivent au lieu de sauter : chacune se nomme, et le
    navigateur anime son passage d'une taille à l'autre. Le contenu du panneau se fond plutôt que de
