@@ -222,6 +222,7 @@ declare global {
     journalDayPanel: (scenario: import('../store/types').Scenario, date: string) => string;
     onJournalPanelToggle: (date: string, key: string) => void;
     initJournalMap: () => void;
+    journalMapPlaces: (date: string) => { id: string; kind: string }[];
     expenseBudgetScenario: () => import('../store/types').Scenario | null;
     manualExpenses: () => import('../store/types').FixedCost[];
     actualExpenses: () => import('../store/types').ActualExpense[];

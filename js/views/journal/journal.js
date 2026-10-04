@@ -16,19 +16,6 @@ function setJournalScenario(id) {
   render();
 }
 
-function journalScenarioPicker() {
-  const scenarios = journalScenarioOptions();
-  return /* HTML */ `<select class="journal-scenario-select" onchange="setJournalScenario(this.value)">
-    <option value="">— Choisir un scénario —</option>
-    ${scenarios
-      .map(
-        (s) =>
-          `<option value="${s.id}" ${s.id === prefs.journalScenarioId ? 'selected' : ''}>${escapeHtml(s.name)}</option>`,
-      )
-      .join('')}
-  </select>`;
-}
-
 // Présélectionné sur le scénario choisi (chosen.js), une fois : le choix reste ensuite libre, y
 // compris pour revenir à « aucun » — sans quoi ce défaut s'imposerait à chaque rendu.
 function defaultJournalScenarioId() {
@@ -37,32 +24,6 @@ function defaultJournalScenarioId() {
   prefs.journalScenarioId = chosen ? chosen.id : '';
   persistPrefs();
   return prefs.journalScenarioId;
-}
-
-function renderJournalView() {
-  const scenario = defaultJournalScenarioId() ? getScenario(prefs.journalScenarioId) : null;
-  if (scenario && !prefs.journalDate) {
-    const days = journalScenarioDays(scenario);
-    if (days.length) prefs.journalDate = days[0];
-  }
-  const date = prefs.journalDate;
-  return /* HTML */ `
-    <div class="view-header">
-      <div>
-        <h2 class="view-title">Journal</h2>
-        <p class="view-sub">Un carnet de bord, jour par jour</p>
-      </div>
-      <div class="view-header-actions">
-        ${journalScenarioPicker()} ${toolbarSeparator()} ${journalSideTabsButtons(date || '')}
-      </div>
-    </div>
-    ${journalDayCards(scenario)}
-    ${!scenario
-      ? emptyState('Choisis un scénario', 'Les jours du journal se datent sur le séjour d’un scénario.')
-      : !date
-        ? emptyState('Aucun jour', 'Ajoute un jour depuis le rang ci-dessus.')
-        : journalDayPanel(scenario, date)}
-  `;
 }
 
 function journalDayPanel(scenario, date) {

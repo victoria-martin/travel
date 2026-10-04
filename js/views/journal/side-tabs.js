@@ -8,17 +8,6 @@ const JOURNAL_SIDE_TABS = [
   { key: 'map', icon: svgIcon('map'), label: 'Carte', body: (date) => journalMapBlock(date) },
 ];
 
-function journalSideTabsButtons(date) {
-  return JOURNAL_SIDE_TABS.map((tab) =>
-    toolbarButton({
-      icon: tab.icon,
-      label: tab.label,
-      active: tab.key === prefs.journalSidePanel,
-      onclick: `onJournalPanelToggle('${date}','${tab.key}')`,
-    }),
-  ).join('');
-}
-
 function onJournalPanelToggle(date, key) {
   if (window.matchMedia('(max-width: 639px)').matches) openSheet('journal-panel', date, key);
   else toggleJournalSidePanel(key);
@@ -29,13 +18,4 @@ function toggleJournalSidePanel(key) {
   prefs.journalSidePanel = prefs.journalSidePanel === key ? null : key;
   persistPrefs();
   renderWithTransition();
-}
-
-function journalPanelSheet(m) {
-  const tab = JOURNAL_SIDE_TABS.find((t) => t.key === m.payload.key);
-  return /* HTML */ `<h3>${escapeHtml(tab.label)}</h3>
-    ${tab.body(m.payload.date)}
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal()">Fermer</button>
-    </div>`;
 }

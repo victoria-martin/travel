@@ -116,7 +116,7 @@ const MODAL_TYPES = {
   },
   'journal-panel': {
     open: (date, key) => ({ payload: { date, key } }),
-    body: (m) => journalPanelSheet(m),
+    // body : React (src/domains/journal/modal/JournalPanelModal.tsx, src/modal-bodies.ts).
   },
   step: {
     // Une étape neuve naît seule ou déjà ouverte en options : c'est le bouton qui l'a dit.

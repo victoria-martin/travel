@@ -9,6 +9,7 @@ import { CarModelModal } from './domains/car-models/modal/CarModelModal';
 import { ActualExpenseModal } from './domains/expenses/modal/ActualExpenseModal';
 import { ImportExpensesModal } from './domains/expenses/modal/ImportExpensesModal';
 import { FixedCostModal } from './domains/fixed-costs/modal/FixedCostModal';
+import { JournalPanelModal } from './domains/journal/modal/JournalPanelModal';
 import { PackingItemModal } from './domains/packing/modal/PackingItemModal';
 import { OfferModal } from './domains/rentals/modal/OfferModal';
 import { ScenarioPanelModal } from './domains/scenarios/detail/panel-modal/ScenarioPanelModal';
@@ -47,6 +48,7 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'accommodation-google-maps': GoogleMapsAccommodationModal,
   step: StepModal,
   'scenario-panel': ScenarioPanelModal,
+  'journal-panel': JournalPanelModal,
   'paste-import': PasteImportModal,
   voyage: TravelModal,
 };
