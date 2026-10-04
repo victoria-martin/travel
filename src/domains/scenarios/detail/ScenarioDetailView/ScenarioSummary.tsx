@@ -1,5 +1,5 @@
 import type { Scenario } from '@/store/types';
-import type { ScenarioRoute } from '../hooks/useScenarioRoute';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { OfferBlock } from './OfferBlock';
 import { ExpensesBlock } from './ExpensesBlock';
 import { TotalBlock } from './TotalBlock';

@@ -1,6 +1,6 @@
 import { Icon } from '@/shared/Icon';
 import { useTravelStore } from '@/store/useTravelStore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { CompareSection } from './ScenariosView/CompareSection';
 import { ScenarioCard } from './ScenariosView/ScenarioCard';
@@ -8,9 +8,8 @@ import { scenarioRank } from './ScenariosView/utils';
 import { matchesScenarioSearch } from './searchScenario';
 
 /*
-  Porte js/views/scenarios/{scenarios,header,list/list,list/row}.js. La bande d'itinéraire et les
-  cartes de comparaison restent délégués (voir leurs fichiers) ; le reste — recherche, favoris,
-  scénario choisi, comparer/archivés, actions de ligne — est du vrai React.
+  Porte js/views/scenarios/{scenarios,header,list/list,list/row}.js, bande d'itinéraire et cartes
+  de comparaison comprises. Une carte comparée lit sa route via useScenarioRoute, comme le détail.
 */
 export function ScenariosView() {
   const scenarios = useTravelStore(
@@ -25,15 +24,6 @@ export function ScenariosView() {
     .filter((scenario) => matchesScenarioSearch(scenario, query))
     .sort((a, b) => scenarioRank(a) - scenarioRank(b));
   const maxNights = Math.max(1, ...items.map((scenario) => window.totalNights(scenario)));
-
-  // Port du useEffect d'origine dans renderScenariosView : les distances d'itinéraire (OSRM) des
-  // scénarios comparés se résolvent de façon asynchrone, fillStepLegs relance un render() une fois
-  // la réponse arrivée (routing.js).
-  useEffect(() => {
-    if (!compareMode) return;
-    window.comparedScenarios(scenarios).forEach((scenario) => window.fillStepLegs(scenario));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [compareMode]);
 
   return (
     <>

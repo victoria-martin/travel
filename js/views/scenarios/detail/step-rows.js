@@ -21,12 +21,3 @@ function rowLeadStep(scenario, row) {
   return groupSteps(scenario, row.group).find((st) => isStepRetained(scenario, st)) || null;
 }
 
-// Le rang d'une étape parmi les visibles : sa lettre et sa date en dépendent, `null` sinon.
-function stepRanks(scenario) {
-  const ranks = {};
-  let rank = 0;
-  scenario.steps.forEach((st) => {
-    ranks[st.id] = isStepVisible(scenario, st) ? rank++ : null;
-  });
-  return ranks;
-}

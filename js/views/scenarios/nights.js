@@ -11,11 +11,6 @@ function stepNights(step) {
   return parseInt(step.nights) || 0;
 }
 
-// Une colonne dure ce que durent ses étapes, retenue ou non : c'est ce qu'on compare.
-function optionNights(scenario, option) {
-  return optionSteps(scenario, option.id).reduce((sum, st) => sum + stepNights(st), 0);
-}
-
 function totalNights(scenario) {
   return visibleSteps(scenario).reduce((sum, st) => sum + stepNights(st), 0);
 }

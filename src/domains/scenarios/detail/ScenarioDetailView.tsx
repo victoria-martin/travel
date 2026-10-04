@@ -2,9 +2,9 @@ import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect } from 'react';
 import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
-import { useScenarioMoney } from './hooks/useScenarioMoney';
-import { useScenarioRoad } from './hooks/useScenarioRoad';
-import { useScenarioRoute } from './hooks/useScenarioRoute';
+import { useScenarioMoney } from '@/domains/scenarios/hooks/useScenarioMoney';
+import { useScenarioRoad } from '@/domains/scenarios/hooks/useScenarioRoad';
+import { useScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { RouteStrip } from './ScenarioDetailView/RouteStrip';
 import { RouteTrail } from './ScenarioDetailView/RouteTrail';
 import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';

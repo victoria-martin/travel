@@ -1,14 +1,9 @@
 import { FavoriteCell } from '@/shared/cells/FavoriteCell';
 import { Icon } from '@/shared/Icon';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import type { Scenario } from '@/store/types';
+import { ScenarioRouteBar } from './ScenarioCard/ScenarioRouteBar';
 
-/*
-  Port de scenarioRow (js/views/scenarios/list/row.js). La bande d'itinéraire
-  (scenarioRouteBar) reste déléguée : purement visuelle, sans interaction propre, calculée depuis
-  plusieurs dérivations legacy (nightsByPlace, placeStatus, stepStatusBackground) — la réécrire en
-  React n'apporterait rien tant qu'elle n'a pas besoin d'évoluer.
-*/
+// Port de scenarioRow (js/views/scenarios/list/row.js).
 export function ScenarioCard({
   scenario,
   maxNights,
@@ -70,7 +65,7 @@ export function ScenarioCard({
         <div className="scenario-card-meta">
           {window.nightsLabel(nights)} · {count} étape{count > 1 ? 's' : ''}
         </div>
-        <LegacyMarkup html={window.scenarioRouteBar(scenario, maxNights)} />
+        <ScenarioRouteBar scenario={scenario} maxNights={maxNights} />
       </div>
       <div className="scenario-card-money">
         <strong className="scenario-card-total">{window.formatEuros(total.euros)}</strong>

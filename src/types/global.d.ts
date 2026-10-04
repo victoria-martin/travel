@@ -287,8 +287,6 @@ declare global {
     applyTravelTab: () => void;
     applyFlash: () => void;
     placeOpenInlineMenu: () => void;
-    renderScenariosView: () => string;
-    fillStepLegs: (scenario: import('../store/types').Scenario) => void;
     comparedScenarios: <T extends { id: string }>(items: T[]) => T[];
     compareMode: boolean;
     activeToast: string;
@@ -303,7 +301,6 @@ declare global {
       step: import('../store/types').Step,
     ) => import('../store/types').Accommodation | import('../store/types').Attraction | null;
     visibleSteps: (scenario: import('../store/types').Scenario) => import('../store/types').Step[];
-    scenarioRouteBar: (scenario: import('../store/types').Scenario, maxNights: number) => string;
     setChosenScenario: (id: string) => void;
     toggleComparedScenario: (id: string) => void;
     isComparedScenario: (id: string) => boolean;
@@ -313,7 +310,6 @@ declare global {
     toggleArchivedScenarios: () => void;
     toggleCompareMode: () => void;
     createScenario: () => void;
-    scenarioCompareCard: (scenario: import('../store/types').Scenario) => string;
     saveActualExpense: (id: string) => void;
     saveFixedCost: (id: string) => void;
     expenseRecurrenceKey: (recurrence: string) => string;
@@ -443,6 +439,10 @@ declare global {
     detachScenarioTransport: (scenarioId: string, transportId: string) => void;
     fixedCostsTotal: (scenario: import('../store/types').Scenario) => number;
     setRecapFold: (key: string, open: boolean) => void;
+    placeStatus: (
+      scenario: import('../store/types').Scenario,
+      place: { steps: import('../store/types').Step[] },
+    ) => string;
     setAccommodationCheckInTime: (id: string, checkInTime: string) => void;
     isBookedAccommodation: (accommodation: import('../store/types').Accommodation | undefined) => boolean;
     stepOutOfRange: (

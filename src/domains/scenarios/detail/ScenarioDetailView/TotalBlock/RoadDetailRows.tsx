@@ -1,5 +1,5 @@
 import type { Scenario } from '@/store/types';
-import { distanceLabel } from '../distanceLabel';
+import { distanceLabel } from '@/domains/scenarios/distanceLabel';
 import { RoadFuelCostRow } from '../RoadFuelCostRow';
 import { RoadTollCostRow } from '../RoadTollCostRow';
 import { RoadRow } from './RoadRow';

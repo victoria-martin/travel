@@ -1,5 +1,5 @@
 import type { Scenario } from '@/store/types';
-import { RecapRow } from './RecapRow';
+import { RecapRow } from '@/domains/scenarios/recap/RecapRow';
 import { RoadDetailRows } from './RoadDetailRows';
 import { RoadRow } from './RoadRow';
 

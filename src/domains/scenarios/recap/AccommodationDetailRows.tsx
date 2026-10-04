@@ -1,6 +1,6 @@
 import type { Scenario } from '@/store/types';
 import { Fragment } from 'react';
-import type { ScenarioRoute } from '../../hooks/useScenarioRoute';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { LegRow } from './AccommodationDetailRows/LegRow';
 import { PassageRow } from './AccommodationDetailRows/PassageRow';
 import { recapStops } from './AccommodationDetailRows/recapStops';

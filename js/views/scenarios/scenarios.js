@@ -1,52 +1,6 @@
 let activeScenarioId = null;
-let scenarioSearchQuery = '';
-
 function getActiveScenarioId() {
   return activeScenarioId;
-}
-
-function scenarioSearchField() {
-  return `<label class="list-search" data-list-search="scenarios" title="Rechercher">
-    <input type="search" placeholder="Rechercher…" value="${escapeHtml(scenarioSearchQuery)}"
-      oninput="setScenarioSearch(this.value)" />
-  </label>`;
-}
-
-function setScenarioSearch(query) {
-  scenarioSearchQuery = query;
-  render();
-  const input = document.querySelector('.list-search[data-list-search="scenarios"] input');
-  if (input) {
-    input.focus();
-    input.setSelectionRange(query.length, query.length);
-  }
-}
-
-function scenarioMatchesSearch(scenario) {
-  const wanted = normalizeListSearch(scenarioSearchQuery);
-  if (!wanted) return true;
-  const values = [scenario.name];
-  scenario.steps.forEach((step) => {
-    const place = stepPlace(step);
-    values.push(step.name, place?.city, place?.name);
-  });
-  return normalizeListSearch(values.filter(Boolean).join(' ')).includes(wanted);
-}
-
-function renderScenariosView() {
-  const items = archivedScenarios(ofCurrentTravel(state.scenarios))
-    .filter(scenarioMatchesSearch)
-    .sort((a, b) => scenarioRank(a) - scenarioRank(b));
-  return /* HTML */ `
-    ${scenariosHeader()}
-    ${
-      items.length === 0
-        ? showArchivedScenarios
-          ? emptyState('Aucun scénario archivé', 'Archive un scénario pour le sortir de la liste.')
-          : emptyState('Aucun scénario', 'Crée un premier scénario pour poser tes étapes.')
-        : scenarioList(items) + (compareMode ? scenarioCompare(items) : '')
-    }
-  `;
 }
 
 // Le scénario retenu ouvre la liste, les favoris le suivent : on lit d'abord ce qui est décidé.

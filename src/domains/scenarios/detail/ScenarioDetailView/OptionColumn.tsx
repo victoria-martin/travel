@@ -1,6 +1,6 @@
 import { Icon } from '@/shared/Icon';
 import type { Scenario, StepGroup, StepGroupOption } from '@/store/types';
-import type { ScenarioRoute } from '../hooks/useScenarioRoute';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { StepCard } from './StepCard';
 import { StepLeg } from './StepLeg';
 

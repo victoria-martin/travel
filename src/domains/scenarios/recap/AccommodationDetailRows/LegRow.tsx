@@ -1,6 +1,6 @@
 import type { Scenario, Step } from '@/store/types';
-import type { ScenarioRoute } from '../../../hooks/useScenarioRoute';
-import { durationLabel } from '../../durationLabel';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
+import { durationLabel } from '@/domains/scenarios/durationLabel';
 import { RecapIconLabel } from './RecapIconLabel';
 
 // The road driven from the previous place: its own row, outside the three-column grid.

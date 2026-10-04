@@ -3,7 +3,7 @@ import type { Scenario, Step, StepGroup } from '@/store/types';
 import * as dnd from '@dnd-kit/react';
 import { isSortable } from '@dnd-kit/react/sortable';
 import { Fragment } from 'react';
-import type { ScenarioRoute } from '../hooks/useScenarioRoute';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { StepCard } from './StepCard';
 import { StepGroupView } from './StepGroupView';
 import { StepLeg } from './StepLeg';

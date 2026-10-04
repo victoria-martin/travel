@@ -1,6 +1,6 @@
 import type { Scenario } from '@/store/types';
 import { ExtraRecapRow } from './ExtraRecapRow';
-import { RecapRow } from './RecapRow';
+import { RecapRow } from '@/domains/scenarios/recap/RecapRow';
 
 // Expenses attached to the scenario, then expense lines set on its steps and groups.
 export function ChargeDetailRows({ scenario }: { scenario: Scenario }) {

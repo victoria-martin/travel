@@ -1,5 +1,5 @@
 import type { Scenario, Step } from '@/store/types';
-import type { ScenarioRoute } from '../../hooks/useScenarioRoute';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
 import { routeLinkColor } from '../routeLinkColor';
 import { routeLinkName } from '../routeLinkName';
 import { scrollToStepCard } from '../scrollToStepCard';

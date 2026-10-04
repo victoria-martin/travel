@@ -1,12 +1,12 @@
 import type { Scenario } from '@/store/types';
-import { useScenarioMoney } from '../hooks/useScenarioMoney';
-import { useScenarioRoad } from '../hooks/useScenarioRoad';
-import { useScenarioRoute } from '../hooks/useScenarioRoute';
-import { AccommodationDetailRows } from './TotalBlock/AccommodationDetailRows';
+import { useScenarioMoney } from '@/domains/scenarios/hooks/useScenarioMoney';
+import { useScenarioRoad } from '@/domains/scenarios/hooks/useScenarioRoad';
+import { useScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
+import { AccommodationDetailRows } from '@/domains/scenarios/recap/AccommodationDetailRows';
 import { AttractionDetailRows } from './TotalBlock/AttractionDetailRows';
 import { ChargeDetailRows } from './TotalBlock/ChargeDetailRows';
 import { RecapGroup } from './TotalBlock/RecapGroup';
-import { RecapRow } from './TotalBlock/RecapRow';
+import { RecapRow } from '@/domains/scenarios/recap/RecapRow';
 import { TransportDetailRows } from './TotalBlock/TransportDetailRows';
 
 export function TotalBlock({ scenario }: { scenario: Scenario }) {

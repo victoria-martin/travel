@@ -1,7 +1,7 @@
 import type { Scenario, Step } from '@/store/types';
-import type { ScenarioRoute } from '../../hooks/useScenarioRoute';
-import { distanceLabel } from '../distanceLabel';
-import { durationLabel } from '../durationLabel';
+import type { ScenarioRoute } from '@/domains/scenarios/hooks/useScenarioRoute';
+import { distanceLabel } from '@/domains/scenarios/distanceLabel';
+import { durationLabel } from '@/domains/scenarios/durationLabel';
 
 export function roadLegLabel(scenario: Scenario, step: Step, route: ScenarioRoute): string | null {
   const rank = window.stepLegRank(scenario, step);

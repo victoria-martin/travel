@@ -9,10 +9,6 @@ function toggleArchivedScenarios() {
   render();
 }
 
-function archivedScenarios(items) {
-  return items.filter((s) => !!s.archived === showArchivedScenarios);
-}
-
 function activeScenarios(items) {
   return items.filter((s) => !s.archived);
 }
@@ -25,12 +21,3 @@ function toggleScenarioArchived(id) {
   render();
 }
 
-function archiveButton(s) {
-  return /* HTML */ `<button
-    class="icon-btn"
-    onclick="toggleScenarioArchived('${s.id}')"
-    title="${s.archived ? 'Désarchiver' : 'Archiver'}"
-  >
-    ${s.archived ? svgIcon('archive-restore') : svgIcon('archive')}
-  </button>`;
-}

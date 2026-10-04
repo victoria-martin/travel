@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { RecapRow } from './RecapRow';
+import { RecapRow } from '@/domains/scenarios/recap/RecapRow';
 
 // A family folds on its own; its amount reads on its title whether open or not, and again at its foot.
 export function RecapGroup({
