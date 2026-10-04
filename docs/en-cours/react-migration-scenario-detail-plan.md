@@ -184,11 +184,21 @@ monté par `ScenarioDetailView` sous `weatherBannerShown()`.
 `global.d.ts` : retrait de `scenarioWeatherBanner`, ajout de `dateToIso`/`scenarioStart`/`totalDays`.
 `pnpm react:typecheck` propre.
 
-**F. Itinéraire** — [route-trail.js](../js/views/scenarios/detail/route-trail.js) (48 lignes) et
-[route-strip.js](../js/views/scenarios/detail/route-strip.js) (34 lignes), `scenarioRouteTrail`/
-`scenarioRouteStrip`. Même famille que `scenarioRouteBar`/`scenarioCompareCard` déjà laissés
-délégués ailleurs dans la migration (ScenariosView, liste) — vérifier si un composant partagé a du
-sens entre les deux avant d'en écrire un par écran.
+**F. Itinéraire — ✅ fait.** [RouteTrail.tsx](../src/domains/scenarios/detail/ScenarioDetailView/RouteTrail.tsx)
++ `RouteTrail/RouteTrailLink.tsx`, [RouteStrip.tsx](../src/domains/scenarios/detail/ScenarioDetailView/RouteStrip.tsx)
++ `RouteStrip/` (`RouteStripLink`, `stayRangeLabel`, `roadLegLabel`). Les briques communes aux deux
+(`routeLinkColor`, `routeLinkName`, `scrollToStepCard`) et à `StepLeg` (`durationLabel`,
+`distanceLabel`, sorties de `StepLeg.tsx`) vivent à plat dans `ScenarioDetailView/`.
+- **Pas de composant partagé avec `scenarioRouteBar`** (liste) : la bande de la liste groupe par lieu
+  (`nightsByPlace`), se met à l'échelle de la liste entière et n'est pas cliquable ; le fil et la
+  bande du détail vont par étape et mènent à sa carte. Même teinte, pas la même lecture.
+- **Bug corrigé au passage :** le tronçon de route de la bande (`stepLegRoadSlot`) n'était jamais
+  rempli dans le détail — seul `ScenariosView` appelle `fillStepLegs`. `RouteStripLink` lit
+  désormais la route de `useScenarioRoute`, comme `StepLeg`.
+- Legacy supprimé : `route-trail.js` et `route-strip.js` (fichiers + `<script src>`),
+  `stepLegRoadSlot` et `LEG_LABELS.road` (`step-legs.js`), `stayRangeLabel` (`step-dates.js`).
+`global.d.ts` : retrait de `scenarioRouteTrail`/`scenarioRouteStrip`, ajout de
+`stepStatusBackground`. `pnpm react:typecheck` propre.
 
 **G. Panneau latéral (carte/transports/argent/valise) + split handle** —
 [side-panel.js](../js/views/scenarios/detail/side-panel.js) (14 lignes, dispatcher) +

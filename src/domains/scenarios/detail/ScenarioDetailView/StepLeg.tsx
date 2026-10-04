@@ -1,16 +1,7 @@
 import type { Scenario, Step } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
-
-function durationLabel(seconds: number): string {
-  const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return `${minutes} min`;
-  return `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`;
-}
-
-function distanceLabel(meters: number): string {
-  const kilometers = meters / 1000;
-  return `${kilometers < 10 ? kilometers.toFixed(1).replace('.', ',') : Math.round(kilometers)} km`;
-}
+import { distanceLabel } from './distanceLabel';
+import { durationLabel } from './durationLabel';
 
 export function StepLeg({
   scenario,

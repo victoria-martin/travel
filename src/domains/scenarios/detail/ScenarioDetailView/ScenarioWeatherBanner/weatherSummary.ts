@@ -9,7 +9,8 @@ export function weatherSummary(
   if (!day.locationKey) return { icon: '', text: 'Coordonnées manquantes' };
   if (!forecast) return { icon: '', text: 'Chargement de la prévision…' };
   const actual = forecast.get(window.dateToIso(day.date));
-  if (!actual) return { icon: '', text: 'Prévision indisponible à cette date' };
+
+  if (!actual) return { icon: '', text: 'Date passée' };
   const temperatures = [actual.maximum, actual.minimum]
     .filter(Number.isFinite)
     .map((temperature) => `${Math.round(temperature)}°`)

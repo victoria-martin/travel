@@ -36,7 +36,6 @@ const LEG_LABELS = {
   full: (leg) => `${durationLabel(leg.duration)} · ${distanceLabel(leg.distance)}`,
   recap: (leg, scenario) =>
     `${durationLabel(leg.duration)} · ⛽ ${formatEuros(legFuelCost(scenario, leg))} · 🛣️ ${formatEuros(legTollCost(leg))}`,
-  road: (leg) => `${distanceLabel(leg.distance)} · ${durationLabel(leg.duration)}`,
 };
 
 function legSlot(scenario, step, label) {
@@ -51,10 +50,6 @@ function stepLegSlot(scenario, step) {
 
 function stepLegRecapSlot(scenario, step) {
   return legSlot(scenario, step, 'recap');
-}
-
-function stepLegRoadSlot(scenario, step) {
-  return legSlot(scenario, step, 'road');
 }
 
 function stepLegSlots(scenario, rank) {

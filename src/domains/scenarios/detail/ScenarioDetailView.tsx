@@ -5,6 +5,8 @@ import { ScenarioLegacyMarkup } from './ScenarioDetailView/ScenarioLegacyMarkup'
 import { useScenarioMoney } from './hooks/useScenarioMoney';
 import { useScenarioRoad } from './hooks/useScenarioRoad';
 import { useScenarioRoute } from './hooks/useScenarioRoute';
+import { RouteStrip } from './ScenarioDetailView/RouteStrip';
+import { RouteTrail } from './ScenarioDetailView/RouteTrail';
 import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';
 import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
 import { ScenarioWeatherBanner } from './ScenarioDetailView/ScenarioWeatherBanner';
@@ -36,8 +38,8 @@ export function ScenarioDetailView() {
       {window.weatherBannerShown() && <ScenarioWeatherBanner scenario={scenario} />}
       {window.trailShown() && (
         <>
-          <ScenarioLegacyMarkup html={window.scenarioRouteTrail(scenario)} />
-          <ScenarioLegacyMarkup html={window.scenarioRouteStrip(scenario)} />
+          <RouteTrail scenario={scenario} />
+          <RouteStrip scenario={scenario} route={route} />
         </>
       )}
       <div className="scenario-detail-cols" style={{ gridTemplateColumns: splitStyle }}>
