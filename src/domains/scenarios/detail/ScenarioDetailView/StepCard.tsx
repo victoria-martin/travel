@@ -164,6 +164,10 @@ export function StepCard({
   );
 }
 
+function stepOutReason(scenario: Scenario, step: Step) {
+  return step.hidden || window.isGroupHidden(scenario, step.groupId) ? 'Masquée' : 'Colonne écartée';
+}
+
 function StepOrderBadge({
   scenario,
   step,
@@ -177,7 +181,7 @@ function StepOrderBadge({
     return (
       <div
         className="step-order step-order-hidden"
-        title={`${window.stepOutReason(scenario, step)} — hors des dates, des totaux et de la carte`}
+        title={`${stepOutReason(scenario, step)} — hors des dates, des totaux et de la carte`}
       >
         •
       </div>

@@ -8,6 +8,11 @@ function placeOptionLabel(place: Accommodation | Attraction) {
   return location ? `${place.name} — ${location}` : place.name;
 }
 
+// On cherche un lieu par son nom comme par sa province.
+function placeMatches(place: Accommodation | Attraction, needle: string) {
+  return `${place.name} ${window.placeLevelsLabel(place)}`.toLowerCase().includes(needle.toLowerCase());
+}
+
 function favoriteFirst(itemA: { favorite: boolean; name: string }, itemB: { favorite: boolean; name: string }) {
   return (itemB.favorite ? 1 : 0) - (itemA.favorite ? 1 : 0) || itemA.name.localeCompare(itemB.name);
 }
@@ -36,11 +41,11 @@ export function StepPlaceDropdown({ scenario, step }: { scenario: Scenario; step
   const type = window.accTypeKey(step.accommodationType);
   const accommodations = window
     .ofCurrentTravel(window.state.accommodations as Accommodation[])
-    .filter((item) => (!type || window.accTypeKey(item.type) === type) && window.placeMatches(item, search))
+    .filter((item) => (!type || window.accTypeKey(item.type) === type) && placeMatches(item, search))
     .sort(favoriteFirst);
   const attractions = window
     .ofCurrentTravel(window.state.attractions as Attraction[])
-    .filter((item) => window.placeMatches(item, search))
+    .filter((item) => placeMatches(item, search))
     .sort(favoriteFirst);
 
   const current = step.attractionId

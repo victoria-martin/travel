@@ -391,10 +391,6 @@ declare global {
     setStepPlace: (scenarioId: string, stepId: string, value: string) => void;
     setStepPlaceDate: (scenarioId: string, stepId: string, date: string) => void;
     NIGHTS_OPTIONS: number[];
-    placeMatches: (
-      place: import('../store/types').Accommodation | import('../store/types').Attraction,
-      needle: string,
-    ) => boolean;
     placeLevelsLabel: (place: import('../store/types').PlaceLevels) => string;
     attractionTypeKey: (type: string) => string;
     openAccommodationSheet: (id: string) => void;
@@ -478,10 +474,10 @@ declare global {
     toolbarMenu: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
     stepLetter: (rank: number) => string;
-    stepOutReason: (
+    isGroupHidden: (
       scenario: import('../store/types').Scenario,
-      step: import('../store/types').Step,
-    ) => string;
+      groupId: string,
+    ) => boolean;
     holderExtras: (
       holder: import('../store/types').Step | import('../store/types').StepGroup,
     ) => import('../store/types').Extra[];
