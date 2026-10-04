@@ -507,6 +507,7 @@ declare global {
     setPackingQuantity: (id: string, quantity: number) => void;
     togglePackingChecked: (id: string) => void;
     removeFromTravelPacking: (id: string) => void;
+    toggleCatalogItemInTravel: (catalogId: string) => void;
     isPackingGroupOpen: (category: string) => boolean;
     setPackingGroupOpen: (category: string, isOpen: boolean) => void;
     addTravelPackingItem: (line: {

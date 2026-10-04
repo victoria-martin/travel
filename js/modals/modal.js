@@ -108,7 +108,7 @@ const MODAL_TYPES = {
   },
   'valise-composer': {
     open: () => ({ payload: {} }),
-    body: () => packingComposerSheet(),
+    // body : React (src/domains/packing/modal/PackingComposerModal.tsx, src/modal-bodies.ts).
   },
   'scenario-panel': {
     open: (scenarioId, key) => ({ scenarioId, payload: { scenarioId, key } }),

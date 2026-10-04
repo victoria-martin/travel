@@ -6,6 +6,3 @@ function getPackingItem(id) {
   return state.packingItems.find((i) => i.id === id);
 }
 
-function sortedPackingItems() {
-  return [...state.packingItems].sort((a, b) => (a.label || '').localeCompare(b.label || '', 'fr'));
-}
