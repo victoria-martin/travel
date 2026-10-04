@@ -295,6 +295,7 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    emptyExtra: () => import('../store/types').Extra;
     COUNTRIES: { code: string; label: string }[];
     countryLabel: (code: string) => string;
     countryFlag: (code: string) => string;
@@ -389,7 +390,6 @@ declare global {
     renameScenario: (id: string, name: string) => void;
     setScenarioStartDate: (id: string, date: string) => void;
     stepNights: (step: import('../store/types').Step) => number;
-    stepAttractionsField: (payload: import('../store/types').Step) => string;
     saveStep: (id: string) => void;
     stepArrival: (scenario: import('../store/types').Scenario, index: number) => Date | null;
     stepLegRank: (
