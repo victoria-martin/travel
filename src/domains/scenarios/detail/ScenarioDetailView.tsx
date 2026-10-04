@@ -1,6 +1,6 @@
 import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect } from 'react';
-import { ScenarioLegacyMarkup } from './ScenarioDetailView/ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
 import { useScenarioMoney } from './hooks/useScenarioMoney';
 import { useScenarioRoad } from './hooks/useScenarioRoad';
@@ -8,6 +8,10 @@ import { useScenarioRoute } from './hooks/useScenarioRoute';
 import { RouteStrip } from './ScenarioDetailView/RouteStrip';
 import { RouteTrail } from './ScenarioDetailView/RouteTrail';
 import { ScenarioDetailHeader } from './ScenarioDetailView/ScenarioDetailHeader';
+import { scenarioSplitColumns } from './ScenarioDetailView/scenarioSplitColumns';
+import { ScenarioSidePanel } from './ScenarioDetailView/ScenarioSidePanel';
+import { ScenarioSideTabsRail } from './ScenarioDetailView/ScenarioSideTabsRail';
+import { ScenarioSplitHandle } from './ScenarioDetailView/ScenarioSplitHandle';
 import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
 import { ScenarioWeatherBanner } from './ScenarioDetailView/ScenarioWeatherBanner';
 import { StepList } from './ScenarioDetailView/StepList';
@@ -27,10 +31,6 @@ export function ScenarioDetailView() {
 
   if (!scenario) return <></>;
   const sidePanelOpen = !!window.prefs.scenarioSidePanel;
-  const splitStyle = window
-    .scenarioSplitStyle()
-    .replace(/^grid-template-columns:\s*/, '')
-    .replace(/;$/, '');
 
   return (
     <>
@@ -42,18 +42,18 @@ export function ScenarioDetailView() {
           <RouteStrip scenario={scenario} route={route} />
         </>
       )}
-      <div className="scenario-detail-cols" style={{ gridTemplateColumns: splitStyle }}>
+      <div className="scenario-detail-cols" style={{ gridTemplateColumns: scenarioSplitColumns() }}>
         <div className="scenario-detail-main view-scroller">
           <StepList scenario={scenario} route={route} />
           <ScenarioSummary scenario={scenario} route={route} />
         </div>
         {sidePanelOpen && (
           <>
-            <ScenarioLegacyMarkup html={window.scenarioSplitHandle()} />
-            <ScenarioLegacyMarkup html={window.scenarioSidePanel(scenario)} initializeMaps />
+            <ScenarioSplitHandle />
+            <ScenarioSidePanel scenario={scenario} total={money.total} />
           </>
         )}
-        <ScenarioLegacyMarkup html={window.scenarioSideTabsRail(scenario.id)} />
+        <ScenarioSideTabsRail scenarioId={scenario.id} />
       </div>
       <div className="sticky-footer">
         <div className="scenario-header-money">

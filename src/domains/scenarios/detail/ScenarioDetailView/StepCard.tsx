@@ -2,7 +2,7 @@ import { Icon } from '@/shared/Icon';
 import type { Scenario, Step } from '@/store/types';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { ExtrasBlock } from './ExtrasBlock';
-import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { StepLine } from './StepLine';
 
 export function StepCard({
@@ -165,7 +165,9 @@ export function StepCard({
 }
 
 function stepOutReason(scenario: Scenario, step: Step) {
-  return step.hidden || window.isGroupHidden(scenario, step.groupId) ? 'Masquée' : 'Colonne écartée';
+  return step.hidden || window.isGroupHidden(scenario, step.groupId)
+    ? 'Masquée'
+    : 'Colonne écartée';
 }
 
 function StepOrderBadge({

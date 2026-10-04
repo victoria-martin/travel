@@ -1,6 +1,6 @@
 import type { Scenario } from '@/store/types';
 import type { ScenarioRoute } from '../hooks/useScenarioRoute';
-import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
 export function ScenarioSummary({ scenario, route }: { scenario: Scenario; route: ScenarioRoute }) {
   const html = [
@@ -12,7 +12,7 @@ export function ScenarioSummary({ scenario, route }: { scenario: Scenario; route
 
   return (
     <div className="scenario-detail-money">
-      <ScenarioLegacyMarkup html={html} />
+      <LegacyMarkup html={html} />
       {route.status === 'error' && <p role="status">Tronçons routiers indisponibles.</p>}
     </div>
   );

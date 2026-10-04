@@ -1,5 +1,5 @@
 import type { Extra, Scenario, Step, StepGroup } from '@/store/types';
-import { ScenarioLegacyMarkup } from '../ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { ExtraCountDropdown } from './ExtraCountDropdown';
 import { ExtraMenu } from './ExtraMenu';
 
@@ -19,7 +19,7 @@ export function ExtraRow({
   return (
     <div className="step-extra-row">
       <ExtraMenu scenario={scenario} holder={holder} line={line} />
-      <ScenarioLegacyMarkup html={window.extraStatusTag(line)} />
+      <LegacyMarkup html={window.extraStatusTag(line)} />
       {line.attractionId ? (
         <input
           className="step-extra-date"

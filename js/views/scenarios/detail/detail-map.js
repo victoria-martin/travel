@@ -10,6 +10,11 @@ function destroyScenarioDetailMaps() {
   scenarioDetailMaps = [];
 }
 
+// The side panel split resizes the map without re-rendering it.
+function invalidateScenarioDetailMaps() {
+  scenarioDetailMaps.forEach((map) => map.invalidateSize());
+}
+
 function scenarioMapBlock(scenario, id) {
   const hasPlaces = visibleSteps(scenario).some((st) => coordsFor(st));
   return /* HTML */ `<div class="scenario-map-block">

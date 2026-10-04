@@ -3,14 +3,14 @@ import { Icon } from '@/shared/Icon';
 import { TagLabel } from '@/shared/TagLabel';
 import { OpenResourceMenuItem } from '@/shared/select/OpenResourceMenuItem';
 import type { Extra, Scenario, Step, StepGroup } from '@/store/types';
-import { ScenarioLegacyMarkup } from '../ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
 // La pastille d'une ligne ouvre ses alternatives du même genre : une activité se remplace par une
 // activité, une dépense par une dépense. extraLabel reste la fonction legacy (icône/émoji + nom,
 // ou « supprimée » sur une référence morte) : réutilisée pour le trigger et la ligne sélectionnée,
 // pas reconstruite en JSX.
 function ExtraLabel({ line }: { line: Extra }) {
-  return <ScenarioLegacyMarkup html={window.extraLabel(line)} />;
+  return <LegacyMarkup html={window.extraLabel(line)} />;
 }
 
 export function ExtraMenu({
@@ -51,7 +51,9 @@ export function ExtraMenu({
             {(attraction || cost) && (
               <OpenResourceMenuItem
                 onSelect={() =>
-                  cost ? window.openModal('charge', cost.id) : window.openAttractionSheet(attraction!.id)
+                  cost
+                    ? window.openModal('charge', cost.id)
+                    : window.openAttractionSheet(attraction!.id)
                 }
               />
             )}
@@ -81,7 +83,8 @@ export function ExtraMenu({
                   type="button"
                   className={`inline-menu-item ${item.id === line.costId ? 'selected' : ''}`}
                 >
-                  <Icon name="wallet" /> <span className="inline-label">{window.costLabel(item)}</span>
+                  <Icon name="wallet" />{' '}
+                  <span className="inline-label">{window.costLabel(item)}</span>
                 </button>
               </DropdownMenu.Item>
             ))}

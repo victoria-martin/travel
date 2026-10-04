@@ -46,13 +46,27 @@ Constats :
 
 ## Lots
 
-**G1. Coque + table d'onglets + split — effort medium.**
-`ScenarioSidePanel.tsx` (`<aside>` + pied, total lu sur `useScenarioMoney`), une seule table
-d'onglets React partagée par les boutons du header et le panneau (fin de la recopie
-`SIDE_TABS`), corps encore en `ScenarioLegacyMarkup` onglet par onglet. Split en React
-(`ScenarioSplitHandle`, pointer events) — `invalidateSize` passe encore par
-`window.scenarioDetailMaps` jusqu'à G4. `SCENARIO_SIDE_TABS` legacy reste tant que le sheet mobile
-le lit.
+**G1. Coque + table d'onglets + rail + split — ✅ fait.**
+[ScenarioSidePanel.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/ScenarioSidePanel.tsx)
+(`<aside>` + pied, total = `money.total` déjà calculé par `useScenarioMoney`), un composant par
+onglet dans `ScenarioSidePanel/` (`MapTab`, `TransportsTab`, `MoneyTab`, `PackingTab`, corps encore
+en `LegacyMarkup`), une seule table
+[scenarioSideTabs.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/scenarioSideTabs.tsx)
+lue par les boutons du header, le panneau et le
+[rail](../../src/domains/scenarios/detail/ScenarioDetailView/ScenarioSideTabsRail.tsx) (la recopie
+`SIDE_TABS` de `ScenarioSideTabsButtons` disparaît). Split :
+[ScenarioSplitHandle.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/ScenarioSplitHandle.tsx)
++ `scenarioSplitColumns`/`scenarioSplitSizes`/`scenarioRailHidden` ; le glisser invalide la carte via
+`invalidateScenarioDetailMaps` (ajoutée dans `detail-map.js`, à retirer en G4).
+- `MapTab` redessine la carte à chaque changement du scénario (`useEffect` sur `scenario`). Avant,
+  le redessin suivait le HTML du panneau entier : isolé, le HTML de la carte ne change presque
+  jamais.
+- `ScenarioLegacyMarkup` perd sa prop `initializeMaps` (seul `MapTab` s'en servait) et devient un
+  simple alias de `LegacyMarkup` : supprimé, ses 8 appelants lisent `LegacyMarkup`.
+- `Button` accepte `ariaLabel` (passthrough additif, pour le rail).
+- Legacy supprimé : `side-panel.js`, `split.js` (fichiers + `<script src>`), `scenarioSideTabsRail`
+  et `activeSideTab` de `side-tabs.js`. `SCENARIO_SIDE_TABS` legacy reste pour le sheet mobile (G6).
+`pnpm react:typecheck` propre.
 
 **G2. Blocs Argent — effort high.** Offre, transports, dépenses, total en composants React, montés
 par l'onglet Argent **et** par `ScenarioSummary`. Chaque montant se compare d'abord à
@@ -74,10 +88,7 @@ porter `scenarioPackingBlock` et son formulaire.
 monte les corps React des onglets. `SCENARIO_SIDE_TABS`, `scenarioPanelSheet`, `side-panel.js`,
 `side-tabs.js` deviennent morts.
 
-## À trancher (bloque G1)
+## Tranché
 
-- **Rail vertical** (`scenarioSideTabsRail`) : son commentaire dit « dupliqué du header pour
-  comparer les deux emplacements à l'usage ». Le porter tel quel, ou le retirer (le header garde
-  seul les boutons) ?
-- **Sheet mobile** : G6 absorbe le § 5 du plan panneaux (recommandé, sinon ce § 5 porte un wrapper
-  autour de corps legacy que G remplace), ou on le laisse là-bas ?
+- **Rail vertical** : on le garde, porté tel quel en G1.
+- **Sheet mobile** : G6 absorbe le § 5 de react-migration-panels-plan.md.

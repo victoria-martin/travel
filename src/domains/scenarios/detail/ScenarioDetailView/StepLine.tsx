@@ -1,5 +1,5 @@
 import type { Scenario, Step } from '@/store/types';
-import { ScenarioLegacyMarkup } from './ScenarioLegacyMarkup';
+import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { StepNightsDropdown } from './StepLine/StepNightsDropdown';
 import { StepPlaceDropdown } from './StepLine/StepPlaceDropdown';
 import { StepTypeDropdown } from './StepLine/StepTypeDropdown';
@@ -24,7 +24,7 @@ export function StepLine({
       <StepTypeDropdown scenario={scenario} step={step} />
       <div className="step-place">
         <StepPlaceDropdown scenario={scenario} step={step} />
-        <ScenarioLegacyMarkup html={window.stepSheetButton(step)} />
+        <LegacyMarkup html={window.stepSheetButton(step)} />
         {step.attractionId && stepId ? (
           <input
             className="step-place-date"
@@ -35,9 +35,9 @@ export function StepLine({
           />
         ) : null}
       </div>
-      <ScenarioLegacyMarkup html={window.stepStatusTag(step)} />
-      <ScenarioLegacyMarkup html={window.stepAvailabilityTag(step, arrival)} />
-      <ScenarioLegacyMarkup html={window.stepCheckInTimeTag(step)} />
+      <LegacyMarkup html={window.stepStatusTag(step)} />
+      <LegacyMarkup html={window.stepAvailabilityTag(step, arrival)} />
+      <LegacyMarkup html={window.stepCheckInTimeTag(step)} />
       <StepNightsDropdown scenario={scenario} step={step} />
     </>
   );

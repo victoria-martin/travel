@@ -461,10 +461,10 @@ declare global {
     outOfRangeStyle: () => { key: string; label: string; modifier: string; showText: boolean };
     setOutOfRangeStyle: (key: string) => void;
     onScenarioPanelToggle: (scenarioId: string, key: string) => void;
-    scenarioSideTabsRail: (scenarioId: string) => string;
-    scenarioSidePanel: (scenario: import('../store/types').Scenario) => string;
-    scenarioSplitStyle: () => string;
-    scenarioSplitHandle: () => string;
+    scenarioMapBlock: (scenario: import('../store/types').Scenario, id: string) => string;
+    scenarioTransportsRecap: (scenario: import('../store/types').Scenario) => string;
+    scenarioPackingBlock: () => string;
+    invalidateScenarioDetailMaps: () => void;
     initScenarioDetailMaps: () => void;
     destroyScenarioDetailMaps: () => void;
     toolbarSeparator: () => string;

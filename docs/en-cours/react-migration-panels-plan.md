@@ -117,7 +117,9 @@ types, deux absents de l'inventaire vont probablement servir :
    frontière `platform/`). Fichier cible :
    `src/domains/journal/modal/JournalPanelModal.tsx`.
 
-5. **`scenario-panel`** — [js/views/scenarios/detail/side-tabs.js](../js/views/scenarios/detail/side-tabs.js)
+5. **`scenario-panel`** — **déplacé** dans le lot G6 de
+   [react-migration-scenario-side-panel-plan.md](react-migration-scenario-side-panel-plan.md) : les
+   corps d'onglet y passent en React, le sheet monte ces composants. Description d'origine : [js/views/scenarios/detail/side-tabs.js](../js/views/scenarios/detail/side-tabs.js)
    (98 lignes, dont `scenarioPanelSheet` ~8 lignes). Même wrapper que `journal-panel`, mais 4 onglets
    (Carte, Transports, Argent, Valise) et `tab.body` concatène parfois plusieurs blocs de calcul
    (`scenarioOfferBlock(s) + scenarioTransportsBlock(s) + scenarioExpensesBlock(s) + …`) — tout ça

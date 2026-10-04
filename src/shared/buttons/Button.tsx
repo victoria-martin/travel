@@ -40,13 +40,23 @@ type ButtonProps = {
   size?: 'default' | 'small' | 'square';
   className?: string;
   title?: string;
+  ariaLabel?: string;
 };
 
-export const Button = ({ children, onClick, variant, size, className, title }: ButtonProps) => {
+export const Button = ({
+  children,
+  onClick,
+  variant,
+  size,
+  className,
+  title,
+  ariaLabel,
+}: ButtonProps) => {
   return (
     <button
       type="button"
       title={title}
+      aria-label={ariaLabel}
       onClick={onClick}
       className={button({ variant, size }) + (className ? ` ${className}` : '')}
     >
