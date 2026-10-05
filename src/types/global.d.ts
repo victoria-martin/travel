@@ -6,6 +6,23 @@ export {};
   l'app legacy en entier.
 */
 declare global {
+  interface LegacySortOrder {
+    key: string;
+    label: string;
+    dict: Record<string, { label: string; emoji: string }>;
+  }
+
+  // A legacy COLUMN_SETS entry: it still carries sort, filter and visibility semantics for React tables.
+  interface LegacyColumn {
+    key: string;
+    label: string;
+    pickerLabel?: string;
+    locked?: boolean;
+    hiddenByDefault?: boolean;
+    sortValue?: (item: unknown) => string | number;
+    sortOrder?: LegacySortOrder;
+  }
+
   interface Window {
     state: any;
     currentTravelId: () => string | null;
@@ -20,6 +37,34 @@ declare global {
     attractionStatus: (status: string) => { label: string; emoji: string };
     coordsLabel: (p: { lat: string; lng: string }) => string;
     hiddenColumns: (kind: string) => string[];
+    columnsFor: (kind: string) => LegacyColumn[];
+    columnLabel: (column: LegacyColumn) => string;
+    sortableColumns: (kind: string) => LegacyColumn[];
+    sortItems: <T>(kind: string, items: T[]) => T[];
+    sortCriteria: (kind: string) => { key: string; dir: 'asc' | 'desc' }[];
+    toggleSort: (kind: string, key: string) => void;
+    addSortLevel: (kind: string) => void;
+    setSortKey: (kind: string, index: number, key: string) => void;
+    setSortDir: (kind: string, index: number, dir: string) => void;
+    removeSortLevel: (kind: string, index: number) => void;
+    moveSortLevel: (kind: string, index: number, offset: number) => void;
+    directionLabel: (column: LegacyColumn | undefined, dir: 'asc' | 'desc') => string;
+    sortOrderWords: (order: LegacySortOrder) => string[];
+    startSortWordDrag: (event: React.DragEvent, word: string) => void;
+    overSortWord: (event: React.DragEvent) => void;
+    dropOnSortWord: (event: React.DragEvent, kind: string, columnKey: string, word: string) => void;
+    endSortWordDrag: () => void;
+    filterableColumns: (kind: string) => LegacyColumn[];
+    filterLevels: (scope: string) => { key: string; values: 'all' | string[] }[];
+    filterColumn: (kind: string, key: string) => LegacyColumn | undefined;
+    filterValues: (kind: string, column: LegacyColumn) => string[];
+    levelValues: (kind: string, level: { key: string; values: 'all' | string[] }) => string[];
+    toggleFilterLevel: (scope: string, key: string) => void;
+    setAllFilterLevels: (scope: string, checked: boolean) => void;
+    toggleFilterValue: (scope: string, index: number, valueIndex: number) => void;
+    setAllFilterValuesEverywhere: (scope: string, checked: boolean) => void;
+    activeFilterCount: (scope: string) => number;
+    keptByFilters: (scope: string, item: unknown) => boolean;
     toggleColumn: (kind: string, key: string) => void;
     ATTRACTION_TYPES: Record<string, { label: string; emoji: string; color: string }>;
     ATTRACTION_STATUSES: Record<string, { label: string; emoji: string }>;

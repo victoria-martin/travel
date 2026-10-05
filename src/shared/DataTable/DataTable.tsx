@@ -6,62 +6,71 @@ type SortDir = 'asc' | 'desc';
 type Sort = { key: string; dir: SortDir } | null;
 
 /*
-  Chrome seul (docs/en-cours/react-migration-plan.md § 4) : tri un seul niveau, cycle asc → desc → aucun,
-  sur le modèle de toggleSort (js/sort.js) mais en état local — pas encore persisté dans prefs, pas
-  encore de tri multi-niveaux ni de colonnes masquables. Le contenu de chaque cellule est composé
-  par l'appelant via `column.render`.
+  Chrome seul (docs/en-cours/react-migration-plan.md § 4) : le contenu de chaque cellule est composé
+  par l'appelant via `column.render`. Avec un `kind`, le tri est celui du legacy (js/sort.js) :
+  plusieurs niveaux gardés dans prefs.sort, tri par défaut (SORT_DEFAULTS), ordre de vocabulaire,
+  et une colonne est triable quand sa colonne legacy (COLUMN_SETS[kind]) l'est. Sans `kind`, un tri
+  à un niveau en état local.
 */
 export function DataTable<T extends { id: string }>({
   columns,
   items,
+  kind,
   onRowClick,
 }: {
   columns: Column<T>[];
   items: T[];
+  kind?: string;
   onRowClick?: (item: T) => void;
 }) {
-  const [sort, setSort] = useState<Sort>(null);
+  const [localSort, setLocalSort] = useState<Sort>(null);
+
+  const legacySortable = kind
+    ? new Set(window.sortableColumns(kind).map((column) => column.key))
+    : null;
+  const criteria = kind ? window.sortCriteria(kind) : localSort ? [localSort] : [];
+  const isSortable = (column: Column<T>) =>
+    legacySortable ? legacySortable.has(column.key) : !!column.sortValue;
 
   function toggleSort(column: Column<T>) {
-    if (!column.sortValue) return;
-    if (sort?.key !== column.key) setSort({ key: column.key, dir: 'asc' });
-    else if (sort.dir === 'asc') setSort({ key: column.key, dir: 'desc' });
-    else setSort(null);
+    if (kind) return window.toggleSort(kind, column.key);
+    if (localSort?.key !== column.key) setLocalSort({ key: column.key, dir: 'asc' });
+    else if (localSort.dir === 'asc') setLocalSort({ key: column.key, dir: 'desc' });
+    else setLocalSort(null);
   }
 
-  const sorted = sortItems(items, columns, sort);
+  const sorted = kind ? window.sortItems(kind, items) : sortItems(items, columns, localSort);
 
   return (
     <div className="table-wrap">
       <table>
         <thead>
           <tr>
-            {columns.map((column) => (
-              <th key={column.key}>
-                {column.sortValue ? (
+            {columns.map((column) => {
+              if (!isSortable(column)) return <th key={column.key}>{column.label}</th>;
+              const index = criteria.findIndex((criterion) => criterion.key === column.key);
+              const arrow =
+                index < 0
+                  ? 'arrow-up-down'
+                  : criteria[index].dir === 'asc'
+                    ? 'arrow-up'
+                    : 'arrow-down';
+              return (
+                <th key={column.key}>
                   <button
-                    className={`th-sort ${sort?.key === column.key ? 'active' : ''}`}
+                    className={`th-sort ${index >= 0 ? 'active' : ''}`}
                     onClick={() => toggleSort(column)}
                     title={`Trier par ${column.label}`}
                   >
                     {column.label}
                     <span className="th-sort-arrow">
-                      <Icon
-                        name={
-                          sort?.key !== column.key
-                            ? 'arrow-up-down'
-                            : sort.dir === 'asc'
-                              ? 'arrow-up'
-                              : 'arrow-down'
-                        }
-                      />
+                      <Icon name={arrow} />
+                      {index >= 0 && criteria.length > 1 ? index + 1 : ''}
                     </span>
                   </button>
-                ) : (
-                  column.label
-                )}
-              </th>
-            ))}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
