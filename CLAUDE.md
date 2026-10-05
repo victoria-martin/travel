@@ -31,14 +31,21 @@ sont deux frères au même niveau — jamais le fichier déplacé **dans** un do
 [domains/cities/CitiesView/](src/domains/cities/CitiesView/) (`CitiesHeader.tsx`,
 `CitiesHeaderActions.tsx`).
 
-## Un menu déroulant vit dans `shared/select/`
+## Un menu déroulant vit dans `shared/select/` ou `shared/menu/`, selon ce qu'il fait
 
-Tout composant React construit sur Radix `DropdownMenu` — un menu déroulant, pas un panneau
-`ToolbarPanel`/`details` ni une cellule qui en utilise un comme détail d'implémentation — va dans
-[src/shared/select/](src/shared/select/), jamais recréé localement à un écran. Objectif : repérer
-les doublons d'un coup d'œil au lieu de les laisser se recréer sous des noms différents. A trouvé
-un doublon dès sa création : `VocabularyDropdown.tsx`, recréé à l'identique de `TagDropdown.tsx`
-par une session parallèle qui ignorait le renommage — supprimé.
+Tout composant React construit sur Radix `DropdownMenu` se range dans `shared/`, jamais recréé
+localement à un écran, selon un critère :
+
+- **choisir une valeur** (statut, type, offre, quantité…) → [src/shared/select/](src/shared/select/) ;
+- **menu d'en-tête** qui ouvre un panneau ou des actions (Réglages, Trier, Filtrer, Ajouter) →
+  [src/shared/menu/](src/shared/menu/), assemblé avec `ToolbarMenu` (déclencheur + contenu en
+  `children`).
+
+Un menu propre à un domaine (le filtre de la carte, le menu d'ajout des hébergements) reste dans
+son domaine mais s'assemble avec `ToolbarMenu`. Objectif : repérer les doublons d'un coup d'œil au
+lieu de les laisser se recréer sous des noms différents. A trouvé un doublon dès sa création :
+`VocabularyDropdown.tsx`, recréé à l'identique de `TagDropdown.tsx` par une session parallèle qui
+ignorait le renommage — supprimé.
 
 ## Un champ de formulaire de modale vit dans `shared/`, créé avant le deuxième consommateur
 
