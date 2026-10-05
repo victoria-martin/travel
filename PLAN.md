@@ -543,6 +543,14 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
   à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et Charges fixes,
   plus légères (6-10 colonnes), restent des tables classiques.
 
+## 📱 Mobile
+
+- **Carte d'étape illisible sous 640px** <!--t:8rvg--> — 📐 layout · 🐛 fix · ⏳ à faire : dans le
+  détail d'un scénario, le nom de l'étape s'écrit lettre par lettre dans sa carte (la colonne du
+  titre s'écrase à zéro), et le ↗ de la fiche d'hébergement chevauche la pastille du lieu. Constaté
+  en capture le 2026-10-05 (390px de large) ; déjà signalé ouvert dans le journal CLAUDE.md du
+  2026-09-19. Disposition à concevoir avant de coder.
+
 ## 📝 Données à saisir
 
 Du contenu, pas des fonctionnalités : à entrer dans l'app dès que l'écran correspondant existe.
