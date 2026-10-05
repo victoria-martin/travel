@@ -31,7 +31,7 @@ export function ExtraMenu({
     <div className="inline-dropdown extra-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             <ExtraLabel line={line} />
           </button>
         </DropdownMenu.Trigger>

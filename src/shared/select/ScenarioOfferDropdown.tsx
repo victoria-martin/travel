@@ -27,7 +27,7 @@ export function ScenarioOfferDropdown({
     <div className="inline-dropdown car-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             <TagLabel label={current ? window.offerLabel(current) : 'Aucune voiture'} />
           </button>
         </DropdownMenu.Trigger>

@@ -11,7 +11,7 @@ export function StepNightsDropdown({ scenario, step }: { scenario: Scenario; ste
     <div className="inline-dropdown nights-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             <TagLabel label={window.nightsLabel(current)} />
           </button>
         </DropdownMenu.Trigger>
@@ -29,7 +29,10 @@ export function StepNightsDropdown({ scenario, step }: { scenario: Scenario; ste
                 asChild
                 onSelect={() => window.setStepNights(scenario.id, stepId, String(n))}
               >
-                <button type="button" className={`inline-menu-item ${n === current ? 'selected' : ''}`}>
+                <button
+                  type="button"
+                  className={`inline-menu-item ${n === current ? 'selected' : ''}`}
+                >
                   {window.nightsLabel(n)}
                 </button>
               </DropdownMenu.Item>

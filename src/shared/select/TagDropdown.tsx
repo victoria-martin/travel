@@ -31,11 +31,7 @@ export function TagDropdown<V extends { label: string; emoji: string }>({
     <div className={`inline-dropdown ${className}`}>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button
-            type="button"
-            className={`inline-tag${current ? '' : ' inline-tag-empty'}`}
-            style={{ font: 'inherit' }}
-          >
+          <button type="button" className={`inline-tag${current ? '' : ' inline-tag-empty'}`}>
             {current ? <TagLabel emoji={current.emoji} label={current.label} /> : placeholder}
           </button>
         </DropdownMenu.Trigger>

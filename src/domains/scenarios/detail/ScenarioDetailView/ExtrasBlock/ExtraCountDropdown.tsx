@@ -21,7 +21,7 @@ export function ExtraCountDropdown({
     >
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             {window.extraCountLabel(current)}
           </button>
         </DropdownMenu.Trigger>
@@ -38,7 +38,10 @@ export function ExtraCountDropdown({
                 asChild
                 onSelect={() => window.setExtraCount(scenario.id, holderId, line.id, n)}
               >
-                <button type="button" className={`inline-menu-item ${n === current ? 'selected' : ''}`}>
+                <button
+                  type="button"
+                  className={`inline-menu-item ${n === current ? 'selected' : ''}`}
+                >
                   {window.extraCountLabel(n)}
                 </button>
               </DropdownMenu.Item>

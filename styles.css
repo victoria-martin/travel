@@ -1318,6 +1318,7 @@ tr:hover td {
 }
 .inline-tag {
   display: inline-flex;
+  font-family: inherit;
   align-items: center;
   gap: 6px;
   padding: 3px 10px;
@@ -3967,23 +3968,27 @@ tr:hover td {
     display: none;
   }
 
-  /* La colonne "auto" des actions (3 boutons + séparateur + ⋮) ne rentre pas à côté du titre sur
-     un téléphone : les deux repassent en une seule colonne, l'identité au-dessus des actions. */
+  /* La colonne "auto" des actions (boutons + séparateurs + ⋮) ne rentre pas à côté du titre sur
+     un téléphone : une seule colonne, une rangée par bloc — titre, date et décompte, total, actions. */
   .scenario-header {
     grid-template-columns: minmax(0, 1fr);
   }
   .scenario-header-identity {
     grid-row: 1;
   }
-  .scenario-header .view-header-actions {
+  .scenario-header .view-sub {
     grid-column: 1;
     grid-row: 2;
-    justify-content: flex-start;
   }
   .scenario-header-money {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 3;
     justify-self: start;
+    justify-content: flex-start;
+  }
+  .scenario-header .view-header-actions {
+    grid-column: 1;
+    grid-row: 4;
     justify-content: flex-start;
   }
 

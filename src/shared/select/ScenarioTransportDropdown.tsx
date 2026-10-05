@@ -17,7 +17,7 @@ export function ScenarioTransportDropdown({
     <div className="inline-dropdown transport-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             <span className="inline-emoji">
               <Icon name="plane" />
             </span>

@@ -11,7 +11,7 @@ export function PackingQuantityDropdown({ item }: { item: PackingListItem }) {
     <div className="inline-dropdown packing-quantity-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             {window.packingQuantityLabel(item)}
           </button>
         </DropdownMenu.Trigger>

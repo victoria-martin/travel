@@ -9,7 +9,7 @@ export function ScenarioExpenseDropdown({ scenario }: { scenario: Scenario }) {
     <div className="inline-dropdown expense-dropdown">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-tag" style={{ font: 'inherit' }}>
+          <button type="button" className="inline-tag">
             <span className="inline-emoji">
               <Icon name="wallet" />
             </span>
