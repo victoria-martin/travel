@@ -38,6 +38,18 @@ declare global {
     coordsLabel: (p: { lat: string; lng: string }) => string;
     hiddenColumns: (kind: string) => string[];
     columnsFor: (kind: string) => LegacyColumn[];
+    chosenStepForPlace: (
+      place: { accommodationId: string } | { attractionId: string },
+    ) => {
+      scenario: import('../store/types').Scenario;
+      step: import('../store/types').Step;
+      index: number;
+    } | null;
+    createdAtDate: (iso: string) => string;
+    listViewMode: Record<string, 'table' | 'card'>;
+    setListMode: (kind: string, mode: 'table' | 'card') => void;
+    favOnly: boolean;
+    toggleFavOnly: () => void;
     columnLabel: (column: LegacyColumn) => string;
     sortableColumns: (kind: string) => LegacyColumn[];
     sortItems: <T>(kind: string, items: T[]) => T[];

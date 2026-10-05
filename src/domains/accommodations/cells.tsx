@@ -1,6 +1,7 @@
 import { EditableTextCell } from '@/shared/cells/EditableTextCell';
 import { FavoriteCell as SharedFavoriteCell } from '@/shared/cells/FavoriteCell';
 import { Icon } from '@/shared/Icon';
+import { OutOfRangeBadge } from '@/shared/OutOfRangeBadge';
 import { AddWordMenuItem } from '@/shared/select/AddWordMenuItem';
 import { TagDropdown } from '@/shared/select/TagDropdown';
 import type { Accommodation } from '@/store/types';
@@ -18,6 +19,7 @@ export function NameCell({ accommodation }: { accommodation: Accommodation }) {
   return (
     <>
       <strong>{accommodation.name}</strong>
+      <OutOfRangeBadge reason={window.accommodationSearchOutOfRange(accommodation)} />
       <div className="row-notes">
         <EditableTextCell
           value={accommodation.notes}

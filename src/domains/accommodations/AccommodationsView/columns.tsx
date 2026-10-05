@@ -1,37 +1,41 @@
+import { ChosenStepCell } from '@/shared/cells/ChosenStepCell';
 import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
+import { EditableTextCell } from '@/shared/cells/EditableTextCell';
+import { GoogleMapsCell } from '@/shared/cells/GoogleMapsCell';
 import { LinkCell } from '@/shared/cells/LinkCell';
 import { TextCell } from '@/shared/cells/TextCell';
 import type { Column } from '@/shared/DataTable/types';
+import { MissingAddressBadge } from '@/shared/MissingAddressBadge';
 import type { Accommodation } from '@/store/types';
 import { ActionsCell, FavoriteCell, NameCell, PriceCell, StatusBadge, TypeBadge } from '../cells';
 
-// Port de availabilityDate (js/views/accommodations/table/columns.js) : les deux dates viennent
-// d'un <input type="date">, donc en ISO — la cellule les rend lisibles.
+// Both dates come from an <input type="date">, hence ISO: the cell makes them readable.
 function availabilityDate(iso: string): string {
   const date = window.isoToDate(iso);
   return date ? window.formatStepDay(date) : '';
 }
 
 /*
-  Port de js/views/accommodations/table/columns.js, scope réduit comme Attractions/Cities/Charges
-  fixes/Transports : reste à porter — chosenStep (dérivation scénario), region/country/address,
-  notes en colonne à part (déjà éditable sous le nom), Google Maps, favoris seuls, mode cartes,
-  panneau de filtres, bouton Importer, menu d'ajout, tri sur vocabulaire.
+  Port de js/views/accommodations/table/columns.js. Keys match the legacy COLUMN_SETS.hebergements,
+  which still carries sorting, filtering and hidden-by-default (DataTable kind="hebergements").
 */
 export const columns: Column<Accommodation>[] = [
   {
     key: 'favorite',
     label: '',
     locked: true,
-    sortValue: (accommodation) => (accommodation.favorite ? 0 : 1),
     render: (accommodation) => <FavoriteCell accommodation={accommodation} />,
   },
   {
     key: 'name',
     label: 'Nom',
     locked: true,
-    sortValue: (accommodation) => (accommodation.name || '').toLowerCase(),
     render: (accommodation) => <NameCell accommodation={accommodation} />,
+  },
+  {
+    key: 'chosenStep',
+    label: 'Étape',
+    render: (accommodation) => <ChosenStepCell place={{ accommodationId: accommodation.id }} />,
   },
   {
     key: 'type',
@@ -46,14 +50,22 @@ export const columns: Column<Accommodation>[] = [
   {
     key: 'city',
     label: 'Ville',
-    sortValue: (accommodation) => (accommodation.city || '').toLowerCase(),
     render: (accommodation) => <TextCell value={accommodation.city} />,
   },
   {
     key: 'county',
     label: 'Province',
-    sortValue: (accommodation) => (accommodation.county || '').toLowerCase(),
     render: (accommodation) => <TextCell value={accommodation.county} />,
+  },
+  {
+    key: 'region',
+    label: 'Région',
+    render: (accommodation) => <TextCell value={accommodation.region} />,
+  },
+  {
+    key: 'country',
+    label: 'Pays',
+    render: (accommodation) => <TextCell value={accommodation.country} />,
   },
   {
     key: 'tags',
@@ -74,6 +86,16 @@ export const columns: Column<Accommodation>[] = [
     ),
   },
   {
+    key: 'address',
+    label: 'Adresse',
+    render: (accommodation) => (
+      <>
+        <strong>{accommodation.address}</strong>
+        <MissingAddressBadge address={accommodation.address} />
+      </>
+    ),
+  },
+  {
     key: 'price',
     label: 'Prix',
     render: (accommodation) => <PriceCell accommodation={accommodation} />,
@@ -86,14 +108,31 @@ export const columns: Column<Accommodation>[] = [
   {
     key: 'availableFrom',
     label: 'Disponible du',
-    sortValue: (accommodation) => accommodation.availableFrom || '',
     render: (accommodation) => <TextCell value={availabilityDate(accommodation.availableFrom)} />,
   },
   {
     key: 'availableTo',
     label: 'Disponible au',
-    sortValue: (accommodation) => accommodation.availableTo || '',
     render: (accommodation) => <TextCell value={availabilityDate(accommodation.availableTo)} />,
+  },
+  {
+    key: 'notes',
+    label: 'Notes',
+    render: (accommodation) => (
+      <EditableTextCell
+        value={accommodation.notes}
+        placeholder="Notes…"
+        onSave={(notes) => {
+          accommodation.notes = notes;
+          window.saveNow();
+        }}
+      />
+    ),
+  },
+  {
+    key: 'createdAt',
+    label: 'Créé le',
+    render: (accommodation) => <TextCell value={window.createdAtDate(accommodation.createdAt)} />,
   },
   {
     key: 'link',
@@ -104,6 +143,13 @@ export const columns: Column<Accommodation>[] = [
     key: 'bookingLink',
     label: 'Booking',
     render: (accommodation) => <LinkCell link={accommodation.bookingLink} label="Booking" />,
+  },
+  {
+    key: 'googleMaps',
+    label: 'Google Maps',
+    render: (accommodation) => (
+      <GoogleMapsCell query={accommodation.address || accommodation.name} />
+    ),
   },
   {
     key: 'actions',

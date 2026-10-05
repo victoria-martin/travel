@@ -1,6 +1,6 @@
 import { Icon } from '@/shared/Icon';
+import { OutOfRangeBadge } from '@/shared/OutOfRangeBadge';
 import type { Scenario, Step } from '@/store/types';
-import { StepAvailabilityBadge } from './StepLine/StepAvailabilityBadge';
 import { StepCheckInTime } from './StepLine/StepCheckInTime';
 import { StepNightsDropdown } from './StepLine/StepNightsDropdown';
 import { StepPlaceDropdown } from './StepLine/StepPlaceDropdown';
@@ -44,7 +44,7 @@ export function StepLine({
         ) : null}
       </div>
       {accommodation && <StepStatusDropdown accommodation={accommodation} />}
-      <StepAvailabilityBadge
+      <OutOfRangeBadge
         reason={
           accommodation
             ? window.stepOutOfRange(accommodation, arrival, window.stepNights(step))

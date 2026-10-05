@@ -1,7 +1,7 @@
 import { Icon } from '@/shared/Icon';
 
-// The step's own dates against the accommodation's availability window.
-export function StepAvailabilityBadge({ reason }: { reason: string | null }) {
+// An accommodation searched or booked outside its availability window; the reason is its tooltip.
+export function OutOfRangeBadge({ reason }: { reason: string | null }) {
   if (!reason) return null;
   const style = window.outOfRangeStyle();
   return (
