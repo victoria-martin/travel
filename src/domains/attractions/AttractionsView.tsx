@@ -3,18 +3,16 @@ import { HeaderActions } from '@/shared/header/HeaderActions';
 import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
+import { AddResourceButton } from '@/shared/buttons/AddResourceButton';
 import { ColumnPicker } from '@/shared/menu/ColumnPicker';
+import { SortMenu } from '@/shared/menu/SortMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { columns } from './AttractionsView/columns';
 import { searchAttraction } from './searchAttraction';
 
-/*
-  Porte js/views/attractions/{attractions,header,columns}.js sur DataTable, même scope réduit que
-  Cities/Charges fixes/Transports : tri/recherche/colonnes masquables/édition en place faits.
-  Restent, pas bloquants : bouton Ajouter, mode cartes (listModeToggle), favoris uniquement, menu ⋮.
-*/
+// Porte js/views/attractions/{attractions,header,columns}.js.
 export function AttractionsView() {
   const attractions = useTravelStore(
     useShallow((store) => window.ofCurrentTravel(store.data.attractions)),
@@ -43,7 +41,14 @@ export function AttractionsView() {
       </div>
       <TableHeaderActions>
         <SearchInput value={query} onChange={setQuery} />
+        <SortMenu kind="attractions" />
         <ColumnPicker kind="attractions" columns={columns} />
+        <span className="toolbar-separator" />
+        <AddResourceButton
+          title="Ajouter un lieu"
+          label="Ajouter"
+          onClick={() => window.openModal('attraction')}
+        />
       </TableHeaderActions>
       {items.length === 0 ? (
         <div className="empty-state">
@@ -53,6 +58,7 @@ export function AttractionsView() {
       ) : (
         <div className="table-scroll">
           <DataTable
+            kind="attractions"
             columns={visibleColumns}
             items={items}
             onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}

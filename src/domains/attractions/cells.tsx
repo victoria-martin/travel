@@ -1,5 +1,6 @@
 import { FavoriteCell as SharedFavoriteCell } from '@/shared/cells/FavoriteCell';
 import { Icon } from '@/shared/Icon';
+import { MissingAddressBadge } from '@/shared/MissingAddressBadge';
 import { AddWordMenuItem } from '@/shared/select/AddWordMenuItem';
 import { TagDropdown } from '@/shared/select/TagDropdown';
 import type { Attraction } from '@/store/types';
@@ -23,11 +24,7 @@ export function NameCell({ attraction }: { attraction: Attraction }) {
   return (
     <>
       <strong>{attraction.name}</strong>
-      {!attraction.address && (
-        <span className="warning-badge" title="Pas d'adresse renseignée">
-          <Icon name="triangle-alert" />
-        </span>
-      )}
+      <MissingAddressBadge address={attraction.address} />
     </>
   );
 }

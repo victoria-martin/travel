@@ -15,8 +15,8 @@ import { CitiesHeaderActions } from './CitiesView/CitiesHeaderActions';
   `description: {hiddenByDefault: true}`, une seule source pour la préférence. Clé 'cities' choisie
   pour la route/le code — le libellé visible reste « Villes » (NAV_ITEMS, ce fichier).
   Édition en place (type/statut/tags), actions de ligne (ouvrir/dupliquer/supprimer, déléguées à
-  openModal/duplicateAttraction/deleteItem legacy) faites. Reste : menu ⋮, tri sur type/statut
-  (ordre de vocabulaire, pas encore porté).
+  openModal/duplicateAttraction/deleteItem legacy) faites. Tri délégué au legacy
+  (DataTable kind="cities") : ville puis nom par défaut, ordre de vocabulaire sur type/statut.
 */
 export function CitiesView() {
   const attractions = useTravelStore(
@@ -48,6 +48,7 @@ export function CitiesView() {
       ) : (
         <div className="table-scroll">
           <DataTable
+            kind="cities"
             columns={visibleColumns}
             items={items}
             onRowClick={(attraction) => window.openAttractionSheet(attraction.id)}
