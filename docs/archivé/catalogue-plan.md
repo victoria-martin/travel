@@ -1,11 +1,15 @@
 # Catalogue d'hébergements — page Découvrir
 
+> **Abandonné le 2026-10-05**, remplacé par [architecture-plan.md](../en-cours/architecture-plan.md) :
+> backend Rails + GraphQL au lieu de Hasura Cloud, et ajout au voyage par référence au lieu
+> d'une copie. Rien de ce plan n'a été implémenté.
+
 Faire vivre un catalogue global d'hébergements (indépendant d'un voyage) dans une vraie base
 relationnelle, consultable dans une nouvelle page **Découvrir**, avec un bouton pour copier une
 entrée dans le voyage ouvert. Premier pas du besoin noté dans
-[atelier/notes.json](../atelier/notes.json) (catalogue partagé multi-client) — démarré ici à scope
+[atelier/notes.json](../../atelier/notes.json) (catalogue partagé multi-client) — démarré ici à scope
 réduit, avant que le multi-tenant réel soit tranché (voir
-[react-migration-plan.md § 9](react-migration-plan.md)).
+[react-migration-plan.md § 9](../en-cours/react-migration-plan.md)).
 
 Décisions actées :
 
@@ -21,7 +25,7 @@ Décisions actées :
   le catalogue.
 - **Pas d'auth/multi-tenant** : le catalogue est public en lecture, « mon voyage » reste le voyage
   ouvert dans l'app. Le multi-tenant réel (comptes, catalogue par client) reste hors scope — c'est
-  le point que l'adaptateur sync ([react-migration-plan.md § 2](react-migration-plan.md)) garde
+  le point que l'adaptateur sync ([react-migration-plan.md § 2](../en-cours/react-migration-plan.md)) garde
   ouvert pour plus tard.
 - **Page à part** : « Découvrir » n'est pas un onglet d'Hébergements — donnée de nature différente
   (catalogue global vs données du voyage), même critère que les autres domaines de l'app
@@ -61,8 +65,8 @@ se remet pas à jour si le catalogue change ensuite.
 
 - `@apollo/client` + `graphql` ajoutés aux deps (`package.json`), client posé dans un fichier dédié
   (ex. `src/store/catalogClient.ts`), pointant sur l'endpoint Hasura Cloud.
-- `REACT_VIEWS.decouvrir` ([main.tsx](../src/main.tsx)) monte `DecouvrirView` — nouvelle entrée
-  dans `NAV_ITEMS` ([nav-items.js](../js/views/nav-items.js)).
+- `REACT_VIEWS.decouvrir` ([main.tsx](../../src/main.tsx)) monte `DecouvrirView` — nouvelle entrée
+  dans `NAV_ITEMS` ([nav-items.js](../../js/views/nav-items.js)).
 - Un hook `useAccommodationsCatalog()` dans `src/domains/decouvrir/` fait la query de liste (nom,
   type, ville, photo) ; pas de filtre serveur pour la première version, le filtrage se fait côté
   client comme les autres listes de l'app.

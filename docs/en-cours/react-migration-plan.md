@@ -16,9 +16,15 @@ Décisions actées (validées en session) :
 - **Synchro** : la couche sync du store est un adaptateur remplaçable (`read()` / `push(data,
 baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalogue partagé
   multi-client demande une vraie base relationnelle, seul l'adaptateur change — pas les hooks ni
-  les composants. Le catalogue global démarre en pratique dès maintenant, à scope réduit : voir
-  [catalogue-plan.md](catalogue-plan.md) et § 9 ci-dessous — plus « hors scope », une piste
-  parallèle à celle-ci (§ 7).
+  les composants. Le backend cible est tranché depuis le 2026-10-05 — Rails + GraphQL, catalogue
+  global référencé par les voyages : voir [architecture-plan.md](architecture-plan.md) et § 9
+  ci-dessous, une piste parallèle à celle-ci (§ 7). L'adaptateur ne suffira pas seul : la forme des
+  données change aussi (architecture-plan.md § 5).
+- **Couche données (2026-10-05)** : elle n'est plus portée sur Zustand ni sur un adaptateur Sheet.
+  Le Sheet disparaît au profit d'un backend Rails + GraphQL, et c'est le lot 4 de
+  [architecture-plan.md](architecture-plan.md) qui remplace `window.state`, les mutations legacy
+  et [sync.js](../../js/sync.js). Ce plan-ci ne garde que l'affichage (§ 10). Détail :
+  architecture-plan.md § 7.
 - **Build/hébergement cible (2026-10-01)** : `file://`/« ouvrir `index.html` sans rien lancer » est
   abandonné à la fin de la migration — l'app se lancera avec un serveur front (comme les autres
   projets), ce qui permet un vrai build Vite (ESM, dev server, HMR) une fois `js/` legacy supprimé.
@@ -193,7 +199,8 @@ reste au fur et à mesure (voir § 7) :
   (`mergeStates`), pas un simple POST — l'écrire en parallèle aurait fait deux chemins écrivant sur
   le même Google Sheet, un vrai risque sur les données réelles. Reste une tâche à part, quand
   `js/sync.js` lui-même est porté (Phase 4 ou plus tôt si la bascule DB de
-  [atelier/notes.json](../atelier/notes.json) démarre avant).
+  [atelier/notes.json](../atelier/notes.json) démarre avant). **2026-10-05** — la bascule démarre : ce
+  portage n'aura pas lieu, voir [architecture-plan.md](architecture-plan.md) § 7.
 
 Risque identifié : un accès `state.x` oublié dans du legacy, pendant la période où les deux
 coexistent, lirait une donnée périmée. Pas de garde automatique prévue pour l'instant — à vérifier
@@ -515,9 +522,10 @@ Le détail d'un scénario n'a plus aucun `LegacyMarkup` depuis le 2026-10-04 :
 [react-migration-scenario-detail-plan.md](../archivé/react-migration-scenario-detail-plan.md) et
 [react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md).
 
-**Découvrir / catalogue ([catalogue-plan.md](catalogue-plan.md)) n'est pas une étape de cette
-séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme `REACT_VIEWS` /
-mount-unmount), déjà fait : c'est un écran neuf, câblé sur Hasura/Postgres en GraphQL, qui ne lit
+**Découvrir / catalogue ([architecture-plan.md](architecture-plan.md), lot 2) n'est pas une étape
+de cette séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme
+`REACT_VIEWS` / mount-unmount), déjà fait : c'est un écran neuf, câblé sur le backend Rails en
+GraphQL, qui ne lit
 ni n'écrit jamais la globale `state` legacy ni le store Zustand — rien à attendre des Phases 1-5,
 qui portent des écrans EXISTANTS depuis le Sheet. Elle peut donc avancer en même temps, sans ordre
 imposé entre les deux. Ce que les deux partagent reste optionnel, pas un blocage : `DataTable`
@@ -552,9 +560,15 @@ n'est pas une étape de ce plan : l'adaptateur sync (§ 2) garde seulement la po
 pas avoir à redéfaire le store le jour où cette initiative démarre pour de vrai.
 
 **2026-10-01** — le catalogue global d'hébergements démarre pour de vrai, avant le multi-tenant :
-voir [catalogue-plan.md](catalogue-plan.md). Scope volontairement réduit (pas d'auth, ajout au
+voir [catalogue-plan.md](../archivé/catalogue-plan.md). Scope volontairement réduit (pas d'auth, ajout au
 voyage = copie) — le reste (villes/activités au catalogue, import, scraping, multi-tenant réel)
 reste hors scope ici.
+
+**2026-10-05** — ce plan catalogue est abandonné avant toute implémentation, remplacé par
+[architecture-plan.md](architecture-plan.md) : monorepo, backend Rails + GraphQL au lieu de Hasura,
+ajout au voyage par référence au lieu d'une copie, données du voyage dans Postgres (le Sheet
+disparaît). Import, scraping et
+multi-tenant y deviennent des lots.
 
 ## 10. Ce qui reste legacy — où et pourquoi
 
@@ -562,10 +576,11 @@ Relevé du 2026-10-04, après les lots A–E de la même journée (`git grep "Le
 html=\|dangerouslySetInnerHTML" -- src`, plus les `body:` restants de `MODAL_TYPES`). C'est le
 backlog vers « `js/` legacy supprimé ».
 
+**2026-10-05** — ce backlog ne couvre plus que l'affichage. La couche données legacy (`state`,
+`upsertX`/`saveNow`, `sync.js`, `storage.js`) disparaît avec le lot 4 de
+[architecture-plan.md](architecture-plan.md), pas par un portage ici.
+
 **Encore legacy, et pourquoi :**
-- Modale `settings` et bouton Réglages de la barre latérale (`settingsButton`) — chantier en cours
-  côté utilisatrice ([react-migration-panels-plan.md](react-migration-panels-plan.md) § 1), pas
-  touché pour ne pas croiser son travail.
 - Journal — `journalDayPanel` : bloc impératif autour d'un seul `<textarea>` et de son caret (§ 7,
   Phase 3). Le sheet mobile du panneau (`journal-panel`) est porté, pas le panneau desktop, resté
   dans ce bloc.

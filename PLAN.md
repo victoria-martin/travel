@@ -358,8 +358,11 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 ## 🔎 Découvrir
 
 - **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · ⚙️ infra · ⏳ à faire : catalogue
-  global d'hébergements (Hasura Cloud + Postgres, Apollo côté front), avec un bouton qui copie une
-  entrée dans le voyage ouvert. Plan détaillé : [catalogue-plan.md](docs/en-cours/catalogue-plan.md).
+  global de lieux servi par le backend Rails + GraphQL, avec un bouton qui ajoute une entrée au
+  voyage ouvert. Lots 2 et 3 de [architecture-plan.md](docs/en-cours/architecture-plan.md).
+- **Trancher l'architecture cible** <!--t:k3vz--> — 🏛️ archi · ⏳ à faire : les 6 questions ouvertes
+  de [architecture-plan.md § 4](docs/en-cours/architecture-plan.md) — entités et champs du
+  catalogue, hors ligne, auth, hébergement, note d'un lieu. Elles bloquent les lots 1, 2, 4 et 5.
 
 ## 🧩 Transverse
 
@@ -467,10 +470,10 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   **Fait** : le détail d'un scénario n'a plus aucun bloc legacy, panneau latéral et sheet mobile
   compris — [docs/archivé/react-migration-scenario-detail-plan.md](docs/archivé/react-migration-scenario-detail-plan.md)
   et [docs/archivé/react-migration-scenario-side-panel-plan.md](docs/archivé/react-migration-scenario-side-panel-plan.md).
-  **Reste ouvert** : 4 panneaux/modales utilitaires explicitement hors scope de ce backlog
-  (`valise-composer`, `journal-panel`, `sync`, `settings`) — backlog et patron
-  détaillés dans [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md)
-  — puis l'horizon final : suppression de `js/` legacy.
+  **Fait** : les 5 panneaux/modales utilitaires (`valise-composer`, `journal-panel`, `sync`,
+  `settings`, `scenario-panel`) — [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md),
+  qui garde une question ouverte sur le style des phrases. **Reste ouvert** : l'horizon final,
+  suppression de `js/` legacy.
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
