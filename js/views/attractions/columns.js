@@ -16,13 +16,6 @@ COLUMN_SETS.attractions = [
     sortValue: (a) => (a.name || '').toLowerCase(),
   },
   {
-    key: 'recent',
-    filter: false,
-    label: 'Ajout récent',
-    hiddenByDefault: true,
-    sortValue: (a) => a.createdAt || '',
-  },
-  {
     key: 'chosenStep',
     filter: false,
     label: 'Étape',
@@ -140,6 +133,15 @@ COLUMN_SETS.attractions = [
     cell: attractionCreatedAtCell,
     sortValue: (a) => a.createdAt || '',
   },
+  {
+    key: 'updatedAt',
+    label: 'Modifié le',
+    hiddenByDefault: true,
+    filter: false,
+    nowrap: true,
+    cell: (a) => textCell(createdAtDate(a.updatedAt)),
+    sortValue: (a) => a.updatedAt || '',
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'googleMaps', label: 'Google Maps', cell: (a) => googleMapsCell(a.address || a.name) },
   { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
@@ -147,7 +149,7 @@ COLUMN_SETS.attractions = [
 
 SORT_DEFAULTS.attractions = [
   { key: 'chosenStep', dir: 'asc' },
-  { key: 'recent', dir: 'desc' },
+  { key: 'updatedAt', dir: 'desc' },
 ];
 
 function attractionFavoriteCell(a) {

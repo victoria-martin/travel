@@ -13,9 +13,13 @@ function defaultSortCriteria(kind) {
 }
 
 // A dictionary column carries its own order, so reversing it says nothing: those levels stay asc.
+// A level whose column no longer exists (a saved sort outliving a renamed column) is dropped.
 function sortCriteria(kind) {
   const columns = columnsFor(kind);
-  return (prefs.sort[kind] || defaultSortCriteria(kind)).map((criterion) => {
+  const known = (prefs.sort[kind] || defaultSortCriteria(kind)).filter((criterion) =>
+    columns.some((c) => c.key === criterion.key && c.sortValue),
+  );
+  return known.map((criterion) => {
     const column = columns.find((c) => c.key === criterion.key);
     return column && column.sortOrder ? { ...criterion, dir: 'asc' } : criterion;
   });

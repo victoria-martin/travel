@@ -10,13 +10,6 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
   {
-    key: 'recent',
-    label: 'Ajout récent',
-    hiddenByDefault: true,
-    filter: false,
-    sortValue: (a) => a.createdAt || '',
-  },
-  {
     key: 'chosenStep',
     filter: false,
     label: 'Étape',
@@ -120,6 +113,15 @@ const ACCOMMODATION_COLUMNS = [
     cell: accommodationCreatedAtCell,
     sortValue: (a) => a.createdAt || '',
   },
+  {
+    key: 'updatedAt',
+    label: 'Modifié le',
+    hiddenByDefault: true,
+    filter: false,
+    nowrap: true,
+    cell: (a) => textCell(createdAtDate(a.updatedAt)),
+    sortValue: (a) => a.updatedAt || '',
+  },
   { key: 'link', label: 'Lien', cell: linkCell },
   { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
   {
@@ -135,12 +137,11 @@ COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
 SORT_DEFAULTS.hebergements = [
   { key: 'chosenStep', dir: 'asc' },
   { key: 'favorite', dir: 'asc' },
-  { key: 'recent', dir: 'desc' },
+  { key: 'updatedAt', dir: 'desc' },
   { key: 'type', dir: 'asc' },
   { key: 'status', dir: 'asc' },
 ];
 
-// SORT_DEFAULTS.hebergements = [{ key: 'recent', dir: 'desc' }];
 
 function accommodationFavoriteCell(a) {
   return favoriteStar(a.favorite, `toggleFavorite('${a.id}')`);

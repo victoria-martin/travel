@@ -135,6 +135,11 @@ export const columns: Column<Accommodation>[] = [
     render: (accommodation) => <TextCell value={window.createdAtDate(accommodation.createdAt)} />,
   },
   {
+    key: 'updatedAt',
+    label: 'Modifié le',
+    render: (accommodation) => <TextCell value={window.createdAtDate(accommodation.updatedAt)} />,
+  },
+  {
     key: 'link',
     label: 'Lien',
     render: (accommodation) => <LinkCell link={accommodation.link} />,

@@ -117,6 +117,11 @@ export const columns: Column<Attraction>[] = [
     label: 'Créé le',
     render: (attraction) => <TextCell value={window.createdAtDate(attraction.createdAt)} />,
   },
+  {
+    key: 'updatedAt',
+    label: 'Modifié le',
+    render: (attraction) => <TextCell value={window.createdAtDate(attraction.updatedAt)} />,
+  },
   { key: 'link', label: 'Lien', render: (attraction) => <LinkCell link={attraction.link} /> },
   {
     key: 'googleMaps',
