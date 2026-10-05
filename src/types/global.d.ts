@@ -351,6 +351,9 @@ declare global {
     dismissAskOpen: boolean;
     keepEditing: () => void;
     closeModal: () => void;
+    PHRASE_STYLES: { key: string; label: string; modifier: string }[];
+    phraseStyle: () => { key: string; label: string; modifier: string };
+    setPhraseStyle: (key: string) => void;
     emptyExtra: () => import('../store/types').Extra;
     COUNTRIES: { code: string; label: string }[];
     countryLabel: (code: string) => string;

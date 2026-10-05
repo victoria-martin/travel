@@ -1,6 +1,10 @@
+import { ToolbarButton } from '@/shared/buttons/ToolbarButton';
+import { SettingsMenu } from '@/shared/menu/SettingsMenu';
+import { ListModeToggle } from '@/shared/toolbar/ListModeToggle';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { PhraseCategory } from './TranslationsView/PhraseCategory';
+import { PhraseSettings } from './TranslationsView/PhraseSettings';
 
 function matchesSearch(item: { fr: string; note?: string }, lang: string, wanted: string): boolean {
   if (!wanted) return true;
@@ -10,10 +14,8 @@ function matchesSearch(item: { fr: string; note?: string }, lang: string, wanted
 }
 
 /*
-  Porte js/views/phrases.js, scope réduit : catégories (en dur + phrases custom), recherche,
-  sélecteur de langue, traduction (+ correction via window.prompt, déléguée). Restent, pas
-  bloquants : style de carte (classique/duo/minimal), mode liste/cartes, formulaire d'ajout/édition
-  react (openModal suffit pour l'instant, comme partout ailleurs).
+  Porte js/views/phrases.js. Two independent axes on the same cards: the list mode picks the
+  chrome (box or flat row), the style (⋮) picks the typography.
 */
 
 export function TranslationsView() {
@@ -23,6 +25,8 @@ export function TranslationsView() {
   const available = window.travelPhraseLanguages();
   const lang = window.currentPhraseLang();
   const wanted = query.trim().toLowerCase();
+  const mode = window.listViewMode.phrases;
+  const containerClass = `${window.phraseStyle().modifier} ${mode === 'table' ? 'translation-mode-list' : 'translation-mode-card'}`;
   const categories = window
     .phraseCategoriesWithCustom()
     .map((category) => ({
@@ -56,9 +60,17 @@ export function TranslationsView() {
               ))}
             </select>
           )}
-          <button type="button" className="btn btn-small" onClick={() => window.openModal('phrase')}>
-            Phrase
-          </button>
+          <ToolbarButton
+            icon="plus"
+            label="Phrase"
+            variant="primary"
+            onClick={() => window.openModal('phrase')}
+          />
+          <ListModeToggle kind="phrases" />
+          <span className="toolbar-separator" />
+          <SettingsMenu>
+            <PhraseSettings />
+          </SettingsMenu>
         </div>
       </div>
       <input
@@ -68,7 +80,7 @@ export function TranslationsView() {
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <div id="translation-categories">
+      <div id="translation-categories" className={containerClass}>
         {!lang ? (
           <p className="hint">
             Choisis un ou plusieurs pays dans la modale du voyage pour voir les phrases traduites.

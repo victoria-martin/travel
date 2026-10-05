@@ -107,6 +107,8 @@ const PHRASE_STYLES = [
   { key: 'minimal', label: 'Minimal (liste sobre)', modifier: 'translation-style-minimal' },
 ];
 
+window.PHRASE_STYLES = PHRASE_STYLES;
+
 function phraseStyle() {
   return PHRASE_STYLES.find((s) => s.key === prefs.phraseStyle) || PHRASE_STYLES[0];
 }

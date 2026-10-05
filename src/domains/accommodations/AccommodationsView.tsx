@@ -13,7 +13,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { AccommodationAddMenu } from './AccommodationsView/AccommodationAddMenu';
 import { AccommodationCard } from './AccommodationsView/AccommodationCard';
 import { columns } from './AccommodationsView/columns';
-import { ListModeToggle } from './AccommodationsView/ListModeToggle';
+import { ListModeToggle } from '@/shared/toolbar/ListModeToggle';
 import { searchAccommodation } from './searchAccommodation';
 
 const KIND = 'hebergements';
