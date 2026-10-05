@@ -1,11 +1,10 @@
-import { LegacyMarkup } from '../shared/LegacyMarkup';
 import { NavButton } from './Sidebar/NavButton';
 import { NavSection } from './Sidebar/NavSection';
+import { SettingsNavButton } from './Sidebar/SettingsNavButton';
 import { SyncStatusButton } from './Sidebar/SyncStatusButton';
 import { TravelSelector } from './Sidebar/TravelSelector';
 
-// Port de render()/navBtn/navSection (js/render.js). Le bouton Réglages reste délégué tant que la
-// modale `settings` n'est pas portée (react-migration-panels-plan.md § 1).
+// Port de render()/navBtn/navSection (js/render.js).
 export function Sidebar() {
   const accueil = window.navItem('accueil');
 
@@ -18,7 +17,7 @@ export function Sidebar() {
       ))}
       <div className="sidebar-footer">
         <SyncStatusButton />
-        <LegacyMarkup html={window.settingsButton()} />
+        <SettingsNavButton />
       </div>
     </div>
   );

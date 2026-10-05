@@ -141,7 +141,8 @@ const MODAL_TYPES = {
   },
   // body : React (src/shell/SyncModal.tsx, src/modal-bodies.ts).
   sync: {},
-  settings: { body: () => settingsForm() },
+  // body : React (src/shell/SettingsModal.tsx, src/modal-bodies.ts).
+  settings: {},
 };
 window.MODAL_TYPES = MODAL_TYPES;
 

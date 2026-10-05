@@ -74,16 +74,19 @@ types, deux absents de l'inventaire vont probablement servir :
 
 ## Backlog ordonné
 
-**1. `settings`** — [js/views/settings/modal.js](../js/views/settings/modal.js) (11 lignes) +
-   [blocks.js](../js/views/settings/blocks.js) (12 lignes) +
-   [page-settings.js](../js/views/settings/page-settings.js) (17 lignes). **Prochain type à faire,
-   puis stop.** Le plus simple des 5 : `settingsForm()` est juste `<h3>` + `${settingsBlocks()}` +
-   un bouton Fermer. `settingsBlocks()` est aussi appelée par le menu ⋮ d'une liste (pas seulement
-   cette modale) — garder tout son contenu en `LegacyMarkup`, aucune valeur à le recomposer en JSX
-   pour un deuxième appelant qui ne change rien. `pageSettingsBlock()` lit la globale `view` (pas
-   `window.view`) — vérifier si `getCurrentView()` (déjà dans `global.d.ts`) donne la même valeur
-   avant de supposer qu'on peut s'en passer. Fichier cible : `src/shell/SettingsModal.tsx` (pas un
-   domaine d'entité).
+1. **`settings`** — ✅ fait (2026-10-05) : [SettingsModal.tsx](../../src/shell/SettingsModal.tsx)
+   réutilise `SettingsMenuContent`, le contenu JSX du ⋮ des listes, au lieu d'envelopper
+   `settingsBlocks()` en `LegacyMarkup`. Le bloc de la page ouverte passe par
+   [PageSettings.tsx](../../src/shell/SettingsModal/PageSettings.tsx) (`window.getCurrentView()`
+   renvoie bien la globale `view`, [js/router.js:28](../../js/router.js#L28)). Le bouton de la barre
+   latérale devient [SettingsNavButton.tsx](../../src/shell/Sidebar/SettingsNavButton.tsx) ;
+   `js/views/settings/modal.js` et `button.js` sont supprimés. `blocks.js`/`page-settings.js`
+   restent : `toolbarMenu()` ([js/views/toolbar/menu.js](../../js/views/toolbar/menu.js)) les lit.
+   **Question ouverte** : `PageSettings` ne porte que `scenario-detail`. L'entrée `phrases`
+   (`phraseStyleOption`, style des phrases) n'est pas portée, parce que
+   [TranslationsView.tsx](../../src/domains/translations/TranslationsView.tsx) n'applique pas
+   `phraseStyle()` : le réglage n'aurait aucun effet. Porter le style dans la vue React, ou retirer
+   le réglage ?
 
 2. **`valise-composer`** — ✅ fait (2026-10-04) : [PackingComposerModal.tsx](../../src/domains/packing/modal/PackingComposerModal.tsx),
    porté en entier plutôt qu'en `LegacyMarkup` — la recherche en `useState` rend inutile le repeint

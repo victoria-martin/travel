@@ -20,6 +20,7 @@ import { TransportModal } from './domains/transports/modal/TransportModal';
 import { AddTranslationModal } from './domains/translations/modal/AddTranslationModal';
 import { TravelModal } from './domains/travels/modal/TravelModal';
 import { VilleModal } from './domains/villes/modal/VilleModal';
+import { SettingsModal } from './shell/SettingsModal';
 import { SyncModal } from './shell/SyncModal';
 
 /*
@@ -53,6 +54,7 @@ export const MODAL_BODIES: Record<string, (props: { payload: any }) => React.JSX
   'journal-panel': JournalPanelModal,
   'valise-composer': PackingComposerModal,
   sync: SyncModal,
+  settings: SettingsModal,
   'paste-import': PasteImportModal,
   voyage: TravelModal,
 };

@@ -324,7 +324,6 @@ declare global {
     setNavSectionFold: (key: string, open: boolean) => void;
     NAV_ITEMS: { key: string; label: string; icon: string }[];
     NAV_SECTIONS: { key: string; title: string; keys: string[] }[];
-    settingsButton: () => string;
     mobileNavPlusOpen: boolean;
     mobileNavReordering: boolean;
     MOBILE_NAV_PRIMARY_COUNT: number;
