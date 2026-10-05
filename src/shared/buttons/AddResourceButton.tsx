@@ -1,5 +1,4 @@
-import { Icon } from '@/shared/Icon';
-import { Button } from '@/shared/buttons/Button';
+import { ToolbarButton } from '@/shared/buttons/Button';
 
 type AddResourceButtonProps = {
   title: string;
@@ -8,10 +7,21 @@ type AddResourceButtonProps = {
 };
 
 export const AddResourceButton = ({ title, onClick, label }: AddResourceButtonProps) => {
+  const showLabels = window.showButtonLabels();
+
+  // eslint-disable-next-line no-console -- debug temporaire
+  console.log('label :', label);
+
   return (
-    <Button variant="primary" onClick={onClick}>
-      <Icon name="plus" />
-      {label}
-    </Button>
+    <ToolbarButton onClick={onClick} icon="plus" label="Ajouter" variant="primary"></ToolbarButton>
+    // <Button
+    //   title={title}
+    //   data-test-id="add-ressource-button"
+    //   variant="primary"
+    //   size="small"
+    // >
+    //   <Icon name="plus" />
+    //   {showLabels && label}
+    // </Button>
   );
 };

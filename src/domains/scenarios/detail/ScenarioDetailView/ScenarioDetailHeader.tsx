@@ -26,6 +26,7 @@ export function ScenarioDetailHeader({
           >
             <Icon name="arrow-left" />
           </button>
+          {/* <IconButton icon="arrow-left" onClick={() => window.goTo('scenarios')} /> */}
           <h2 className="view-title">
             <span
               className="editable"

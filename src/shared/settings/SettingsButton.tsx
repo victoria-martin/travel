@@ -1,17 +1,15 @@
 import { Icon } from '@/shared/Icon';
 import { Button } from '@/shared/buttons/Button';
 
-type SettingsButtonProps = React.ComponentProps<'button'> & {
-  label: string;
-};
+type SettingsButtonProps = React.ComponentProps<'button'>;
 
-const SettingsButton = ({ label, ...props }: SettingsButtonProps) => {
+const SettingsButton = ({ ...props }: SettingsButtonProps) => {
   const showLabels = window.showButtonLabels();
 
   return (
     <Button {...props}>
       <Icon name="ellipsis-vertical" />
-      {showLabels && <span className="toolbar-label">{label}</span>}
+      {showLabels && <span className="toolbar-label">Affichage</span>}
     </Button>
   );
 };

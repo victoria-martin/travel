@@ -2,33 +2,9 @@ import { RadioCardField } from '@/shared/form-fields/RadioCardField';
 import { SwitchField } from '@/shared/form-fields/SwitchField';
 import { Icon } from '@/shared/Icon';
 import { MenuContent } from '@/shared/menu/MenuContent';
-import SettingsButton from '@/shared/settings/SettingsButton';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import type { ReactNode } from 'react';
 
-/*
-  Port de toolbarMenu/settingsBlocks (js/views/toolbar/menu.js, js/views/settings/blocks.js) :
-  les réglages transverses, puis `children` pour ce qui ne vaut que sur la page ouverte — sous son
-  propre titre, posé par l'écran qui l'utilise.
-*/
-
-// TODO: créer une déclinaison qui embarque  <ScenarioDetailSettings /> directement ? pas sur
-export function SettingsMenu({ children }: { children?: ReactNode }) {
-  return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger asChild>
-        <SettingsButton />
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Portal>
-        <SettingsMenuContent>{children}</SettingsMenuContent>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
-  );
-}
-
-import React from 'react';
-
-export const SettingsMenuContent = ({ children }: { children: React.ReactNode }) => {
+export const SettingsMenuContent = ({ children }: { children: ReactNode }) => {
   return (
     <MenuContent>
       <div className="filter-block">

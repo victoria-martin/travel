@@ -1,3 +1,4 @@
+import { FilterMenu } from '@/domains/carte/MapView/FilterMenu';
 import { MapFilterPanel } from '@/domains/carte/MapView/MapFilterPanel';
 import { Icon } from '@/shared/Icon';
 import { SettingsMenu } from '@/shared/settings/SettingsMenu';
@@ -5,7 +6,7 @@ import { useTravelStore } from '@/store/useTravelStore';
 import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { LeafletMap } from '../../platform/web/LeafletMap';
-import { FilterButton } from './MapView/FilterButton';
+import { FilterButton } from '../../shared/buttons/FilterButton';
 import { Legend } from './MapView/Legend';
 import { NewCityButton } from './MapView/NewCityButton';
 import { RouteBuilderPanel } from './MapView/RouteBuilderPanel';
@@ -57,6 +58,7 @@ export function MapView() {
         </HeaderActions> */}
         <div className="view-header-actions">
           <FilterButton />
+          <FilterMenu />
           <button
             type="button"
             className={`btn btn-outline btn-small ${window.routeBuilder.active ? 'active' : ''}`}

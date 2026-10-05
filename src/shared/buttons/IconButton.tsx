@@ -12,7 +12,13 @@ type IconButtonProps = {
 // un bouton avec juste une icône - on veut garder, à tester
 export const IconButton = ({ onClick, variant, icon }: IconButtonProps) => {
   return (
-    <Button onClick={onClick} size="square" variant={variant}>
+    <Button
+      onClick={onClick}
+      size="square"
+      variant={variant}
+
+      className="btn-outline btn btn-square"
+    >
       <span className="toolbar-icon">
         <Icon name={icon} />
       </span>
