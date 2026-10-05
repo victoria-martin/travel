@@ -1,5 +1,4 @@
 import { OverlayHost } from '@/shell/OverlayHost';
-import { useEffect } from 'react';
 
 /*
   Port du patron dismissAsk/wordAsk/providerAsk/routeAccommodationAsk (js/views/ask-overlay.js) :
@@ -10,11 +9,6 @@ import { useEffect } from 'react';
 export function AskOverlayHost() {
   const ask = window.activeAsk;
 
-  useEffect(() => {
-    if (ask?.after) ask.after();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ask?.html]);
-
   if (!ask) return null;
 
   return (
@@ -22,6 +16,7 @@ export function AskOverlayHost() {
       onClose={ask.onClose}
       onKeyDown={(event) => ask.onKeydown?.(event.nativeEvent)}
       html={{ __html: ask.html }}
+      onOpened={ask.after}
     />
   );
 }

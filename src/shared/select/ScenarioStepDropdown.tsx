@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { MenuPortal } from '@/shared/select/MenuPortal';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -26,7 +27,7 @@ export function ScenarioStepDropdown({
             {label}
           </button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
+        <MenuPortal>
           <DropdownMenu.Content
             className="inline-menu"
             align="start"
@@ -58,7 +59,7 @@ export function ScenarioStepDropdown({
               </div>
             ))}
           </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+        </MenuPortal>
       </DropdownMenu.Root>
     </div>
   );

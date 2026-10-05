@@ -148,13 +148,14 @@ async function drawScenarioRoute(map, points, noticeId, idleMessage) {
   setRouteNotice(noticeId, '⏳ Calcul du trajet routier…');
   try {
     const { line } = await fetchRoute(points);
-    if (!map.getContainer().isConnected) return;
+    // The container can outlive its map: React reuses it for the next one after map.remove().
+    if (!map.getContainer().isConnected || !map.getPane('mapPane')) return;
     L.polyline(line, { color: '#3E6259', weight: 4, opacity: 0.9 }).addTo(map);
     drawRouteArrows(map, line);
     setRouteNotice(noticeId, idleMessage);
   } catch (e) {
     console.warn('Trajet routier indisponible', e);
-    if (map.getContainer().isConnected) {
+    if (map.getContainer().isConnected && map.getPane('mapPane')) {
       setRouteNotice(noticeId, '⚠️ Trajet routier indisponible — réessaie plus tard.');
     }
   }

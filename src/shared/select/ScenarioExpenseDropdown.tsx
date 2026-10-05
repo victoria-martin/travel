@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { MenuPortal } from '@/shared/select/MenuPortal';
 import { Icon } from '@/shared/Icon';
 import type { Scenario } from '@/store/types';
 
@@ -15,7 +16,7 @@ export function ScenarioExpenseDropdown({ scenario }: { scenario: Scenario }) {
             <span className="inline-label">Rattacher une dépense</span>
           </button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
+        <MenuPortal>
           <DropdownMenu.Content
             className="inline-menu"
             align="start"
@@ -41,7 +42,7 @@ export function ScenarioExpenseDropdown({ scenario }: { scenario: Scenario }) {
               ))
             )}
           </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+        </MenuPortal>
       </DropdownMenu.Root>
     </div>
   );

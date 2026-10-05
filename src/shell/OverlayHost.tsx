@@ -6,6 +6,7 @@ type OverlayHostProps = {
   onClose: () => void;
   onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   html?: { __html: string };
+  onOpened?: () => void;
   children?: ReactNode;
 };
 
@@ -16,12 +17,19 @@ type OverlayHostProps = {
   la modale déjà ouverte (hideOthers, @radix-ui/react-dialog) — ses boutons deviennent alors
   incliquables. Échap reste géré par le onKeyDown de l'appelant (comportement legacy inchangé),
   on se contente d'empêcher la fermeture par défaut de Radix pour ne pas le court-circuiter.
+  `onOpened` attend que Radix ait monté le contenu (un tour après le rendu) avant de toucher à ses
+  champs : appelé plus tôt, il ne les trouverait pas.
 */
-export const OverlayHost = ({ onClose, onKeyDown, html, children }: OverlayHostProps) => (
+export const OverlayHost = ({ onClose, onKeyDown, html, onOpened, children }: OverlayHostProps) => (
   <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
     <Dialog.Portal>
       <Dialog.Overlay className="overlay overlay-ask" onKeyDown={onKeyDown}>
         <Dialog.Content
+          onOpenAutoFocus={(event) => {
+            if (!onOpened) return;
+            event.preventDefault();
+            onOpened();
+          }}
           onEscapeKeyDown={(event) => event.preventDefault()}
           onPointerDownOutside={(event) => {
             event.preventDefault();

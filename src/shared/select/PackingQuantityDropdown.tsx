@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { MenuPortal } from '@/shared/select/MenuPortal';
 import type { PackingListItem } from '@/store/types';
 
 const MAX_PACKING_QUANTITY = 20;
@@ -14,7 +15,7 @@ export function PackingQuantityDropdown({ item }: { item: PackingListItem }) {
             {window.packingQuantityLabel(item)}
           </button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
+        <MenuPortal>
           <DropdownMenu.Content
             className="inline-menu"
             align="start"
@@ -46,7 +47,7 @@ export function PackingQuantityDropdown({ item }: { item: PackingListItem }) {
               ),
             )}
           </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+        </MenuPortal>
       </DropdownMenu.Root>
     </div>
   );

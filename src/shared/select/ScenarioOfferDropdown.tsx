@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { MenuPortal } from '@/shared/select/MenuPortal';
 import { Icon } from '@/shared/Icon';
 import { OpenResourceMenuItem } from '@/shared/select/OpenResourceMenuItem';
 import { TagLabel } from '@/shared/TagLabel';
@@ -30,7 +31,7 @@ export function ScenarioOfferDropdown({
             <TagLabel label={current ? window.offerLabel(current) : 'Aucune voiture'} />
           </button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
+        <MenuPortal>
           <DropdownMenu.Content
             className="inline-menu"
             align="start"
@@ -84,7 +85,7 @@ export function ScenarioOfferDropdown({
               </button>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+        </MenuPortal>
       </DropdownMenu.Root>
     </div>
   );

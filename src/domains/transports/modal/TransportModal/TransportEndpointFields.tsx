@@ -17,9 +17,10 @@ export function TransportEndpointFields({
   placeId: string;
   precision: string;
 }) {
-  const places = useTravelStore(
+  const attractions = useTravelStore(
     useShallow((store) => window.ofCurrentTravel(store.data.attractions)),
-  ).sort((placeA, placeB) => placeA.name.localeCompare(placeB.name));
+  );
+  const places = [...attractions].sort((placeA, placeB) => placeA.name.localeCompare(placeB.name));
   const group = (groupLabel: string, items: Attraction[]) =>
     items.length ? (
       <optgroup label={groupLabel}>

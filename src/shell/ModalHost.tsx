@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { useEffect } from 'react';
+import { ModalContentContext } from '@/shared/modal/ModalContentContext';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MODAL_BODIES } from '../modal-bodies';
 
 /*
@@ -24,8 +25,17 @@ export function ModalHost() {
   const Body = modal ? MODAL_BODIES[modal.type] : undefined;
   const bodyHtml = modal && !Body ? window.modalBodyHtml() : null;
 
+  // Radix mounts the content one pass after this render: the first paint is signalled by the
+  // content's own ref, later swaps of an already open modal by the effect.
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [contentElement, setContentElement] = useState<HTMLDivElement | null>(null);
+  const onContentMounted = useCallback((element: HTMLDivElement | null) => {
+    contentRef.current = element;
+    setContentElement(element);
+    if (element && window.modal) window.onModalPainted();
+  }, []);
   useEffect(() => {
-    if (modal) window.onModalPainted();
+    if (modal && contentRef.current) window.onModalPainted();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal, bodyHtml]);
 
@@ -37,6 +47,7 @@ export function ModalHost() {
         <Dialog.Portal>
           <Dialog.Overlay className={modal.sheet ? 'overlay overlay-sheet' : 'overlay'}>
             <Dialog.Content
+              ref={onContentMounted}
               className={modal.sheet ? 'modal modal-sheet' : 'modal'}
               style={width ? { maxWidth: width } : undefined}
               onEscapeKeyDown={(event) => {
@@ -53,11 +64,13 @@ export function ModalHost() {
               <VisuallyHidden>
                 <Dialog.Title>{modal.type}</Dialog.Title>
               </VisuallyHidden>
-              {Body ? (
-                <Body payload={modal.payload} />
-              ) : (
-                <div dangerouslySetInnerHTML={{ __html: bodyHtml || '' }} />
-              )}
+              <ModalContentContext.Provider value={contentElement}>
+                {Body ? (
+                  <Body payload={modal.payload} />
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: bodyHtml || '' }} />
+                )}
+              </ModalContentContext.Provider>
             </Dialog.Content>
           </Dialog.Overlay>
         </Dialog.Portal>

@@ -1,7 +1,7 @@
 import { LeafletMap } from '@/platform/web/LeafletMap';
 import type { Scenario } from '@/store/types';
 import { useTravelStore } from '@/store/useTravelStore';
-import { useId } from 'react';
+import { useId, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { scenarioMapMarkers } from './MapTab/scenarioMapMarkers';
 
@@ -13,6 +13,12 @@ export function MapTab({ scenario }: { scenario: Scenario }) {
   const noticeId = `scenario-route-notice-${useId().replace(/:/g, '')}`;
   const hasPlaces = window.visibleSteps(scenario).some((step) => window.coordsFor(step));
 
+  // A new marker list recreates the map: tie it to what the map shows, not to every render. The
+  // legacy mutates a scenario in place, so its content is the key, not its reference.
+  const drawnKey = JSON.stringify([scenario.steps, scenario.groups, window.prefs.stepAreaShape]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const markers = useMemo(() => scenarioMapMarkers(attractions), [attractions, drawnKey]);
+
   if (!hasPlaces)
     return (
       <div className="scenario-map-block">
@@ -22,7 +28,6 @@ export function MapTab({ scenario }: { scenario: Scenario }) {
       </div>
     );
 
-  const markers = scenarioMapMarkers(attractions);
   return (
     <div className="scenario-map-block">
       <LeafletMap
