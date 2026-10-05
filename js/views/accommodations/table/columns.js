@@ -10,6 +10,13 @@ const ACCOMMODATION_COLUMNS = [
   },
   { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
   {
+    key: 'recent',
+    label: 'Ajout récent',
+    hiddenByDefault: true,
+    filter: false,
+    sortValue: (a) => a.createdAt || '',
+  },
+  {
     key: 'chosenStep',
     filter: false,
     label: 'Étape',

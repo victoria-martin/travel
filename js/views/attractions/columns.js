@@ -20,7 +20,7 @@ COLUMN_SETS.attractions = [
     filter: false,
     label: 'Ajout récent',
     hiddenByDefault: true,
-    sortValue: (a) => a.recentOrder,
+    sortValue: (a) => a.createdAt || '',
   },
   {
     key: 'chosenStep',
