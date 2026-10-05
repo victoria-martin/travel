@@ -145,7 +145,7 @@ story (voir "Contrainte technique" ci-dessus).
 | --- | --- |
 | [src/shared/modal/CloseModalButton.tsx](../src/shared/modal/CloseModalButton.tsx) | `window.dismissModal = () => {}` |
 | [src/shared/menu/ColumnPicker.tsx](../../src/shared/menu/ColumnPicker.tsx) | `window.hiddenColumns = () => []`, `window.toggleColumn = () => {}` |
-| [src/shared/toolbar/SettingsMenu.tsx](../src/shared/toolbar/SettingsMenu.tsx) | `window.showButtonLabels = () => true`, `window.toggleButtonLabels = () => {}` |
+| [src/shared/menu/SettingsMenu.tsx](../../src/shared/menu/SettingsMenu.tsx) | `window.showButtonLabels = () => true`, `window.toggleButtonLabels = () => {}` |
 | [src/shared/menu/ToolbarMenu.tsx](../../src/shared/menu/ToolbarMenu.tsx) | aucun directement, mais sert de wrapper aux deux ci-dessus dans leurs stories |
 | [src/shared/WordSelectField.tsx](../src/shared/WordSelectField.tsx) | `window.wordSelectChanged = () => {}`, `window.NEW_WORD_VALUE = '__new__'` |
 
