@@ -1,4 +1,5 @@
 import { SettingsMenu } from '@/shared/menu/SettingsMenu';
+import { SortMenu } from '@/shared/menu/SortMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { ActualExpenseButton } from './ExpensesView/ActualExpenseButton';
 import { ActualExpensesTable } from './ExpensesView/ActualExpensesTable';
@@ -9,9 +10,8 @@ import { ImportExpensesButton } from './ExpensesView/ImportExpensesButton';
 import { SummaryMetrics } from './ExpensesView/SummaryMetrics';
 
 /*
-  Porte js/views/expenses/{expenses,header,total,actual,derived}.js, scope réduit comme ailleurs :
-  tri (sortPanel) et menu ⋮ complet pas repris — seule la préférence transverse (SettingsMenu).
-  Budget prévu et Dépenses réelles restent des `<table>` en clair (comme en legacy) plutôt que
+  Porte js/views/expenses/{expenses,header,total,actual,derived}.js. Trier règle le Budget prévu
+  (manualExpenses trie déjà via sortItems('charges')). Budget prévu et Dépenses réelles restent des `<table>` en clair (comme en legacy) plutôt que
   `DataTable` : des lignes de total/non-budgétisé s'intercalent, que l'abstraction DataTable (une
   ligne = un item) ne sait pas représenter.
 */
@@ -27,9 +27,12 @@ export function ExpensesView() {
           <span className="view-sub">Budget du scénario et dépenses réelles du voyage</span>
         </div>
         <div className="view-header-actions">
+          <SortMenu kind="charges" />
+          <span className="toolbar-separator" />
           <AddBudgetButton scenario={scenario} />
           <ActualExpenseButton />
           <ImportExpensesButton />
+          <span className="toolbar-separator" />
           <SettingsMenu />
         </div>
       </div>
