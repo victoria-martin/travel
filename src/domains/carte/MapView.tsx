@@ -6,7 +6,6 @@ import { useTravelStore } from '@/store/useTravelStore';
 import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { LeafletMap } from '../../platform/web/LeafletMap';
-import { FilterButton } from '../../shared/buttons/FilterButton';
 import { Legend } from './MapView/Legend';
 import { NewCityButton } from './MapView/NewCityButton';
 import { RouteBuilderPanel } from './MapView/RouteBuilderPanel';
@@ -57,7 +56,6 @@ export function MapView() {
           <NewCityButton />
         </HeaderActions> */}
         <div className="view-header-actions">
-          <FilterButton />
           <FilterMenu />
           <button
             type="button"

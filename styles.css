@@ -316,6 +316,8 @@ body {
   padding: var(--main-pad-y) var(--main-pad-x);
   min-width: 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 .view-header {
@@ -1096,8 +1098,6 @@ tr:hover td {
 
 .main:has(.table-scroll) {
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 .main:has(.table-scroll) .view-header,
 .main:has(.table-scroll) .table-header-actions {
@@ -2669,8 +2669,6 @@ tr:hover td {
    la liste des étapes et le panneau de droite scrollent chacun pour soi. */
 .main:has(.scenario-detail-cols) {
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
   padding-bottom: 0;
 }
 /* Les deux bandes du haut ne se compriment pas sous une longue liste : elles la surplombent. */

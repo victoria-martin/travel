@@ -39,7 +39,7 @@ export function ScenarioWeatherBanner({ scenario }: { scenario: Scenario }) {
         ))}
       </div>
       <a
-        className="scenario-weather-attribution"
+        // className="scenario-weather-attribution"
         href="https://open-meteo.com/"
         target="_blank"
         rel="noreferrer"
