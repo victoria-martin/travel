@@ -536,15 +536,15 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 
 - **fix scroll in page** <!--t:epip--> — 📐 layout · ✅ fait : réglé au fil des headers sticky et
   des panneaux `overflow-y` posés view par view (journal CLAUDE.md du 2026-09-18 et suivants).
+
+## 📱 Mobile
+
 - **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : Hébergements, Lieux &
   activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
   ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23
   colonnes. Transports (16 colonnes) n'a pas encore le sien — décidé lors de la réflexion mobile,
   à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et Charges fixes,
   plus légères (6-10 colonnes), restent des tables classiques.
-
-## 📱 Mobile
-
 - **Carte d'étape illisible sous 640px** <!--t:8rvg--> — 📐 layout · 🐛 fix · ⏳ à faire : dans le
   détail d'un scénario, le nom de l'étape s'écrit lettre par lettre dans sa carte (la colonne du
   titre s'écrase à zéro), et le ↗ de la fiche d'hébergement chevauche la pastille du lieu. Constaté
