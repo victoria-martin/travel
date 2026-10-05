@@ -7,24 +7,6 @@
   seul l'étape dont l'hébergement est le plus proche.
 */
 
-function routeScenarioActions() {
-  return /* HTML */ `<div class="field-row">
-    ${routeScenarioDropdown()}
-    <button type="button" class="btn btn-outline" onclick="addRouteToPlan()">Ajouter au plan</button>
-  </div>`;
-}
-
-function routeScenarioDropdown() {
-  return inlineDropdown(
-    'route-scenario',
-    'route-scenario-dropdown',
-    /* HTML */ `<summary class="btn btn-outline attraction-scenario-trigger">
-        Ajouter à un scénario
-      </summary>
-      <div class="inline-menu">${scenarioStepPickerGroups('addRouteToStep')}</div>`,
-  );
-}
-
 function routeBuilderPointsByKind() {
   return {
     attraction: routeBuilder.points.filter((p) => p.kind === 'attraction'),

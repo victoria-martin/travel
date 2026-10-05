@@ -1,12 +1,9 @@
 import { OverlayHost } from '@/shell/OverlayHost';
 import { ProviderAskForm } from './AskOverlayHost/ProviderAskForm';
+import { RouteAccommodationForm } from './AskOverlayHost/RouteAccommodationForm';
 import { WordAskForm } from './AskOverlayHost/WordAskForm';
 
-/*
-  Une question posée par-dessus l'écran en cours, une seule à la fois (window.activeAsk). Les
-  questions portées en React se déclarent par `kind` ; celles encore en HTML legacy passent par
-  `html` (js/ask-overlay.js). Le clic hors de la boîte appelle onClose.
-*/
+// One question over the current screen at a time (window.activeAsk), one form per `kind`.
 export function AskOverlayHost() {
   const ask = window.activeAsk;
   if (!ask) return null;
@@ -27,11 +24,13 @@ export function AskOverlayHost() {
       </OverlayHost>
     );
   return (
-    <OverlayHost
-      onClose={ask.onClose}
-      onKeyDown={(event) => ask.onKeydown?.(event.nativeEvent)}
-      html={{ __html: ask.html }}
-      onOpened={ask.after}
-    />
+    <OverlayHost onClose={ask.onClose}>
+      <RouteAccommodationForm
+        scenarioId={ask.scenarioId}
+        stepId={ask.stepId}
+        points={ask.points}
+        onClose={ask.onClose}
+      />
+    </OverlayHost>
   );
 }

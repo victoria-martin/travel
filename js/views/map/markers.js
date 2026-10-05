@@ -6,40 +6,6 @@
   Le popup s'ouvre au survol et se referme quand le curseur quitte le point et le popup ; un clic
   l'épingle, il reste alors à l'écran jusqu'à ce qu'on le ferme (sa croix, ou un clic ailleurs).
 */
-function initMap() {
-  const el = document.getElementById('map');
-  if (!el || typeof L === 'undefined') return;
-  if (leafletMap) {
-    leafletMap.remove();
-    leafletMap = null;
-  }
-
-  leafletMap = createLeafletMap('map');
-  const scenario = mapFilters.scenarioId ? getScenario(mapFilters.scenarioId) : null;
-  if (scenario) drawScenarioOnMap(leafletMap, scenario, 'route-notice', ROUTE_HELP);
-  const chosenAccommodationIds =
-    scenario && mapFilters.scenarioOnly ? scenarioAccommodationIds(scenario) : null;
-  const bounds = [];
-
-  ofCurrentTravel(state.accommodations).forEach((a) => {
-    if (!keptOnMap('hebergements', a)) return;
-    if (chosenAccommodationIds && !chosenAccommodationIds.has(a.id)) return;
-    addAccommodationMarker(leafletMap, a, bounds);
-  });
-
-  ofCurrentTravel(state.attractions).forEach((a) => {
-    if (!keptOnMap('attractions', a)) return;
-    addAttractionMarker(leafletMap, a, bounds);
-  });
-
-  ofCurrentTravel(state.villes).forEach((v) => addVilleMarker(leafletMap, v, bounds));
-
-  fitToPoints(leafletMap, bounds);
-  if (routeBuilder.active) drawRouteBuilderLine(leafletMap);
-}
-
-// « Lieux du scénario » ne restreint que les hébergements : les attractions/villes du voyage
-// s'affichent toujours, comme dans « Tous les lieux ».
 function scenarioAccommodationIds(scenario) {
   return new Set(
     visibleSteps(scenario)
@@ -73,12 +39,6 @@ function addAttractionMarker(map, a, bounds) {
   const point = markerPoint(a, bounds);
   if (!point) return;
   addMapPinMarker(map, point, mapDotIcon(), attractionPopup(a), a.name, a.id, 'attraction');
-}
-
-function addVilleMarker(map, v, bounds) {
-  const point = markerPoint(v, bounds);
-  if (!point) return;
-  addMapPinMarker(map, point, mapPinIcon('map-pin'), villePopup(v), v.name, v.id, 'ville');
 }
 
 function mapPinIcon(icon) {
@@ -278,10 +238,6 @@ function setMapAttractionScenario(attractionId, scenarioId) {
   menu.querySelectorAll('[data-map-attraction-scenario]').forEach((panel) => {
     panel.hidden = panel.dataset.mapAttractionScenario !== scenarioId;
   });
-}
-
-function villePopup(v) {
-  return `<strong>${escapeHtml(v.name)}</strong>`;
 }
 
 function popupName(item, url) {

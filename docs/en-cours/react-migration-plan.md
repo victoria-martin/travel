@@ -585,9 +585,6 @@ backlog vers « `js/` legacy supprimé ».
   Phase 3). Le sheet mobile du panneau (`journal-panel`) est porté, pas le panneau desktop, resté
   dans ce bloc.
 - À faire — `todoBuilder` : registre colonnes-par-kind à réécrire en entier (§ 7, Phase 3).
-- Carte — `RouteBuilderPanel`, `NewCityButton` : état + async dans des globales de module (§ 5).
-- Questions posées par-dessus une modale (`askNewWord`, `askNewProvider`) : HTML legacy peint par
-  `OverlayHost`. Les menus React les appellent avec un rappel (`onCreate`).
 - Page **Locations** endormie (journal CLAUDE.md 2026-09-16) : ses fichiers restent sur le disque,
   volontairement — son formulaire garde le `providerSelectField` legacy (adapté à la nouvelle
   signature d'`askNewProvider`). Déjà cassée avant cette passe : `offerPriceLabels` et
@@ -602,7 +599,17 @@ fragments legacy des modales React (`LocateFields`, `ProviderSelectField`, `Mult
 `AddByNameRow`, champs de l'offre/du loueur/du modèle/du trajet/du voyage, actions « Ajouter à un
 scénario » d'un lieu, instructions d'import collé, champ Activités d'une étape).
 
+**Fait le 2026-10-05 (lots H, G, D, C)** : tri de la page Dépenses (`SortMenu kind="charges"`),
+en-tête Phrases (style, mode liste, réglages de page), les trois questions posées par-dessus
+l'écran (`activeAsk` typé par `kind` : `word`, `provider`, `routeAccommodation` — le chemin HTML
+d'`OverlayHost` disparaît), panneau Itinéraire et bouton ＋ Ville de la Carte. Le rendu legacy de
+la Carte (`renderMapView`, `initMap`, panneaux scénario/filtres/légende/split, `new-city.js`) est
+supprimé : il n'avait plus d'appelant depuis la Phase 2.
+
 **Manques et points connus :**
+- Carte, panneau Filtres : les niveaux de filtre par colonne de chaque collection
+  (`filterLevelsBlock`) ne sont pas portés — `FilterFields` n'a que les interrupteurs et Favoris.
+  Des niveaux posés avant la migration filtrent toujours (`keptOnMap`), sans écran pour les voir.
 - Modale d'étape, champ Activités : cliquer Enregistrer pendant que la recherche a le focus ne fait
   rien au premier clic — au mousedown le champ perd le focus, la liste de résultats (dans le flux)
   se vide, le bouton remonte et le mouseup tombe à côté. Même comportement en legacy ; constaté en

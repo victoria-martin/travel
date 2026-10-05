@@ -1,15 +1,7 @@
 /*
-  Lister les étapes où rattacher quelque chose — un lieu, un point d'itinéraire — groupées par
-  scénario, deux appelants (attractions/modal/add-to-scenario.js, map/route-to-scenario.js).
-  Le geste appelé prend toujours (scenarioId, stepId), comme attachAttractionToStep/addRouteToStep.
+  Lister les étapes d'un scénario où rattacher un lieu, depuis le popup de la carte (markers.js).
+  Le geste appelé prend toujours (scenarioId, stepId).
 */
-function scenarioStepPickerGroups(onPick, extraArgs = '') {
-  const groups = activeScenarios(ofCurrentTravel(state.scenarios))
-    .map((scenario) => scenarioStepPickerGroup(scenario, onPick, extraArgs))
-    .join('');
-  return groups || '<div class="inline-menu-group">Aucun scénario</div>';
-}
-
 function scenarioStepPickerGroup(scenario, onPick, extraArgs) {
   const steps = visibleSteps(scenario);
   if (!steps.length) return '';

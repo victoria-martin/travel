@@ -38,9 +38,7 @@ declare global {
     coordsLabel: (p: { lat: string; lng: string }) => string;
     hiddenColumns: (kind: string) => string[];
     columnsFor: (kind: string) => LegacyColumn[];
-    chosenStepForPlace: (
-      place: { accommodationId: string } | { attractionId: string },
-    ) => {
+    chosenStepForPlace: (place: { accommodationId: string } | { attractionId: string }) => {
       scenario: import('../store/types').Scenario;
       step: import('../store/types').Step;
       index: number;
@@ -199,9 +197,7 @@ declare global {
     PASTE_COLUMN_ORDER: string[];
     fieldLabel: (key: string) => string;
     runPasteImport: () => void;
-    accommodationSearchOutOfRange: (
-      acc: import('../store/types').Accommodation,
-    ) => string | null;
+    accommodationSearchOutOfRange: (acc: import('../store/types').Accommodation) => string | null;
     applyPriceFormula: (input: HTMLInputElement) => void;
     importHomeExchangePaste: () => void;
     importHomeExchangeLink: () => void;
@@ -386,13 +382,6 @@ declare global {
     activeToast: string;
     activeAsk:
       | {
-          kind?: undefined;
-          html: string;
-          onKeydown?: (event: KeyboardEvent) => void;
-          after?: () => void;
-          onClose: () => void;
-        }
-      | {
           kind: 'word';
           bank: string;
           onCreate: (word: { key: string; label: string; emoji: string }) => void;
@@ -404,7 +393,21 @@ declare global {
           onCreate: (provider: import('../store/types').Provider) => void;
           onClose: () => void;
         }
+      | {
+          kind: 'routeAccommodation';
+          scenarioId: string;
+          stepId: string | null;
+          points: { id: string; name: string }[];
+          onClose: () => void;
+        }
       | null;
+    applyRouteAccommodationChoice: (
+      scenarioId: string,
+      stepId: string | null,
+      points: { id: string; name: string }[],
+      choice: 'new-step' | 'replace' | 'new-scenario',
+      sourceId: string,
+    ) => void;
     WORD_BANKS: Record<string, { noun: string; color: boolean }>;
     createWord: (
       bank: string,
@@ -439,7 +442,20 @@ declare global {
       points: { lat: number; lng: number; name: string; id: string; kind: string }[];
     };
     toggleRouteBuilderMode: () => void;
-    routeBuilderPanel: () => string;
+    removeRouteBuilderPoint: (index: number) => void;
+    clearRouteBuilderPoints: () => void;
+    startRoutePointDrag: (event: React.DragEvent, index: number) => void;
+    overRoutePointRow: (event: React.DragEvent) => void;
+    dropOnRoutePointRow: (event: React.DragEvent, index: number) => void;
+    endRoutePointDrag: () => void;
+    addRouteToStep: (scenarioId: string, stepId: string) => void;
+    addRouteToPlan: () => void;
+    geocodeCandidates: (
+      address: string,
+    ) => Promise<{ label: string; lat: string; lng: string; city?: string }[]>;
+    upsertVille: (ville: import('../store/types').Ville) => void;
+    villeIdFromName: (travelId: string, name: string) => string;
+    getStep: (scenarioId: string, stepId: string) => import('../store/types').Step | undefined;
     drawRouteBuilderLine: (map: any) => void;
     addRouteBuilderPoint: (
       lat: number,
@@ -448,7 +464,6 @@ declare global {
       id: string,
       kind: string,
     ) => void;
-    newCityPanel: () => string;
     mapFilters: {
       shown: { hebergements: boolean; attractions: boolean };
       scenarioId: string | null;
@@ -528,9 +543,7 @@ declare global {
     ) => { euros: number; guestPoints: number };
     stepAccommodationCost: (step: import('../store/types').Step) => number;
     hasStepBudget: (step: import('../store/types').Step) => boolean;
-    getAccommodation: (
-      id: string | null,
-    ) => import('../store/types').Accommodation | undefined;
+    getAccommodation: (id: string | null) => import('../store/types').Accommodation | undefined;
     formatAccommodationCost: (
       acc: import('../store/types').Accommodation | undefined,
       amount: number,
@@ -557,7 +570,9 @@ declare global {
       place: { steps: import('../store/types').Step[] },
     ) => string;
     setAccommodationCheckInTime: (id: string, checkInTime: string) => void;
-    isBookedAccommodation: (accommodation: import('../store/types').Accommodation | undefined) => boolean;
+    isBookedAccommodation: (
+      accommodation: import('../store/types').Accommodation | undefined,
+    ) => boolean;
     stepOutOfRange: (
       accommodation: import('../store/types').Accommodation,
       arrival: Date | null,
@@ -571,10 +586,19 @@ declare global {
       firstStay: number;
       dates: string[];
     }[];
-    placeCost: (row: { steps: import('../store/types').Step[] }) => { euros: number; guestPoints: number };
-    scenarioExtraCostLines: (scenario: import('../store/types').Scenario) => import('../store/types').Extra[];
-    scenarioAttractionLines: (scenario: import('../store/types').Scenario) => import('../store/types').Extra[];
-    scenarioOfferOptions: (scenario: import('../store/types').Scenario) => import('../store/types').ProviderOption[];
+    placeCost: (row: { steps: import('../store/types').Step[] }) => {
+      euros: number;
+      guestPoints: number;
+    };
+    scenarioExtraCostLines: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').Extra[];
+    scenarioAttractionLines: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').Extra[];
+    scenarioOfferOptions: (
+      scenario: import('../store/types').Scenario,
+    ) => import('../store/types').ProviderOption[];
     scenarioDateLabel: (iso: string) => string;
     legFuelCost: (scenario: import('../store/types').Scenario, leg: { distance: number }) => number;
     legTollCost: (leg: { distance: number }) => number;
@@ -583,7 +607,11 @@ declare global {
     scenarioTollCalc: (scenario: import('../store/types').Scenario) => number;
     travelFuelPrice: () => number;
     travelTollRate: () => number;
-    setScenarioRoadBudget: (scenarioId: string, field: 'fuelBudget' | 'tollBudget', value: string) => void;
+    setScenarioRoadBudget: (
+      scenarioId: string,
+      field: 'fuelBudget' | 'tollBudget',
+      value: string,
+    ) => void;
     attachScenarioExpense: (scenarioId: string, costId: string) => void;
     detachScenarioExpense: (scenarioId: string, costId: string) => void;
     trailShown: () => boolean;
@@ -635,14 +663,13 @@ declare global {
     toolbarMenu: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
     stepLetter: (rank: number) => string;
-    isGroupHidden: (
-      scenario: import('../store/types').Scenario,
-      groupId: string,
-    ) => boolean;
+    isGroupHidden: (scenario: import('../store/types').Scenario, groupId: string) => boolean;
     holderExtras: (
       holder: import('../store/types').Step | import('../store/types').StepGroup,
     ) => import('../store/types').Extra[];
-    extrasTotal: (holder: import('../store/types').Step | import('../store/types').StepGroup) => number;
+    extrasTotal: (
+      holder: import('../store/types').Step | import('../store/types').StepGroup,
+    ) => number;
     attachExtraAttraction: (scenarioId: string, holderId: string, attractionId: string) => void;
     attachExtraCost: (scenarioId: string, holderId: string, costId: string) => void;
     createAttractionNamed: (name: string) => import('../store/types').Attraction;
@@ -661,40 +688,17 @@ declare global {
     getFixedCost: (id: string) => import('../store/types').FixedCost | undefined;
     costLabel: (cost: import('../store/types').FixedCost) => string;
     costMatches: (query: string, usedIds: string[]) => import('../store/types').FixedCost[];
-    attractionMatches: (
-      query: string,
-      usedIds: string[],
-    ) => import('../store/types').Attraction[];
-    setExtraDate: (
-      scenarioId: string,
-      holderId: string,
-      lineId: string,
-      date: string,
-    ) => void;
-    setExtraBudget: (
-      scenarioId: string,
-      holderId: string,
-      lineId: string,
-      budget: string,
-    ) => void;
-    setExtraCount: (
-      scenarioId: string,
-      holderId: string,
-      lineId: string,
-      count: number,
-    ) => void;
+    attractionMatches: (query: string, usedIds: string[]) => import('../store/types').Attraction[];
+    setExtraDate: (scenarioId: string, holderId: string, lineId: string, date: string) => void;
+    setExtraBudget: (scenarioId: string, holderId: string, lineId: string, budget: string) => void;
+    setExtraCount: (scenarioId: string, holderId: string, lineId: string, count: number) => void;
     setExtraAttraction: (
       scenarioId: string,
       holderId: string,
       lineId: string,
       attractionId: string,
     ) => void;
-    setExtraCost: (
-      scenarioId: string,
-      holderId: string,
-      lineId: string,
-      costId: string,
-    ) => void;
+    setExtraCost: (scenarioId: string, holderId: string, lineId: string, costId: string) => void;
     detachExtra: (scenarioId: string, holderId: string, lineId: string) => void;
     stepStatusBackground: (status: string) => string;
     stepStatus: (

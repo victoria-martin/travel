@@ -1,6 +1,6 @@
 /*
   Fiche minimale : nom + position. Pas de champs d'attraction (favoris, tags, statut…) — une ville
-  n'en a pas. La recherche reprend le geste de new-city.js (taper, choisir un résultat), mais les
+  n'en a pas. La recherche reprend le geste de NewCityButton (src/domains/carte/MapView/NewCityButton.tsx) (taper, choisir un résultat), mais les
   coordonnées choisies vivent dans modal.payload le temps de la saisie, comme les autres champs
   sans <input> dédié (ex. searchDate d'un hébergement).
 */

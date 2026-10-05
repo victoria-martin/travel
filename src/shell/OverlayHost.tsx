@@ -1,11 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import type { KeyboardEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 type OverlayHostProps = {
   onClose: () => void;
-  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
-  html?: { __html: string };
   onOpened?: () => void;
   children?: ReactNode;
 };
@@ -15,15 +13,15 @@ type OverlayHostProps = {
   (askNewProvider, askNewWord) : elle prend son propre Dialog Radix plutôt qu'un <div> fixed,
   sinon elle hérite du pointer-events:none que Radix pose sur tout ce qui n'est pas le Content de
   la modale déjà ouverte (hideOthers, @radix-ui/react-dialog) — ses boutons deviennent alors
-  incliquables. Échap reste géré par le onKeyDown de l'appelant (comportement legacy inchangé),
-  on se contente d'empêcher la fermeture par défaut de Radix pour ne pas le court-circuiter.
+  incliquables. Échap reste géré par le formulaire posé dedans, on empêche la fermeture par défaut
+  de Radix pour ne pas le court-circuiter.
   `onOpened` attend que Radix ait monté le contenu (un tour après le rendu) avant de toucher à ses
   champs : appelé plus tôt, il ne les trouverait pas.
 */
-export const OverlayHost = ({ onClose, onKeyDown, html, onOpened, children }: OverlayHostProps) => (
+export const OverlayHost = ({ onClose, onOpened, children }: OverlayHostProps) => (
   <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
     <Dialog.Portal>
-      <Dialog.Overlay className="overlay overlay-ask" onKeyDown={onKeyDown}>
+      <Dialog.Overlay className="overlay overlay-ask">
         <Dialog.Content
           onOpenAutoFocus={(event) => {
             if (!onOpened) return;
@@ -39,7 +37,7 @@ export const OverlayHost = ({ onClose, onKeyDown, html, onOpened, children }: Ov
           <VisuallyHidden>
             <Dialog.Title>Question</Dialog.Title>
           </VisuallyHidden>
-          {html ? <div dangerouslySetInnerHTML={html} /> : children}
+          {children}
         </Dialog.Content>
       </Dialog.Overlay>
     </Dialog.Portal>
