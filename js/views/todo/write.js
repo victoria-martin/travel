@@ -1,32 +1,24 @@
-function addTodoList() {
-  const column = todoDraftColumn();
-  if (!column || !todoDraft.values.length) return;
+function addTodoList(kind, columnKey, filterValues) {
   state.todoLists.push({
     id: uid(),
     travelId: currentTravelId(),
-    kind: todoDraft.kind,
-    columnKey: column.key,
-    filterValues: todoDraft.values,
+    kind,
+    columnKey,
+    filterValues,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
-  todoDraft = { kind: todoDraft.kind, columnKey: column.key, values: [] };
   saveNow();
   showToast('Liste créée');
 }
 
 // A list is edited where it is read: clicking one of its pills adds or drops that word.
-function toggleTodoListValue(id, index) {
+function toggleTodoListValue(id, value) {
   const list = getTodoList(id);
-  const value = filterValues(list.kind, filterColumn(list.kind, list.columnKey))[index];
   list.filterValues = list.filterValues.includes(value)
     ? list.filterValues.filter((v) => v !== value)
     : [...list.filterValues, value];
   list.updatedAt = new Date().toISOString();
   saveNow();
   showToast('Liste modifiée');
-}
-
-function deleteTodoList(id) {
-  deleteItem('todoLists', id);
 }

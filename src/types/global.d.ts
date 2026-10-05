@@ -224,6 +224,10 @@ declare global {
     travelPackingItems: () => import('../store/types').PackingListItem[];
     todoListsOfTravel: () => import('../store/types').TodoList[];
     todoListItems: (list: import('../store/types').TodoList) => unknown[];
+    LIST_RESOURCES: { kind: string; label: string; icon: string }[];
+    listResource: (kind: string) => { kind: string; label: string; icon: string };
+    addTodoList: (kind: string, columnKey: string, filterValues: string[]) => void;
+    toggleTodoListValue: (id: string, value: string) => void;
     freeTodosOfTravel: () => import('../store/types').FreeTodo[];
     travelPhraseLanguages: () => string[];
     currentPhraseLang: () => string;
@@ -249,8 +253,6 @@ declare global {
     importGoogleMapsPaste: (field: HTMLInputElement, nameId: string) => void;
     importGoogleMapsLink: (field: HTMLInputElement, nameId: string) => void;
     saveAttraction: (id: string) => void;
-    todoBuilder: () => string;
-    todoListCard: (list: import('../store/types').TodoList) => string;
     setTodoSearch: (query: string) => void;
     addFreeTodo: (text: string) => void;
     toggleFreeTodo: (id: string) => void;

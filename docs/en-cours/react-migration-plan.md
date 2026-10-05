@@ -358,6 +358,7 @@ entre l'écran et `LeafletMap`) dans `markers.ts`. La règle « rien dans les ho
 
 **Trois fuites identifiées, pas encore derrière une frontière `platform/`** (Leaflet est le seul
 sous-système qui en a une aujourd'hui) :
+
 - `@dnd-kit/core`, drag & drop souris des étapes de scénario
   ([StepList.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepList.tsx),
   [StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx)) — pointeur/DOM,
@@ -379,6 +380,7 @@ liste est maintenant posée plutôt qu'à découvrir plus tard.
 
 **Mitigations mobile (web) posées dans le même tour, distinctes du sujet RN ci-dessus** — pour
 l'app mobile actuelle, pas en préparation d'un futur port natif :
+
 - Drag des étapes de scénario : déjà non affiché sous 640px (`.step-drag-handle{display:none}`,
   [styles.css:3911](../styles.css#L3911)), les boutons `.step-reorder-buttons` restent. Rien à
   faire, déjà en place avant ce tour.
@@ -417,10 +419,10 @@ src/
 | 0a — Mécanisme     | Villes (spike, lecture seule)                                               | Vite + TS en place, `REACT_VIEWS`/mount-unmount dans `renderMain()` — **fait et vérifié à l'écran**                                                                                                                                                                                                                                |
 | 0b — Store         | aucun de plus                                                               | types par domaine (`store/types.ts`), store Zustand en lecture seule (`useTravelStore`), contrat `SyncAdapter` documenté mais pas implémenté (§ 2) — **fait, typecheck propre**                                                                                                                                                    |
 | 1 — Tables simples | Cities ✅, Charges fixes ✅, Transports ✅, Attractions ✅, Hébergements ✅ | **Fait**, détail ci-dessous.                                                                                                                                                                                                                                                                                                       |
-| 2 — Logique propre | Carte ✅, Scénarios (détail) ✅                                            | **Fait** — le DnD (dernier point ouvert) est résolu et confirmé à l'écran le 2026-10-03, détail ci-dessous.                                                                                                                                                                                                                        |
+| 2 — Logique propre | Carte ✅, Scénarios (détail) ✅                                             | **Fait** — le DnD (dernier point ouvert) est résolu et confirmé à l'écran le 2026-10-03, détail ci-dessous.                                                                                                                                                                                                                        |
 | 3 — Terminée ✅    | Journal, Accueil, Notes, Infos utiles, Phrases, Valise, À faire, Dépenses   | détail ci-dessous.                                                                                                                                                                                                                                                                                                                 |
 | 4 — Le shell       | Sidebar ✅, router ✅, modale globale ✅, toasts ✅                         | `#app` est un seul root React (§ 1, détail complet) — `js/` reste en place : cette phase change qui possède le DOM, pas combien d'écrans sont encore legacy (`scenarios` liste, menu mobile, formulaires, panneaux complexes délégués restent à part). « `js/` legacy supprimé » reste l'horizon final, pas le livrable de ce lot. |
-| 5 — Nettoyage RN   | —                                                                           | **Premier passage fait (2026-10-03, détail § 5)** : vérif clean, 3 fuites listées (`@dnd-kit/core`, `FileReader`, `@radix-ui/*`) — rien d'urgent, pas de RN à l'horizon proche.                                                                                                                                                   |
+| 5 — Nettoyage RN   | —                                                                           | **Premier passage fait (2026-10-03, détail § 5)** : vérif clean, 3 fuites listées (`@dnd-kit/core`, `FileReader`, `@radix-ui/*`) — rien d'urgent, pas de RN à l'horizon proche.                                                                                                                                                    |
 
 **Phase 1, détail.** Partagé : `DataTable`/`SearchInput`/`ToolbarMenu` (ex-`ToolbarPanel`)/`SettingsMenu`/`ColumnPicker`/
 `TagDropdown`(Radix `DropdownMenu`, `shared/select/`)/`EditableTagsCell`/`EditableTextCell`/`TagLabel`/
@@ -581,10 +583,10 @@ backlog vers « `js/` legacy supprimé ».
 [architecture-plan.md](architecture-plan.md), pas par un portage ici.
 
 **Encore legacy, et pourquoi :**
+
 - Journal — `journalDayPanel` : bloc impératif autour d'un seul `<textarea>` et de son caret (§ 7,
   Phase 3). Le sheet mobile du panneau (`journal-panel`) est porté, pas le panneau desktop, resté
   dans ce bloc.
-- À faire — `todoBuilder` : registre colonnes-par-kind à réécrire en entier (§ 7, Phase 3).
 - Page **Locations** endormie (journal CLAUDE.md 2026-09-16) : ses fichiers restent sur le disque,
   volontairement — son formulaire garde le `providerSelectField` legacy (adapté à la nouvelle
   signature d'`askNewProvider`). Déjà cassée avant cette passe : `offerPriceLabels` et
@@ -602,11 +604,13 @@ scénario » d'un lieu, instructions d'import collé, champ Activités d'une ét
 **Fait le 2026-10-05 (lots H, G, D, C)** : tri de la page Dépenses (`SortMenu kind="charges"`),
 en-tête Phrases (style, mode liste, réglages de page), les trois questions posées par-dessus
 l'écran (`activeAsk` typé par `kind` : `word`, `provider`, `routeAccommodation` — le chemin HTML
-d'`OverlayHost` disparaît), panneau Itinéraire et bouton ＋ Ville de la Carte. Le rendu legacy de
+d'`OverlayHost` disparaît), panneau Itinéraire et bouton ＋ Ville de la Carte, page À faire entière (constructeur et listes,
+dont chaque table reprend les colonnes React de la page qu'elle lit — `TodoListTable`). Le rendu legacy de
 la Carte (`renderMapView`, `initMap`, panneaux scénario/filtres/légende/split, `new-city.js`) est
 supprimé : il n'avait plus d'appelant depuis la Phase 2.
 
 **Manques et points connus :**
+
 - Carte, panneau Filtres : les niveaux de filtre par colonne de chaque collection
   (`filterLevelsBlock`) ne sont pas portés — `FilterFields` n'a que les interrupteurs et Favoris.
   Des niveaux posés avant la migration filtrent toujours (`keptOnMap`), sans écran pour les voir.

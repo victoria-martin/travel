@@ -1,16 +1,9 @@
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';
 import { FreeTodoCard } from './TodoView/FreeTodoCard';
+import { TodoBuilder } from './TodoView/TodoBuilder';
+import { TodoListCard } from './TodoView/TodoListCard';
 
-/*
-  Porte js/views/todo/{todo,header,free/card}.js. Le builder (ressource/colonne/valeurs à choisir)
-  et chaque liste dynamique restent délégués via LegacyMarkup : ils s'appuient sur listTable, qui
-  sait rendre la table de N'IMPORTE quel `kind` (hébergements, attractions, transports…) avec les
-  colonnes que CHAQUE écran déclare — refaire ça en React demanderait un registre colonnes-par-kind
-  qui n'existe pas encore, un chantier à part. Seule la carte "Tâches libres" (texte libre, pas de
-  ressource à filtrer) est un vrai composant React.
-*/
 export function TodoView() {
   useTravelStore();
   const [query, setQuery] = useState('');
@@ -45,14 +38,14 @@ export function TodoView() {
         </div>
       </div>
       <FreeTodoCard query={query} />
-      <LegacyMarkup html={window.todoBuilder()} />
+      <TodoBuilder />
       {lists.length === 0 ? (
         <div className="empty-state">
           <strong>Aucune liste</strong>
           Choisis une ressource et une colonne, puis coche les valeurs à suivre.
         </div>
       ) : (
-        lists.map((list) => <LegacyMarkup key={list.id} html={window.todoListCard(list)} />)
+        lists.map((list) => <TodoListCard key={list.id} list={list} />)
       )}
     </>
   );

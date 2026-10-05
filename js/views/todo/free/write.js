@@ -12,7 +12,6 @@ function addFreeTodo(text) {
   });
   saveNow();
   showToast('Tâche créée');
-  focusFreeTodoInput();
 }
 
 function toggleFreeTodo(id) {
@@ -33,9 +32,4 @@ function setFreeTodoStatus(id, status) {
 
 function deleteFreeTodo(id) {
   deleteItem('freeTodos', id);
-}
-
-function focusFreeTodoInput() {
-  const field = document.getElementById('free-todo-input');
-  if (field) field.focus();
 }

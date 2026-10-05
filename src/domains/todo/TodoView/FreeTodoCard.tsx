@@ -1,8 +1,6 @@
 import { FreeTodoRow } from './FreeTodoRow';
 
-// Port de freeTodoCard (js/views/todo/free/card.js). `query` vient du champ de recherche partagé
-// de TodoView — une tâche libre n'a que `text` à comparer, contrairement à todoItemMatchesSearch
-// (nom/label/description/notes/texte) qui sert les listes dynamiques déléguées au legacy.
+// `query` comes from TodoView's shared search field; a free task only has `text` to compare.
 export function FreeTodoCard({ query }: { query: string }) {
   const wanted = query.trim().toLowerCase();
   const todos = window
@@ -14,7 +12,10 @@ export function FreeTodoCard({ query }: { query: string }) {
     <section className="todo-list">
       <div className="todo-list-head">
         <h3 className="todo-list-title">
-          Tâches libres <span className="todo-list-count">{done}/{todos.length}</span>
+          Tâches libres{' '}
+          <span className="todo-list-count">
+            {done}/{todos.length}
+          </span>
         </h3>
       </div>
       {todos.length > 0 && (
