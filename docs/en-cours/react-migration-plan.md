@@ -420,22 +420,24 @@ src/
 `SwitchField`/cellules (`TextCell`/`TagsCell`/`FavoriteCell`/`LinkCell`). Tri, recherche, colonnes
 masquables, édition en place, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer, délégué
 à `openModal`/`openSheet`/`deleteItem` legacy — `ModalHost` pas nécessaire, l'overlay legacy vit hors
-de `#main`), menu ⋮ (texte des boutons) : faits sur les 5 écrans. Restent, pas bloquants : formulaires
+de `#main`), menu ⋮ (texte des boutons) : faits sur les 5 écrans. Tri et filtre délégués au legacy depuis le
+2026-10-05 : `DataTable` prend un `kind` et trie par `sortItems` (niveaux dans `prefs.sort`,
+`SORT_DEFAULTS`, ordre de vocabulaire) ; `SortMenu`/`ListFilterMenu` (`shared/menu/`) éditent les
+mêmes `prefs` que les panneaux legacy — les colonnes legacy (`COLUMN_SETS`) restent la source du tri,
+du filtre et du masquage par défaut, les colonnes React n'en portent que le rendu. Restent, pas bloquants : formulaires
 React si une modale legacy est un jour réécrite ; `SettingsMenu` n'a que la préférence transverse (pas
 `outOfRangeStyleOption`/réglages par page, hors sujet ici).
 Attractions (`domains/attractions/`) étant la même entité que Cities (`domains/cities/`), leurs
 cellules et leur texte de recherche sont partagés (`attractions/cells.tsx`,
 `attractions/searchAttraction.ts`) — Cities les consomme plutôt que de les dupliquer. Colonnes
-Attractions portées : favori/nom/type/statut/tags/description/ville/province/lien/actions ; restent
-(comme Cities) chosenStep, prix, region/country/address/coords/accommodation/hours/phone, Google
-Maps, tri sur vocabulaire, bouton Ajouter.
+Attractions et Cities à parité legacy depuis le 2026-10-05 : toutes les colonnes de leur
+`COLUMN_SETS`, Trier, Ajouter (Attractions). Le tri passe par le legacy (`DataTable kind`, ci-dessous).
 Hébergements (`domains/accommodations/`) : `EditableTextCell` nouveau (notes + prix en édition
 inline, contentEditable + `onBlur`, sans `window.render()` — exactement la raison du `syncEditable`
 legacy, qui évite d'arracher le focus) ; colonnes portées favori/nom(+notes)/type/statut/ville/
-province/tags/prix/dates/disponible du·au/lien/booking/actions, ligne → fiche (`openSheet`) ; restent
-chosenStep, region/country/address, colonne notes à part, Google Maps, favoris seuls, mode cartes,
-panneau de filtres, bouton Importer, menu d'ajout à 5 portes (un seul bouton « Ajouter », saisie
-manuelle). `ACCOMMODATION_TYPES`/`ACCOMMODATION_STATUSES` n'étaient jamais exposées sur `window`
+province/tags/prix/dates/disponible du·au/lien/booking/actions, ligne → fiche (`openSheet`). À
+parité legacy depuis le 2026-10-05 : toutes les colonnes de `COLUMN_SETS.hebergements`, Trier,
+Filtrer, Favoris, Tableau/Cartes, Importer (sans synchro), menu d'ajout à 5 portes. `ACCOMMODATION_TYPES`/`ACCOMMODATION_STATUSES` n'étaient jamais exposées sur `window`
 (même classe de bug que § 2) — corrigé au passage.
 
 **Phase 2, détail.** Carte : **faite, § 5 pour le détail** — filtre, panneau scénario, itinéraire
@@ -586,9 +588,6 @@ fragments legacy des modales React (`LocateFields`, `ProviderSelectField`, `Mult
 scénario » d'un lieu, instructions d'import collé, champ Activités d'une étape).
 
 **Manques et points connus :**
-- La modale d'import collé (`paste-import`) n'est ouverte que par l'en-tête legacy des
-  Hébergements, dont le bouton « Importer » n'est pas porté (§ 7, Phase 1) : son corps React existe,
-  rien ne l'ouvre aujourd'hui.
 - Modale d'étape, champ Activités : cliquer Enregistrer pendant que la recherche a le focus ne fait
   rien au premier clic — au mousedown le champ perd le focus, la liste de résultats (dans le flux)
   se vide, le bouton remonte et le mouseup tombe à côté. Même comportement en legacy ; constaté en
