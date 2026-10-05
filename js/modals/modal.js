@@ -204,13 +204,7 @@ function closeModal() {
   render();
 }
 
-/*
-  Fermer sur une saisie non enregistrée demande quoi en faire. ModalHost (src/shell/ModalHost.tsx)
-  peint le corps de la modale via dangerouslySetInnerHTML : tant que modal.payload ne change pas,
-  cfg.body(modal) rend la même chaîne à chaque appel, donc React ne retouche pas ce DOM — rouvrir
-  dismissAskOpen et rappeler render() ne perd plus la saisie en cours (l'arrachait quand ce bloc
-  vivait hors de #app, peint par un appendChild manuel jamais revisité par un render()).
-*/
+// Closing over unsaved input asks what to do with it (Confirm, src/shell/Confirm.tsx).
 var dismissAskOpen = false;
 
 function dismissModal() {
@@ -250,12 +244,6 @@ function modalFieldsState() {
 function modalFieldValue(field) {
   if (field.isContentEditable) return field.innerText;
   return field.type === 'checkbox' || field.type === 'radio' ? field.checked : field.value;
-}
-
-// Peint par ModalHost (src/shell/ModalHost.tsx) via dangerouslySetInnerHTML — ces trois lectures
-// remplacent l'ancien renderModal() qui créait et appendait le DOM lui-même.
-function modalBodyHtml() {
-  return MODAL_TYPES[modal.type].body(modal);
 }
 
 function modalPanelWidth() {

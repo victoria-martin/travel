@@ -4,26 +4,6 @@
   l'écrit dans le Drive du voyage et rend une URL — c'est cette URL, légère, qui vit dans
   journalEntries.photos. Nécessite l'action `uploadPhoto` d'apps-script/Code.js déployée.
 */
-function journalPhotosBlock(date) {
-  const entry = getJournalEntry(currentTravelId(), date);
-  const photos = entry ? entry.photos : [];
-  if (!photos.length) return '';
-  return /* HTML */ `<div class="journal-photos" id="journal-photos">
-    ${photos.map((url) => journalPhotoThumb(url, date)).join('')}
-  </div>`;
-}
-
-function journalPhotoThumb(url, date) {
-  return /* HTML */ `<div class="journal-photo">
-    <a href="${escapeHtml(url)}" target="_blank" rel="noopener"
-      ><img src="${escapeHtml(url)}" alt="" loading="lazy"
-    /></a>
-    <button class="journal-photo-remove" title="Retirer" onclick="removeJournalPhoto('${date}', '${escapeHtml(url)}')">
-      ${svgIcon('x')}
-    </button>
-  </div>`;
-}
-
 async function onJournalPhotoPicked(input, date) {
   const files = Array.from(input.files || []);
   input.value = '';

@@ -1,18 +1,8 @@
 import { Icon } from '@/shared/Icon';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { useTravelStore } from '@/store/useTravelStore';
-import { useEffect } from 'react';
 import { DayCards } from './JournalView/DayCards';
+import { JournalDayPanel } from './JournalView/JournalDayPanel';
 
-/*
-  Porte js/views/journal/{journal,day-cards,side-tabs}.js. La carte en-tête (sélecteur de
-  scénario) et le rang de jours sont de vrais composants React. Le panneau du jour (éditeur
-  markdown, dropdown {}, photos, pastilles planifiées, refs non résolues, panneau carte) reste
-  délégué via LegacyMarkup : tout tourne autour d'un unique textarea et de sa position de caret
-  (document.getElementById('journal-text'), sélection, insertion au curseur) — un bloc
-  profondément impératif, même famille que RouteBuilderPanel/NewCityButton (§ 5 du plan), pas
-  une liste ou un formulaire ordinaire à reconstruire en React.
-*/
 export function JournalView() {
   useTravelStore();
   const scenarioId = window.defaultJournalScenarioId();
@@ -22,11 +12,6 @@ export function JournalView() {
     if (days.length) window.prefs.journalDate = days[0];
   }
   const date = window.prefs.journalDate as string;
-  const sidePanelOpen = !!window.prefs.journalSidePanel;
-
-  useEffect(() => {
-    if (sidePanelOpen) window.initJournalMap();
-  }, [scenario?.id, date, sidePanelOpen]);
 
   return (
     <>
@@ -73,7 +58,7 @@ export function JournalView() {
           Ajoute un jour depuis le rang ci-dessus.
         </div>
       ) : (
-        <LegacyMarkup html={window.journalDayPanel(scenario, date)} />
+        <JournalDayPanel key={date} scenario={scenario} date={date} />
       )}
     </>
   );

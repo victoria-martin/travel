@@ -13,6 +13,12 @@ declare global {
   }
 
   // A legacy COLUMN_SETS entry: it still carries sort, filter and visibility semantics for React tables.
+  interface JournalPlace {
+    id: string;
+    name: string;
+    kind: 'accommodation' | 'attraction';
+  }
+
   interface LegacyColumn {
     key: string;
     label: string;
@@ -272,10 +278,22 @@ declare global {
     ) => import('../store/types').JournalEntry | null;
     selectJournalDay: (date: string) => void;
     promptJournalDay: () => void;
-    journalDayPanel: (scenario: import('../store/types').Scenario, date: string) => string;
     onJournalPanelToggle: (date: string, key: string) => void;
-    initJournalMap: () => void;
     journalMapPlaces: (date: string) => { id: string; kind: string }[];
+    journalPlannedItemsForDay: (
+      scenario: import('../store/types').Scenario,
+      date: string,
+    ) => JournalPlace[];
+    stepForJournalDay: (
+      scenario: import('../store/types').Scenario,
+      date: string,
+    ) => import('../store/types').Step | null;
+    journalTextRefs: (text: string) => { raw: string; name: string; entity: JournalPlace | null }[];
+    journalRefMatches: (query: string) => JournalPlace[];
+    resolveJournalRef: (name: string) => JournalPlace | null;
+    setJournalTextQuiet: (date: string, text: string) => void;
+    removeJournalPhoto: (date: string, url: string) => void;
+    onJournalPhotoPicked: (input: HTMLInputElement, date: string) => void;
     expenseBudgetScenario: () => import('../store/types').Scenario | null;
     manualExpenses: () => import('../store/types').FixedCost[];
     actualExpenses: () => import('../store/types').ActualExpense[];
@@ -342,7 +360,6 @@ declare global {
     openTravelModal: (id?: string) => void;
     openSyncModal: () => void;
     modal: { type: string; sheet: boolean; payload: any } | null;
-    modalBodyHtml: () => string;
     modalPanelWidth: () => string | null;
     onModalPainted: () => void;
     dismissModal: () => void;

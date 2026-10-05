@@ -2,7 +2,6 @@ import { Icon } from '@/shared/Icon';
 import type { Scenario, Step } from '@/store/types';
 import { useSortable } from '@dnd-kit/react/sortable';
 import { ExtrasBlock } from './ExtrasBlock';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 import { StepLine } from './StepLine';
 
 export function StepCard({

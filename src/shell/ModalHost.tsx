@@ -5,10 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { MODAL_BODIES } from '../modal-bodies';
 
 /*
-  Port de renderModal/dismissModal (js/modals/modal.js), maintenant sur Dialog de Radix (le corps
-  vient de MODAL_BODIES, ou d'un `cfg.body` legacy en dangerouslySetInnerHTML pour un type pas
-  encore porté — Radix ne regarde pas le contenu, juste l'overlay/le focus/le clavier) : focus trap, restauration
-  du focus à la fermeture, aria-modal — remplace l'implémentation main.
+  La modale globale sur Dialog de Radix, son corps venant de MODAL_BODIES : focus trap,
+  restauration du focus à la fermeture, aria-modal.
 
   `.overlay`/`.modal` gardent leur CSS inchangée (centrage par flex du parent sur l'enfant) en
   nichant Dialog.Content DANS Dialog.Overlay plutôt qu'en frères comme le fait l'exemple Radix par
@@ -23,7 +21,6 @@ import { MODAL_BODIES } from '../modal-bodies';
 export function ModalHost() {
   const modal = window.modal;
   const Body = modal ? MODAL_BODIES[modal.type] : undefined;
-  const bodyHtml = modal && !Body ? window.modalBodyHtml() : null;
 
   // Radix mounts the content one pass after this render: the first paint is signalled by the
   // content's own ref, later swaps of an already open modal by the effect.
@@ -37,7 +34,7 @@ export function ModalHost() {
   useEffect(() => {
     if (modal && contentRef.current) window.onModalPainted();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modal, bodyHtml]);
+  }, [modal]);
 
   const width = modal ? window.modalPanelWidth() : null;
 
@@ -65,11 +62,7 @@ export function ModalHost() {
                 <Dialog.Title>{modal.type}</Dialog.Title>
               </VisuallyHidden>
               <ModalContentContext.Provider value={contentElement}>
-                {Body ? (
-                  <Body payload={modal.payload} />
-                ) : (
-                  <div dangerouslySetInnerHTML={{ __html: bodyHtml || '' }} />
-                )}
+                {Body && <Body payload={modal.payload} />}
               </ModalContentContext.Provider>
             </Dialog.Content>
           </Dialog.Overlay>

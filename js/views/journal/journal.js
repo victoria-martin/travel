@@ -25,16 +25,3 @@ function defaultJournalScenarioId() {
   persistPrefs();
   return prefs.journalScenarioId;
 }
-
-function journalDayPanel(scenario, date) {
-  return /* HTML */ `<div class="journal-cols">
-    <div class="journal-main view-scroller">
-      ${journalPlannedPillsHtml(scenario, date)} ${journalEditorBlock(date)}
-    </div>
-    ${prefs.journalSidePanel
-      ? /* HTML */ `<div class="journal-side">
-          ${JOURNAL_SIDE_TABS.find((t) => t.key === prefs.journalSidePanel).body(date)}
-        </div>`
-      : ''}
-  </div>`;
-}

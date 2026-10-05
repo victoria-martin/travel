@@ -1,6 +1,5 @@
 import { useTravelStore } from '@/store/useTravelStore';
 import { useEffect } from 'react';
-import { LegacyMarkup } from '@/shared/LegacyMarkup';
 
 import { useScenarioMoney } from '@/domains/scenarios/hooks/useScenarioMoney';
 import { useScenarioRoad } from '@/domains/scenarios/hooks/useScenarioRoad';

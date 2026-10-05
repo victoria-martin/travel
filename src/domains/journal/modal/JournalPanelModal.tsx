@@ -1,6 +1,6 @@
 import { LeafletMap } from '@/platform/web/LeafletMap';
 import { useTravelStore } from '@/store/useTravelStore';
-import { journalMapMarkers } from './JournalPanelModal/journalMapMarkers';
+import { journalMapMarkers } from '@/domains/journal/journalMapMarkers';
 
 // Below 640px the journal side panel opens in this sheet; its only tab is the day's map.
 export function JournalPanelModal({ payload }: { payload: { date: string; key: string } }) {

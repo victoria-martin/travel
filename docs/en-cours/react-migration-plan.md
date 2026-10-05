@@ -584,9 +584,6 @@ backlog vers « `js/` legacy supprimé ».
 
 **Encore legacy, et pourquoi :**
 
-- Journal — `journalDayPanel` : bloc impératif autour d'un seul `<textarea>` et de son caret (§ 7,
-  Phase 3). Le sheet mobile du panneau (`journal-panel`) est porté, pas le panneau desktop, resté
-  dans ce bloc.
 - Page **Locations** endormie (journal CLAUDE.md 2026-09-16) : ses fichiers restent sur le disque,
   volontairement — son formulaire garde le `providerSelectField` legacy (adapté à la nouvelle
   signature d'`askNewProvider`). Déjà cassée avant cette passe : `offerPriceLabels` et
@@ -601,13 +598,17 @@ fragments legacy des modales React (`LocateFields`, `ProviderSelectField`, `Mult
 `AddByNameRow`, champs de l'offre/du loueur/du modèle/du trajet/du voyage, actions « Ajouter à un
 scénario » d'un lieu, instructions d'import collé, champ Activités d'une étape).
 
-**Fait le 2026-10-05 (lots H, G, D, C)** : tri de la page Dépenses (`SortMenu kind="charges"`),
+**Fait le 2026-10-05 (lots H, G, D, C, B, A)** : tri de la page Dépenses (`SortMenu kind="charges"`),
 en-tête Phrases (style, mode liste, réglages de page), les trois questions posées par-dessus
 l'écran (`activeAsk` typé par `kind` : `word`, `provider`, `routeAccommodation` — le chemin HTML
 d'`OverlayHost` disparaît), panneau Itinéraire et bouton ＋ Ville de la Carte, page À faire entière (constructeur et listes,
 dont chaque table reprend les colonnes React de la page qu'elle lit — `TodoListTable`). Le rendu legacy de
 la Carte (`renderMapView`, `initMap`, panneaux scénario/filtres/légende/split, `new-city.js`) est
-supprimé : il n'avait plus d'appelant depuis la Phase 2.
+supprimé : il n'avait plus d'appelant depuis la Phase 2. Panneau du jour du Journal
+(`JournalDayPanel` : textarea contrôlé, caret tenu par `useJournalEditor`, aperçu markdown en
+éléments React, menu `{}`, pastilles planifiées, refs non résolues, photos, carte latérale sur
+`LeafletMap`). Plus aucun écran ne passe par du HTML legacy : `LegacyMarkup` et le repli
+`cfg.body` de `ModalHost` disparaissent avec leurs derniers lecteurs.
 
 **Manques et points connus :**
 
