@@ -40,7 +40,7 @@ différemment :
 1. **`window.svgIcon` / `ICON_BODIES`** ([js/icons.js](../js/icons.js)) — léger, sans dépendance
    sur l'état de l'app, utilisé par la quasi-totalité des composants (`Icon.tsx`, donc
    `IconButton`, `AddResourceButton`, `SwitchField`, `TagsField`, `SearchInput`, `FavoriteCell`,
-   `ToolbarPanel`…). **À charger pour de vrai**, pas à stubber — sinon toutes les icônes sont
+   `ToolbarMenu`…). **À charger pour de vrai**, pas à stubber — sinon toutes les icônes sont
    vides dans Storybook, ce qui ruine l'intérêt même du catalogue.
    `js/icons.js` est un script classique (`function svgIcon(...)`, pas d'export) : un `import
 '../js/icons.js'` dans `preview.ts` ne suffit pas, Vite l'exécuterait en module isolé sans
@@ -144,9 +144,9 @@ story (voir "Contrainte technique" ci-dessus).
 | Fichier | Stub nécessaire |
 | --- | --- |
 | [src/shared/modal/CloseModalButton.tsx](../src/shared/modal/CloseModalButton.tsx) | `window.dismissModal = () => {}` |
-| [src/shared/toolbar/ColumnPicker.tsx](../src/shared/toolbar/ColumnPicker.tsx) | `window.hiddenColumns = () => []`, `window.toggleColumn = () => {}` |
+| [src/shared/menu/ColumnPicker.tsx](../../src/shared/menu/ColumnPicker.tsx) | `window.hiddenColumns = () => []`, `window.toggleColumn = () => {}` |
 | [src/shared/toolbar/SettingsMenu.tsx](../src/shared/toolbar/SettingsMenu.tsx) | `window.showButtonLabels = () => true`, `window.toggleButtonLabels = () => {}` |
-| [src/shared/toolbar/ToolbarPanel.tsx](../src/shared/toolbar/ToolbarPanel.tsx) | aucun directement, mais sert de wrapper aux deux ci-dessus dans leurs stories |
+| [src/shared/menu/ToolbarMenu.tsx](../../src/shared/menu/ToolbarMenu.tsx) | aucun directement, mais sert de wrapper aux deux ci-dessus dans leurs stories |
 | [src/shared/WordSelectField.tsx](../src/shared/WordSelectField.tsx) | `window.wordSelectChanged = () => {}`, `window.NEW_WORD_VALUE = '__new__'` |
 
 `src/shared/header/HeaderActions.tsx` est **hors scope** de cette étape : le fichier contient un

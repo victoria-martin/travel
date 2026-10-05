@@ -2,7 +2,7 @@ import { DataTable } from '@/shared/DataTable/DataTable';
 import { Icon } from '@/shared/Icon';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
-import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { ColumnPicker } from '@/shared/menu/ColumnPicker';
 import type { CarModel, Offer } from '@/store/types';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';

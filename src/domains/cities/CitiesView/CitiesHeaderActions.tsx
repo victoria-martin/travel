@@ -1,5 +1,5 @@
 import { SearchInput } from '@/shared/SearchInput';
-import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { ColumnPicker } from '@/shared/menu/ColumnPicker';
 import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { columns } from '../cities-table/columns';
 

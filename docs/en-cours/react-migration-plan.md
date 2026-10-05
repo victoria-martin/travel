@@ -415,7 +415,7 @@ src/
 | 4 — Le shell       | Sidebar ✅, router ✅, modale globale ✅, toasts ✅                         | `#app` est un seul root React (§ 1, détail complet) — `js/` reste en place : cette phase change qui possède le DOM, pas combien d'écrans sont encore legacy (`scenarios` liste, menu mobile, formulaires, panneaux complexes délégués restent à part). « `js/` legacy supprimé » reste l'horizon final, pas le livrable de ce lot. |
 | 5 — Nettoyage RN   | —                                                                           | **Premier passage fait (2026-10-03, détail § 5)** : vérif clean, 3 fuites listées (`@dnd-kit/core`, `FileReader`, `@radix-ui/*`) — rien d'urgent, pas de RN à l'horizon proche.                                                                                                                                                   |
 
-**Phase 1, détail.** Partagé : `DataTable`/`SearchInput`/`ToolbarPanel`/`SettingsMenu`/`ColumnPicker`/
+**Phase 1, détail.** Partagé : `DataTable`/`SearchInput`/`ToolbarMenu` (ex-`ToolbarPanel`)/`SettingsMenu`/`ColumnPicker`/
 `TagDropdown`(Radix `DropdownMenu`, `shared/select/`)/`EditableTagsCell`/`EditableTextCell`/`TagLabel`/
 `SwitchField`/cellules (`TextCell`/`TagsCell`/`FavoriteCell`/`LinkCell`). Tri, recherche, colonnes
 masquables, édition en place, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer, délégué

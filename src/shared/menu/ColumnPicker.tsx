@@ -1,5 +1,6 @@
-import type { Column } from '../DataTable/types';
-import { ToolbarPanel } from '../select/ToolbarPanel';
+import type { Column } from '@/shared/DataTable/types';
+import { ToolbarButton } from '@/shared/buttons/ToolbarButton';
+import { ToolbarMenu } from '@/shared/menu/ToolbarMenu';
 
 /*
   Port de columnPicker (js/columns.js), délégué au getter/setter legacy (prefs.hiddenColumns,
@@ -10,11 +11,7 @@ export function ColumnPicker<T>({ kind, columns }: { kind: string; columns: Colu
   const hidden = window.hiddenColumns(kind);
   const options = columns.filter((column) => !column.locked);
   return (
-    <ToolbarPanel
-      icon="columns-3"
-      label="Colonnes"
-      // count={options.filter((column) => hidden.includes(column.key)).length}
-    >
+    <ToolbarMenu trigger={<ToolbarButton icon="columns-3" label="Colonnes" />}>
       {options.map((column) => (
         <label className="filter-option" key={column.key}>
           <input
@@ -25,6 +22,6 @@ export function ColumnPicker<T>({ kind, columns }: { kind: string; columns: Colu
           {column.label}
         </label>
       ))}
-    </ToolbarPanel>
+    </ToolbarMenu>
   );
 }

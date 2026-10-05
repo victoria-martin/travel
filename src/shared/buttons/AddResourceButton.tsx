@@ -1,4 +1,4 @@
-import { ToolbarButton } from '@/shared/buttons/Button';
+import { ToolbarButton } from '@/shared/buttons/ToolbarButton';
 
 type AddResourceButtonProps = {
   title: string;

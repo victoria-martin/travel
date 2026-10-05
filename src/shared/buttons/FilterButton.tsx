@@ -1,4 +1,4 @@
-import { ToolbarButton } from '@/shared/buttons/Button';
+import { ToolbarButton } from '@/shared/buttons/ToolbarButton';
 import { MAP_KINDS } from '../../domains/carte/MapView/mapKinds';
 
 // Menu d'en-tête (toolbarPanel) — mêmes champs que FilterPanel, voir FilterFields.

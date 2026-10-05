@@ -1,4 +1,3 @@
-import { Icon } from '@/shared/Icon';
 import { cva } from 'class-variance-authority';
 
 const button = cva('btn', {
@@ -59,24 +58,5 @@ export const Button = ({
     >
       {children}
     </button>
-  );
-};
-
-// not sure i need
-type ToolbarButtonProps = React.ComponentProps<'button'> & {
-  icon: string;
-  label: string;
-  variant?: ButtonVariants;
-  count?: number;
-};
-export const ToolbarButton = ({ icon, count, label, variant, ...props }: ToolbarButtonProps) => {
-  const showLabels = window.showButtonLabels();
-
-  return (
-    <Button {...props} size="small" variant={variant}>
-      <Icon name={icon} />
-      {showLabels && <span className="toolbar-label">{label}</span>}
-      {!!count && <span className="toolbar-count">{count}</span>}
-    </Button>
   );
 };

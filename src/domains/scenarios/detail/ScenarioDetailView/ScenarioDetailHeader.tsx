@@ -1,5 +1,5 @@
 import { Icon } from '@/shared/Icon';
-import { SettingsMenu } from '@/shared/settings/SettingsMenu';
+import { SettingsMenu } from '@/shared/menu/SettingsMenu';
 import type { Scenario } from '@/store/types';
 import { ScenarioDetailSettings } from './ScenarioDetailHeader/ScenarioDetailSettings';
 import { ScenarioSideTabsButtons } from './ScenarioDetailHeader/ScenarioSideTabsButtons';

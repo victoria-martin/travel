@@ -2,7 +2,7 @@ import { DataTable } from '@/shared/DataTable/DataTable';
 import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
-import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { ColumnPicker } from '@/shared/menu/ColumnPicker';
 import type { Transport } from '@/store/types';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';

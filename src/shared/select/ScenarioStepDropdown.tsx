@@ -1,5 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { MenuPortal } from '@/shared/select/MenuPortal';
+import { MenuPortal } from '@/shared/menu/MenuPortal';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useShallow } from 'zustand/react/shallow';
 

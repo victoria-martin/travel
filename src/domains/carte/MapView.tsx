@@ -1,7 +1,7 @@
 import { FilterMenu } from '@/domains/carte/MapView/FilterMenu';
 import { MapFilterPanel } from '@/domains/carte/MapView/MapFilterPanel';
 import { Icon } from '@/shared/Icon';
-import { SettingsMenu } from '@/shared/settings/SettingsMenu';
+import { SettingsMenu } from '@/shared/menu/SettingsMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';

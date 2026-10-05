@@ -6,7 +6,7 @@ import { HeaderActions } from '@/shared/header/HeaderActions';
 import { TableHeaderActions } from '@/shared/header/TableHeaderActions';
 import { normalizeSearch } from '@/shared/normalizeSearch';
 import { SearchInput } from '@/shared/SearchInput';
-import { ColumnPicker } from '@/shared/toolbar/ColumnPicker';
+import { ColumnPicker } from '@/shared/menu/ColumnPicker';
 import type { FixedCost } from '@/store/types';
 import { useTravelStore } from '@/store/useTravelStore';
 import { useState } from 'react';

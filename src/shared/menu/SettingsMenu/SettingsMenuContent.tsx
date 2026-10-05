@@ -1,12 +1,12 @@
 import { RadioCardField } from '@/shared/form-fields/RadioCardField';
 import { SwitchField } from '@/shared/form-fields/SwitchField';
 import { Icon } from '@/shared/Icon';
-import { MenuContent } from '@/shared/menu/MenuContent';
 import type { ReactNode } from 'react';
 
-export const SettingsMenuContent = ({ children }: { children: ReactNode }) => {
+// The cross-page settings, then the open page's own block under its title, given as children.
+export const SettingsMenuContent = ({ children }: { children?: ReactNode }) => {
   return (
-    <MenuContent>
+    <>
       <div className="filter-block">
         <p className="filter-title">Réglages généraux</p>
         <SwitchField
@@ -32,6 +32,6 @@ export const SettingsMenuContent = ({ children }: { children: ReactNode }) => {
         />
       </div>
       {children}
-    </MenuContent>
+    </>
   );
 };
