@@ -1,89 +1,24 @@
 /*
-  Le mot qui manque au milieu d'une saisie : son formulaire se pose par-dessus la modale ouverte
-  sans la re-rendre, comme askNewProvider — le champ en cours d'édition n'est pas encore enregistré.
+  Le mot qui manque au milieu d'une saisie : son formulaire (WordAskForm, React) se pose par-dessus
+  la modale ouverte sans la re-rendre — le champ en cours d'édition n'est pas encore enregistré.
 */
-const WORD_SWATCHES = [
-  '#35607d',
-  '#c98a3e',
-  '#a6462e',
-  '#7c8b5e',
-  '#3e6259',
-  '#6b5b95',
-  '#5f6b72',
-  '#4e7a9b',
-];
-
-let wordAskCallback = null;
 
 // onCreate(word) reçoit le mot créé — un consommateur select le repose dans son <select>
 // (cf. wordSelectChanged), un menu inline l'applique directement à l'entité.
 function askNewWord(bank, onCreate) {
   if (activeAsk) return;
-  wordAskCallback = onCreate;
-  const { noun, color } = WORD_BANKS[bank];
-  const html = /* HTML */ `<div class="modal modal-ask">
-    <h3>Ajouter ${noun}</h3>
-    <div class="field-row">
-      <div class="field" style="flex:0 0 64px;">
-        <label>Emoji</label>
-        <input id="new-word-emoji" type="text" maxlength="4" placeholder="🏷️" />
-      </div>
-      <div class="field">
-        <label>Libellé</label>
-        <input id="new-word-label" type="text" />
-      </div>
-    </div>
-    ${color ? wordSwatchesField() : ''}
-    <div class="modal-actions">
-      <button class="btn btn-outline" onclick="closeWordAsk()">Annuler</button>
-      <button class="btn" onclick="confirmNewWord('${bank}')">Créer</button>
-    </div>
-  </div>`;
-  showAskOverlay(html, {
-    onKeydown: (e) => wordAskKeydown(e, bank),
-    after: () => document.getElementById('new-word-label').focus(),
-  });
+  activeAsk = { kind: 'word', bank, onCreate, onClose: closeAskOverlay };
+  render();
 }
 
-function wordSwatchesField() {
-  return /* HTML */ `<div class="field">
-    <label>Couleur</label>
-    <div class="accent-swatches">
-      ${WORD_SWATCHES.map(
-        (c, i) =>
-          `<button type="button" class="accent-swatch ${i === 0 ? 'selected' : ''}" data-swatch="${c}" style="background:${c};" onclick="pickWordSwatch('${c}')"></button>`,
-      ).join('')}
-    </div>
-    <input id="new-word-color" type="hidden" value="${WORD_SWATCHES[0]}" />
-  </div>`;
-}
-
-function pickWordSwatch(color) {
-  document.getElementById('new-word-color').value = color;
-  document
-    .querySelectorAll('.overlay-ask .accent-swatch')
-    .forEach((el) => el.classList.toggle('selected', el.dataset.swatch === color));
-}
-
-function wordAskKeydown(event, bank) {
-  if (event.key !== 'Enter' && event.key !== 'Escape') return;
-  event.preventDefault();
-  if (event.key === 'Escape') return closeWordAsk();
-  confirmNewWord(bank);
-}
-
-function confirmNewWord(bank) {
-  const label = document.getElementById('new-word-label').value.trim();
-  if (!label) return;
-  const emoji = document.getElementById('new-word-emoji').value.trim() || '🏷️';
-  const { dict, color } = WORD_BANKS[bank];
-  const word = { key: slugWordKey(label, dict), label, emoji };
-  if (color) word.color = document.getElementById('new-word-color').value;
+function createWord(bank, { label, emoji, color }) {
+  const { dict, color: hasColor } = WORD_BANKS[bank];
+  const word = { key: slugWordKey(label, dict), label, emoji: emoji || '🏷️' };
+  if (hasColor) word.color = color;
   dict[word.key] = word;
   prefs.customWords[bank] = (prefs.customWords[bank] || []).concat(word);
   persistPrefs();
-  wordAskCallback(word);
-  closeWordAsk();
+  return word;
 }
 
 // Le mot créé rejoint le select ouvert et s'y sélectionne, devant l'item ＋ qui ferme la liste ;
@@ -93,8 +28,4 @@ function selectCreatedWord(id, word) {
   const option = new Option(`${word.emoji} ${word.label}`, word.key, true, true);
   select.add(option, select.options[select.options.length - 1]);
   wordSelectValues[id] = word.key;
-}
-
-function closeWordAsk() {
-  closeAskOverlay();
 }

@@ -10,6 +10,8 @@ const WORD_BANKS = {
   attractionStatuses: { dict: ATTRACTION_STATUSES, noun: 'un statut de lieu', color: false },
 };
 
+window.WORD_BANKS = WORD_BANKS;
+
 const NEW_WORD_VALUE = '__new';
 window.NEW_WORD_VALUE = NEW_WORD_VALUE;
 const wordSelectValues = {};

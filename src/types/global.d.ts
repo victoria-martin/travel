@@ -384,12 +384,32 @@ declare global {
     comparedScenarios: <T extends { id: string }>(items: T[]) => T[];
     compareMode: boolean;
     activeToast: string;
-    activeAsk: {
-      html: string;
-      onKeydown?: (event: KeyboardEvent) => void;
-      after?: () => void;
-      onClose: () => void;
-    } | null;
+    activeAsk:
+      | {
+          kind?: undefined;
+          html: string;
+          onKeydown?: (event: KeyboardEvent) => void;
+          after?: () => void;
+          onClose: () => void;
+        }
+      | {
+          kind: 'word';
+          bank: string;
+          onCreate: (word: { key: string; label: string; emoji: string }) => void;
+          onClose: () => void;
+        }
+      | {
+          kind: 'provider';
+          mode: string;
+          onCreate: (provider: import('../store/types').Provider) => void;
+          onClose: () => void;
+        }
+      | null;
+    WORD_BANKS: Record<string, { noun: string; color: boolean }>;
+    createWord: (
+      bank: string,
+      fields: { label: string; emoji: string; color: string },
+    ) => { key: string; label: string; emoji: string };
     closeAskOverlay: () => void;
     stepPlace: (
       step: import('../store/types').Step,
