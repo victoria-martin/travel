@@ -377,6 +377,7 @@ body {
 .scenario-header .view-sub {
   grid-column: 1;
   grid-row: 2;
+  margin-left: 44px;
   /* justify-content: flex-end; */
 }
 
