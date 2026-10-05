@@ -22,9 +22,11 @@ les types.
   que le lieu principal et les activités portent désormais chacun une date ponctuelle propre. Le
   rôle du champ libre « arrivée le » (`arrivalDate`) reste à trancher.
 - **try dynamic route trail** <!--t:m8qd--> — 🧩 ui · 📐 layout · 💡 idée :
-  [route-trail.js](js/views/scenarios/detail/route-trail.js) s'affiche de nouveau sous l'en-tête,
-  derrière la bascule « Afficher le fil » des Réglages
-  ([trail-show.js](js/views/scenarios/detail/trail-show.js)). La bande de maillons prend trop de
+  le fil s'affiche de nouveau sous l'en-tête, derrière la bascule « Afficher le fil » des Réglages
+  ([trail-show.js](js/views/scenarios/detail/trail-show.js)), en deux styles au choix
+  ([trail-style.js](js/views/scenarios/detail/trail-style.js)) : **Fil**
+  ([RouteTrail.tsx](src/domains/scenarios/detail/ScenarioDetailView/RouteTrail.tsx)) ou **Bande**
+  ([RouteStrip.tsx](src/domains/scenarios/detail/ScenarioDetailView/RouteStrip.tsx)). La bande de maillons prend trop de
   place, la colonne de gauche et la gouttière nue essayées ne valent pas mieux : trouver ce que le
   fil doit montrer, et quand. Il se peint du statut de l'étape comme la bande de la liste, et
   « Coloré par type d'hébergement » ([trail-color.js](js/views/scenarios/detail/trail-color.js))

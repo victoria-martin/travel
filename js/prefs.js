@@ -18,6 +18,7 @@ var prefs = {
   showButtonLabels: false,
   trailColorByType: false,
   trailShown: false,
+  trailStyle: 'trail',
   stepAreaShape: 'circle',
   weatherBannerShown: false,
   weatherBannerStyle: 'timeline',

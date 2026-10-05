@@ -22,6 +22,10 @@ function stepAreaShapeOption() {
 
 // Les réglages du fil du trajet et de la zone autour d'une étape.
 function trailOptions() {
-  return /* HTML */ `${trailShowOption()} ${trailColorOption()} ${stepAreaShapeOption()}
-  ${weatherBannerStyleOption()}`;
+  return /* HTML */ `${stepAreaShapeOption()}
+    <div class="page-submenu">
+      <p class="filter-title">Fil du trajet</p>
+      ${trailShowOption()} ${trailStyleOption()} ${trailColorOption()}
+    </div>
+    ${weatherBannerStyleOption()}`;
 }

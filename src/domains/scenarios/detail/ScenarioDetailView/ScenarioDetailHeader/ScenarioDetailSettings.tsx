@@ -6,16 +6,6 @@ export function ScenarioDetailSettings() {
   return (
     <div className="filter-block">
       <p className="filter-title">Détail du scénario</p>
-      <SwitchField
-        label="Afficher le fil"
-        checked={window.trailShown()}
-        onChange={() => window.toggleTrailShown()}
-      />
-      <SwitchField
-        label="Coloré par type d’hébergement"
-        checked={window.trailColorByType()}
-        onChange={() => window.toggleTrailColor()}
-      />
       <RadioCardField
         label="Zone d’étape"
         name="step-area-shape"
@@ -27,6 +17,26 @@ export function ScenarioDetailSettings() {
         selectedKey={window.prefs.stepAreaShape}
         onChange={(key) => window.setStepAreaShape(key)}
       />
+      <div className="page-submenu">
+        <p className="filter-title">Fil du trajet</p>
+        <SwitchField
+          label="Afficher le fil"
+          checked={window.trailShown()}
+          onChange={() => window.toggleTrailShown()}
+        />
+        <RadioCardField
+          label="Style"
+          name="trail-style"
+          options={window.TRAIL_STYLES}
+          selectedKey={window.trailStyle()}
+          onChange={(style) => window.setTrailStyle(style)}
+        />
+        <SwitchField
+          label="Coloré par type d’hébergement"
+          checked={window.trailColorByType()}
+          onChange={() => window.toggleTrailColor()}
+        />
+      </div>
       <div className="page-submenu">
         <p className="filter-title">Météo</p>
         <SwitchField

@@ -36,12 +36,12 @@ export function ScenarioDetailView() {
     <>
       <ScenarioDetailHeader scenario={scenario} money={money.total} />
       {window.weatherBannerShown() && <ScenarioWeatherBanner scenario={scenario} />}
-      {window.trailShown() && (
-        <>
-          <RouteTrail scenario={scenario} />
+      {window.trailShown() &&
+        (window.trailStyle() === 'strip' ? (
           <RouteStrip scenario={scenario} route={route} />
-        </>
-      )}
+        ) : (
+          <RouteTrail scenario={scenario} />
+        ))}
       <div className="scenario-detail-cols" style={{ gridTemplateColumns: scenarioSplitColumns() }}>
         <div className="scenario-detail-main view-scroller">
           <StepList scenario={scenario} route={route} />

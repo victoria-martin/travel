@@ -911,6 +911,9 @@ mène à la page où la corriger.
   en cliquable : le maillon mène à sa carte. Il reste collé sous l'en-tête quand la liste défile,
   puisque c'est là qu'il sert. Il ne s'affiche qu'à partir de deux étapes retenues, et une
   préférence des Réglages le montre ou le cache — sur un scénario court la liste dit déjà tout.
+  Une seconde préférence, à côté, choisit son style : **Fil**, les maillons ci-dessus, ou
+  **Bande**, qui ajoute la durée de route entre deux étapes et les dates de séjour. Les trois
+  réglages du fil — afficher, style, couleur — vivent dans un même sous-bloc du ⋮.
 - **Créer une étape** : le ＋ entre deux rangées comme le bouton de l'en-tête ouvrent le même choix,
   « Créer une étape » ou « Créer une étape avec options » — la seconde pose un groupe de deux
   colonnes d'emblée. Dans une colonne, le ＋ n'a qu'un geste, donc pas de menu : l'étape y naît.

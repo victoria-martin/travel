@@ -511,6 +511,9 @@ declare global {
     toggleTrailShown: () => void;
     trailColorByType: () => boolean;
     toggleTrailColor: () => void;
+    TRAIL_STYLES: { key: string; label: string }[];
+    trailStyle: () => string;
+    setTrailStyle: (style: string) => void;
     STEP_AREA_SHAPES: { key: string; label: string }[];
     setStepAreaShape: (shape: string) => void;
     weatherBannerShown: () => boolean;
