@@ -472,8 +472,11 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   et [docs/archivé/react-migration-scenario-side-panel-plan.md](docs/archivé/react-migration-scenario-side-panel-plan.md).
   **Fait** : les 5 panneaux/modales utilitaires (`valise-composer`, `journal-panel`, `sync`,
   `settings`, `scenario-panel`) — [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md),
-  qui garde une question ouverte sur le style des phrases. **Reste ouvert** : l'horizon final,
-  suppression de `js/` legacy.
+  qui garde une question ouverte sur le style des phrases. **Fait (2026-10-05)** : plus aucun
+  écran ne passe par du HTML legacy — Carte (itinéraire, ＋ Ville), À faire, panneau du jour du
+  Journal, questions par-dessus une modale ; à vérifier à l'écran via
+  [docs/en-cours/react-migration-a-tester.md](docs/en-cours/react-migration-a-tester.md).
+  **Reste ouvert** : l'horizon final, suppression de `js/` legacy (couche données comprise).
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,
