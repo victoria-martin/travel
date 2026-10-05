@@ -62,12 +62,9 @@ export function ScenarioDetailHeader({
         <span className="toolbar-separator" />
         <ScenarioSideTabsButtons scenarioId={scenario.id} />
         <span className="toolbar-separator" />
-        {/* ICI */}
-        <div className="test-red">
-          <SettingsMenu>
-            <ScenarioDetailSettings />
-          </SettingsMenu>
-        </div>
+        <SettingsMenu>
+          <ScenarioDetailSettings />
+        </SettingsMenu>
       </div>
 
       <div className="view-sub" style={{ marginLeft: 44 }}>

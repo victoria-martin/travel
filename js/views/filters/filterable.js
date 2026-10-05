@@ -1,12 +1,15 @@
 /*
   Une colonne filtre dès qu'elle porte des mots : son vocabulaire, ou ceux que ses lignes tiennent.
-  Un prix, une date, un favori n'en portent pas — une égalité sur un nombre ne filtre rien. Une
+  Un prix, une date, un favori n'en portent pas — une égalité sur un nombre ne filtre rien ; une
+  colonne triable dont la valeur n'est pas un mot (rang d'étape, date de création) le dit par
+  `filter: false`. Une
   colonne verrouillée nomme la ligne plutôt qu'elle ne la range, donc seul le vocabulaire qu'elle
   déclare compte.
 */
 function filterableColumns(kind) {
   return columnsFor(kind).filter(
     (c) =>
+      c.filter !== false &&
       (c.filterValues || c.sortValue) &&
       (c.sortOrder || !c.locked) &&
       filterValues(kind, c).length > 1,

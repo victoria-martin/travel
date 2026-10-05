@@ -1055,10 +1055,6 @@ th {
   opacity: 1;
 }
 
-.test-red {
-  border: 1px solid red;
-}
-
 /* .flex {
   display: flex;
 } */
@@ -2422,6 +2418,9 @@ tr:hover td {
 .step-extra-add {
   justify-self: start;
   padding: 3px 2px;
+  border: none;
+  background: none;
+  font-family: inherit;
   color: var(--ink-soft);
   font-size: 12px;
   cursor: pointer;

@@ -11,6 +11,7 @@ const ACCOMMODATION_COLUMNS = [
   { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
   {
     key: 'chosenStep',
+    filter: false,
     label: 'Étape',
     cell: (a) => chosenStepCell({ accommodationId: a.id }),
     sortValue: (a) => chosenStepSortValue({ accommodationId: a.id }),
@@ -105,6 +106,7 @@ const ACCOMMODATION_COLUMNS = [
   },
   {
     key: 'createdAt',
+    filter: false,
     label: 'Créé le',
     hiddenByDefault: true,
     nowrap: true,

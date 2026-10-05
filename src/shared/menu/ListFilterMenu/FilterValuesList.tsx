@@ -7,9 +7,10 @@ const SEARCH_FROM = 8;
 export function FilterValuesList({ kind }: { kind: string }) {
   const [search, setSearch] = useState('');
   const levels = window.filterLevels(kind);
+  const filterable = new Set(window.filterableColumns(kind).map((column) => column.key));
   const groups = levels.flatMap((level, levelIndex) => {
     const column = window.filterColumn(kind, level.key);
-    if (!column) return [];
+    if (!column || !filterable.has(column.key)) return [];
     return [
       {
         levelIndex,

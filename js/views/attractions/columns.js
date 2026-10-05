@@ -17,12 +17,14 @@ COLUMN_SETS.attractions = [
   },
   {
     key: 'recent',
+    filter: false,
     label: 'Ajout récent',
     hiddenByDefault: true,
     sortValue: (a) => a.recentOrder,
   },
   {
     key: 'chosenStep',
+    filter: false,
     label: 'Étape',
     cell: (a) => chosenStepCell({ attractionId: a.id }),
     sortValue: (a) => chosenStepSortValue({ attractionId: a.id }),
@@ -131,6 +133,7 @@ COLUMN_SETS.attractions = [
   },
   {
     key: 'createdAt',
+    filter: false,
     label: 'Créé le',
     hiddenByDefault: true,
     nowrap: true,

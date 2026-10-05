@@ -2,7 +2,9 @@
 export function FilterColumnsList({ kind }: { kind: string }) {
   const columns = window.filterableColumns(kind);
   const levels = window.filterLevels(kind);
-  const allChecked = columns.length > 0 && levels.length === columns.length;
+  const allChecked =
+    columns.length > 0 &&
+    columns.every((column) => levels.some((level) => level.key === column.key));
   return (
     <div className="filter-block">
       <p className="filter-title">Filtrer par</p>
