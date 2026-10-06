@@ -1,7 +1,6 @@
 import { ScenarioDetailSettings } from '@/domains/scenarios/detail/ScenarioDetailView/ScenarioDetailHeader/ScenarioDetailSettings';
 import { PhraseSettings } from '@/domains/translations/TranslationsView/PhraseSettings';
 
-// Port de PAGE_SETTINGS/pageSettingsBlock (js/views/settings/page-settings.js).
 const PAGE_SETTINGS = [
   { view: 'scenario-detail', Settings: ScenarioDetailSettings },
   { view: 'phrases', Settings: PhraseSettings },

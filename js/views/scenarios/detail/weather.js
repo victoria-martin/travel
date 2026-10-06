@@ -26,19 +26,3 @@ const WEATHER_BANNER_STYLES = [
 ];
 
 window.WEATHER_BANNER_STYLES = WEATHER_BANNER_STYLES;
-
-function weatherBannerStyleOption() {
-  return /* HTML */ `
-    <div class="page-submenu">
-      <p class="filter-title">Météo</p>
-      ${switchField('Afficher la météo', weatherBannerShown(), 'toggleWeatherBanner()')}
-      ${radioCardField(
-        'Style',
-        'weather-banner-style',
-        WEATHER_BANNER_STYLES,
-        weatherBannerStyle(),
-        'setWeatherBannerStyle',
-      )}
-    </div>
-  `;
-}

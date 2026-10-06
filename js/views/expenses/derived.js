@@ -82,32 +82,3 @@ function derivedExpensesTotal() {
     .flatMap((group) => group.items)
     .reduce((sum, line) => sum + (line.amount || 0), 0);
 }
-
-function derivedExpensesList() {
-  const groups = derivedExpenseGroups();
-  if (!groups.length) {
-    return /* HTML */ `<div class="scenario-extra-empty">
-      Rien à calculer — rien de réservé, aucune voiture par défaut.
-    </div>`;
-  }
-  return groups.map(derivedExpenseGroup).join('');
-}
-
-function derivedExpenseGroup(group) {
-  return /* HTML */ `<div class="expense-group">
-    <button class="expense-group-head" onclick="goTo('${group.view}')">
-      ${escapeHtml(group.label)}
-    </button>
-    ${group.items.map(derivedExpenseLine).join('')}
-  </div>`;
-}
-
-function derivedExpenseLine(line) {
-  return /* HTML */ `<div class="expense-line">
-    <span class="expense-icon">${line.icon}</span>
-    <span class="expense-label">${escapeHtml(line.label)}</span>
-    <strong class="expense-amount ${line.amount === null ? 'expense-amount-open' : ''}">
-      ${line.display}
-    </strong>
-  </div>`;
-}

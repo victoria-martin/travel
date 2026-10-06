@@ -7,5 +7,3 @@ function openAccommodationSheet(id) {
   closeOpenInlineMenu();
   openSheet('accommodation', id);
 }
-
-ROW_CLICKS.hebergements = openAccommodationSheet;

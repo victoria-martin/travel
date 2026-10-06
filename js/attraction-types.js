@@ -13,17 +13,6 @@ const ATTRACTION_TYPES = {
 };
 window.ATTRACTION_TYPES = ATTRACTION_TYPES;
 
-const ATTRACTION_TYPES_SIMPLE = {
-  nature: { label: 'Nature' },
-  heritage: { label: 'Patrimoine' },
-  museum: { label: 'Musée' },
-  city: { label: 'Ville' },
-  village: { label: 'Village' },
-  beach: { label: 'Plage' },
-  activity: { label: 'Activité' },
-  restaurant: { label: 'Restaurant' },
-};
-
 function attractionType(type) {
   return ATTRACTION_TYPES[type] || UNSET_ATTRACTION_TYPE;
 }

@@ -221,7 +221,7 @@ responsabilité ») :
 
 ## 4. Composition — le chrome vs le contenu
 
-- `DataTable` ([shared/DataTable/](../src/shared/DataTable/), remplace [table.js](../js/views/table.js))
+- `DataTable` ([shared/DataTable/](../src/shared/DataTable/), remplace `listTable` du legacy, supprimé)
   ne porte que le chrome : tri (un niveau, cycle asc/desc/aucun — pas encore persisté dans prefs ni
   multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
   (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
@@ -491,12 +491,9 @@ scénario aussi depuis (2026-10-04, [react-migration-scenario-side-panel-plan.md
 groupes (`open` littéral, jamais recalculé — React ne retouche l'attribut que si la prop change
 entre deux rendus, donc un clic utilisateur n'est jamais écrasé) plutôt que de réimplémenter
 `packingClosedGroups` : le repli est un geste de session, jamais persisté, même en legacy.
-À faire (`domains/todo/`) : seule la carte **Tâches libres** (texte libre, pas de ressource à
-filtrer) est un vrai composant React. Le builder et chaque liste dynamique (ressource + colonne +
-valeurs cochées → table de N'IMPORTE quel `kind` via `listTable`) restent délégués via
-`shared/LegacyMarkup` — réimplémenter un registre colonnes-par-kind en React est un chantier à
-part, pas celui-ci. Même mécanisme que RouteBuilderPanel/NewCityButton (§ 5) : complexité stateful
-existante, déléguée plutôt que réécrite avant d'en avoir besoin.
+À faire (`domains/todo/`) : la carte **Tâches libres**, le builder et chaque liste dynamique
+(ressource + colonne + valeurs cochées) sont en React ; une liste rend les colonnes React de son
+`kind` ([TodoListTable.tsx](../../src/domains/todo/TodoView/TodoListCard/TodoListTable.tsx)).
 Journal (`domains/journal/`) : scénario source + rang de jours cliquables (`DayCards.tsx`) sont de
 vrais composants React. Le panneau du jour — éditeur markdown, dropdown `{}` d'insertion de lieu,
 photos, pastilles planifiées, refs non résolues, panneau carte — reste **entièrement délégué** via

@@ -2,13 +2,6 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useState } from 'react';
 import { TagsCell } from './TagsCell';
 
-/*
-  Port de tagsCell (js/views/tags-cell.js) — pas délégué tel quel : la version legacy pilote son
-  toggle via des globales posées au dernier rendu (tagsCellGetter/tagsCellField), qui supposent
-  une seule ligne rendue à la fois. Une table React rend toutes ses lignes d'un coup, donc le
-  toggle est réimplémenté ici (ajouter/retirer un tag d'un tableau, appeler saveNow) plutôt que
-  délégué — le reste (dropdown, vocabulaire, nouveau tag) garde le même comportement.
-*/
 export function EditableTagsCell({
   tags,
   vocabulary,

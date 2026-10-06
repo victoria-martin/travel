@@ -14,7 +14,3 @@ function setTrailStyle(style) {
   persistPrefs();
   render();
 }
-
-function trailStyleOption() {
-  return radioCardField('Style', 'trail-style', TRAIL_STYLES, trailStyle(), 'setTrailStyle');
-}

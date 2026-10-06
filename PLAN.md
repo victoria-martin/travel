@@ -236,7 +236,7 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 - **Sort de l'import depuis un tableau** <!--t:sga5--> — 🧩 ui · 🔌 intégration · 🔍 à étudier : le
   bouton « Importer » n'est affiché que tant qu'aucun Sheet n'est connecté
-  ([header.js:41](js/views/accommodations/header.js#L41)), et `openPasteImport()` reste commentée
+  ([AccommodationsView.tsx:67](src/domains/accommodations/AccommodationsView.tsx#L67)), et `openPasteImport()` reste commentée
   dans [paste-import.js](js/views/accommodations/modal/paste-import.js#L50) avec les questions
   ouvertes sur le flux d'import de fichier. Garder, généraliser ou supprimer.
 
@@ -417,15 +417,10 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   **Villes faite** (migration React, branche `react-migration`) : clé `view`/`COLUMN_SETS`/
   `prefs.sort`/`prefs.hiddenColumns` passée de `villes` à `cities` — libellé affiché resté
   « Villes ». Première vue traitée, les autres restent à faire.
-- **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire : 58 lignes à plat alors
-  que `js/views/accommodations/` existe. Les filtres en sont sortis dans
-  [filters.js](js/views/accommodations/filters.js) et
-  [filter-panel.js](js/views/accommodations/filter-panel.js) ; restent le render et les setters
-  (`setAccommodationType` → [type-dropdown.js](js/views/accommodations/type-dropdown.js),
-  `setAccommodationStatus` → [status-tag.js](js/views/accommodations/status-tag.js),
-  `setAccommodationNotes` →
-  [notes-editable.js](js/views/accommodations/notes-editable.js), `toggleFavorite` → card et
-  columns).
+- **Redécouper `accommodations.js`** <!--t:p2ib--> — 🧹 refacto · ⏳ à faire :
+  [accommodations.js](js/views/accommodations.js) reste à plat alors que `js/views/accommodations/`
+  existe. Il ne garde que des setters appelés depuis React : `toggleFavorite`,
+  `setAccommodationType`, `setAccommodationStatus`, `setAccommodationCheckInTime`.
 - **gérer correctement les liens entre les prix entre les differentes entités** <!--t:8tln--> — 💾 données · 🏛️ archi · ⏳ à faire : faire
   un etat des lieux de comment la donnee est structuree sur chaque entité (car, transport,
   accomodation, restaurant etc.) et
@@ -436,9 +431,10 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 
 - **Ouvrir une ligne dans un panneau de détail : les autres listes** <!--t:n3vd--> — 🧩 ui ·
   🖼️ écran · 💡 idée : les hébergements ouvrent leur fiche en panneau, d'une ligne du tableau
-  comme du ↗ du menu de lieu d'une étape, les loueurs & compagnies d'une ligne de leur onglet. Reste
-  à déclarer `ROW_CLICKS` pour les lieux, les transports, les locations, les offres, les modèles et
-  les dépenses, dont la fiche s'ouvre encore dans la modale centrée. Reste aussi à trancher ce que
+  comme du ↗ du menu de lieu d'une étape, les loueurs & compagnies d'une ligne de leur onglet ; les
+  lieux, les villes et les offres aussi. Reste à passer un `onRowClick` → `openSheet` à `DataTable`
+  pour les transports, les modèles et les dépenses, dont la fiche s'ouvre encore dans la modale
+  centrée. Reste aussi à trancher ce que
   devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
 - **La saisie en ligne sur les autres listes** <!--t:d9ce--> — 🧩 ui · 📥 à trier : plus aucune
@@ -545,8 +541,8 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 Plan d'exécution : [docs/en-cours/mobile-plan.md](docs/en-cours/mobile-plan.md).
 
 - **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : Hébergements, Lieux &
-  activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
-  ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23
+  activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`onRowClick` de
+  `DataTable`, ex. [AttractionsView.tsx](src/domains/attractions/AttractionsView.tsx)) plutôt que de lire un tableau à 17-23
   colonnes. Transports (16 colonnes) n'a pas encore le sien — décidé lors de la réflexion mobile,
   à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et le Budget prévu de Dépenses,
   plus légères (6-10 colonnes), restent des tables classiques.

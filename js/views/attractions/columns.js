@@ -4,7 +4,7 @@ COLUMN_SETS.attractions = [
     label: '',
     pickerLabel: '⭐ Favori',
     locked: true,
-    cell: attractionFavoriteCell,
+
     sortValue: (a) => (a.favorite ? 0 : 1),
     sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
   },
@@ -12,27 +12,27 @@ COLUMN_SETS.attractions = [
     key: 'name',
     label: 'Nom',
     locked: true,
-    cell: attractionNameCell,
+
     sortValue: (a) => (a.name || '').toLowerCase(),
   },
   {
     key: 'chosenStep',
     filter: false,
     label: 'Étape',
-    cell: (a) => chosenStepCell({ attractionId: a.id }),
+
     sortValue: (a) => chosenStepSortValue({ attractionId: a.id }),
   },
   {
     key: 'type',
     label: 'Type',
-    cell: attractionTypeCell,
+
     sortValue: (a) => attractionTypeKey(a.type),
     sortOrder: { key: 'attractionType', dict: ATTRACTION_TYPES, label: 'Ordre des types' },
   },
   {
     key: 'status',
     label: 'Statut',
-    cell: attractionStatusCell,
+
     sortValue: (a) => attractionStatusKey(a.status),
     sortOrder: {
       key: 'attractionStatus',
@@ -43,39 +43,29 @@ COLUMN_SETS.attractions = [
   {
     key: 'price',
     label: 'Prix',
-    nowrap: true,
-    cell: attractionPriceCell,
+
     sortValue: (a) => priceNumber(a.amountMin || a.amountMax || a.budget),
   },
   {
     key: 'tags',
     label: 'Tags',
     filterValues: (a) => a.tags || [],
-    cell: (a) =>
-      tagsCell(a, {
-        field: 'tags',
-        getItem: getAttraction,
-        vocabulary: allAttractionTags,
-        addLabel: '+ tag',
-      }),
   },
   {
     key: 'description',
     label: 'Description',
-    ellipsis: true,
-    cell: attractionDescriptionCell,
   },
   {
     key: 'city',
     label: 'Ville',
-    cell: attractionCityCell,
+
     filterValues: (a) => [a.city],
     sortValue: (a) => (a.city || '').toLowerCase(),
   },
   {
     key: 'county',
     label: 'Province',
-    cell: attractionCountyCell,
+
     filterValues: (a) => [a.county],
     sortValue: (a) => (a.county || '').toLowerCase(),
   },
@@ -83,7 +73,7 @@ COLUMN_SETS.attractions = [
     key: 'region',
     label: 'Région',
     hiddenByDefault: true,
-    cell: attractionRegionCell,
+
     filterValues: (a) => [a.region],
     sortValue: (a) => (a.region || '').toLowerCase(),
   },
@@ -91,7 +81,7 @@ COLUMN_SETS.attractions = [
     key: 'country',
     label: 'Pays',
     hiddenByDefault: true,
-    cell: attractionCountryCell,
+
     filterValues: (a) => [a.country],
     sortValue: (a) => (a.country || '').toLowerCase(),
   },
@@ -99,38 +89,35 @@ COLUMN_SETS.attractions = [
     key: 'address',
     label: 'Adresse',
     hiddenByDefault: true,
-    cell: attractionAddressCell,
+
     sortValue: (a) => (a.address || '').toLowerCase(),
   },
   {
     key: 'coords',
     label: 'Coordonnées',
-    nowrap: true,
+
     hiddenByDefault: true,
-    cell: attractionCoordsCell,
   },
   {
     key: 'accommodation',
     label: 'Hébergement',
     hiddenByDefault: true,
-    cell: attractionAccommodationCell,
+
     sortValue: (a) => attractionAccommodationName(a).toLowerCase(),
   },
-  { key: 'hours', label: 'Horaires', hiddenByDefault: true, cell: attractionHoursCell },
+  { key: 'hours', label: 'Horaires', hiddenByDefault: true },
   {
     key: 'phone',
     label: 'Téléphone',
-    nowrap: true,
+
     hiddenByDefault: true,
-    cell: attractionPhoneCell,
   },
   {
     key: 'createdAt',
     filter: false,
     label: 'Créé le',
     hiddenByDefault: true,
-    nowrap: true,
-    cell: attractionCreatedAtCell,
+
     sortValue: (a) => a.createdAt || '',
   },
   {
@@ -138,13 +125,12 @@ COLUMN_SETS.attractions = [
     label: 'Modifié le',
     hiddenByDefault: true,
     filter: false,
-    nowrap: true,
-    cell: (a) => textCell(createdAtDate(a.updatedAt)),
+
     sortValue: (a) => a.updatedAt || '',
   },
-  { key: 'link', label: 'Lien', cell: linkCell },
-  { key: 'googleMaps', label: 'Google Maps', cell: (a) => googleMapsCell(a.address || a.name) },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
+  { key: 'link', label: 'Lien' },
+  { key: 'googleMaps', label: 'Google Maps' },
+  { key: 'actions', label: '', locked: true },
 ];
 
 SORT_DEFAULTS.attractions = [
@@ -152,77 +138,7 @@ SORT_DEFAULTS.attractions = [
   { key: 'updatedAt', dir: 'desc' },
 ];
 
-function attractionFavoriteCell(a) {
-  return favoriteStar(a.favorite, `toggleAttractionFavorite('${a.id}')`);
-}
-
-function attractionNameCell(a) {
-  return `<strong>${escapeHtml(a.name)}</strong>${missingAddressIndicator(a)}`;
-}
-
-function attractionTypeCell(a) {
-  return attractionTypeDropdown(a);
-}
-
-function attractionStatusCell(a) {
-  return attractionStatusTag(a);
-}
-
-function attractionPriceCell(a) {
-  return priceLabel(a);
-}
-
-function attractionDescriptionCell(a) {
-  return textCell(a.description);
-}
-
-function attractionCityCell(a) {
-  return textCell(a.city);
-}
-
-function attractionCountyCell(a) {
-  return textCell(a.county);
-}
-
-function attractionRegionCell(a) {
-  return textCell(a.region);
-}
-
-function attractionCountryCell(a) {
-  return textCell(a.country);
-}
-
-function attractionAddressCell(a) {
-  // return textCell(a.address);
-  return `<strong>${escapeHtml(a.address)}</strong>${missingAddressIndicator(a)}`;
-}
-
-function attractionCoordsCell(a) {
-  return escapeHtml(coordsLabel(a));
-}
-
 function attractionAccommodationName(a) {
   const accommodation = getAccommodation(a.accommodationId);
   return accommodation ? accommodation.name : '';
-}
-
-function attractionAccommodationCell(a) {
-  return textCell(attractionAccommodationName(a));
-}
-
-function attractionHoursCell(a) {
-  return textCell(a.hours);
-}
-
-function attractionPhoneCell(a) {
-  return textCell(a.phone);
-}
-
-function attractionCreatedAtCell(a) {
-  return textCell(createdAtDate(a.createdAt));
-}
-
-function attractionActionsCell(a) {
-  const duplicate = duplicateButton(`duplicateAttraction('${a.id}')`);
-  return `${editButton('attraction', a.id)}${duplicate}${deleteButton('attractions', a.id)}`;
 }

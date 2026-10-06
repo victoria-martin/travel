@@ -13,11 +13,3 @@ function stepRows(scenario) {
     return [{ group, index }];
   });
 }
-
-// Le tronçon qui précède une rangée mène à son étape retenue, qui n'est pas toujours la première
-// de son bloc : une colonne écartée peut ouvrir le groupe.
-function rowLeadStep(scenario, row) {
-  if (row.step) return row.step;
-  return groupSteps(scenario, row.group).find((st) => isStepRetained(scenario, st)) || null;
-}
-

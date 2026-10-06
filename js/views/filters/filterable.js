@@ -35,8 +35,3 @@ function filterValues(kind, column) {
   if (column.sortOrder) return Object.keys(column.sortOrder.dict).filter((word) => used.has(word));
   return [...used].filter((value) => value !== '').sort((a, b) => a.localeCompare(b, 'fr'));
 }
-
-function filterValueLabel(column, value) {
-  const word = column.sortOrder && column.sortOrder.dict[value];
-  return word ? tagLabel(word.emoji, escapeHtml(word.label)) : escapeHtml(value);
-}

@@ -10,13 +10,9 @@ import { CitiesHeader } from './CitiesView/CitiesHeader';
 import { CitiesHeaderActions } from './CitiesView/CitiesHeaderActions';
 
 /*
-  Porte js/views/villes/cities.js + columns.js sur DataTable. `hiddenColumns`/`toggleColumn`
-  délégués au legacy (js/columns.js) : COLUMN_SETS.cities reste chargé et porte déjà
-  `description: {hiddenByDefault: true}`, une seule source pour la préférence. Clé 'cities' choisie
-  pour la route/le code — le libellé visible reste « Villes » (NAV_ITEMS, ce fichier).
-  Édition en place (type/statut/tags), actions de ligne (ouvrir/dupliquer/supprimer, déléguées à
-  openModal/duplicateAttraction/deleteItem legacy) faites. Tri délégué au legacy
-  (DataTable kind="cities") : ville puis nom par défaut, ordre de vocabulaire sur type/statut.
+  Column visibility and sort come from COLUMN_SETS.cities (js/views/villes/columns.js), the single
+  source for prefs.hiddenColumns and prefs.sort.
+  The 'cities' key names the route and the code; the visible label stays « Villes ».
 */
 export function CitiesView() {
   const attractions = useTravelStore(

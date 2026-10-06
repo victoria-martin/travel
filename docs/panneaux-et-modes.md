@@ -2,7 +2,8 @@
 
 Où se pose une chose qui s'ouvre, et où vit ce qui se souvient qu'elle est ouverte. Ce document
 décrit l'état du code au **15 septembre 2026**, working tree compris — la refonte des filtres y est
-en cours (§3.2).
+en cours (§3.2). Depuis, la migration React a supprimé une partie des fichiers `js/views/` cités :
+leurs liens ne se résolvent plus, l'historique les garde.
 
 Documents liés : [spec produit](spec-voyage-toscane.md) (écran par écran) ·
 [map user flows](map-user-flows.md) (les parcours) · [CLAUDE.md](../CLAUDE.md) (où vit quoi)

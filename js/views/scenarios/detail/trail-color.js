@@ -12,7 +12,3 @@ function toggleTrailColor() {
   persistPrefs();
   render();
 }
-
-function trailColorOption() {
-  return switchField('Coloré par type d’hébergement', trailColorByType(), 'toggleTrailColor()');
-}

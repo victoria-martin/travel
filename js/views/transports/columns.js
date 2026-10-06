@@ -4,7 +4,7 @@ COLUMN_SETS.transports = [
     label: '',
     pickerLabel: '⭐ Favori',
     locked: true,
-    cell: transportFavoriteCell,
+
     sortValue: (t) => (t.favorite ? 0 : 1),
     sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
   },
@@ -12,54 +12,52 @@ COLUMN_SETS.transports = [
     key: 'mode',
     label: 'Mode',
     locked: true,
-    cell: transportModeCell,
+
     sortValue: (t) => transportModeKey(t.mode),
     sortOrder: { key: 'transportMode', dict: TRANSPORT_MODES, label: 'Ordre des modes' },
   },
   {
     key: 'from',
     label: 'Départ',
-    cell: transportFromCell,
+
     sortValue: (t) => transportEndpointLabel(t.fromAttractionId, t.fromPrecision).toLowerCase(),
   },
   {
     key: 'to',
     label: 'Arrivée',
-    cell: transportToCell,
+
     sortValue: (t) => transportEndpointLabel(t.toAttractionId, t.toPrecision).toLowerCase(),
   },
   {
     key: 'departure',
     label: 'Part le',
-    nowrap: true,
-    cell: transportDepartureCell,
+
     sortValue: (t) => transportMoment(t.departDate, t.departTime),
   },
   {
     key: 'arrival',
     label: 'Arrive le',
-    nowrap: true,
+
     hiddenByDefault: true,
-    cell: transportArrivalCell,
+
     sortValue: (t) => transportMoment(t.arriveDate, t.arriveTime),
   },
   {
     key: 'provider',
     label: 'Compagnie / loueur',
-    cell: transportProviderCell,
+
     sortValue: (t) => providerName(t.providerId).toLowerCase(),
   },
   {
     key: 'price',
     label: 'Prix',
-    nowrap: true,
-    cell: transportPriceCell,
+
     sortValue: (t) => priceNumber(t.amountMin || t.amountMax || t.budget),
   },
   {
     key: 'status',
     label: 'Statut',
-    cell: transportStatusCell,
+
     sortValue: (t) => transportStatusKey(t.status),
     sortOrder: {
       key: 'transportStatus',
@@ -67,59 +65,12 @@ COLUMN_SETS.transports = [
       label: 'Ordre des statuts',
     },
   },
-  { key: 'link', label: 'Lien', cell: linkCell },
-  { key: 'notes', label: 'Notes', hiddenByDefault: true, cell: transportNotesCell },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: transportActionsCell },
+  { key: 'link', label: 'Lien' },
+  { key: 'notes', label: 'Notes', hiddenByDefault: true },
+  { key: 'actions', label: '', locked: true },
 ];
 
 SORT_DEFAULTS.transports = [
   { key: 'departure', dir: 'asc' },
   { key: 'mode', dir: 'asc' },
 ];
-
-function transportFavoriteCell(t) {
-  return favoriteStar(t.favorite, `toggleTransportFavorite('${t.id}')`);
-}
-
-function transportModeCell(t) {
-  return transportModeDropdown(t);
-}
-
-function transportFromCell(t) {
-  return transportEndpointCell(t.fromAttractionId, t.fromPrecision);
-}
-
-function transportToCell(t) {
-  return transportEndpointCell(t.toAttractionId, t.toPrecision);
-}
-
-function transportDepartureCell(t) {
-  return transportScheduleCell(t.departDate, t.departTime);
-}
-
-function transportArrivalCell(t) {
-  return transportScheduleCell(t.arriveDate, t.arriveTime);
-}
-
-function transportPriceCell(t) {
-  return priceLabel(t);
-}
-
-function transportStatusCell(t) {
-  return transportStatusTag(t);
-}
-
-function transportNotesCell(t) {
-  return textCell(t.notes);
-}
-
-function transportProviderCell(t) {
-  const lead = providerName(t.providerId);
-  if (!lead) return textCell(t.reference);
-  return `${escapeHtml(lead)}${t.reference ? `<div class="row-notes">${escapeHtml(t.reference)}</div>` : ''}`;
-}
-
-function transportActionsCell(t) {
-  const duplicate = duplicateButton(`duplicateTransport('${t.id}')`);
-  return `${editButton('transport', t.id)}${duplicate}${deleteButton('transports', t.id)}`;
-}

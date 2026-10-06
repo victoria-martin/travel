@@ -5,7 +5,6 @@ import type { Accommodation } from '@/store/types';
 import { FavoriteCell, PriceCell, StatusBadge, TypeBadge } from '../cells';
 import { EditableTextCell } from '@/shared/cells/EditableTextCell';
 
-// Port de accommodationCard (js/views/accommodations/cards/card.js).
 export function AccommodationCard({ accommodation }: { accommodation: Accommodation }) {
   const place = [accommodation.city, accommodation.county].filter(Boolean).join(' · ');
   return (

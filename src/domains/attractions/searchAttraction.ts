@@ -1,6 +1,6 @@
 import type { Attraction } from '@/store/types';
 
-// Port de listSearchText('attractions'/'cities') (js/views/table.js) — même entité, même texte.
+// Shared by Lieux & activités and Villes: same entity, same searched text.
 export function searchAttraction(attraction: Attraction): string {
   return [
     attraction.name,

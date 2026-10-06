@@ -1,6 +1,6 @@
 import { Icon } from '../Icon';
 
-// Port de toolbarFace (js/views/toolbar/button.js) : icône, libellé seulement si la préférence le veut.
+// The label shows only when the button-labels preference is on.
 export function ToolbarFace({ icon, label }: { icon: string; label: string }) {
   return (
     <>

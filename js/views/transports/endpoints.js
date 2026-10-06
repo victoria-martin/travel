@@ -11,9 +11,3 @@ function transportPlaceName(placeId) {
 function transportEndpointLabel(placeId, precision) {
   return [transportPlaceName(placeId), precision].filter(Boolean).join(' · ') || '—';
 }
-
-function transportEndpointCell(placeId, precision) {
-  const place = transportPlaceName(placeId);
-  if (!place) return textCell(precision);
-  return `${escapeHtml(place)}${precision ? `<div class="row-notes">${escapeHtml(precision)}</div>` : ''}`;
-}

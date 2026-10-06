@@ -11,7 +11,3 @@ function toggleTrailShown() {
   persistPrefs();
   render();
 }
-
-function trailShowOption() {
-  return switchField('Afficher le fil', trailShown(), 'toggleTrailShown()');
-}

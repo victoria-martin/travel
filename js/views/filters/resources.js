@@ -1,6 +1,6 @@
 /*
   Une ressource : la collection qu'on lit, et la clé de colonnes que sa page déclare. La clé étant
-  celle de la page, `listTable` et ses colonnes valent partout où on la filtre — la page elle-même,
+  celle de la page, ses colonnes valent partout où on la filtre — la page elle-même,
   la carte, une liste enregistrée.
 */
 const LIST_RESOURCES = [

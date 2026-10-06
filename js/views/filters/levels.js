@@ -98,20 +98,3 @@ function keptByFilters(scope, item) {
     return itemFilterValues(item, column).some((value) => level.values.includes(value));
   });
 }
-
-/*
-  Une valeur cochée puis retirée de sa dernière ligne filtrerait sur ce que plus rien ne montre, et
-  une colonne masquée du picker reste filtrable — c'est la liste qui la porte, pas le tableau. Le
-  sentinel `'all'` n'a rien à élaguer, il suit les données de lui-même.
-*/
-function pruneFilterLevels(scope) {
-  const kind = filterKind(scope);
-  const levels = filterLevels(scope)
-    .filter((level) => filterColumn(kind, level.key))
-    .map((level) => {
-      if (level.values === 'all') return level;
-      const available = filterValues(kind, filterColumn(kind, level.key));
-      return { ...level, values: level.values.filter((value) => available.includes(value)) };
-    });
-  filterState(scope).levels = levels;
-}

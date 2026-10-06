@@ -3,11 +3,6 @@ function getActiveScenarioId() {
   return activeScenarioId;
 }
 
-// Le scénario retenu ouvre la liste, les favoris le suivent : on lit d'abord ce qui est décidé.
-function scenarioRank(s) {
-  return s.isChosen ? 0 : s.favorite ? 1 : 2;
-}
-
 function toggleScenarioFavorite(id) {
   const s = getScenario(id);
   s.favorite = !s.favorite;

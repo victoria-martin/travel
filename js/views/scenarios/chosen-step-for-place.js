@@ -23,12 +23,6 @@ function stepHoldsPlace(scenario, step, accommodationId, attractionId) {
   return !!group && holderExtras(group).some((line) => line.attractionId === attractionId);
 }
 
-function chosenStepCell(place) {
-  const found = chosenStepForPlace(place);
-  if (!found) return '—';
-  return `${escapeHtml(found.scenario.name)} — ${found.index + 1}. ${stepPickerLabel(found.step)}`;
-}
-
 function chosenStepSortValue(place) {
   const found = chosenStepForPlace(place);
   return found ? found.index : Infinity;

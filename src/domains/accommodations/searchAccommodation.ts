@@ -1,6 +1,5 @@
 import type { Accommodation } from '@/store/types';
 
-// Port de listSearchText('hebergements') (js/views/table.js).
 export function searchAccommodation(accommodation: Accommodation): string {
   return [
     accommodation.name,

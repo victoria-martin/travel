@@ -4,22 +4,22 @@ const ACCOMMODATION_COLUMNS = [
     label: '',
     pickerLabel: '⭐ Favori',
     locked: true,
-    cell: accommodationFavoriteCell,
+
     sortValue: (a) => (a.favorite ? 0 : 1),
     sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
   },
-  { key: 'name', label: 'Nom', locked: true, cell: accommodationNameCell },
+  { key: 'name', label: 'Nom', locked: true },
   {
     key: 'chosenStep',
     filter: false,
     label: 'Étape',
-    cell: (a) => chosenStepCell({ accommodationId: a.id }),
+
     sortValue: (a) => chosenStepSortValue({ accommodationId: a.id }),
   },
   {
     key: 'type',
     label: 'Type',
-    cell: accommodationTypeCell,
+
     sortValue: (a) => accTypeKey(a.type),
     sortOrder: {
       key: 'accommodationType',
@@ -30,7 +30,7 @@ const ACCOMMODATION_COLUMNS = [
   {
     key: 'status',
     label: 'Statut',
-    cell: accommodationStatusCell,
+
     sortValue: (a) => accStatusKey(a.status),
     sortOrder: {
       key: 'accommodationStatus',
@@ -41,14 +41,14 @@ const ACCOMMODATION_COLUMNS = [
   {
     key: 'city',
     label: 'Ville',
-    cell: accommodationCityCell,
+
     filterValues: (a) => [a.city],
     sortValue: (a) => (a.city || '').toLowerCase(),
   },
   {
     key: 'county',
     label: 'Province',
-    cell: accommodationCountyCell,
+
     filterValues: (a) => [a.county],
     sortValue: (a) => (a.county || '').toLowerCase(),
   },
@@ -56,7 +56,7 @@ const ACCOMMODATION_COLUMNS = [
     key: 'region',
     label: 'Région',
     hiddenByDefault: true,
-    cell: accommodationRegionCell,
+
     filterValues: (a) => [a.region],
     sortValue: (a) => (a.region || '').toLowerCase(),
   },
@@ -64,7 +64,7 @@ const ACCOMMODATION_COLUMNS = [
     key: 'country',
     label: 'Pays',
     hiddenByDefault: true,
-    cell: accommodationCountryCell,
+
     filterValues: (a) => [a.country],
     sortValue: (a) => (a.country || '').toLowerCase(),
   },
@@ -72,45 +72,33 @@ const ACCOMMODATION_COLUMNS = [
     key: 'tags',
     label: 'Tags',
     filterValues: (a) => a.tags || [],
-    cell: (a) =>
-      tagsCell(a, {
-        field: 'tags',
-        getItem: getAccommodation,
-        vocabulary: allAccommodationTags,
-        addLabel: '+ tag',
-      }),
   },
-  { key: 'address', label: 'Adresse', hiddenByDefault: true, cell: accommodationAddressCell },
-  { key: 'price', label: 'Prix', nowrap: true, cell: accommodationPriceCell },
-  { key: 'dates', label: 'Dates', cell: accommodationDatesCell },
+  { key: 'address', label: 'Adresse', hiddenByDefault: true },
+  { key: 'price', label: 'Prix' },
+  { key: 'dates', label: 'Dates' },
   {
     key: 'availableFrom',
     label: 'Disponible du',
-    nowrap: true,
-    cell: accommodationAvailableFromCell,
+
     sortValue: (a) => a.availableFrom || '',
   },
   {
     key: 'availableTo',
     label: 'Disponible au',
-    nowrap: true,
-    cell: accommodationAvailableToCell,
+
     sortValue: (a) => a.availableTo || '',
   },
   {
     key: 'notes',
     label: 'Notes',
     hiddenByDefault: true,
-    ellipsis: true,
-    cell: accommodationNotesCell,
   },
   {
     key: 'createdAt',
     filter: false,
     label: 'Créé le',
     hiddenByDefault: true,
-    nowrap: true,
-    cell: accommodationCreatedAtCell,
+
     sortValue: (a) => a.createdAt || '',
   },
   {
@@ -118,18 +106,16 @@ const ACCOMMODATION_COLUMNS = [
     label: 'Modifié le',
     hiddenByDefault: true,
     filter: false,
-    nowrap: true,
-    cell: (a) => textCell(createdAtDate(a.updatedAt)),
+
     sortValue: (a) => a.updatedAt || '',
   },
-  { key: 'link', label: 'Lien', cell: linkCell },
-  { key: 'bookingLink', label: 'Booking', cell: accommodationBookingLinkCell },
+  { key: 'link', label: 'Lien' },
+  { key: 'bookingLink', label: 'Booking' },
   {
     key: 'googleMaps',
     label: 'Google Maps',
-    cell: (a) => googleMapsCell(a.address || a.name),
   },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: accommodationActionsCell },
+  { key: 'actions', label: '', locked: true },
 ];
 
 COLUMN_SETS.hebergements = ACCOMMODATION_COLUMNS;
@@ -141,85 +127,3 @@ SORT_DEFAULTS.hebergements = [
   { key: 'type', dir: 'asc' },
   { key: 'status', dir: 'asc' },
 ];
-
-
-function accommodationFavoriteCell(a) {
-  return favoriteStar(a.favorite, `toggleFavorite('${a.id}')`);
-}
-
-function accommodationNameCell(a) {
-  const notes = `<div class="row-notes">${notesEditable(a)}</div>`;
-  const outOfRange = outOfRangeIndicator(accommodationSearchOutOfRange(a));
-  return `<strong>${escapeHtml(a.name)}</strong>${outOfRange}${notes}`;
-}
-
-function accommodationTypeCell(a) {
-  return accommodationTypeDropdown(a);
-}
-
-function accommodationStatusCell(a) {
-  return accommodationStatusTag(a);
-}
-
-function accommodationCityCell(a) {
-  return textCell(a.city);
-}
-
-function accommodationCountyCell(a) {
-  return textCell(a.county);
-}
-
-function accommodationRegionCell(a) {
-  return textCell(a.region);
-}
-
-function accommodationCountryCell(a) {
-  return textCell(a.country);
-}
-
-function accommodationAddressCell(a) {
-  const missingAddress = missingAddressIndicator(a);
-
-  return `<strong>${escapeHtml(a.address)}</strong>${missingAddress}`;
-  // return textCell(a.address);
-}
-
-function accommodationPriceCell(a) {
-  return priceEditable(a);
-}
-
-function accommodationDatesCell(a) {
-  return textCell(a.dates);
-}
-
-// Les deux dates sont écrites par un <input type="date">, donc en ISO : la cellule les rend lisibles.
-function availabilityDate(iso) {
-  const date = isoToDate(iso);
-  return date ? date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '';
-}
-
-function accommodationAvailableFromCell(a) {
-  return textCell(availabilityDate(a.availableFrom));
-}
-
-function accommodationAvailableToCell(a) {
-  return textCell(availabilityDate(a.availableTo));
-}
-
-function accommodationNotesCell(a) {
-  return notesEditable(a);
-}
-
-function accommodationCreatedAtCell(a) {
-  return textCell(createdAtDate(a.createdAt));
-}
-
-function accommodationBookingLinkCell(a) {
-  if (!a.bookingLink) return '—';
-  return externalLink(a.bookingLink, 'Booking');
-}
-
-function accommodationActionsCell(a) {
-  const duplicate = duplicateButton(`duplicateAccommodation('${a.id}')`);
-  return `${editButton('accommodation', a.id)}${duplicate}${deleteButton('accommodations', a.id)}`;
-}

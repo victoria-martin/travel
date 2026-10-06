@@ -8,7 +8,3 @@ function toggleFavOnly() {
   favOnly = !favOnly;
   render();
 }
-
-function keptByFavOnly(a) {
-  return !favOnly || a.favorite;
-}

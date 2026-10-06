@@ -4,8 +4,7 @@ const DISABLED_FIELDS: { field: 'police' | 'firefighters' | 'medical'; label: st
   { field: 'medical', label: 'Secours' },
 ];
 
-// Port de countryInfoCardHtml (js/views/country-info/country-info.js) : seule "note" s'édite, le
-// reste vient du seed (COUNTRY_INFO_SEED) ou d'un enregistrement déjà vérifié à la main.
+// Only the note is editable: the rest comes from COUNTRY_INFO_SEED or a hand-checked record.
 export function CountryInfoCard({ country }: { country: string }) {
   const info = window.countryInfoDefaults(country);
 

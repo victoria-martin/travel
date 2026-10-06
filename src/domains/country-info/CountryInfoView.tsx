@@ -1,9 +1,7 @@
 import { useTravelStore } from '@/store/useTravelStore';
 import { CountryInfoCard } from './CountryInfoView/CountryInfoCard';
 
-// Porte js/views/country-info/country-info.js. Pas de sélecteur : travelCountries() dérive de
-// plusieurs collections (voyage, hébergements, attractions) à la fois, inutile de le refaire ici —
-// la souscription sert juste à re-rendre quand l'une d'elles change.
+// No selector: travelCountries() reads several collections, the subscription only re-renders.
 export function CountryInfoView() {
   useTravelStore();
   const countries = window.travelCountries();

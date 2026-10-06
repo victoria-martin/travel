@@ -1,6 +1,5 @@
 import { Icon } from '../Icon';
 
-// Port de favoriteStar (js/views/favorite-star.js).
 export function FavoriteCell({ favorite, onToggle }: { favorite: boolean; onToggle: () => void }) {
   return (
     <button

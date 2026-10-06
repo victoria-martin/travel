@@ -9,7 +9,3 @@ const TRAVEL_STATUSES = {
   past: { label: 'Passé', emoji: '📦' },
 };
 window.TRAVEL_STATUSES = TRAVEL_STATUSES;
-
-function travelStatus(status) {
-  return TRAVEL_STATUSES[status] || TRAVEL_STATUSES[DEFAULT_TRAVEL_STATUS];
-}

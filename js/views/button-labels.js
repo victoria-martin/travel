@@ -12,7 +12,3 @@ function toggleButtonLabels() {
   persistPrefs();
   render();
 }
-
-function buttonLabelsOption() {
-  return switchField('Textes des boutons', showButtonLabels(), 'toggleButtonLabels()');
-}

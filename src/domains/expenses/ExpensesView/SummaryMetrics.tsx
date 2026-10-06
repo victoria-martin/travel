@@ -1,6 +1,5 @@
 import type { Scenario } from '@/store/types';
 
-// Port de expensesTotalBlock (js/views/expenses/total.js).
 export function SummaryMetrics({ scenario }: { scenario: Scenario | null }) {
   const budgetTotal = scenario ? window.scenarioBudgetTotal(scenario) : null;
   const actualTotal = window.actualExpensesTotal();

@@ -24,3 +24,11 @@ function todoItemMatchesSearch(item) {
     [item.name, item.label, item.description, item.notes, item.text].filter(Boolean).join(' '),
   ).includes(wanted);
 }
+
+function normalizeListSearch(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim();
+}

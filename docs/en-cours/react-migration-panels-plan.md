@@ -80,13 +80,11 @@ types, deux absents de l'inventaire vont probablement servir :
    [PageSettings.tsx](../../src/shell/SettingsModal/PageSettings.tsx) (`window.getCurrentView()`
    renvoie bien la globale `view`, [js/router.js:28](../../js/router.js#L28)). Le bouton de la barre
    latérale devient [SettingsNavButton.tsx](../../src/shell/Sidebar/SettingsNavButton.tsx) ;
-   `js/views/settings/modal.js` et `button.js` sont supprimés. `blocks.js`/`page-settings.js`
-   restent : `toolbarMenu()` ([js/views/toolbar/menu.js](../../js/views/toolbar/menu.js)) les lit.
-   **Question ouverte** : `PageSettings` ne porte que `scenario-detail`. L'entrée `phrases`
-   (`phraseStyleOption`, style des phrases) n'est pas portée, parce que
-   [TranslationsView.tsx](../../src/domains/translations/TranslationsView.tsx) n'applique pas
-   `phraseStyle()` : le réglage n'aurait aucun effet. Porter le style dans la vue React, ou retirer
-   le réglage ?
+   `js/views/settings/` et `js/views/toolbar/` sont supprimés en entier, faute de lecteur.
+   `PageSettings` porte `scenario-detail` et `phrases` : le style des phrases est porté
+   ([PhraseSettings.tsx](../../src/domains/translations/TranslationsView/PhraseSettings.tsx)) et
+   [TranslationsView.tsx:29](../../src/domains/translations/TranslationsView.tsx#L29) applique
+   `phraseStyle()`.
 
 2. **`valise-composer`** — ✅ fait (2026-10-04) : [PackingComposerModal.tsx](../../src/domains/packing/modal/PackingComposerModal.tsx),
    porté en entier plutôt qu'en `LegacyMarkup` — la recherche en `useState` rend inutile le repeint

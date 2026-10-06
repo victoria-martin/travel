@@ -7,5 +7,3 @@ function openAttractionSheet(id) {
   closeOpenInlineMenu();
   openSheet('attraction', id);
 }
-
-ROW_CLICKS.attractions = openAttractionSheet;

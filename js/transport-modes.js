@@ -17,10 +17,6 @@ const PROVIDER_MODES = {
 };
 window.PROVIDER_MODES = PROVIDER_MODES;
 
-// Les modes qu'un voyage peut suivre dans Transports, voiture en tête puisqu'elle reste cochée
-// par défaut.
-const TRACKABLE_MODES = ['car', ...Object.keys(TRANSPORT_MODES)];
-
 function transportMode(mode) {
   return TRANSPORT_MODES[mode] || UNSET_TRANSPORT_MODE;
 }

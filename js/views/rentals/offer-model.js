@@ -16,15 +16,3 @@ function offerModelName(offer) {
 function offerWords(offer) {
   return offerCarModel(offer) || offer;
 }
-
-// Motorisation et boîte étant du modèle, les changer depuis une offre change son modèle. Une offre
-// qui n'en a pas n'a rien à changer : elle ne porte que l'étiquette.
-function offerFuelTag(offer) {
-  const model = offerCarModel(offer);
-  return model ? carFuelTag(model) : staticTag(UNSET_CAR_FUEL);
-}
-
-function offerGearboxTag(offer) {
-  const model = offerCarModel(offer);
-  return model ? carGearboxTag(model) : staticTag(UNSET_CAR_GEARBOX);
-}

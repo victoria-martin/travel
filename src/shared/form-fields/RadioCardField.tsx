@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-// Port de radioCardField (js/views/radio-card-field.js) : un choix fermé en rangée de cartes.
+// A closed choice laid out as a row of cards.
 export type RadioCardOption = { key: string; label: string; preview?: ReactNode };
 
 export function RadioCardField({

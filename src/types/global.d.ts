@@ -114,12 +114,6 @@ declare global {
     UNSET_CAR_FUEL: { label: string; emoji: string };
     UNSET_CAR_GEARBOX: { label: string; emoji: string };
     UNSET_CAR_STATUS: { label: string; emoji: string };
-    providerSelectField: (
-      id: string,
-      mode: string,
-      selectedId: string,
-      onPicked: () => void,
-    ) => string;
     saveOffer: (id: string) => void;
     suggestCarConsumption: () => void;
     saveCarModel: (id: string) => void;
@@ -315,12 +309,6 @@ declare global {
       cost: import('../store/types').FixedCost,
       span: { nights: number; days: number; travelers: number },
     ) => number;
-    firmPrice: (entity: {
-      amountMin?: string;
-      amountMax?: string;
-      budget: string;
-    }) => number | null;
-    defaultOffer: () => import('../store/types').Offer | null;
     offerLabel: (offer: import('../store/types').Offer) => string;
     derivedExpenseGroups: () => {
       key: string;
@@ -340,7 +328,6 @@ declare global {
     navItem: (key: string) => { key: string; label: string; icon: string } | undefined;
     navSectionOpen: (key: string) => boolean;
     setNavSectionFold: (key: string, open: boolean) => void;
-    NAV_ITEMS: { key: string; label: string; icon: string }[];
     NAV_SECTIONS: { key: string; title: string; keys: string[] }[];
     mobileNavPlusOpen: boolean;
     mobileNavReordering: boolean;
@@ -434,7 +421,6 @@ declare global {
       bank: string,
       fields: { label: string; emoji: string; color: string },
     ) => { key: string; label: string; emoji: string };
-    closeAskOverlay: () => void;
     stepPlace: (
       step: import('../store/types').Step,
     ) => import('../store/types').Accommodation | import('../store/types').Attraction | null;
@@ -547,10 +533,6 @@ declare global {
     optionSteps: (
       scenario: import('../store/types').Scenario,
       optionId: string,
-    ) => import('../store/types').Step[];
-    groupSteps: (
-      scenario: import('../store/types').Scenario,
-      group: import('../store/types').StepGroup,
     ) => import('../store/types').Step[];
     chooseGroupOption: (scenarioId: string, groupId: string, optionId: string) => void;
     toggleGroupHidden: (scenarioId: string, groupId: string) => void;
@@ -680,8 +662,6 @@ declare global {
       quantity: number;
       alsoInCatalog: boolean;
     }) => void;
-    toolbarSeparator: () => string;
-    toolbarMenu: () => string;
     coordsFor: (step: import('../store/types').Step) => [number, number] | null;
     stepLetter: (rank: number) => string;
     isGroupHidden: (scenario: import('../store/types').Scenario, groupId: string) => boolean;

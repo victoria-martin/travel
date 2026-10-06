@@ -9,7 +9,7 @@ COLUMN_SETS.cities = [
     label: '',
     pickerLabel: '⭐ Favori',
     locked: true,
-    cell: attractionFavoriteCell,
+
     sortValue: (a) => (a.favorite ? 0 : 1),
     sortLabels: { asc: "Favoris d'abord ⭐", desc: 'Favoris en dernier' },
   },
@@ -17,7 +17,7 @@ COLUMN_SETS.cities = [
     key: 'city',
     label: 'Ville',
     locked: true,
-    cell: attractionCityCell,
+
     filterValues: (a) => [a.city],
     sortValue: (a) => (a.city || '').toLowerCase(),
   },
@@ -25,20 +25,20 @@ COLUMN_SETS.cities = [
     key: 'name',
     label: 'Nom',
     locked: true,
-    cell: attractionNameCell,
+
     sortValue: (a) => (a.name || '').toLowerCase(),
   },
   {
     key: 'type',
     label: 'Type',
-    cell: attractionTypeCell,
+
     sortValue: (a) => attractionTypeKey(a.type),
     sortOrder: { key: 'attractionType', dict: ATTRACTION_TYPES, label: 'Ordre des types' },
   },
   {
     key: 'status',
     label: 'Statut',
-    cell: attractionStatusCell,
+
     sortValue: (a) => attractionStatusKey(a.status),
     sortOrder: {
       key: 'attractionStatus',
@@ -50,21 +50,13 @@ COLUMN_SETS.cities = [
     key: 'tags',
     label: 'Tags',
     filterValues: (a) => a.tags || [],
-    cell: (a) =>
-      tagsCell(a, {
-        field: 'tags',
-        getItem: getAttraction,
-        vocabulary: allAttractionTags,
-        addLabel: '+ tag',
-      }),
   },
   {
     key: 'description',
     label: 'Description',
     hiddenByDefault: true,
-    cell: attractionDescriptionCell,
   },
-  { key: 'actions', label: '', locked: true, nowrap: true, cell: attractionActionsCell },
+  { key: 'actions', label: '', locked: true },
 ];
 
 SORT_DEFAULTS.cities = [

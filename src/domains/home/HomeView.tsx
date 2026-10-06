@@ -8,7 +8,6 @@ function formatHomeDate(date: Date): string {
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Port de homeDatesLabel (js/views/home/home.js).
 function homeDatesLabel(travel: Travel | null): string {
   const start = travel && window.isoToDate(travel.startDate);
   if (!start) return '';

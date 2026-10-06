@@ -7,15 +7,6 @@ function externalLink(url, label) {
   return externalAnchor(url, label, 'external-link');
 }
 
-function linkButton(url, label) {
-  return externalAnchor(url, label, 'btn-outline btn btn-small');
-}
-
-function googleMapsCell(query) {
-  if (!query) return '—';
-  return externalLink(googleMapsPlaceUrl(query), '🗺️ Carte');
-}
-
 function externalAnchor(url, label, className) {
   return `<a href="${escapeHtml(url)}" target="_blank" class="${className}">${label}</a>`;
 }

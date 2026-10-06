@@ -19,30 +19,3 @@ function setOutOfRangeStyle(key) {
   persistPrefs();
   render();
 }
-
-function outOfRangeStyleOption() {
-  const options = OUT_OF_RANGE_STYLES.map((s) => ({
-    key: s.key,
-    label: s.label,
-    preview: /* HTML */ `<span class="oor-badge ${s.modifier}"
-      >${svgIcon('triangle-alert')}${s.showText ? ' Hors dispo' : ''}</span
-    >`,
-  }));
-  return radioCardField(
-    'Indicateur hors dispo',
-    'out-of-range-style',
-    options,
-    outOfRangeStyle().key,
-    'setOutOfRangeStyle',
-  );
-}
-
-// Le badge d'une ligne ou d'une carte : compact, la raison au survol.
-function outOfRangeIndicator(reason) {
-  if (!reason) return '';
-  const style = outOfRangeStyle();
-  return /* HTML */ `<span class="oor-badge ${style.modifier}" title="${escapeHtml(reason)}">
-    ${svgIcon('triangle-alert')}${style.showText ? ' Hors dispo' : ''}
-  </span>`;
-}
-

@@ -54,18 +54,6 @@ function duplicateAttraction(id) {
   showToast('Lieu créé');
 }
 
-function duplicateTransport(id) {
-  const t = getTransport(id);
-  state.transports.push({
-    ...t,
-    id: uid(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
-  saveNow();
-  showToast('Transport créé');
-}
-
 // La copie s'insère sous l'originale : on ajuste l'une des deux, ou on en masque une. Elle ne
 // partage rien avec elle — ses lignes sont les siennes, donc elles reprennent des identifiants
 // neufs. Sa colonne, en revanche, reste celle de l'originale : on y ajoute une étape.

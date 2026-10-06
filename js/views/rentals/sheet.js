@@ -7,5 +7,3 @@ function openOfferSheet(id) {
   closeOpenInlineMenu();
   openSheet('voiture', id);
 }
-
-ROW_CLICKS.locations = openOfferSheet;

@@ -6,35 +6,35 @@ réelles.
 
 ## Couleurs (`:root`, styles.css:4-17)
 
-| Token             | Valeur    | Usage                          |
-| ------------------ | --------- | ------------------------------- |
-| `--paper`          | `#f1e9d8` | fond de page                    |
-| `--paper-raised`   | `#faf5ea` | fond de carte/panneau, hover    |
-| `--ink`            | `#24312b` | texte principal                 |
-| `--ink-soft`       | `#5b6660` | texte secondaire                |
-| `--line`           | `#d9cfb8` | bordures                        |
-| `--stone`          | `#3e6259` | accent primaire (fond bouton)   |
-| `--stone-dark`     | `#2c4740` | accent primaire hover/actif     |
-| `--ochre`          | `#c98a3e` | accent secondaire               |
-| `--gold`           | `#dfa32c` | accent secondaire               |
-| `--rust`           | `#a6462e` | danger / suppression            |
-| `--sage`           | `#7c8b5e` | accent tertiaire                |
-| `--sage-pale`      | `#eef0e4` | fond accent tertiaire           |
-| `--sage-line`      | `#c7cfae` | bordure accent tertiaire        |
-| `--white`          | `#ffffff` | fond actif, texte sur `--stone` |
+| Token            | Valeur    | Usage                           |
+| ---------------- | --------- | ------------------------------- |
+| `--paper`        | `#f1e9d8` | fond de page                    |
+| `--paper-raised` | `#faf5ea` | fond de carte/panneau, hover    |
+| `--ink`          | `#24312b` | texte principal                 |
+| `--ink-soft`     | `#5b6660` | texte secondaire                |
+| `--line`         | `#d9cfb8` | bordures                        |
+| `--stone`        | `#3e6259` | accent primaire (fond bouton)   |
+| `--stone-dark`   | `#2c4740` | accent primaire hover/actif     |
+| `--ochre`        | `#c98a3e` | accent secondaire               |
+| `--gold`         | `#dfa32c` | accent secondaire               |
+| `--rust`         | `#a6462e` | danger / suppression            |
+| `--sage`         | `#7c8b5e` | accent tertiaire                |
+| `--sage-pale`    | `#eef0e4` | fond accent tertiaire           |
+| `--sage-line`    | `#c7cfae` | bordure accent tertiaire        |
+| `--white`        | `#ffffff` | fond actif, texte sur `--stone` |
 
 ## Boutons (styles.css:395-441)
 
 Une seule classe de base `.btn` + un modificateur pour la variante. Pas de `.btn-primary` — le
 style de base EST le primaire.
 
-| Variante  | Classes             | Fond               | Bordure         | Texte             | Exemple d'appelant |
-| --------- | -------------------- | ------------------ | ---------------- | ------------------ | -------------------- |
-| Primary   | `.btn`                | `--stone`           | `--stone`        | `--white`           | boutons d'enregistrement de modale |
-| Outline   | `.btn.btn-ghost`      | transparent         | `--line`         | `--stone-dark`      | actions secondaires de modale |
-| Danger    | `.btn.btn-danger`     | transparent         | `--rust`         | `--rust`            | suppression |
-| Text      | `.btn.btn-text`       | transparent         | transparent      | `--stone-dark`      | [filters/panel.js](../js/views/filters/panel.js) « + Ajouter un niveau » |
-| Small     | `+ .btn-small`        | (cumulable)         | —                | padding/font réduits | — |
+| Variante | Classes           | Fond        | Bordure     | Texte                | Exemple d'appelant                                                      |
+| -------- | ----------------- | ----------- | ----------- | -------------------- | ----------------------------------------------------------------------- |
+| Primary  | `.btn`            | `--stone`   | `--stone`   | `--white`            | boutons d'enregistrement de modale                                      |
+| Outline  | `.btn.btn-ghost`  | transparent | `--line`    | `--stone-dark`       | actions secondaires de modale                                           |
+| Danger   | `.btn.btn-danger` | transparent | `--rust`    | `--rust`             | suppression                                                             |
+| Text     | `.btn.btn-text`   | transparent | transparent | `--stone-dark`       | [SortMenu.tsx](../src/shared/menu/SortMenu.tsx) « + Ajouter un niveau » |
+| Small    | `+ .btn-small`    | (cumulable) | —           | padding/font réduits | —                                                                       |
 
 Boutons hors de cette famille, non unifiés :
 

@@ -43,7 +43,7 @@ function slugWordKey(label, dict) {
 }
 
 // La sélection courante se retient ici : l'item ＋ n'est pas un choix, elle sert à la reposer si
-// la création est annulée, comme providerSelectValues le fait pour un prestataire.
+// la création est annulée.
 function wordSelectChanged(id, bank) {
   const select = document.getElementById(id);
   if (select.value !== NEW_WORD_VALUE) {
