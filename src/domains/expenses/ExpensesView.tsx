@@ -8,6 +8,7 @@ import { BudgetTable } from './ExpensesView/BudgetTable';
 import { DerivedSection } from './ExpensesView/DerivedSection';
 import { ImportExpensesButton } from './ExpensesView/ImportExpensesButton';
 import { SummaryMetrics } from './ExpensesView/SummaryMetrics';
+import { ViewTop } from '@/shared/layout/ViewTop';
 
 /*
   Porte js/views/expenses/{expenses,header,total,actual,derived}.js. Trier règle le Budget prévu
@@ -21,22 +22,24 @@ export function ExpensesView() {
 
   return (
     <>
-      <div className="view-header">
-        <div>
-          <h2 className="view-title">Dépenses</h2>
-          <span className="view-sub">Budget du scénario et dépenses réelles du voyage</span>
+      <ViewTop>
+        <div className="view-header">
+          <div>
+            <h2 className="view-title">Dépenses</h2>
+            <span className="view-sub">Budget du scénario et dépenses réelles du voyage</span>
+          </div>
+          <div className="view-header-actions">
+            <SortMenu kind="charges" />
+            <span className="toolbar-separator" />
+            <AddBudgetButton scenario={scenario} />
+            <ActualExpenseButton />
+            <ImportExpensesButton />
+            <span className="toolbar-separator" />
+            <SettingsMenu />
+          </div>
         </div>
-        <div className="view-header-actions">
-          <SortMenu kind="charges" />
-          <span className="toolbar-separator" />
-          <AddBudgetButton scenario={scenario} />
-          <ActualExpenseButton />
-          <ImportExpensesButton />
-          <span className="toolbar-separator" />
-          <SettingsMenu />
-        </div>
-      </div>
-      <SummaryMetrics scenario={scenario} />
+        <SummaryMetrics scenario={scenario} />
+      </ViewTop>
       <section className="list-section">
         <div className="list-section-head">
           <div>

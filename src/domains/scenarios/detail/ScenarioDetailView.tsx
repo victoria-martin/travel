@@ -14,6 +14,7 @@ import { ScenarioSplitHandle } from './ScenarioDetailView/ScenarioSplitHandle';
 import { ScenarioSummary } from './ScenarioDetailView/ScenarioSummary';
 import { ScenarioWeatherBanner } from './ScenarioDetailView/ScenarioWeatherBanner';
 import { StepList } from './ScenarioDetailView/StepList';
+import { ViewTop } from '@/shared/layout/ViewTop';
 
 export function ScenarioDetailView() {
   const store = useTravelStore();
@@ -33,7 +34,7 @@ export function ScenarioDetailView() {
 
   return (
     <>
-      <div className="view-top">
+      <ViewTop>
         <ScenarioDetailHeader scenario={scenario} money={money.total} />
         {window.weatherBannerShown() && <ScenarioWeatherBanner scenario={scenario} />}
         {window.trailShown() &&
@@ -42,7 +43,7 @@ export function ScenarioDetailView() {
           ) : (
             <RouteTrail scenario={scenario} />
           ))}
-      </div>
+      </ViewTop>
       <div className="scenario-detail-cols" style={{ gridTemplateColumns: scenarioSplitColumns() }}>
         <div className="scenario-detail-main view-scroller">
           <StepList scenario={scenario} route={route} />
