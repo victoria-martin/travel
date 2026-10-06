@@ -17,16 +17,19 @@ copie), archivé le 2026-10-05.
   des jobs testés, au même endroit. Rails plutôt qu'un autre langage parce que c'est la stack
   maîtrisée côté utilisatrice. Hasura et Supabase écartés : la logique y finirait éclatée entre
   règles SQL, fonctions serverless et console.
-- **Monorepo pnpm** : chaque front est une app, le domaine et le client d'API sont des packages
-  partagés (§ 2).
+- **Un repo par app** (2026-10-06, remplace le monorepo pnpm) : le backend dans son propre repo,
+  chaque front dans le sien — l'app travel reste dans ce repo, telle quelle (§ 2). Ils ne
+  partagent que le contrat GraphQL, aucun package de code : la logique métier vit dans le backend
+  et chaque front la reçoit par l'API. Un changement qui touche backend et front fait deux commits,
+  un par repo.
 - **L'app travel reste une SPA Vite + React.** Privée, interactive, pensée hors ligne : le rendu
   serveur ne lui apporte rien.
 - **Next n'entre pas dans l'app travel.** Ce qu'il ajoute à React est surtout du serveur — rendu
   serveur, métadonnées de partage, Server Components, routes API — et rien de ça ne sert une app
   privée derrière un login.
 - **Nuxt exclu** : Vue ne partage rien avec React ni React Native.
-- **Types partagés par codegen** : les types TS des fronts sont générés depuis le schéma GraphQL
-  du backend, dans `packages/api` — jamais réécrits à la main.
+- **Types générés par codegen** : chaque front génère ses types TS depuis le schéma GraphQL du
+  backend, dans son propre repo — jamais réécrits à la main.
 - **Ajouter au voyage = référence** : le voyage pointe vers la fiche du catalogue, qui reste à
   jour (prix, dispo scrapés) et nourrit la base commune (§ 3). Pas de copie.
 - **Toutes les données du voyage passent dans Postgres** : le Google Sheet disparaît. Une seule
@@ -37,25 +40,24 @@ Piste, pas une certitude :
 - **Next pour les fronts publics.** Next sert les pages qu'un inconnu
   doit trouver et ouvrir sans compte — un guide indexé par Google, un lien partagé qui affiche son
   aperçu. L'app travel n'en a aucune ; les sites publics (guide, sites de niche) si. Aucun n'est
-  planifié : le monorepo garde seulement la place pour `apps/site`, et le choix se refera quand
-  l'un d'eux démarrera.
+  planifié : chacun serait son propre repo, et le choix se refera quand l'un d'eux démarrera.
 
-## 2. Structure cible du repo
+## 2. Les repos
 
 ```
-travel/
-├── apps/
-│   ├── travel/        l'app actuelle (Vite + React) — index.html, js/, src/, styles…
-│   └── site/          plus tard : front public (Next, piste)
-├── packages/
-│   ├── domain/        types métier, calculs, vocabulaires — rien de spécifique au navigateur
-│   └── api/           opérations GraphQL, types générés, client Apollo
-├── backend/           app Rails (API only) : modèles, GraphQL, jobs, rspec
-└── tools/             plan-board, translate-phrases (inchangés)
+travel-backend/      nouveau repo (lot 1) : Rails API only — modèles, GraphQL, jobs, rspec
+travel/              ce repo, inchangé : l'app (index.html, js/, src/, styles/), tools/, apps-script/
+site/, agence/…      plus tard, un repo chacun (fronts publics, outil pour agences)
+
+chaque front ──GraphQL──▶ travel-backend ──▶ Postgres
 ```
 
-`apps-script/` disparaît une fois ses scrapers portés dans `backend/` (§ 5, lot 6) et le Sheet
-abandonné (§ 1).
+- **Le contrat** : le backend publie son schéma GraphQL ; chaque front le récupère et lance son
+  codegen (types, opérations, client Apollo) dans son propre repo.
+- **Pas de code partagé entre repos** : un calcul métier dont deux fronts ont besoin passe dans le
+  backend et s'expose dans le schéma, au lieu d'un paquet npm commun.
+- `apps-script/` disparaît de ce repo une fois ses scrapers portés dans le backend (§ 5, lot 6) et
+  le Sheet abandonné (§ 1).
 
 ## 3. Modèle cible : le catalogue possède le lieu, le voyage le référence
 
@@ -112,16 +114,16 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
 
 ## 5. Lots
 
-| Lot | Livrable                                                                                                                                                                                                            | Dépend de            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| 0   | Monorepo : l'app passe dans `apps/travel/`, `pnpm-workspace.yaml` déclare `apps/*` et `packages/*`, scripts et hooks (`.githooks/pre-push`) suivent                                                                 | —                    |
-| 1   | `backend/` : Rails API only, Postgres, `graphql-ruby`, rspec, déployé                                                                                                                                               | Q5                   |
-| 2   | Catalogue : modèle `Place`, query paginée, `packages/api` (codegen + Apollo), page **Découvrir** en lecture seule dans l'app travel ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur | Q1, Q2, Q6           |
-| 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                       | lot 4 (hébergements) |
-| 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_place`   | Q3                   |
-| 5   | Auth + multi-tenant                                                                                                                                                                                                 | Q4                   |
-| 6   | Imports et scrapers portés d'[apps-script/](../../apps-script/) (Booking, HomeExchange, Airbnb, Google Maps) vers des services et jobs Rails ; scraping prix/dispo récurrent                                        | lot 2                |
-| —   | `apps/site` (Next, piste), front public                                                                                                                                                                             | hors scope           |
+| Lot | Livrable                                                                                                                                                                                                          | Dépend de            |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                            | —                    |
+| 1   | Repo `travel-backend` : Rails API only, Postgres, `graphql-ruby`, rspec, déployé                                                                                                                                  | Q5                   |
+| 2   | Catalogue : modèle `Place`, query paginée, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur         | Q1, Q2, Q6           |
+| 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                     | lot 4 (hébergements) |
+| 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_place` | Q3                   |
+| 5   | Auth + multi-tenant                                                                                                                                                                                               | Q4                   |
+| 6   | Imports et scrapers portés d'[apps-script/](../../apps-script/) (Booking, HomeExchange, Airbnb, Google Maps) vers des services et jobs du backend ; scraping prix/dispo récurrent                                 | lot 2                |
+| —   | Front public (Next, piste), dans son propre repo                                                                                                                                                                  | hors scope           |
 
 L'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) a été pensé pour qu'on change de
 source sans toucher aux hooks ni aux composants. Il ne suffira pas au lot 4 : la forme des données
@@ -130,9 +132,9 @@ d'Hébergements et de Lieux & activités changent aussi.
 
 ## 6. L'app travel ne connaît que le contrat GraphQL
 
-`apps/travel` ne dépend jamais de `backend/` : seulement de `packages/api`, dont les types sont
-générés depuis le schéma GraphQL. Le backend étant en Ruby, aucun import direct n'est d'ailleurs
-possible. Changer de backend revient à servir le même schéma.
+L'app travel ne dépend jamais du code du backend : seulement de son schéma GraphQL, dont elle
+génère ses types. Le backend étant en Ruby et dans un autre repo, aucun import direct n'est
+d'ailleurs possible. Changer de backend revient à servir le même schéma.
 
 ## 7. Lien avec la migration React
 
@@ -144,5 +146,5 @@ Partage acté le 2026-10-05 avec [react-migration-plan.md](react-migration-plan.
   `saveNow`), la synchro Sheet ([sync.js](../../js/sync.js)) ne sont **pas** portées sur Zustand.
   Le lot 4 les remplace directement par GraphQL ; les porter d'abord ferait refaire le même
   travail une fois le Sheet abandonné.
-- **Ordre de démarrage** : lots 0 → 1 → 2. Ils ne touchent pas au legacy — Découvrir est un écran
+- **Ordre de démarrage** : lots 1 → 2. Ils ne touchent pas au legacy — Découvrir est un écran
   neuf branché sur GraphQL.
