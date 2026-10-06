@@ -333,14 +333,15 @@ body {
   flex-wrap: wrap;
   background: var(--paper);
 }
-/* Sticky top: 0 lands below .main's top padding: this strip hides what scrolls through it. */
+/* Sticky top: 0 lands below .main's top padding: this strip hides what scrolls through it.
+   Taller than any padding (52px on mobile): .main clips it at its own top edge. */
 .view-header::before {
   content: '';
   position: absolute;
   bottom: 100%;
   left: calc(var(--main-pad-x) * -1);
   right: calc(var(--main-pad-x) * -1);
-  height: var(--main-pad-y);
+  height: 100vh;
   background: var(--paper);
 }
 .view-header-actions {
