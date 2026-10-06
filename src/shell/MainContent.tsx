@@ -4,7 +4,6 @@ import { MapView } from '../domains/carte/MapView';
 import { CitiesView } from '../domains/cities/CitiesView';
 import { CountryInfoView } from '../domains/country-info/CountryInfoView';
 import { ExpensesView } from '../domains/expenses/ExpensesView';
-import { FixedCostsView } from '../domains/fixed-costs/FixedCostsView';
 import { HomeView } from '../domains/home/HomeView';
 import { JournalView } from '../domains/journal/JournalView';
 import { NotesView } from '../domains/notes/NotesView';
@@ -26,7 +25,6 @@ const VIEWS: Record<string, () => React.JSX.Element> = {
   hebergements: AccommodationsView,
   attractions: AttractionsView,
   cities: CitiesView,
-  charges: FixedCostsView,
   transports: TransportsView,
   scenarios: ScenariosView,
   carte: MapView,

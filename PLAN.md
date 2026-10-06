@@ -548,7 +548,7 @@ Plan d'exécution : [docs/en-cours/mobile-plan.md](docs/en-cours/mobile-plan.md)
   activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
   ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23
   colonnes. Transports (16 colonnes) n'a pas encore le sien — décidé lors de la réflexion mobile,
-  à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et Charges fixes,
+  à trancher si ça vaut le coup vu qu'il vient de perdre le mode voiture. Villes et le Budget prévu de Dépenses,
   plus légères (6-10 colonnes), restent des tables classiques.
 - **Carte d'étape illisible sous 640px** <!--t:8rvg--> — 📐 layout · 🐛 fix · ⏳ à faire : dans le
   détail d'un scénario, le nom de l'étape s'écrit lettre par lettre dans sa carte (la colonne du

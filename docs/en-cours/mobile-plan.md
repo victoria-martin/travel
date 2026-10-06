@@ -56,7 +56,7 @@ Hébergements, Lieux & activités et Offres de voiture ouvrent déjà leur ligne
 
 - **Transports** (16 colonnes) : pas encore de sheet — à trancher si ça vaut le coup depuis qu'il a
   perdu le mode voiture.
-- **Villes et Charges fixes** (6-10 colonnes) : tables classiques, à vérifier qu'elles se lisent.
+- **Villes et le Budget prévu de Dépenses** (6-10 colonnes) : tables classiques, à vérifier qu'elles se lisent.
 - **Les autres pages** (Journal, À faire, Phrases, Valise, Notes, Infos utiles, Carte) : passer
   chacune en étroit et lister ce qui casse, avant de corriger.
 

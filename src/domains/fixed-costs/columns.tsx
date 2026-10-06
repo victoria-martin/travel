@@ -2,7 +2,7 @@ import { EditableTagsCell } from '@/shared/cells/EditableTagsCell';
 import type { Column } from '@/shared/DataTable/types';
 import { Icon } from '@/shared/Icon';
 import type { FixedCost } from '@/store/types';
-import { AmountCell, LabelCell, RecurrenceBadge } from '../cells';
+import { AmountCell, LabelCell, RecurrenceBadge } from './cells';
 
 export const columns: Column<FixedCost>[] = [
   {

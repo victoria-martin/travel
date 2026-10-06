@@ -1280,7 +1280,7 @@ Filtrer par [ Type, Région ▾ ]  [ Type: Airbnb, Hôtel — Région: Toscane �
   Lieux & activités — 23 colonnes, Offres de voiture — 17) s'ouvre au clic dans un panneau plein
   bord droit, le même formulaire que sa modale d'édition. Il passe plein écran sous 440px, desktop
   et mobile confondus — pas de version dédiée au téléphone. L'ajout garde la modale centrée ; seule
-  l'édition d'une ligne existante ouvre le sheet. Une table plus légère (Villes, Charges fixes)
+  l'édition d'une ligne existante ouvre le sheet. Une table plus légère (Villes, Budget prévu de Dépenses)
   reste une table classique, éditée en place.
 - **Fermer un formulaire sur une saisie non enregistrée** pose la question dans l'app, jamais dans
   le `confirm` du navigateur : « Enregistrer les modifications ? », avec le choix d'enregistrer, de

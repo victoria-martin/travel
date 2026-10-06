@@ -1,6 +1,6 @@
 import { columns as accommodationColumns } from '@/domains/accommodations/AccommodationsView/columns';
 import { columns as attractionColumns } from '@/domains/attractions/AttractionsView/columns';
-import { columns as fixedCostColumns } from '@/domains/fixed-costs/FixedCostsView/columns';
+import { columns as fixedCostColumns } from '@/domains/fixed-costs/columns';
 import { offerColumns } from '@/domains/transports/TransportsView/CarsTab/OffersSection/columns';
 import { columns as transportColumns } from '@/domains/transports/TransportsView/TransportsListTab/columns';
 import { DataTable } from '@/shared/DataTable/DataTable';

@@ -11,6 +11,12 @@ la ligne ce qui ne va pas.
 - [ ] Ajouter un niveau, changer la colonne, le sens → la table **Budget prévu** se réordonne.
 - [ ] Recharger la page → le tri est conservé.
 
+## Dépenses — notes des charges
+
+- [ ] Page **Dépenses** → table **Budget prévu** → cliquer sous le libellé d'une charge → « Notes… »
+      devient éditable ; taper, **Entrée** → la note reste, recharger → elle est gardée.
+- [ ] Même geste dans une liste de charges de **À faire**.
+
 ## Phrases clé — en-tête
 
 - [ ] Page **Phrases clé** → bouton **＋ Phrase** → la modale d'ajout s'ouvre.
