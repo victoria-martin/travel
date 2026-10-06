@@ -2799,13 +2799,11 @@ tr:hover td {
     display: block;
     padding-bottom: var(--main-pad-y);
   }
+  /* Once .main scrolls, the trail sticks right under the weather banner. */
   .main:has(.scenario-detail-cols) .route-trail {
     position: sticky;
+    top: calc(var(--view-header-h, 0px) + var(--weather-banner-h, 0px));
     margin-bottom: 16px;
-  }
-  /* Both would stick to the same top once .main scrolls: only the trail stays pinned. */
-  .main:has(.scenario-detail-cols) .scenario-weather-banner {
-    position: static;
   }
   .scenario-detail-cols {
     grid-template-columns: minmax(0, 1fr);
