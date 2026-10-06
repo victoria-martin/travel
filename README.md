@@ -1,57 +1,40 @@
 # Voyage Toscane — app de préparation de voyage
 
-## Déployer sur GitHub Pages (une fois)
+## Déploiement
 
-1. Va sur [github.com/new](https://github.com/new) et crée un repo (ex: `voyage-toscane`). Peut être privé ou public.
-2. Ajoute tout le contenu de ce dossier à la racine du repo, en gardant l'arborescence : `index.html`, `styles.css`, le dossier `js/` et le dossier `apps-script/`.
-   - Via l'interface web GitHub : bouton "Add file" → "Upload files", puis glisse le **dossier entier** (les sous-dossiers sont conservés), commit.
-3. Va dans **Settings** (du repo) → **Pages** (menu de gauche).
-4. Sous "Build and deployment" → Source : **Deploy from a branch**. Branch : **main**, dossier : **/ (root)**. Sauvegarde.
-5. Attends 1–2 minutes, puis ton site est en ligne à :
-   `https://TON-PSEUDO-GITHUB.github.io/voyage-toscane/`
+Chaque push sur `main` déploie le site sur GitHub Pages :
+<https://victoria-martin.github.io/travel/>. Le workflow
+[.github/workflows/pages.yml](.github/workflows/pages.yml) installe les dépendances, construit
+`react-dist/` (`pnpm react:build`) puis publie `index.html`, `styles.css`, `styles/`, `js/` et
+`react-dist/`. Dans **Settings → Pages**, la source est **GitHub Actions**.
 
-Envoie ce lien à qui tu veux.
+`react-dist/` n'est pas versionné : en local, `pnpm react:build` (ou `pnpm react:watch`) le
+reconstruit.
 
 ## Structure des fichiers
 
-Une app statique, sans build ni bundler : chaque fichier est chargé tel quel par `index.html`, dans
-l'ordre — une balise `<script src>` par fichier, avant `js/init.js`. Les boutons appellent les
-fonctions directement dans le HTML (`onclick="..."`), donc les fichiers JS sont des scripts
-classiques et **pas** des modules ES.
+`index.html` charge les scripts classiques de `js/` (pas de modules ES), puis le bundle React
+`react-dist/react-app.js`, construit par Vite depuis `src/`. React possède tout l'écran ; `js/`
+garde l'état, la synchro et les fonctions que React appelle sur `window`.
 
 Le détail des critères de découpage (où vit quoi) est dans [CLAUDE.md](CLAUDE.md).
 
 ```
 index.html                       balises + ordre de chargement
-styles.css                       tout le style
+styles.css  styles/              le style
+src/shell/                       coquille React : barre latérale, routage, modale, toasts
+src/domains/<domaine>/           un écran et ses composants
+src/shared/                      composants partagés (tableau, cellules, menus, champs)
+src/store/                       pont vers `state` (useTravelStore)
 js/state.js                      état global partagé (`state`)
 js/storage.js                    cache localStorage
 js/sync.js                       synchro Google Sheets (voir plus bas)
 js/prefs.js                      préférences d'affichage, propres au navigateur
-js/geocode.js                    géocodage d'une adresse
-js/routing.js                    tracé routier (OSRM)
-js/homeexchange.js               lecture d'une annonce HomeExchange collée
-js/columns.js  js/sort.js        colonnes masquables et tri des tableaux
-js/uid.js  js/escape-html.js     primitives
-js/accommodation-types.js        types d'hébergement
-js/accommodation-statuses.js     statuts d'hébergement
-js/render.js                     rendu de la coquille + barre latérale
+js/columns.js  js/sort.js        colonnes masquables et tri des listes
+js/render.js                     notifie React après une mutation
+js/router.js                     la vue courante, portée par le hash
 js/modals/                       ouverture des modales, état du géocodage
-js/views/*.js                    briques utilisées par plusieurs vues (tableau, cartes,
-                                 favoris, tags, duplication, suppression, édition en ligne)
-js/views/cells/                  cellules de tableau partagées (+ actions/)
-js/views/locate/                 bloc de localisation partagé
-js/views/accommodations.js       vue Hébergements — assemblage, filtres, favoris
-js/views/accommodations/         son en-tête, ses colonnes, ses cartes, sa modale, l'import collé
-js/views/cities/                 vue Villes
-js/views/providers/              loueurs et compagnies, onglet de la vue Transports
-js/views/car-models/             les modèles de voiture et leurs offres, onglet de la vue Transports
-js/views/rentals/                vue Locations — une location, ses véhicules, ses options
-js/views/fixed-costs/            vue Charges fixes
-js/views/scenarios/              vue Scénarios — liste (list/), détail (detail/), et les briques
-                                 communes : nuits, dates d'étapes, lettres, montants, carte
-js/views/map.js                  vue Carte (Leaflet)
-js/views/notes.js                vue Notes
+js/views/<domaine>/              getters, setters, colonnes, enregistrement d'un domaine
 js/init.js                       démarrage — doit rester chargé en dernier
 apps-script/Code.js              le backend Apps Script (voir plus bas)
 ```
