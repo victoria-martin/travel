@@ -542,6 +542,8 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
 
 ## 📱 Mobile
 
+Plan d'exécution : [docs/en-cours/mobile-plan.md](docs/en-cours/mobile-plan.md).
+
 - **Adapter le contenu au mobile** <!--t:m8vx--> — 📐 layout · ⏳ à faire : Hébergements, Lieux &
   activités et Offres de voiture ouvrent déjà leur ligne dans un sheet plein écran (`ROW_CLICKS`,
   ex. [attractions/sheet.js](js/views/attractions/sheet.js)) plutôt que de lire un tableau à 17-23
@@ -553,6 +555,11 @@ La page existe : le builder, les listes dynamiques et leur modèle sont décrits
   titre s'écrase à zéro), et le ↗ de la fiche d'hébergement chevauche la pastille du lieu. Constaté
   en capture le 2026-10-05 (390px de large) ; déjà signalé ouvert dans le journal CLAUDE.md du
   2026-09-19. Disposition à concevoir avant de coder.
+- **Le layout de page en dessous de 1100px** <!--t:k4lz--> — 📐 layout · ⏳ à faire : le layout de
+  page (pages avec table : seule la table défile ; pages sans table : la page défile, en-tête et
+  bandes du haut collés) est posé pour le bureau. Reste à décider ce qu'il devient en étroit,
+  notamment le détail d'un scénario : ses deux colonnes défilent chacune pour soi au-dessus de
+  1100px, et s'empilent en une seule colonne en dessous.
 
 ## 📝 Données à saisir
 
