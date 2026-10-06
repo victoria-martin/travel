@@ -1,6 +1,6 @@
 import { ToolbarButton } from '@/shared/buttons/ToolbarButton';
-import { FilterColumnsList } from '@/shared/menu/ListFilterMenu/FilterColumnsList';
-import { FilterValuesList } from '@/shared/menu/ListFilterMenu/FilterValuesList';
+import { FilterColumnsList } from '@/shared/menu/FilterColumnsList';
+import { FilterValuesList } from '@/shared/menu/FilterValuesList';
 import { ToolbarMenu } from '@/shared/menu/ToolbarMenu';
 import { useTravelStore } from '@/store/useTravelStore';
 
@@ -17,8 +17,8 @@ export function ListFilterMenu({ kind }: { kind: string }) {
       wide
     >
       <div className="filter-panel">
-        <FilterColumnsList kind={kind} />
-        <FilterValuesList kind={kind} />
+        <FilterColumnsList scope={kind} />
+        <FilterValuesList scope={kind} />
       </div>
     </ToolbarMenu>
   );

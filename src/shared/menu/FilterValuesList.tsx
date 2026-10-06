@@ -4,9 +4,10 @@ import { useState } from 'react';
 const SEARCH_FROM = 8;
 
 // OR within a column, AND between columns; a checked value stays visible whatever the search.
-export function FilterValuesList({ kind }: { kind: string }) {
+export function FilterValuesList({ scope }: { scope: string }) {
+  const kind = window.filterKind(scope);
   const [search, setSearch] = useState('');
-  const levels = window.filterLevels(kind);
+  const levels = window.filterLevels(scope);
   const filterable = new Set(window.filterableColumns(kind).map((column) => column.key));
   const groups = levels.flatMap((level, levelIndex) => {
     const column = window.filterColumn(kind, level.key);
@@ -32,7 +33,7 @@ export function FilterValuesList({ kind }: { kind: string }) {
         <input
           type="checkbox"
           checked={total > 0 && checkedCount === total}
-          onChange={(event) => window.setAllFilterValuesEverywhere(kind, event.target.checked)}
+          onChange={(event) => window.setAllFilterValuesEverywhere(scope, event.target.checked)}
         />
         Tout cocher
       </label>
@@ -58,7 +59,7 @@ export function FilterValuesList({ kind }: { kind: string }) {
                 <input
                   type="checkbox"
                   checked={isChecked}
-                  onChange={() => window.toggleFilterValue(kind, group.levelIndex, valueIndex)}
+                  onChange={() => window.toggleFilterValue(scope, group.levelIndex, valueIndex)}
                 />
                 {word ? <TagLabel emoji={word.emoji} label={word.label} /> : value}
               </label>

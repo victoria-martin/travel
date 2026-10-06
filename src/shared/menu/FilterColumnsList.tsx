@@ -1,7 +1,8 @@
 // The columns that filter: a checked column keeps all its values until one of them is unticked.
-export function FilterColumnsList({ kind }: { kind: string }) {
+export function FilterColumnsList({ scope }: { scope: string }) {
+  const kind = window.filterKind(scope);
   const columns = window.filterableColumns(kind);
-  const levels = window.filterLevels(kind);
+  const levels = window.filterLevels(scope);
   const allChecked =
     columns.length > 0 &&
     columns.every((column) => levels.some((level) => level.key === column.key));
@@ -12,7 +13,7 @@ export function FilterColumnsList({ kind }: { kind: string }) {
         <input
           type="checkbox"
           checked={allChecked}
-          onChange={(event) => window.setAllFilterLevels(kind, event.target.checked)}
+          onChange={(event) => window.setAllFilterLevels(scope, event.target.checked)}
         />
         Tout cocher
       </label>
@@ -21,7 +22,7 @@ export function FilterColumnsList({ kind }: { kind: string }) {
           <input
             type="checkbox"
             checked={levels.some((level) => level.key === column.key)}
-            onChange={() => window.toggleFilterLevel(kind, column.key)}
+            onChange={() => window.toggleFilterLevel(scope, column.key)}
           />
           {window.columnLabel(column)}
         </label>

@@ -604,7 +604,9 @@ l'écran (`activeAsk` typé par `kind` : `word`, `provider`, `routeAccommodation
 d'`OverlayHost` disparaît), panneau Itinéraire et bouton ＋ Ville de la Carte, page À faire entière (constructeur et listes,
 dont chaque table reprend les colonnes React de la page qu'elle lit — `TodoListTable`). Le rendu legacy de
 la Carte (`renderMapView`, `initMap`, panneaux scénario/filtres/légende/split, `new-city.js`) est
-supprimé : il n'avait plus d'appelant depuis la Phase 2. Panneau du jour du Journal
+supprimé : il n'avait plus d'appelant depuis la Phase 2. Le panneau Filtres de la Carte retrouve,
+par collection, le filtre par colonne et par valeur (`MapFilterLevels`, mêmes listes que le menu
+Filtrer des pages). Panneau du jour du Journal
 (`JournalDayPanel` : textarea contrôlé, caret tenu par `useJournalEditor`, aperçu markdown en
 éléments React, menu `{}`, pastilles planifiées, refs non résolues, photos, carte latérale sur
 `LeafletMap`). Plus aucun écran ne passe par du HTML legacy : `LegacyMarkup` et le repli
@@ -612,9 +614,6 @@ supprimé : il n'avait plus d'appelant depuis la Phase 2. Panneau du jour du Jou
 
 **Manques et points connus :**
 
-- Carte, panneau Filtres : les niveaux de filtre par colonne de chaque collection
-  (`filterLevelsBlock`) ne sont pas portés — `FilterFields` n'a que les interrupteurs et Favoris.
-  Des niveaux posés avant la migration filtrent toujours (`keptOnMap`), sans écran pour les voir.
 - Modale d'étape, champ Activités : cliquer Enregistrer pendant que la recherche a le focus ne fait
   rien au premier clic — au mousedown le champ perd le focus, la liste de résultats (dans le flux)
   se vide, le bouton remonte et le mouseup tombe à côté. Même comportement en legacy ; constaté en

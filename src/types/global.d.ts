@@ -71,6 +71,8 @@ declare global {
     dropOnSortWord: (event: React.DragEvent, kind: string, columnKey: string, word: string) => void;
     endSortWordDrag: () => void;
     filterableColumns: (kind: string) => LegacyColumn[];
+    filterKind: (scope: string) => string;
+    mapScope: (kind: string) => string;
     filterLevels: (scope: string) => { key: string; values: 'all' | string[] }[];
     filterColumn: (kind: string, key: string) => LegacyColumn | undefined;
     filterValues: (kind: string, column: LegacyColumn) => string[];

@@ -99,7 +99,15 @@ la ligne ce qui ne va pas.
 - [ ] Ouvrir 3 ou 4 modales au hasard (hébergement, étape, offre, réglages) → corps affiché
       normalement : le repli HTML de `ModalHost` a été retiré, aucune ne devrait s'ouvrir vide.
 
-## Connu, pas corrigé
+## Carte — filtre par colonne
 
-- Carte, panneau Filtres : pas de filtre par valeur de colonne (seulement les interrupteurs et
-  Favoris) — voir [react-migration-plan.md § 10](react-migration-plan.md).
+- [ ] **Carte** → panneau **Filtres** (colonne de gauche) → sous **Hébergements**, ligne repliée
+      **Colonnes et valeurs** → la déplier → « Filtrer par » (colonnes) puis « Valeurs ».
+- [ ] Décocher une valeur (ex. un statut) → les marqueurs concernés disparaissent ; la ligne repliée
+      affiche « · 1 filtrée » ; le compteur du bouton **Filtrer** de l'en-tête augmente.
+- [ ] Même chose sous **Lieux & activités** : les deux collections se filtrent séparément.
+- [ ] Même contenu depuis le bouton **Filtrer** de l'en-tête ; le champ de recherche des valeurs
+      accepte la frappe sans fermer le menu.
+- [ ] Éteindre une collection → son bloc Colonnes et valeurs disparaît.
+- [ ] Recharger → les filtres sont conservés.
+- [ ] Page **Hébergements** → menu **Filtrer** → toujours fonctionnel (mêmes listes, déplacées).

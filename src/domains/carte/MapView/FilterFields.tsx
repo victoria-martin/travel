@@ -1,14 +1,9 @@
 import { Icon } from '@/shared/Icon';
 import { SwitchField } from '@/shared/form-fields/SwitchField';
+import { MapFilterLevels } from './FilterFields/MapFilterLevels';
 import { MAP_KINDS } from './mapKinds';
 
-/*
-  Port partiel de filter-panel.js (mapFilterFields) : les interrupteurs show/hide + favoris
-  uniquement. Pas encore porté : filterLevelsBlock (filtre par valeur de colonne, dans chaque
-  collection affichée) — un mécanisme à part, pas encore construit côté React, aucun autre écran
-  migré n'en a eu besoin jusqu'ici. Partagé par FilterPanel (colonne fixe) et FilterMenu (menu
-  d'en-tête) — mêmes champs, deux emplacements, comme en legacy.
-*/
+// Shared by MapFilterPanel (side column) and FilterMenu (header menu): same fields, two places.
 // TODO; rename to MapFilters et creer un FilterFields generique si besoin
 export function FilterFields() {
   return (
@@ -27,6 +22,9 @@ export function FilterFields() {
             checked={window.mapFilters.shown[kind.key]}
             onChange={() => window.toggleMapKind(kind.key)}
           />
+          {window.mapFilters.shown[kind.key] && (
+            <MapFilterLevels scope={window.mapScope(kind.key)} />
+          )}
         </div>
       ))}
       <div className="map-filter-block map-filter-favorites">
