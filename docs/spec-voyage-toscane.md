@@ -1232,7 +1232,8 @@ Toutes les pages partagent le même cadre : une marge autour, le même écart en
 (en-tête, bandes, contenu), et un bloc du haut qui reste à l'écran.
 
 - **Page avec table** : la page ne défile pas, la table prend la hauteur qui reste et c'est son
-  contenu qui défile, sous les en-têtes de colonnes — sa barre de défilement commence sous eux.
+  contenu qui défile : les en-têtes de colonnes restent au-dessus, hors de la zone qui défile, et
+  suivent son défilement horizontal.
 - **Page sans table** : la page défile, son bloc du haut reste collé en haut — l'en-tête seul, ou
   l'en-tête et ses bandes (météo, fil du trajet dans le détail d'un scénario).
 - **Détail d'un scénario**, au-dessus de 1100px : la page reste fixe, la liste des étapes et le

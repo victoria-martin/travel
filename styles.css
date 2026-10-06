@@ -1028,11 +1028,37 @@ a.btn {
 
 /* ---------- Table ---------- */
 .table-wrap {
+  display: flex;
+  flex-direction: column;
   background: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: 10px;
-  overflow-x: auto;
-  /* table-layout: fixed; */
+  overflow: hidden;
+}
+/* The column headers sit outside the scroller; their band reaches over the scrollbar's gutter. */
+.table-head {
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #ede4d0;
+}
+.table-head table {
+  table-layout: fixed;
+}
+.table-body {
+  overflow: auto;
+}
+/* The body keeps a flattened copy of the headers, only so its columns are sized by them too. */
+.table-body thead th {
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 0;
+  line-height: 0;
+  visibility: hidden;
+}
+.table-body thead .th-sort {
+  height: 0;
+  overflow: hidden;
 }
 table {
   width: 100%;
@@ -1123,16 +1149,10 @@ tr:hover td {
 }
 .table-scroll .table-wrap {
   min-height: 0;
-  overflow: auto;
 }
-.table-scroll thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-/* The vertical scrollbar starts under the column headers (Chrome, Safari; Firefox ignores it). */
-.table-scroll .table-wrap::-webkit-scrollbar-track {
-  margin-top: var(--thead-h, 0px);
+.table-scroll .table-body {
+  flex: 1;
+  min-height: 0;
 }
 
 /* The tabs wrap the whole page, header included: they keep the page's gap between its blocks. */

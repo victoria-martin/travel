@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Icon } from '../Icon';
 import type { Column } from './types';
-import { useHeaderHeightVar } from './useHeaderHeightVar';
+import { DataTableHeadRow } from './DataTableHeadRow';
+import { useSyncedHead } from './useSyncedHead';
 
 type SortDir = 'asc' | 'desc';
 type Sort = { key: string; dir: SortDir } | null;
@@ -25,7 +25,7 @@ export function DataTable<T extends { id: string }>({
   onRowClick?: (item: T) => void;
 }) {
   const [localSort, setLocalSort] = useState<Sort>(null);
-  const { wrapRef, headRef } = useHeaderHeightVar();
+  const { headRef, headTableRef, bodyRef, bodyTableRef } = useSyncedHead();
 
   const legacySortable = kind
     ? new Set(window.sortableColumns(kind).map((column) => column.key))
@@ -44,65 +44,63 @@ export function DataTable<T extends { id: string }>({
   const sorted = kind ? window.sortItems(kind, items) : sortItems(items, columns, localSort);
 
   return (
-    <div className="table-wrap" ref={wrapRef}>
-      <table>
-        <thead ref={headRef}>
-          <tr>
-            {columns.map((column) => {
-              if (!isSortable(column)) return <th key={column.key}>{column.label}</th>;
-              const index = criteria.findIndex((criterion) => criterion.key === column.key);
-              const arrow =
-                index < 0
-                  ? 'arrow-up-down'
-                  : criteria[index].dir === 'asc'
-                    ? 'arrow-up'
-                    : 'arrow-down';
-              return (
-                <th key={column.key}>
-                  <button
-                    className={`th-sort ${index >= 0 ? 'active' : ''}`}
-                    onClick={() => toggleSort(column)}
-                    title={`Trier par ${column.label}`}
-                  >
-                    {column.label}
-                    <span className="th-sort-arrow">
-                      <Icon name={arrow} />
-                      {index >= 0 && criteria.length > 1 ? index + 1 : ''}
-                    </span>
-                  </button>
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((item) => (
-            <tr
-              key={item.id}
-              className={onRowClick ? 'list-row row-openable' : 'list-row'}
-              onClick={
-                onRowClick
-                  ? (event) => {
-                      if (
-                        event.target instanceof Element &&
-                        event.target.closest(
-                          'button, a, input, textarea, select, summary, label, [contenteditable]',
-                        )
-                      ) {
-                        return;
+    <div className="table-wrap">
+      <div className="table-head" ref={headRef}>
+        <table ref={headTableRef}>
+          <colgroup>
+            {columns.map((column) => (
+              <col key={column.key} />
+            ))}
+          </colgroup>
+          <thead>
+            <DataTableHeadRow
+              columns={columns}
+              criteria={criteria}
+              isSortable={isSortable}
+              onSort={toggleSort}
+            />
+          </thead>
+        </table>
+      </div>
+      <div className="table-body" ref={bodyRef}>
+        <table ref={bodyTableRef}>
+          <thead aria-hidden="true">
+            <DataTableHeadRow
+              columns={columns}
+              criteria={criteria}
+              isSortable={isSortable}
+              onSort={toggleSort}
+            />
+          </thead>
+          <tbody>
+            {sorted.map((item) => (
+              <tr
+                key={item.id}
+                className={onRowClick ? 'list-row row-openable' : 'list-row'}
+                onClick={
+                  onRowClick
+                    ? (event) => {
+                        if (
+                          event.target instanceof Element &&
+                          event.target.closest(
+                            'button, a, input, textarea, select, summary, label, [contenteditable]',
+                          )
+                        ) {
+                          return;
+                        }
+                        onRowClick(item);
                       }
-                      onRowClick(item);
-                    }
-                  : undefined
-              }
-            >
-              {columns.map((column) => (
-                <td key={column.key}>{column.render(item)}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                    : undefined
+                }
+              >
+                {columns.map((column) => (
+                  <td key={column.key}>{column.render(item)}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
