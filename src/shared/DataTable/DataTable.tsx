@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Icon } from '../Icon';
 import type { Column } from './types';
+import { useHeaderHeightVar } from './useHeaderHeightVar';
 
 type SortDir = 'asc' | 'desc';
 type Sort = { key: string; dir: SortDir } | null;
@@ -24,6 +25,7 @@ export function DataTable<T extends { id: string }>({
   onRowClick?: (item: T) => void;
 }) {
   const [localSort, setLocalSort] = useState<Sort>(null);
+  const { wrapRef, headRef } = useHeaderHeightVar();
 
   const legacySortable = kind
     ? new Set(window.sortableColumns(kind).map((column) => column.key))
@@ -42,9 +44,9 @@ export function DataTable<T extends { id: string }>({
   const sorted = kind ? window.sortItems(kind, items) : sortItems(items, columns, localSort);
 
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" ref={wrapRef}>
       <table>
-        <thead>
+        <thead ref={headRef}>
           <tr>
             {columns.map((column) => {
               if (!isSortable(column)) return <th key={column.key}>{column.label}</th>;

@@ -48,5 +48,5 @@ const TABLES: Record<string, (items: unknown[]) => ReactNode> = {
 };
 
 export function TodoListTable({ kind, items }: { kind: string; items: unknown[] }) {
-  return <div className="table-scroll">{TABLES[kind]?.(items)}</div>;
+  return TABLES[kind]?.(items);
 }

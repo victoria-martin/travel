@@ -311,38 +311,43 @@ body {
 
 /* ---------- Main ---------- */
 .main {
+  --page-gap: 16px;
   flex: 1;
-  /* padding: 0 var(--main-pad-x) var(--main-pad-y); */
-  padding: var(--main-pad-y) var(--main-pad-x);
+  padding: 0 var(--main-pad-x) var(--main-pad-y);
   min-width: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--page-gap);
 }
-.view-header {
+/* The top block sticks to .main's top and carries its top padding: nothing shows above it.
+   .view-top groups several bands (scenario detail); alone, .view-header is that block. */
+.view-header,
+.view-top {
   position: sticky;
   top: 0;
   z-index: 20;
+  flex-shrink: 0;
+  margin: 0 calc(var(--main-pad-x) * -1);
+  padding: var(--main-pad-y) var(--main-pad-x) 0;
+  background: var(--paper);
+}
+.view-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  /* margin: 0 calc(var(--main-pad-x) * -1) 14px; */
-  /* padding: var(--main-pad-y) var(--main-pad-x) 8px; */
   gap: 16px;
   flex-wrap: wrap;
-  background: var(--paper);
 }
-/* Sticky top: 0 lands below .main's top padding: this strip hides what scrolls through it.
-   Taller than any padding (52px on mobile): .main clips it at its own top edge. */
-.view-header::before {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: calc(var(--main-pad-x) * -1);
-  right: calc(var(--main-pad-x) * -1);
-  height: 100vh;
-  background: var(--paper);
+.view-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+}
+.view-top > .view-header {
+  position: static;
+  margin: 0;
+  padding: 0;
 }
 .view-header-actions {
   display: flex;
@@ -415,11 +420,8 @@ body {
   line-height: 1.15;
 }
 .scenario-weather-banner {
-  position: sticky;
-  top: var(--view-header-h, 0px);
-  z-index: 18;
   width: calc(100% + (var(--main-pad-x) * 2));
-  margin: 0 calc(var(--main-pad-x) * -1) 16px;
+  margin: 0 calc(var(--main-pad-x) * -1);
   padding: 10px var(--main-pad-x) 12px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -1110,7 +1112,6 @@ tr:hover td {
 .main:has(.table-scroll) {
   overflow: hidden;
 }
-.main:has(.table-scroll) .view-header,
 .main:has(.table-scroll) .table-header-actions {
   flex-shrink: 0;
 }
@@ -1129,7 +1130,17 @@ tr:hover td {
   top: 0;
   z-index: 1;
 }
+/* The vertical scrollbar starts under the column headers (Chrome, Safari; Firefox ignores it). */
+.table-scroll .table-wrap::-webkit-scrollbar-track {
+  margin-top: var(--thead-h, 0px);
+}
 
+/* The tabs wrap the whole page, header included: they keep the page's gap between its blocks. */
+.transports-react-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--page-gap);
+}
 .main:has(.table-scroll) > .transports-react-view,
 .transports-react-view:has(.table-scroll) > [role='tabpanel'] {
   flex: 1;
@@ -2539,15 +2550,12 @@ tr:hover td {
   font-family: inherit;
 }
 /* Le fil du trajet : un maillon par étape retenue, large comme ses nuits, qui mène à sa carte.
-   Il se pose sous l'en-tête et y reste : on s'en sert justement quand la liste a défilé. */
+   Il vit dans le bloc du haut de la page (.view-top), qui reste à l'écran quand la liste défile. */
 .route-trail {
-  position: sticky;
-  top: var(--view-header-h, 0px);
-  z-index: 15;
   display: flex;
   align-items: stretch;
   gap: 4px;
-  margin: 0 calc(var(--main-pad-x) * -1) 16px;
+  margin: 0 calc(var(--main-pad-x) * -1);
   padding: 4px var(--main-pad-x) 12px;
   border-bottom: 1px solid var(--line);
   background: var(--paper);
@@ -2566,10 +2574,14 @@ tr:hover td {
   color: var(--ink);
   text-align: left;
   cursor: pointer;
+  /* TODO:  à géneraliser sur le boutoàon outline ou autre; */
+  transition: border-color 0.2s;
 }
+
 .route-trail-link:hover {
   border-color: var(--stone);
-  background: var(--white);
+  /* background: var(--white); */
+  background: var(--paper-raised);
 }
 .route-trail-bar {
   height: 4px;
@@ -2614,7 +2626,7 @@ tr:hover td {
 .route-strip {
   display: flex;
   gap: 8px;
-  margin: 0 calc(var(--main-pad-x) * -1) 16px;
+  margin: 0 calc(var(--main-pad-x) * -1);
   padding: 2px var(--main-pad-x) 6px;
 }
 .route-strip-link {
@@ -2676,21 +2688,11 @@ tr:hover td {
   text-overflow: ellipsis;
 }
 
-/* Le détail d'un scénario tient en trois zones : l'en-tête et le fil du trajet restent en haut,
-   la liste des étapes et le panneau de droite scrollent chacun pour soi. */
+/* Le détail d'un scénario tient en deux zones : le bloc du haut reste en place, la liste des étapes
+   et le panneau de droite scrollent chacun pour soi. */
 .main:has(.scenario-detail-cols) {
   overflow: hidden;
   padding-bottom: 0;
-}
-/* Les deux bandes du haut ne se compriment pas sous une longue liste : elles la surplombent. */
-.main:has(.scenario-detail-cols) > .view-header,
-.main:has(.scenario-detail-cols) > .route-trail,
-.main:has(.scenario-detail-cols) > .route-strip {
-  flex-shrink: 0;
-}
-.main:has(.scenario-detail-cols) .route-trail {
-  position: static;
-  margin-bottom: 12px;
 }
 .scenario-detail-cols {
   display: grid;
@@ -2807,16 +2809,10 @@ tr:hover td {
 @media (max-width: 1100px) {
   .main:has(.scenario-detail-cols) {
     overflow-y: auto;
-    display: block;
     padding-bottom: var(--main-pad-y);
   }
-  /* Once .main scrolls, the trail sticks right under the weather banner. */
-  .main:has(.scenario-detail-cols) .route-trail {
-    position: sticky;
-    top: calc(var(--view-header-h, 0px) + var(--weather-banner-h, 0px));
-    margin-bottom: 16px;
-  }
   .scenario-detail-cols {
+    flex: none;
     grid-template-columns: minmax(0, 1fr);
   }
   .scenario-detail-main,
@@ -3840,9 +3836,16 @@ tr:hover td {
     align-items: center;
     z-index: 26;
   }
+  /* The top block clears the fixed top bar (52px) and covers what scrolls under it. */
   .main {
-    padding-top: 52px;
     padding-bottom: 58px;
+  }
+  .view-header,
+  .view-top {
+    padding-top: 52px;
+  }
+  .view-top > .view-header {
+    padding-top: 0;
   }
 
   .mobile-nav-bar {

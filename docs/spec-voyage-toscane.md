@@ -1226,6 +1226,18 @@ posé depuis une pastille, « Aucun statut » ❔ par défaut.
 
 ## 5. Règles transverses
 
+### Le layout d'une page
+
+Toutes les pages partagent le même cadre : une marge autour, le même écart entre leurs blocs
+(en-tête, bandes, contenu), et un bloc du haut qui reste à l'écran.
+
+- **Page avec table** : la page ne défile pas, la table prend la hauteur qui reste et c'est son
+  contenu qui défile, sous les en-têtes de colonnes — sa barre de défilement commence sous eux.
+- **Page sans table** : la page défile, son bloc du haut reste collé en haut — l'en-tête seul, ou
+  l'en-tête et ses bandes (météo, fil du trajet dans le détail d'un scénario).
+- **Détail d'un scénario**, au-dessus de 1100px : la page reste fixe, la liste des étapes et le
+  panneau de droite défilent chacun pour soi. En dessous, voir le plan mobile.
+
 ### Filtrer
 
 Une seule ligne, deux menus déroulants à checkboxes — les colonnes actives, puis leurs valeurs —
