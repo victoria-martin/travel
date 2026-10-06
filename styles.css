@@ -2803,6 +2803,10 @@ tr:hover td {
     position: sticky;
     margin-bottom: 16px;
   }
+  /* Both would stick to the same top once .main scrolls: only the trail stays pinned. */
+  .main:has(.scenario-detail-cols) .scenario-weather-banner {
+    position: static;
+  }
   .scenario-detail-cols {
     grid-template-columns: minmax(0, 1fr);
   }

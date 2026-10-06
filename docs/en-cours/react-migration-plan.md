@@ -611,6 +611,4 @@ Filtrer des pages). Panneau du jour du Journal
 
 **Manques et points connus :**
 
-- Non vérifié, déduit du CSS : sous 1100px, le fil du trajet et la bannière météo du détail
-  scénario collent tous deux à `--view-header-h` ; affichés ensemble, la bannière (z-index 18)
-  recouvrirait le fil (15).
+Aucun connu.
