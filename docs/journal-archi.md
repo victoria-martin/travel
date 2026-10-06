@@ -1,0 +1,803 @@
+# Journal d'archi — app travel
+
+Historique des décisions de découpage. Les critères en vigueur vivent dans [CLAUDE.md](../CLAUDE.md).
+
+
+- **2026-10-03** — les champs d'un formulaire de modale React (`ActualExpenseModal.tsx`,
+  `FixedCostModal.tsx`) se composent désormais depuis six briques génériques de
+  [src/shared/](../src/shared/) — `TextField`, `TextareaField`, `SelectField`, `FieldRow`,
+  `ModalSaveButton`, `ModalTitle` — plutôt que du balisage `.field`/`<select>`/bouton
+  d'enregistrement écrit en clair dans chaque formulaire (voir « Un champ de formulaire de modale
+  vit dans `shared/` » plus haut). Les deux formulaires déjà portés ont été réécrits pour les
+  consommer.
+
+- **2026-10-02** — un choix fermé à peu d'options (zone d'étape, style météo, style de phrase,
+  indicateur hors dispo) se pose désormais en rangée de cartes via un seul composant partagé,
+  `radioCardField` ([radio-card-field.js](../js/views/radio-card-field.js)) : les deux patrons de
+  cartes qui coexistaient (zone d'étape en grille, style météo empilé plein largeur) et les deux
+  `<select>` natifs (indicateur hors dispo, style de phrase) convergent vers le même balisage —
+  `.radio-card-field` / `.radio-card-grid` / `.radio-card` dans [styles.css](../styles.css),
+  remplaçant `.step-area-*` et `.weather-style-*`. Repéré sur la modale Réglages : le dropdown natif
+  détonnait visuellement à côté des cartes Cercle/Rectangle et Standard/Compact/Lignes.
+
+- **2026-10-01** — les tables Hébergements et Lieux & activités gagnent une colonne **Étape** : le
+  rang et le nom de l'étape du **scénario choisi** où vit la ligne — directement pour un
+  hébergement (`step.accommodationId`), directement ou en activité pour un lieu
+  (`step.attractionId`, ou en extra de l'étape ou de son groupe). `chosenStepForPlace`
+  ([chosen-step-for-place.js](../js/views/scenarios/chosen-step-for-place.js)) va dans
+  `js/views/scenarios/` malgré ses deux consommateurs hors du domaine — même précédent que
+  `nearestAccommodationStep` : une brique qui lit les étapes vit avec elles. Cette colonne est
+  aussi le premier critère des deux tris par défaut, pour ouvrir la liste dans l'ordre du plan
+  retenu ; sans scénario choisi ou lieu hors plan, l'étape est vide et retombe en fin de tri.
+
+  Éditer les tags d'une ligne passait par un champ texte libre + `datalist` : il devient un menu
+  déroulant à cases à cocher, sur le patron du panneau Filtrer (`.filter-option`) plutôt qu'une
+  brique neuve — `tagsCell` ([tags-cell.js](../js/views/tags-cell.js)), seul fichier touché puisque
+  Hébergements et Lieux & activités en sont les deux seuls consommateurs. Le vocabulaire proposé
+  reste l'union des tags déjà posés (plus le vocabulaire par défaut des lieux,
+  `DEFAULT_ATTRACTION_TAGS`) : aucune liste n'est à administrer, cocher un tag absent de la liste
+  via le champ du bas le crée. `tagsField` (la modale), qui sert aussi les catégories de Dépenses,
+  n'est pas touché — hors du périmètre demandé, et un troisième consommateur à qui ce menu ne
+  conviendrait pas forcément de la même façon.
+
+- **2026-10-01** — la sidebar se regroupe en 3 sections repliables
+  (`NAV_SECTIONS`, [nav-items.js](../js/views/nav-items.js)), Accueil restant hors groupe en tête.
+  `NAV_ITEMS` reste plat : la barre mobile ([mobile-nav/](../js/views/mobile-nav/)) n'en consomme que
+  les clés, le groupement ne la concerne pas. Chaque section est un `<details>`/`<summary>` natif —
+  même patron que `recapGroup` du récap scénario — dont le pli persiste dans
+  `prefs.navSectionFolds` ([prefs.js](../js/prefs.js)). Deux découpages comparés avant de choisir :
+  - **A, par phase du voyage** (essayé en premier, remplacé) — Préparation : Scénarios, Dépenses,
+    Transports, Valise, À faire · Sur place : Hébergements, Lieux & activités, Villes, Carte ·
+    Pendant le séjour : Journal, Notes, Phrases clé, Infos utiles.
+  - **B, par nature du contenu** (retenu) — Lieux : Hébergements, Lieux & activités, Villes, Carte ·
+    Budget & logistique : Dépenses, Transports, Scénarios · Voyage en cours : Journal, Notes,
+    Phrases clé, Infos utiles, Valise, À faire.
+    Revenir à A : remplacer le tableau `NAV_SECTIONS` par les trois groupes ci-dessus, rien d'autre à
+    toucher (même mécanisme de pli, mêmes clés `NAV_ITEMS`). Remplace la tâche <!--t:s7qk--> du
+    backlog, dont le critère COLLECTER/DÉCIDER/LIRE n'a pas été retenu.
+
+- **2026-09-20** — nouvelle page **Villes** ([js/views/villes/villes.js](../js/views/villes/villes.js)),
+  entrée de barre latérale à part entière plutôt que mode de Lieux & activités — choix posé
+  explicitement (AskUserQuestion), donc en tension avec le critère « une lecture dérivée est un mode
+  de la page qu'elle lit » de la tâche <!--t:s7qk--> ([PLAN.md](../PLAN.md)), qui aura Villes à trancher
+  avec le reste. Une première version groupait les lieux par ville en accordéons ; elle s'efface
+  devant une table classique — sur sa propre demande (« fais moi donc une table ! ») — pour rester
+  dans le seul patron de liste de l'app : [columns.js](../js/views/villes/columns.js) déclare
+  `COLUMN_SETS.villes` en réutilisant telles quelles les cellules de
+  [attractions/columns.js](../js/views/attractions/columns.js) (même entité, mêmes rendus), avec la
+  ville en tête et en premier niveau de tri (`SORT_DEFAULTS.villes`, ville puis nom) — préférences de
+  tri et colonnes propres à `villes`, pour ne pas modifier celles de Lieux & activités en touchant
+  l'une ou l'autre page. Une ligne ouvre la fiche du lieu en panneau (`openAttractionSheet`), déjà
+  câblée par `ROW_CLICKS.attractions` — nouvel enregistrement `ROW_CLICKS.villes`, même fonction.
+
+- **2026-09-19** — les marqueurs de la carte générale passent du disque plat (`L.circleMarker`, sans
+  glyph malgré ce que disait le commentaire d'en-tête du fichier — resté d'une intention jamais
+  posée) à une pastille `L.divIcon` portant l'icône Lucide de sa collection — 🏠 `house` pour un
+  hébergement, 🏛 `landmark` pour une attraction, les mêmes que leur entrée du panneau Filtrer —
+  teintée de la couleur de son type (`mapTypePinIcon`, [markers.js](../js/views/map/markers.js)). Un
+  seul glyph par collection plutôt qu'un par type : huit icônes distinctes à cette taille ne se
+  distingueraient plus, la couleur porte déjà la distinction de type ailleurs dans l'app. Une
+  **légende** reprend les deux tables sous le panneau Filtrer
+  ([legend.js](../js/views/map/legend.js)) — rien à tenir à jour à part, elle relit
+  `ACCOMMODATION_TYPES` / `ATTRACTION_TYPES`.
+
+  Le popup d'un marqueur s'ouvre désormais au survol et se referme en quittant le point ; un clic
+  l'épingle, il reste alors à l'écran jusqu'à sa croix ou un clic ailleurs sur la carte
+  (`addTypePinMarker`). `bindPopup` attache son propre clic « toggle » : sans le retirer
+  (`marker.off('click')`), cliquer sur un marqueur déjà ouvert par survol l'aurait refermé au lieu
+  de l'épingler.
+
+- **2026-09-19** — le panneau Filtrer (carte + listes) tient sur **une seule ligne** : deux menus
+  déroulants à vraies checkboxes (`<input type="checkbox">` dans un `<label class="filter-option">`,
+  pas un bouton avec une icône de coche — un `<select>` natif ni l'un ni l'autre ne savent porter
+  plusieurs coches). Le premier coche les colonnes actives (« Tout cocher » en tête,
+  `filterColumnsMenu`) ; le second regroupe les valeurs de toutes les colonnes cochées **dans le
+  même menu**, un groupe (`.inline-menu-group`) par colonne, plutôt qu'un menu par colonne
+  (`filterValuesMenu`, [values-menu.js](../js/views/filters/values-menu.js)). Ni pile de lignes ni
+  ligne par niveau : `toggleFilterLevel` / `setAllFilterLevels` / `setAllFilterValuesEverywhere`
+  ([levels.js](../js/views/filters/levels.js)) remplacent `addFilterLevel` / `setFilterLevelColumn` /
+  `removeFilterLevel`, devenus inutiles puisqu'une colonne ne se choisit ni ne se retire plus ligne
+  par ligne — décocher sa case dans le premier menu suffit.
+
+  Les deux checklists partent **toutes cochées** — colonnes et valeurs — plutôt que vides : un
+  niveau neuf porte `values: 'all'`, un sentinel plutôt que la liste énumérée, pour qu'une valeur
+  apparue plus tard dans les données reste incluse sans qu'on ait à la recocher ; il ne se fige en
+  tableau explicite qu'au premier décochage. Tout décocher un niveau exclut désormais tout — avant,
+  un niveau sans valeur cochée était lu comme « pas de filtre » ; `keptByFilters` perd ce
+  court-circuit sur `values.length === 0`, qui contredirait maintenant un décochage volontaire.
+
+  Le filtre devient une **préférence** et non plus le geste en cours : il vit dans
+  `prefs.filters[scope]` ([prefs.js](../js/prefs.js)) et survit au rechargement, comme le tri.
+  `filterState` le crée à la demande avec toutes les colonnes actives par défaut ; la carte, dont le
+  `scope` (`carte:hebergements`) diffère du `kind` qu'il lit, enregistre ce mapping à part
+  (`registerFilterScope`, [map/filters.js](../js/views/map/filters.js)) plutôt que d'écrire dans l'état
+  directement comme avant — `filterState` est désormais le seul point d'écriture.
+
+- **2026-09-19** — la pastille d'attraction sur la carte perd son emoji : `addAttractionMarker`
+  ([markers.js](../js/views/map/markers.js)) dessine désormais un disque coloré, sur le même patron
+  que `addAccommodationMarker` — seule la couleur du type distingue une ville d'une activité et les
+  types d'activité entre eux, comme c'était déjà le cas pour les hébergements. `.map-pin`
+  (styles.css) devient mort avec le `divIcon` qui le portait, et disparaît.
+
+- **2026-09-19** — la carte, générale ou du détail d'un scénario, montre toujours les pastilles
+  d'attractions et de villes. Sur la carte générale, sélectionner un scénario avec « Lieux du
+  scénario » ne filtrait pas que les hébergements aux étapes retenues : `scenarioSelection`
+  ([markers.js](../js/views/map/markers.js)) restreignait aussi les attractions à celles ajoutées
+  comme extras payants du scénario — les villes, qui n'en sont presque jamais, disparaissaient de
+  fait. Ce filtre ne porte donc plus que sur les hébergements
+  (`scenarioAccommodationIds`) ; attractions et villes du voyage s'affichent dans les deux modes.
+  Le détail d'un scénario, lui, ne dessinait que les pastilles d'étape (lettres) et le tracé,
+  aucune attraction : `addAccommodationMarker` / `addAttractionMarker` étaient câblées en dur sur
+  `leafletMap`, la globale de la page Carte — inutilisables ailleurs. Elles prennent désormais la
+  carte Leaflet en argument, ce qui laisse `initScenarioDetailMaps`
+  ([detail-map.js](../js/views/scenarios/detail/detail-map.js)) leur ajouter les attractions du
+  voyage sur sa propre instance.
+
+- **2026-09-19** — le bloc Voiture d'un scénario affichait un total (offre + options) sans jamais
+  montrer le prix de base : `scenarioOfferTotal` ([money.js](../js/views/scenarios/money.js)) l'incluait
+  déjà dans son calcul, mais aucune ligne ne le disait — seules les options apparaissaient, rendant
+  un scénario sans prix/jour renseigné indiscernable d'un scénario dont le prix était bien compté.
+  `scenarioOfferBaseLine` ([offer-block.js](../js/views/scenarios/detail/offer-block.js)) ajoute la
+  ligne manquante entre le sélecteur d'offre et les options, sur le modèle des lignes `.expense-line`
+  déjà en place ; sans prix par jour renseigné sur l'offre, elle l'affiche en toutes lettres au lieu
+  d'un silencieux 0 €.
+
+  Le même trou existait tronçon par tronçon dans le récap : la ligne « 🚗 1 h 11 » entre deux étapes
+  ne portait que la durée, alors que l'essence et le péage du voyage entier se lisent déjà plus bas
+  dans « Le détail de la route ». `legFuelCost` / `legTollCost` ([road.js](../js/views/scenarios/road.js))
+  reprennent le même calcul que `scenarioFuelCost` / `scenarioTollCost`, appliqué à la seule distance
+  du tronçon OSRM plutôt qu'au total du scénario — jamais le budget saisi à la main, qui ne porte que
+  sur le voyage entier. Le label `time` de `LEG_LABELS` ([step-legs.js](../js/views/scenarios/detail/step-legs.js))
+  devient `recap`, seul consommateur de ce label (`stepLegRecapSlot`, utilisé uniquement par
+  `recapLegRow`) ; les deux autres labels (`full` pour la gouttière, `road` pour la bande de route)
+  restent inchangés, chacun avec ses propres consommateurs.
+
+- **2026-09-19** — les deux checklists loueur ↔ modèle (« Modèles proposés » du loueur,
+  « Proposé par » du modèle) deviennent des `<select multiple>` natifs plutôt qu'une liste de
+  cases à cocher — même donnée, plus compact. `onchange` lit `select.selectedOptions` en une
+  fois (`setProviderModels`, `setCarModelProviders`,
+  [model-rows.js](../js/views/providers/modal/model-rows.js),
+  [provider-rows.js](../js/views/car-models/modal/provider-rows.js)), ce qui remplace le toggle
+  unitaire par item d'avant. Le loueur dont une offre est déjà relevée reste verrouillé
+  sélectionné via `<option disabled>` — `selectedOptions` le respecte sans code dédié, comme le
+  `disabled` du checkbox avant lui.
+
+- **2026-09-19** — un loueur peut de nouveau se créer en mode Voiture : le retrait de `car` dans
+  `TRANSPORT_MODES` (`234bd68`, décision correcte pour les trajets — une location n'est pas un
+  trajet daté) avait aussi vidé le select Mode du formulaire loueur, qui partageait cette même
+  liste. Repéré en lançant l'app (Playwright) plutôt qu'à la lecture du code, sur une demande
+  ambiguë (« il faut pouvoir créer une voiture qd je créé un loueur ») qui décrivait en fait ce
+  bug — le champ « Nouveau modèle » existait déjà dans `model-rows.js`, mais restait gated
+  derrière un `mode === 'car'` devenu inatteignable. `PROVIDER_MODES`
+  ([transport-modes.js](../js/transport-modes.js)), superset de `TRANSPORT_MODES` + `car`, sert
+  désormais le seul domaine loueur (`modal/form.js`, `columns.js`, `mode-tag.js`,
+  `quick-create.js`) ; `TRANSPORT_MODES` reste inchangé pour les trajets, où la voiture n'a pas à
+  revenir.
+
+- **2026-09-19** — la motorisation, la boîte et la consommation d'un modèle de voiture se
+  suggèrent depuis un catalogue embarqué plutôt que de rester à taper à la main : 178 couples
+  marque/modèle agrégés du jeu de données officiel ADEME Car Labelling (data.gouv.fr, licence
+  ouverte) dans [consumption-db.js](../js/views/car-models/consumption-db.js), généré une fois hors
+  ligne — pas d'appel réseau au runtime, l'app doit tourner sans. `lookupCarConsumption` matche le
+  nom du modèle le plus long apparaissant dans le texte tapé (« Yaris Cross » l'emporte sur
+  « Yaris »), et ne complète jamais un champ déjà rempli — une suggestion, pas une réécriture. Elle
+  s'applique aux deux points d'entrée : en direct sur le champ Modèle de la modale dédiée
+  ([consumption-suggest.js](../js/views/car-models/modal/consumption-suggest.js)), et dans
+  `createCarModelNamed` lui-même pour les trois créations rapides par nom (offre, brouillon
+  d'offre, modèle tapé depuis la fiche d'un loueur) — centraliser là plutôt que de dupliquer
+  l'appel dans les trois fichiers, puisque c'était déjà le seul point d'entrée commun. La base ne
+  couvre que le catalogue neuf du trimestre de sa génération : ni les générations précédentes
+  (Clio 4, Golf 7…) ni les modèles temporairement hors gamme (Golf, Polo au moment de l'écrire) —
+  décision assumée plutôt que d'agréger plusieurs trimestres pour une couverture plus large, plus
+  lourde et aux valeurs moins homogènes.
+
+- **2026-09-19** — les 3 boutons Carte/Argent/Valise du détail scénario quittent leur rail
+  vertical (bord droit, `.scenario-side-rail`, supprimé) pour le header
+  ([side-tabs.js](../js/views/scenarios/detail/side-tabs.js)), groupe « lire la vue » comme
+  Tableau/Cartes ailleurs — recliquer l'actif referme le panneau, comportement inchangé. D'abord
+  posés en `toolbarToggleGroup` (la pilule soudée de Tableau/Cartes), puis repassés en trois
+  `toolbarButton` séparés : la pilule dit « un seul choix parmi N, toujours actif », alors qu'ici
+  on peut aussi tout refermer — un état qu'un toggle-group ne sait pas montrer, repéré à l'écran
+  par l'utilisatrice. Sous 640px, où `.scenario-detail-cols` n'a plus de colonne de droite, le
+  même bouton ouvre le
+  contenu en sheet plutôt que de le pousser sous les étapes (`onScenarioPanelToggle`,
+  `window.matchMedia('(max-width: 639px)')` — première branche JS sur la largeur de l'app, tout le
+  reste jusqu'ici passait par du CSS pur). Le sheet réutilise le mécanisme `openSheet`/`MODAL_TYPES`
+  déjà en place pour les fiches d'entité, avec une entrée `scenario-panel` générique dont le
+  `body` retrouve l'onglet demandé dans `SCENARIO_SIDE_TABS` et rend son bloc existant tel quel —
+  sur le patron du `valise-composer` déjà non-formulaire (pas de `edits`, un bouton Fermer en pied
+  plutôt qu'Enregistrer). `.scenario-detail-side` et `.scenario-split` sont masqués sous 640px pour
+  qu'une préférence posée sur desktop (`prefs.scenarioSidePanel`, ouvert sur `'map'` par défaut) ne
+  s'affiche pas en double sous le sheet. A aussi fait remonter une régression du même geste : les 3
+  boutons + séparateur + ⋮ ne rentraient plus à côté du titre sur 390px et l'écrasaient à zéro
+  (le titre entier passait lettre par lettre) — `.scenario-header` repasse en une colonne sous
+  640px, identité au-dessus des actions. Repéré en testant à l'écran plutôt qu'en relisant le CSS.
+  Une régression preexistante et sans rapport, la même casse lettre par lettre sur le nom d'une
+  étape dans sa carte, reste ouverte — pas touchée ici.
+
+- **2026-09-19** — les tables trop larges pour se lire en ligne (Hébergements et Lieux &
+  activités, 23 colonnes ; Offres de voiture, 17) s'ouvrent en sheet plutôt qu'en repli carte :
+  le mécanisme existait déjà pour Hébergements et Prestataires (`ROW_CLICKS` + `openSheet(type,
+id)`, [table.js](../js/views/table.js) / [modal.js](../js/modals/modal.js)) — la même modale d'édition,
+  posée en panneau de droite au lieu du centre — et `.modal-sheet{max-width:100%}` la fait déjà
+  passer plein écran sous 440px, desktop et mobile compris, sans media query dédiée. Étendre à deux
+  entités de plus n'a donc été que les brancher sur le patron existant
+  ([attractions/sheet.js](../js/views/attractions/sheet.js), [rentals/sheet.js](../js/views/rentals/sheet.js))
+  — pas une nouvelle brique. Les colonnes retenues (23/23/17) viennent d'un comptage réel des
+  `COLUMN_SETS`, pas d'une impression ; Transports (16) et les tables plus légères (Villes,
+  Charges fixes, 6-10 colonnes) restent posées dans [PLAN.md](../PLAN.md).
+
+- **2026-09-19** — le mode voiture disparaît des Transports : la décision « une location de
+  voiture n'est pas un transport » (docs/spec-voyage-toscane.md, Décisions actées) était déjà
+  écrite, mais le mode `car` de `TRANSPORT_MODES` ([transport-modes.js](../js/transport-modes.js))
+  la contredisait — un trajet pouvait référencer une offre avec ses propres dates, en doublon du
+  bloc Voiture d'un scénario (`scenario.offerId`, sans dates à lui, dont le coût se calcule déjà
+  sur les jours du scénario). Grep à l'appui : rien ne lisait le duo de points A→B d'un trajet
+  voiture ni son `offerId` en dehors de ce doublon — un trajet non rattaché à un scénario ne
+  servait qu'à s'afficher dans l'onglet Trajets et à compter dans le budget une fois réservé, deux
+  choses qu'une offre fait déjà toute seule. Le mode est donc retiré partout, pas seulement du
+  picker de scénario. `providerNoun` ([provider-label.js](../js/views/providers/provider-label.js))
+  passe d'une lecture de `TRANSPORT_MODES.car.carrier` (un champ devenu uniformément vrai une fois
+  la voiture partie) à un `mode === 'car'` explicite. La migration
+  (`adoptCarTransports`, [storage.js](../js/storage.js)) redescend l'offre d'un trajet voiture déjà
+  rattaché sur `scenario.offerId` avant de le détacher — le trajet n'est pas supprimé, il reste sur
+  la page Transports, juste sans mode reconnu (`❔ Non renseigné`) si on veut le rouvrir.
+
+- **2026-09-18** — première passe mobile : sous 640px, une barre du bas dédiée
+  (`.mobile-nav-bar`, [mobile-nav/](../js/views/mobile-nav/)) remplace la sidebar — 4 pages
+  principales + un onglet **Plus** qui ouvre un tiroir listant le reste, choisi parmi trois pistes
+  dessinées dans un artifact et comparées côte à côte avant de trancher (une quatrième option,
+  redocker les 8 icônes du rail telles quelles en bas, a été codée puis abandonnée : trop serré,
+  pas ce qui avait été validé). L'ordre — quelles pages sont dans la barre, lesquelles dans Plus —
+  est une préférence locale (`prefs.mobileNavOrder`, jamais synchronisée) qu'on réorganise depuis
+  un bouton du tiroir, en glissant les lignes sur le patron déjà établi par `step-drag.js` (poignée
+  `⠿`, ligne de dépôt via `markDrop`/`overTopHalf` de [drag.js](../js/views/drag.js)) — donc pas de
+  support tactile réel, comme les autres glissers de l'app. `NAV_ITEMS`
+  ([nav-items.js](../js/views/nav-items.js)) devient la table unique des huit pages, partagée par la
+  sidebar desktop (ordre fixe, boucle plutôt que huit appels à la main) et la barre mobile (ordre
+  personnalisable) — une neuvième, Valise, rejoint la liste au passage puisqu'elle venait d'arriver
+  dans la sidebar. `.sidebar` elle-même s'effondre à taille nulle sous 640px (`position: fixed`,
+  ce qui la sort du flux flex de `#app` et laisse `.main` seul enfant prendre toute la place) : ses
+  `.nav-btn` disparaissent, mais le sélecteur de voyage et le bloc synchro/réglages, ses seuls
+  enfants à sortir eux-mêmes en `position: fixed`, restent épinglés en haut, à gauche et à droite —
+  le sélecteur y garde nom et sous-titre du voyage sur deux lignes (`.travel-identity` remise à
+  `display: flex`, la règle à 900px qui ne garde que l'emoji ne s'appliquant qu'au rail vertical) :
+  au pouce, l'icône seule ne suffisait pas à dire quel voyage est ouvert. Piège rencontré en route
+  sur le `.view-header` sticky, repéré par l'utilisatrice en testant en vrai plutôt qu'à la
+  relecture du CSS : son `top: 0` de base se cale déjà sur le bord intérieur du padding de `.main`,
+  donc une fois `.main { padding-top: 52px }` posé pour dégager la barre fixe, `top: 0` suffit — y
+  ajouter `top: 52px` cumulait les deux et décalait le sticky de 104px, avec un bout de carte
+  scrollée visible dans l'écart. Vérifié en Playwright (chromium déjà en cache local, screenshots
+  dans `~/Downloads/mobile-nav-*`) plutôt que sur un raisonnement CSS seul. Les tables (Transports,
+  Locations, Villes, Charges fixes…) débordent encore à l'horizontale sous cette largeur — pas dans
+  ce lot, gardé dans [PLAN.md](../PLAN.md) (« Adapter le contenu au mobile »), et probablement voué à
+  devenir un sheet plutôt qu'un simple repli carte, à trancher dans ce chantier-là.
+
+- **2026-09-17** — la barre d'outils d'un en-tête (`.view-header-actions` / `.list-section-actions`)
+  se lit en **4 groupes fixes**, séparés par `toolbarSeparator()`
+  ([separator.js](../js/views/toolbar/separator.js)) : lire la vue (tri, filtre, colonnes) → garder/
+  filtrer ce qui reste (favoris, tableau/cartes, comparer, archivés) → agir (importer, ＋) → régler
+  (⋮, toujours seul en dernier). Un groupe absent d'un écran ne laisse pas de séparateur orphelin —
+  quand le groupe 1 est conditionnel (`mode === 'table'`), le séparateur qui le ferme est dans la
+  même condition que lui, pas à côté. `.toolbar-separator` est un simple trait vertical de 1px sur
+  `--line`, posé en `<span>` dans le flux — pas de sous-conteneurs par groupe, le fichier reste un
+  header écrit en clair. A fait remonter deux en-têtes qui violaient déjà l'ordre : Scénarios
+  mêlait `+ Nouveau` (une action) avec Comparer/Archivés (des filtres) dans le désordre, et la Carte
+  écrivait sélecteur de scénario avant le bouton Filtrer alors que les deux façonnent la vue.
+
+- **2026-09-17** — un lien Google Maps de recherche d'hôtel porte sa **date de recherche** dans
+  l'URL finale, motif `!5mN!1s<date>` — non documenté par Google, à confirmer si un lien la porte
+  autrement. `googleMapsSearchDate` ([GoogleMaps.js](../apps-script/GoogleMaps.js)) l'extrait à côté du
+  nom et des coordonnées ; côté front elle n'a pas de champ à elle, elle s'écrit directement dans
+  `modal.payload.searchDate` ([google-maps.js](../js/google-maps.js)) sur le modèle des autres écritures
+  de payload sans `<input>` (`modal.payload.modelId = …` dans les modales voiture/transport) — un
+  champ visible aurait suggéré qu'on la corrige à la main, alors qu'elle ne sert qu'à comparer.
+  L'indicateur « hors dispo » qui en découle ([availability-check.js](../js/views/availability-check.js))
+  se **calcule** à chaque rendu depuis les dates existantes plutôt que de se stocker, pour la même
+  raison qu'ailleurs dans l'app : rien ne doit pouvoir diverger si une des dates comparées change
+  ensuite. La même fonction sert l'hébergement (date de recherche vs disponible du·au) et l'étape
+  d'un scénario (ses propres dates vs la même fenêtre) — deux comparands, un seul calcul. Trois
+  peintures de la pastille cohabitent dans [availability-badge.js](../js/views/availability-badge.js),
+  choisies depuis le menu Affichage ([settings/blocks.js](../js/views/settings/blocks.js)) : c'est un
+  réglage à tester, pas une préférence a priori tranchée. `isoToDate`
+  ([dates.js](../js/dates.js)) sort en primitive transverse à cette occasion — trois fichiers le
+  recalculaient déjà à la main (`split('-').map(Number)`), la comparaison en ajoutait un quatrième
+  usage.
+
+- **2026-09-16** — ce que coûte la **route** est une dérivation du tracé, pas une saisie : les
+  kilomètres qu'OSRM rend déjà pour la gouttière chiffrent l'essence et les péages, et rien ne
+  s'enregistre — déplacer une étape les refait. Le partage suit ce que chaque chiffre EST : la
+  consommation vit sur le **modèle** ([columns.js](../js/views/car-models/columns.js)), au même titre
+  que sa boîte, tandis que le prix du litre et le péage au kilomètre sont **du voyage**
+  ([road-rates.js](../js/views/travels/road-rates.js)) — on y compare des itinéraires, pas des
+  carburants. Le péage porte sur toute la distance faute qu'OSRM dise quelle part est à barrière :
+  c'est un ordre de grandeur, donc chaque ligne du récap redit le taux dont vient son montant
+  ([road-rows.js](../js/views/scenarios/detail/road-rows.js)). Le point dur est que le récap se rend
+  **synchrone** alors que la distance vient d'un fetch : [routing.js](../js/routing.js) garde donc,
+  à côté du cache de promesses, la distance **résolue** (`routeDistance`, `null` tant qu'elle ne
+  l'est pas), et `fillStepLegs` rend la vue une fois de plus la première fois qu'une route revient
+  — le tour d'après, tout le récap la lit comme n'importe quel autre montant. Les emplacements
+  différés des tronçons ne pouvaient pas servir : un total ne se remplit pas case par case.
+
+- **2026-09-16** — l'onglet **Voitures** empile deux listes titrées plutôt qu'une carte par modèle
+  portant ses offres : `Offres` d'abord, `Modèles` dessous, sur le motif de la page Dépenses
+  ([expenses.js](../js/views/expenses/expenses.js)), dont les classes remontent en `.list-section*`
+  puisqu'elles ont maintenant deux consommateurs. Le groupement par modèle imposait une seule
+  lecture et interdisait à la table d'être une liste ordinaire de l'app ; à plat, les deux listes
+  reprennent `listTable` avec leur panneau de tri et leur sélecteur de colonnes, et on range par ce
+  qu'on vient comparer. Le tri par défaut des offres — modèle puis prix par jour — recolle les
+  offres d'une même voiture, ce que le groupement faisait d'office. Chaque section porte son propre
+  bouton d'ajout, donc l'onglet n'a plus d'actions dans l'en-tête de la page. C'est aussi ce qui
+  sort « offre » et « modèle » de l'implicite : jusque-là aucun titre à l'écran ne nommait ce que
+  les lignes étaient. `car-model-card.js`, `offers-table.js` et l'`offer-row.js` du dossier
+  disparaissent avec le tableau imbriqué ; `columns.js` ([car-models](../js/views/car-models/columns.js))
+  déclare `COLUMN_SETS.modeles` comme les autres écrans déclarent les leurs.
+
+- **2026-09-16** — une **offre** porte son loueur, et la page Locations s'endort. Une location —
+  loueur, lieu, dates — ne servait qu'à ramener au jour le total qu'un loueur affiche ; le prix qui
+  se saisit devenant celui du **jour**, il ne lui restait rien que l'offre ne porte elle-même, et
+  la durée appartient au scénario qui lit l'offre. La migration fait donc **redescendre** loueur,
+  lieu et dates de la location sur l'offre au lieu de les déplacer : la collection `rentals` reste
+  dans l'état et dans la synchro, les fichiers de la page restent sur le disque, et son sommeil
+  tient à trois endroits nommés dans le commentaire d'[index.html](../index.html) — ses balises
+  `<script>`, son entrée de navigation ([render.js](../js/render.js)) et sa modale
+  ([modal.js](../js/modals/modal.js)). Rien n'est effacé, la rallumer est mécanique. La saisie d'une
+  offre vit désormais dans l'onglet Modèles de voiture, dont l'en-tête ouvre les deux portes —
+  « Modèle » pour compléter le catalogue, « Offre » quand on a un tarif sous les yeux — et sa
+  modale sait créer le modèle qui manque, ce que seule la grille de saisie savait faire. Cette
+  grille, elle, s'endort avec la page : PLAN.md la garde. `providerSelectField`
+  ([select-field.js](../js/views/providers/select-field.js)) prend un rappel, parce que créer un
+  prestataire par son item ＋ n'est pas un `change` : sans lui la modale d'une offre ne repeindrait
+  ni ses modèles ni ses options. `rental-days.js` devient
+  [offer-dates.js](../js/views/rentals/offer-dates.js), `price-labels.js` se replie dans
+  [offer-price.js](../js/views/rentals/offer-price.js) — il n'y restait qu'un libellé. Le dossier
+  garde le nom `rentals/` alors que son domaine vivant est l'offre : il se renommera quand la page
+  sera réveillée ou supprimée, pas tant que les deux cohabitent.
+
+- **2026-09-16** — un fait qui s'écrirait à deux endroits se **dérive** plutôt qu'il ne se
+  synchronise : « ce loueur propose ce modèle » vivait dans les cases de sa fiche **et** dans toute
+  offre relevée chez lui, et rien n'écrivait chez l'autre — décocher un modèle laissait une offre
+  qui le contredisait à l'écran d'à côté. `providerCarModels`
+  ([get-provider.js](../js/views/providers/get-provider.js)) rend l'union des deux, une offre valant
+  une case ; `addProviderModel` disparaît, il réécrivait un fait déjà porté. Symétriquement, ce qui
+  n'a qu'un seul foyer doit nettoyer ce qui le référence : une option retirée du catalogue d'un
+  loueur quitte les offres et les scénarios qui l'avaient cochée
+  ([providers/modal/save.js](../js/views/providers/modal/save.js)) — la référence morte disparaissait
+  des totaux sans le dire.
+
+- **2026-09-16** — une ville se crée depuis la carte
+  ([new-city.js](../js/views/map/new-city.js)) : c'est là qu'on voit le trou, et une ville n'est plus
+  qu'une attraction de type ville depuis la fusion. Le panneau ne reprend pas `locateFields` : ses
+  ids sont ceux de la modale ouverte (`geo-address`…), deux jeux dans le même document iraient au
+  premier venu, et un panneau d'en-tête n'a de toute façon que la recherche à porter — les
+  coordonnées à la main et le reste de la fiche restent la modale. Le brouillon vit donc dans une
+  globale du module et non dans le DOM : chaque étape rend la page, et un champ y perdrait ce qu'on
+  y a tapé. Le nom posé est celui du résultat et non ce qu'on a tapé — « sienne » devient
+  « Siena » —, les quatre niveaux venant du même résultat.
+
+- **2026-09-15** — un loueur porte les **modèles qu'il propose**
+  ([model-rows.js](../js/views/providers/modal/model-rows.js)) : le menu Modèle d'une offre listait
+  tout le catalogue du voyage, donc on ne pouvait pas dire « chez Europcar il y a une BMW ». C'est
+  une **référence** et non le retour de `provider.models` supprimé le matin même — le modèle reste
+  du voyage, une seule Golf que deux loueurs cochent, sinon la comparaison qui fait tout l'intérêt
+  de l'onglet Voitures disparaît. La reprise (`adoptProviderModels`, [storage.js](../js/storage.js))
+  part de ce qu'on a déjà relevé — les offres du loueur donnent ses modèles — et tourne après
+  `adoptCarModels` et `adoptRentals`, qui posent respectivement le `modelId` d'une offre et le
+  loueur de sa location. Le menu garde le modèle que l'offre porte même si le loueur ne le coche
+  plus : un select ne fait pas disparaître une valeur enregistrée. Changer la location d'une offre
+  repeint désormais les deux blocs que le loueur décide, modèles et options, et le modèle choisi
+  se relit avant le repeint plutôt que de se perdre. Le mode commande le bloc comme il commande
+  déjà les champs d'un trajet : seule la voiture a des modèles, d'où un `onchange` sur le select
+  de mode.
+
+- **2026-09-15** — `cars` devient [offers](../js/views/rentals/get-offer.js) : la collection ne tenait
+  pas des voitures mais des **prix**, et la voiture, c'est `carModels`. Les deux noms étaient
+  croisés par rapport à l'écran — le code appelait `cars` ce que la page Locations nomme
+  « véhicule », et `carModels` ce que l'onglet nomme « Voitures » —, et la même entité portait deux
+  familles de noms selon le fichier, `car*` ici et `vehicle*` là. Le test qui départage : ce qui
+  change quand un loueur revoit ses tarifs est une offre, ce qui ne bouge jamais est un modèle.
+  Le renommage ne touche pas les clés persistées — `COLUMN_SETS.locations`, les `sortOrder.key`
+  (`carStatus`, `carFuel`, `carGearbox`), `openModal('voiture')` —, sans quoi les colonnes masquées
+  et les ordres de tri déjà enregistrés repartiraient à zéro ; ni les vocabulaires `CAR_STATUSES` /
+  `CAR_FUELS` / `CAR_GEARBOXES`, dont les deux derniers qualifient le modèle. Les textes de l'écran
+  restent « véhicule » : renommer l'entité n'est pas renommer ce qu'on lit. La reprise vit dans
+  `adoptOfferNames` ([storage.js](../js/storage.js)), et la **base de synchro** y passe aussi
+  ([sync.js](../js/sync.js)) : elle est lue hors de `migrateData`, et son instantané resté au nom
+  d'avant aurait renvoyé chaque offre en ajout. Côté Sheet, l'onglet se renomme au lieu de renaître
+  vide (`LEGACY_SHEETS`), et `carId` rejoint `LEGACY_HEADERS` comme `geoAddress` avant lui.
+
+- **2026-09-15** — le chrome passe des emoji aux icônes Lucide (ISC), recopiées dans
+  [js/icons.js](../js/icons.js) plutôt que chargées d'un CDN : l'app doit tourner sans réseau, et
+  `lucide.createIcons()` demanderait une passe sur le DOM après chacun des douze endroits qui
+  écrivent en `innerHTML`, popups Leaflet et menus posés à la main compris. `svgIcon(name)` rend
+  la balise, `icon` restant le nom que l'appelant — bouton de barre d'outils, onglet, entrée de
+  navigation — donne au balisage qu'il reçoit ; une globale nommée `icon` serait masquée dans
+  chacun d'eux. Le tracé est en `currentColor` sur une grille de 24, donc la taille se règle en
+  `em` et les `font-size` déjà posés (`.nav-icon`, `.icon-btn`, `.step-move-btn`) valent telles
+  quelles. Trois frontières : les **vocabulaires** restent en emoji — ce sont des données — et
+  une rangée où les deux se côtoient reste entièrement en emoji ; ce qui s'écrit dans un
+  `<option>` ou passe par `escapeHtml` (les `pickerLabel`, les sens de tri) ne peut pas porter de
+  balise ; et le canal `geocode-status` écrit en `textContent`, donc ses ⚠️ y restent. L'œil de
+  [hidden-button.js](../js/views/scenarios/detail/hidden-button.js), seul SVG dessiné à la main,
+  rejoint la table et emporte sa classe `.eye-icon`. `expense-emoji.js` devient
+  [expense-icon.js](../js/expense-icon.js) : la globale ne porte plus un emoji. La flèche de cap
+  d'un traçé, elle, perd son halo en `text-shadow` pour un `filter: drop-shadow` : une ombre de
+  texte ne peint pas un SVG.
+
+- **2026-09-15** — un modèle de voiture est du **voyage** et non d'un loueur
+  ([js/views/car-models/](../js/views/car-models/)) : le ranger sous son loueur faisait deux Golf qui
+  ne savent pas qu'elles parlent de la même voiture, alors que comparer deux loueurs est
+  précisément ce qu'on vient faire. Le modèle ne porte donc que ce que la voiture _est_ — nom,
+  motorisation, boîte ; ce qu'elle coûte dépend du loueur et des dates, donc ça vit sur l'offre,
+  c'est-à-dire sur le véhicule d'une location. L'onglet Voitures devient l'écran de comparaison :
+  un modèle, ses offres dessous, chacune avec son loueur, ses dates, ses options et son prix — deux
+  offres du même loueur ne différant que par une assurance s'y lisent l'une sous l'autre. Le tarif
+  indicatif qu'un loueur portait sur son modèle disparaît avec le catalogue par loueur : un prix
+  sans dates ne voulait rien dire. La grille d'une location cherche le nom tapé dans le catalogue
+  avant de l'y créer ([vehicle-draft.js](../js/views/rentals/offer-draft.js)), donc il se remplit en
+  saisissant. La page Transports prend un troisième onglet, et son en-tête cesse de trancher par
+  `if` : chaque onglet déclare son corps, ses actions et son sous-titre dans `TRANSPORT_TABS`
+  ([tab.js](../js/views/transports/tab.js)). Les pastilles de motorisation et de boîte ayant deux
+  domaines lecteurs, elles remontent à plat dans [fuel-tag.js](../js/views/fuel-tag.js) et
+  [gearbox-tag.js](../js/views/gearbox-tag.js), avec [word-options.js](../js/views/word-options.js).
+
+- **2026-09-15** — la page Voitures devient **Locations** et suit le site du loueur : on cherche
+  une fois (loueur, lieu, dates) et on lit une liste de véhicules. Le contexte devient donc une entité,
+  [rentals](../js/views/rentals/get-rental.js), et le véhicule n'en porte que la référence — lieu, dates
+  et loueur cessent d'être recopiés sur chaque ligne, comme le nom du loueur l'a cessé le matin
+  même. Le prix saisi est le **total** que le loueur affiche ; le prix par jour devient une
+  dérivation ([vehicle-price.js](../js/views/rentals/offer-price.js)), ce qui laisse le scénario
+  multiplier un prix par jour par ses jours à lui sans rien changer. Les options d'un véhicule sont
+  des cases cochées dans le catalogue de son loueur : le prix vit à un seul endroit, et l'option
+  tapée depuis la fiche d'un véhicule rejoint ce catalogue
+  ([options-field.js](../js/views/rentals/modal/options-field.js)). La saisie rapide est une ligne du
+  tableau et non une modale ([vehicle-draft.js](../js/views/rentals/offer-draft.js)) : `Entrée`
+  enregistre et rouvre une ligne vide, on recopie l'écran du loueur sans jamais changer de fenêtre.
+  La page se nomme donc **Locations** et son dossier aussi ([js/views/rentals/](../js/views/rentals/)) :
+  « Voitures » nommait la ligne d'avant, pas ce que la page range. La clé de la vue suit — une liste
+  enregistrée de la page À faire et les préférences de colonnes se reprennent sous la nouvelle.
+  La liste dépliable remplaçant le tableau plat, la bascule tableau/cartes de la page disparaît ;
+  `COLUMN_SETS.voitures` reste pour les listes filtrées de la page À faire, qui lisent la collection
+  entière — d'où sa colonne Location, que la page n'a pas à répéter sous l'en-tête qui la
+  porte déjà.
+
+- **2026-09-15** — le loueur d'une voiture et la compagnie d'un trajet étaient deux textes libres,
+  recopiés à chaque ligne : ils deviennent une seule entité, [js/views/providers/](../js/views/providers/),
+  dont le **mode** dit le mot — loueur pour la voiture, compagnie pour les quatre autres. Le domaine
+  ne se range pas sous l'écran qui l'affiche : la table vit dans un second onglet de la page
+  Transports ([tab.js](../js/views/transports/tab.js), une globale comme `compareMode`, hors du hash et
+  des prefs), mais la page des locations la lit aussi, donc le dossier reste à plat. Une voiture référence son
+  loueur et un trajet de mode voiture n'en porte pas : il passe par sa voiture, sinon les deux
+  chemins diraient chacun le sien. Les options d'un prestataire sont propres à lui — un vocabulaire
+  global n'aurait partagé que le mot et coûté un second écran — et un `datalist` des libellés déjà
+  posés les propose sans rien administrer. Celui qui manque au milieu d'une saisie se crée par-dessus
+  la modale ouverte sans la re-rendre ([quick-create.js](../js/views/providers/quick-create.js)), sur le
+  modèle du `dismissAsk` de [modal.js](../js/modals/modal.js) : `modal` est une globale unique, et
+  rouvrir une modale perdrait les champs déjà tapés. La reprise dérive l'identifiant du voyage, du
+  mode et du nom plutôt qu'un `uid()` neuf : les deux côtés de la synchro doivent en trouver le même,
+  sans quoi chaque envoi partirait en conflit. `cars/price-label.js` remonte à plat en
+  [price-label.js](../js/views/price-label.js) — les options l'utilisent — et `typedPriceLabel` y perd
+  le nom de la voiture.
+
+- **2026-09-14** — comparer est un **mode de la liste** des scénarios et non une vue à elle : les
+  lignes restent, elles gagnent une case, et les scénarios cochés se posent sous la liste dans
+  [js/views/scenarios/compare/](../js/views/scenarios/compare/) — `mode.js` pour la sélection,
+  `cards.js` pour la rangée, `card.js` pour la carte, sur le découpage de `list/`. La carte ne
+  calcule rien : elle rappelle `accommodationDetailRows` et les totaux de
+  [money.js](../js/views/scenarios/money.js), ceux-là mêmes que le Total général du détail — une
+  seconde écriture du récap les ferait diverger. La sélection vit dans une globale du module, comme
+  `activeScenarioId` : ce n'est pas une préférence qu'on retrouve, c'est le geste en cours.
+
+- **2026-09-14** — un critère de tri portant un vocabulaire (statut, type, mode) ne se renverse
+  pas, il se **range** : `croissant / décroissant` ne dit rien de dix statuts, l'ordre des mots
+  oui. La colonne déclare donc un `sortOrder` — le dictionnaire, son libellé, et la clé sous
+  laquelle son ordre vit dans `prefs` — et son `sortValue` redevient le mot brut, c'est
+  [sort-order.js](../js/sort-order.js) qui le classe ; `dictSortIndex` disparaît, il calculait ce
+  rang depuis le seul ordre de déclaration. Ce qui est rangé n'est que ce qu'on a posé : un mot
+  ajouté au code plus tard tombe après, à la place que sa déclaration lui donne. Le second champ
+  du niveau devient alors le menu de ces mots
+  ([sort-order-menu.js](../js/sort-order-menu.js)) au lieu du select de sens, et une colonne de
+  vocabulaire perd le `desc` — l'en-tête y cycle croissant → aucun, sans quoi le panneau porterait
+  un sens qu'il ne sait pas montrer. Le glisser étant le second de l'app, le marquage de la ligne
+  de dépôt sort dans [drag.js](../js/views/drag.js), comme le board l'avait fait pour ses deux
+  familles, et [step-drag.js](../js/views/scenarios/detail/step-drag.js) le partage.
+
+- **2026-09-13** — `js/views/map.js` devient le dossier [js/views/map/](../js/views/map/) quand la
+  carte cesse d'être celle des hébergements : [filters.js](../js/views/map/filters.js) tient l'état et
+  les bascules, [filter-panel.js](../js/views/map/filter-panel.js) le panneau,
+  [markers.js](../js/views/map/markers.js) le tracé, `map.js` le seul `renderMapView`. Les types se
+  filtrent par **collection** — deux listes plutôt qu'une liste mêlée — parce qu'un type
+  d'hébergement et un type d'activité ne se comparent pas ; province, favoris et scénario restent
+  communs, ce sont des questions sur le voyage et non sur la collection. Le style inline du panneau
+  devient `.filter-hint` et `.map-scenario-select`, et la pastille d'attraction `.map-pin`.
+
+- **2026-09-13** — `js/views/accommodations/table/tags-cell.js` remonte à plat dans
+  [tags-cell.js](../js/views/tags-cell.js) : la cellule qui édite les tags sur place a deux
+  consommateurs dès que les attractions s'en servent, donc elle prend son getter et son vocabulaire
+  en argument, comme [tags-field.js](../js/views/tags-field.js) l'avait fait pour la modale. Le getter
+  tient dans une globale reposée à chaque ligne, et non dans la cellule : une seule table est à
+  l'écran à la fois, et une seule cellule y est en édition.
+
+- **2026-09-13** — le panneau principal ne montre qu'**une liste à la fois** : tout le plan, une
+  page, ou les sessions ouvertes. C'est une préférence de vue et non un état du plan, donc elle vit
+  dans le navigateur ([view.js](../tools/plan-board/view.js)) sur le modèle de
+  [fold.js](../tools/plan-board/fold.js) — le board se recharge à chaque enregistrement, et une liste
+  ouverte exprès ne doit pas se refermer derrière nous. La barre latérale cesse d'être une liste
+  d'ancres pour devenir le sélecteur de ces vues, ce qui sort la liste des sessions de la barre
+  étroite : [sessions-nav.js](../tools/plan-board/sessions-nav.js) n'en garde que l'entrée et son
+  compte, [sessions-view.js](../tools/plan-board/sessions-view.js) tient la liste, où une session se
+  lit comme une carte de tâche. Une vue ne s'empile pas, elle remplace la précédente — d'où une
+  seule flèche `←` en tête de la page ouverte, et pas d'historique. Un `###` n'est pas une vue à
+  lui : ouvrir un groupe ouvre sa page et s'y pose. Une page renommée ou disparue emporte sa vue, on
+  retombe sur la liste complète. Le filtre, lui, reste global — il vit dans la topbar, au-dessus de
+  la liste — donc filtrer les pages ne demande rien de plus : la barre vaut dans toutes les vues.
+
+- **2026-09-13** — filtrer se lit comme **deux listes de mots** — ceux qu'on veut voir, ceux qu'on
+  veut hors de la liste — et non comme un état posé sur chacun des trente mots du vocabulaire : le
+  panneau porte alors ce qui est filtré, sa taille suit ce qu'on y pose, et un mot ne pouvant vivre
+  que dans une liste, c'est la structure qui porte l'exclusivité plutôt qu'un état à trois
+  positions. Les trois vocabulaires étant disjoints, un mot se suffit à lui-même : son axe se
+  retrouve en l'interrogeant dans l'une puis l'autre liste, comme `splitRest` le fait sur une puce
+  de PLAN.md. Un mot inclus ouvre son axe, deux axes se croisent, un mot exclu sort la tâche quoi
+  qu'il arrive. D'où un seul `＋` par liste, qui déplie les trois vocabulaires d'un tenant — la
+  pastille porte sa couleur, on n'a pas à choisir l'axe d'abord — et une recherche qui ne repeint
+  que sa grille, comme [emoji-picker.js](../tools/plan-board/emoji-picker.js), sans quoi le champ perd
+  le focus à chaque frappe. Les archivées, elles, ne sont pas un mot mais l'autre collection : elles
+  restent une bascule au pied du panneau, hors des deux listes. Le partage est
+  [filters.js](../tools/plan-board/filters.js) pour ce qui est à l'écran et
+  [filter-panel.js](../tools/plan-board/filter-panel.js) pour la façon de le poser ; la barre vit dans
+  la topbar, au-dessus de la liste, donc le filtre vaut dans toutes les vues. Un panneau flottant se
+  referme enfin sur l'**appartenance** (`.toolbar`, `.row-priority`) et non sur un préfixe
+  d'action : le fond d'un panneau n'a pas de `data-act`, et cliquer dedans le fermait.
+
+- **2026-09-13** — une session se **ferme** sans disparaître : `closeSession` pose un `closedAt` sur
+  son entrée de [sessions.js](../tools/plan-board/sessions.js) au lieu de la supprimer, parce que le
+  `sessionId` est le seul lien vers la conversation — la tâche sort de la liste, son ▶ rouvre quand
+  même la même session, et la rouvrir efface la marque. La route est `DELETE
+/api/tasks/<id>/session`, le serveur restant le seul écrivain de `.claude/plan-sessions.json`.
+  Ce qui décide de la fermeture, lui, n'est pas mécanique : aucun commit ne porte l'id d'une tâche,
+  donc savoir si son travail est fait demande de lire sa puce contre le code — d'où un skill,
+  [plan-tool-close-sessions](../.claude/skills/plan-tool-close-sessions/SKILL.md), et pas un bouton du board. Une session
+  orpheline (la tâche a été supprimée sous elle) et une tâche déjà close se ferment sans rien juger.
+
+- **2026-09-13** — une tâche porte une **priorité**, troisième vocabulaire à côté des types et des
+  statuts : [priorities.js](../tools/plan-board/priorities.js) sur le modèle de
+  [statuses.js](../tools/plan-board/statuses.js). Les trois listes s'écrivent dans la même énumération
+  `·` de PLAN.md et doivent rester disjointes, puisque `splitRest` reconnaît un morceau en
+  l'interrogeant dans l'une puis l'autre — d'où le refus de `vocabulary.js`, qui écrit pourtant dans
+  les trois fichiers depuis le `＋` du tiroir. La priorité est le seul axe facultatif : recliquer la
+  pastille active l'enlève, là où un statut est toujours porté. D'où `à trier` 📥, qui devient
+  `NEW_STATUS` : une tâche neuve n'a été triée par personne et n'a pas encore de priorité. Sur la
+  carte la pastille suit celle du statut ; dans le tiroir elle tient sa rangée entre Type et Statut,
+  les trois passant désormais par un `wordChoices` commun — la rangée de pastilles est l'invariant,
+  le libellé du champ reste écrit en clair. C'est aussi la seule chose qu'une ligne édite sans
+  ouvrir son tiroir ([row-priority.js](../tools/plan-board/row-priority.js)) : on repèse une tâche en
+  lisant la liste, pas en l'ouvrant. Le déclencheur est une pastille `role="button"` et non un
+  bouton, parce qu'il vit dans le bouton qui ouvre le tiroir — c'est `closest('[data-act]')` qui
+  départage les deux gestes.
+
+- **2026-09-13** — le lien session ↔ tâche va désormais dans les deux sens : `PUT
+/api/tasks/<id>/session` rattache une conversation ouverte à la main, là où
+  [sessions.js](../tools/plan-board/sessions.js) ne savait que générer un uuid neuf au lancement depuis
+  le board. Il passe par le serveur et non par le skill, parce que le serveur est le seul écrivain
+  de `.claude/plan-sessions.json` et le seul endroit où un statut se décide — le rattachement
+  emprunte le `markDoing` du lancement. Une tâche qui porte déjà une session se refuse (`409`) : le
+  lien pointe vers une autre conversation, on ne l'écrase pas. Côté skills, `plan-tool-start-task` et
+  `plan-tool-commit-task` recopiaient mot pour mot leur étape « retrouver la tâche » ; elle devient
+  [.claude/skills/shared/retrouver-la-tache.md](../.claude/skills/shared/retrouver-la-tache.md), un
+  fichier parce qu'elle a deux consommateurs, et le cul-de-sac « demander de quelle tâche il s'agit »
+  y devient la recherche des candidates dans PLAN.md.
+
+- **2026-09-13** — `js/views/transports/` créé pour le domaine Transport, sur le découpage
+  d'`attractions/`. Le mode est ce qui décide des champs : les quatre modes à compagnie portent
+  `carrier` / `reference`, la voiture porte un `carId` qui **référence**
+  [get-car.js](../js/views/rentals/get-offer.js) au lieu de recopier la location — d'où deux blocs exclusifs
+  dans la modale, repeints au changement de mode, et une lecture du formulaire qui garde la valeur
+  du bloc absent plutôt que de l'effacer. Un départ est une ville **plus** une précision libre :
+  un aéroport n'est pas une ville, mais il est dans une ville. `price.js` est la première
+  implémentation de la règle transverse « budget et prix » — la fourchette `amountMin` / `amountMax`
+  gagne dès qu'un montant est saisi, le budget sinon, et la cellule dit lequel elle affiche ; il
+  reste dans le domaine tant qu'il n'a qu'un consommateur. Il appelle `priceNumber` / `formatEuros`,
+  qui vivent encore dans [money.js](../js/views/scenarios/money.js) : deux domaines les lisent
+  désormais, donc ce fichier devrait remonter à plat dans `js/views/`.
+
+- **2026-09-13** — une session ouverte par le board porte son nom : `claude --name '◉ <titre>'`
+  dans [iterm.js](../tools/plan-board/iterm.js). Le nom est fixe, contrairement à l'`ai-title` que le
+  CLI régénère à chaque tour, et le `◉` de tête distingue ces conversations des autres dans le
+  picker et le titre de terminal.
+
+- **2026-09-12** — le statut d'une tâche suit le geste, pas ma discipline : ouvrir sa session la
+  passe à `🚧 en cours` côté serveur ([server.js](../tools/plan-board/server.js)), après qu'iTerm a
+  répondu, et jamais sur une tâche close — `DOING_STATUS` et `CLOSED_STATUSES` rejoignent
+  `NEW_STATUS` dans [statuses.js](../tools/plan-board/statuses.js), qui reste le seul endroit où un
+  statut se nomme. La fin, elle, se décide : c'est le skill `plan-tool-commit-task`
+  ([.claude/skills/plan-tool-commit-task/SKILL.md](../.claude/skills/plan-tool-commit-task/SKILL.md)), qui retrouve la
+  tâche par le lien session ↔ `plan-sessions.json`, la passe à `✅ fait` et délègue le commit.
+
+- **2026-09-12** — la couleur d'une pastille devient un axe à elle, partagé par les deux
+  vocabulaires : [pill-variants.js](../tools/plan-board/pill-variants.js) tient les six variantes et la
+  classe CSS de chacune, une pastille de type et une de statut de même variante se peignent pareil.
+  Le `tone` disparaît — il ne servait qu'à nommer la classe, donc il faisait doublon avec la
+  variante dès l'instant où les deux listes la partagent. Les classes de [board.css](../tools/plan-board/board.css)
+  passent du statut (`pill-doing`, `pill-dropped`) à la couleur (`pill-info`, `pill-error`), et
+  `pill-focus` est la déclinaison pleine de `pill-success` pour « à faire », le seul statut qui
+  appelle l'œil. Le panneau de vocabulaire propose donc les six variantes telles qu'elles peignent,
+  et non plus les tons déjà employés par la liste qu'on complète.
+
+- **2026-09-12** — un titre du board est un accordéon : il replie ce qu'il tient, une page comme un
+  groupe, et affiche alors le nombre de tâches cachées. Le repli est une préférence de vue, pas un
+  état du plan — il vit dans le navigateur ([fold.js](../tools/plan-board/fold.js)) sur le modèle de
+  [theme.js](../tools/plan-board/theme.js), parce que le board se recharge à chaque enregistrement et
+  qu'une section fermée exprès ne doit pas se rouvrir toute seule. Le titre devenant le geste de
+  repli, l'édition passe à une poignée : l'emoji pour la page, comme dans la barre latérale, un ✎
+  pour le groupe.
+
+- **2026-09-12** — une sous-section se crée, se renomme et se glisse comme une section. Un `###` est
+  un groupe **dans** une page : deux pages peuvent porter le même nom, donc il ne se cherche jamais
+  que dans la sienne — `subsectionIndex` part de `sectionRange`, et `insertionLine` cesse de
+  balayer tout le fichier. Il n'a pas d'emoji, contrairement au `##` : l'icône appartient à la page,
+  le groupe n'a qu'un nom, d'où un quatrième mode de tiroir
+  ([subsection-drawer.js](../tools/plan-board/subsection-drawer.js)) plutôt qu'un drapeau dans celui de
+  la section. Le formulaire d'ajout ([new-subsection.js](../tools/plan-board/new-subsection.js)) est le
+  même aux trois endroits où le geste a du sens — pied de section, barre latérale, tiroir de la page
+  — et son état retient lequel des trois est ouvert, puisqu'il n'y en a qu'un à la fois. Le glisser
+  de la barre latérale porte désormais deux familles, il sort donc dans
+  [section-drag.js](../tools/plan-board/section-drag.js) sur le modèle de `task-drag.js` ;
+  [sections-nav.js](../tools/plan-board/sections-nav.js) ne garde que le rendu. Déposer un groupe sous
+  une autre page l'y déplace, tâches comprises — l'ordre du fichier EST l'ordre affiché.
+
+- **2026-09-12** — une tâche se tape aussi en fin de liste, dans la portée où elle atterrit :
+  [new-task.js](../tools/plan-board/new-task.js) ne demande que le titre — le reste (types, corps,
+  statut) est le travail du tiroir — et le statut de départ, commun aux deux chemins, devient
+  `NEW_STATUS` dans [statuses.js](../tools/plan-board/statuses.js). Le board se rend désormais sur le
+  squelette de PLAN.md et non sur le regroupement des seules tâches visibles : une portée sans
+  aucune tâche reste affichée, puisqu'elle n'a rien à filtrer et que c'est là qu'on pose la
+  première — sans quoi une section fraîchement créée serait inatteignable. Les archivées, elles,
+  ne sont plus dans le fichier : `groupBySection` leur reste, sous la portée qu'elles gardent en
+  mémoire, et le bouton ne s'y affiche pas.
+
+- **2026-09-12** — le board se recharge à l'enregistrement. `node --watch` couvre les modules du
+  serveur, un `fs.watch` du dossier plus un flux SSE (`/api/reload`) couvre les fichiers servis en
+  assets, que `--watch` ne voit pas puisqu'ils ne sont jamais `require`és. Les deux moitiés passent
+  par un seul canal : un restart de node coupe le flux, le navigateur se rebranche seul, et
+  [live-reload.js](../tools/plan-board/live-reload.js) lit cette reconnexion comme un message. Le
+  tiroir ouvert diffère le rechargement jusqu'à sa fermeture — c'est le seul état qui coûte de
+  perdre. La fenêtre détachée, elle, survit : le `pagehide` de l'onglet ne la ferme plus quand le
+  rechargement vient de nous, et le document neuf la retrouve par son nom
+  (`window.open('', 'plan-board')`) pour y reposer le `#app`, ce qui lui garde sa taille et sa
+  place. D'où l'`adoptWindow` de [detach.js](../tools/plan-board/detach.js), par où passent les deux
+  entrées — le clic Détacher et la reprise après rechargement.
+
+- **2026-09-12** — l'emoji est une propriété de la section, pas un caractère du nom : `splitHeading`
+  coupe le `##` en deux dans [plan.js](../tools/plan-board/plan.js), une section se désigne partout par
+  son nom nu (tâches, portée, ancre, déplacement) et `headingLine` la réécrit. D'où le retrait du
+  picker du titre de tâche — un titre n'a pas d'emoji à lui — et
+  [section-drawer.js](../tools/plan-board/section-drawer.js), troisième mode du tiroir, qui édite les
+  deux moitiés de la ligne ; renommer une section y déplace ses tâches sans rien toucher d'autre,
+  puisque le titre est le seul endroit où elle vit. Les trois modes deviennent une table lue à
+  l'appel (`drawerModes`) : chacun vit dans son fichier, chargé après `drawer.js`.
+
+- **2026-09-12** — une section se crée depuis la barre latérale, sans passer par une tâche :
+  [new-section.js](../tools/plan-board/new-section.js) tient le bouton et son champ, sur le modèle de
+  [new-vocabulary.js](../tools/plan-board/new-vocabulary.js), et `POST /api/sections` écrit le `##`
+  juste avant « Données à saisir » comme le fait déjà la première tâche d'une portée neuve. La liste
+  se rend désormais depuis `board.sections`, l'ordre du fichier, et non plus depuis les seules
+  sections qui portent une tâche visible : sans ça une section vide n'apparaîtrait nulle part. Une
+  section filtrée reste donc affichée, avec un compteur à zéro.
+
+- **2026-09-12** — un type ou un statut qui manque se tape dans le panneau, et
+  [vocabulary.js](../tools/plan-board/vocabulary.js) l'écrit dans
+  [types.js](../tools/plan-board/types.js) / [statuses.js](../tools/plan-board/statuses.js) : les listes
+  restent la source de vérité en code, versionnées, et le mot rejoint aussi le tableau vivant parce
+  que `plan.js` en tient une référence déstructurée — un `require` rejoué ne changerait rien à
+  `planType`. Le format de PLAN.md impose deux refus côté serveur : les deux vocabulaires doivent
+  rester disjoints, `splitRest` reconnaissant un morceau de ligne en l'interrogeant dans l'une puis
+  l'autre liste, et un libellé ne porte pas la syntaxe de la puce (`·`, `:`, parenthèses). Côté
+  écran, [new-vocabulary.js](../tools/plan-board/new-vocabulary.js) tient le formulaire et
+  [emoji-picker.js](../tools/plan-board/emoji-picker.js) prend une cible — `title` insère au caret,
+  `vocabulaire` remplace la pastille. Le bloc Type / Statut venant de `draftFields`, le `＋`
+  s'affiche dans les deux panneaux : le réserver à la création demanderait de passer un mode au
+  bloc, soit la prop de configuration qu'on évite.
+
+- **2026-09-12** — une tâche se glisse comme une section : [task-drag.js](../tools/plan-board/task-drag.js)
+  déplace son bloc entier dans PLAN.md — puce et lignes de continuation — et un dépôt sous un autre
+  titre la change de section, puisque l'ordre du fichier EST l'ordre affiché. Le dépôt nomme la
+  tâche devant laquelle il atterrit, ou la portée dont il vise la fin quand il n'y a plus rien
+  après. Le marquage de la ligne de dépôt, commun aux deux, sort dans
+  [drag.js](../tools/plan-board/drag.js) ; côté CSS, `.dragging` / `.drop-before` / `.drop-after` ne
+  sont plus rattachés à la barre latérale et se posent après les cartes, dont ils remplacent
+  l'ombre le temps du geste.
+
+- **2026-09-12** — un titre de tâche peut porter un emoji :
+  [emojis.js](../tools/plan-board/emojis.js) est le vocabulaire, liste figée sur le modèle de
+  [statuses.js](../tools/plan-board/statuses.js), avec les mots-clés français qui servent à le
+  chercher ; [emoji-picker.js](../tools/plan-board/emoji-picker.js) est le panneau, qui écrit dans le
+  champ à la position du curseur. Le panneau vit sous le champ Titre de `draftFields`, donc les deux
+  modes du tiroir — ajouter et éditer — l'ont sans rien en savoir. La position du curseur se lit à
+  l'ouverture du panneau : au clic sur une vignette, le champ a déjà perdu le focus.
+
+- **2026-09-12** — la barre latérale du board sort de `board.js` dans
+  [sections-nav.js](../tools/plan-board/sections-nav.js) : elle n'est plus une liste d'ancres mais un
+  ordre qu'on manipule, la section s'attrape et se dépose. Le drop écrit PLAN.md — `moveSection`
+  déplace le bloc `##` entier, tâches comprises — parce que l'ordre du fichier EST l'ordre affiché ;
+  rien ne le mémorise à côté. Un titre de section porte un emoji, qui est de la décoration et jamais
+  du nom : la reconnaissance de « Données à saisir », seule section exclue du board et tenue en
+  dernière place, se fait donc sur le nom sans son premier mot.
+
+- **2026-09-12** — `js/views/link-button.js` devient
+  [external-link.js](../js/views/external-link.js) : la responsabilité est d'ouvrir une URL dans un
+  onglet, et elle a deux formes — `externalLink` pour une cellule ou un popup, `linkButton` pour une
+  carte. Les trois `<a target="_blank" style="color:…">` écrits en clair
+  ([link-cell.js](../js/views/cells/link-cell.js), la colonne Booking, le popup de
+  [map.js](../js/views/map.js)) passent par la première, et le style inline devient `.external-link`.
+- **2026-09-12** — `js/views/toolbar/` créé : `button.js`, `panel.js` (le bouton qui ouvre son
+  propre panneau), `toggle-group.js`, `filter-panel.js` et `menu.js` (le ⋮). Chaque header écrit sa
+  barre en clair à partir de ces briques — pas de `toolbar(kind, {…})` qui fabriquerait l'écran.
+  `sortPanel` perd son argument `filters` : trier et filtrer sont deux boutons. La préférence des
+  libellés vit dans [button-labels.js](../js/views/button-labels.js), à plat, parce qu'elle a deux
+  consommateurs — la barre latérale et le menu ⋮ ; `listModeToggle` rejoint `setListMode` dans
+  [list-mode.js](../js/views/list-mode.js). Côté CSS, `.filter-toggle` et `.col-picker` disparaissent
+  au profit d'un seul `.toolbar-btn`, porté aussi bien par un `<button>` que par un `<summary>`.
+  Le détail d'un scénario a la même barre, mêmes briques.
+- **2026-09-12** — `tools/plan-board/` créé : le backlog de [PLAN.md](../PLAN.md) devient un écran,
+  chaque tâche ouvrant sa session Claude. Un outil de dev, pas un domaine du voyage — d'où `tools/`
+  et pas `js/views/`. Le lien tâche → session tient à un marqueur `<!--t:id-->` dans PLAN.md, donc
+  un renommage ne le casse pas ; la liaison elle-même vit hors du plan, dans
+  `.claude/plan-sessions.json`. Le chat Claude de VS Code ne déclare pas d'`uriHandler` : rien ne
+  l'ouvre depuis l'extérieur, le lancement passe par iTerm et `claude --session-id` / `--resume`.
+- **2026-09-12** — PLAN.md devient un format lu **et écrit**. Deux axes indépendants sur une tâche,
+  chacun une liste figée sur le modèle d'[accommodation-statuses.js](../js/accommodation-statuses.js) :
+  [types.js](../tools/plan-board/types.js) dit sur quoi elle porte — plusieurs à la fois, une page
+  neuve est presque toujours écran **et** modèle — et [statuses.js](../tools/plan-board/statuses.js) où
+  elle en est. Ils s'écrivent dans une même liste `·` parce que leurs vocabulaires sont disjoints.
+  Le corps d'une tâche se lit en paragraphes logiques : le retour à la ligne à cent colonnes
+  n'appartient qu'à l'écriture du fichier, et ne coupe jamais un code span ni un lien. Les sections
+  `##` servent de portée à la création — ce sont les pages de l'app, `Transverse` étant le global —
+  et une portée absente s'écrit à la volée : le `##` ou le `###` manquant est posé par la première
+  tâche qui s'y range, avant « Données à saisir » qui ferme le fichier.
+- **2026-09-12** — le board se détache dans une fenêtre ordinaire (`window.open`), pas en
+  Picture-in-Picture : le toujours-au-dessus du PiP gêne plus qu'il n'aide. Le nœud `#app` y est
+  déplacé, donc une seule instance — ce qui interdit deux choses que l'app travel s'autorise : les
+  `onclick` inline, qui ne se résolvent pas dans l'autre document (d'où la délégation d'événements
+  sur `#app`), et `confirm` / `alert`, qui s'ouvrent sur la fenêtre d'origine et pas sous les yeux
+  (d'où l'archivage armé en deux clics et les erreurs affichées en place). Le panneau met la session
+  en premier : c'est le geste principal, il ne passe pas sous la ligne de flottaison.
+- **2026-09-12** — `js/views/cards/actions/` créé : la paire Modifier / Suppr. des cartes,
+  recopiée à l'identique dans Hébergements, Voitures et Charges fixes, devient `cardEditButton` /
+  `cardDeleteButton`. Deux familles distinctes et non paramétrables l'une par l'autre — une ligne de
+  tableau agit en icônes ([cells/actions/](../js/views/cells/actions/)), une carte en boutons texte.
+- **2026-09-12** — `js/views/attractions/` créé pour le domaine Attraction, sur le découpage de
+  `cities/` et `accommodations/`. Trois briques en sont sorties parce qu'elles ont désormais deux
+  consommateurs : le champ tags de modale devient [tags-field.js](../js/views/tags-field.js) et prend
+  son vocabulaire en argument, les libellés de lieu localisé
+  ([locate-labels.js](../js/views/locate/locate-labels.js)) quittent `cities.js`, et `accSortIndex`
+  devient `dictSortIndex` dans [sort.js](../js/sort.js). Symétriquement, le vocabulaire de tags des
+  hébergements descend de `views/tags.js` dans
+  [accommodations/tags.js](../js/views/accommodations/tags.js) : `views/tags.js` ne garde que
+  `tagChips`, la seule brique réellement partagée.
+- **2026-09-12** — `js/views/travels/favicon.js` devient
+  [tab.js](../js/views/travels/tab.js) : l'onglet est la responsabilité, pas seulement l'icône — titre,
+  emoji et pastille « local ». `isLocalEnv` y vit, elle n'a que ce consommateur.
+- **2026-09-12** — `apps-script/Html.js` créé : `matchOne` / `decodeEntities` / `matchFirst`,
+  partagés par les deux scrapers ([HomeExchange.js](../apps-script/HomeExchange.js),
+  [Booking.js](../apps-script/Booking.js)).
+- **2026-09-12** — `js/views/travels/` créé pour le domaine Voyage : `get-travel.js`,
+  `selector.js` (le bouton et le menu de la barre latérale) et `modal/`. Le voyage ouvert et le
+  filtrage des collections vivent dans [current-travel.js](../js/current-travel.js), à côté de
+  [prefs.js](../js/prefs.js) qui le stocke.
+- **2026-09-11** — `js/views/cells/` créé pour les briques de cellule partagées : `text-cell.js`,
+  `link-cell.js` et `actions/` (`edit-button.js`, `duplicate-button.js`, `delete-button.js`).
+  `linkButton`, qui ne sert qu'aux cartes, est sorti dans [link-button.js](../js/views/link-button.js).
+- **2026-09-11** — les cinq `duplicate*` regroupés dans [duplicate.js](../js/views/duplicate.js),
+  sortis de `scenarios.js` et de `fixed-costs/`.
+- **2026-09-11** — `simple-lists/` éclaté en `cars/`, `fixed-costs/` et le générique `list/`.
+- **2026-09-11** — `cities/table.js` + `row.js` fondus dans le tableau générique, colonnes sorties
+  dans [cities/columns.js](../js/views/cities/columns.js).
+- **2026-09-11** — `js/views/list/` démantelé : Voitures et Charges fixes écrivent leurs fichiers
+  en clair comme Villes et Hébergements, le tableau partagé remonte dans
+  [table.js](../js/views/table.js).
+- **2026-09-12** — un seul accès à `localStorage`, dans [local-store.js](../js/local-store.js) :
+  `readStore` / `writeStore` / `removeStore` (+ variantes `…String` pour l'URL de synchro, stockée
+  en texte brut). Lecture muette, écriture bruyante. Les quatre clés passent par là ;
+  `readLocalStorage` disparaît, `persist` devient `persistState`, `saveSyncBase` devient
+  `persistSyncBase`, et `persistSyncUrl` remplace les deux écritures inline de `sync.js`.
