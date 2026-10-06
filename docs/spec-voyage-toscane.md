@@ -660,13 +660,12 @@ tête.
 - Les colonnes d'une offre servent aussi aux listes filtrées de la page À faire, qui lisent la
   collection entière — d'où leur colonne Loueur, que le tableau d'un modèle porte déjà.
 
-### Locations — en sommeil
+### Locations — supprimée
 
-La page a été retirée de la navigation. Une location — un loueur, un lieu, deux dates — ne servait
-qu'à ramener au jour le total qu'un loueur affiche ; le prix qui se saisit étant désormais celui du
-jour, il ne lui restait rien à porter que l'offre ne porte elle-même. Ses fichiers et sa collection
-`rentals` restent en place, rien n'est effacé : la rallumer tient à ses balises `<script>`, à son
-entrée de navigation et à sa modale.
+Une location — un loueur, un lieu, deux dates — ne servait qu'à ramener au jour le total qu'un
+loueur affiche ; le prix qui se saisit étant celui du jour, l'offre porte tout ce qu'elle portait.
+La page, déjà retirée de la navigation, est supprimée (2026-10-06) ; sa collection `rentals` reste
+dans les données, lue seulement par la reprise qui redescend loueur, lieu et dates sur les offres.
 
 Ce qu'elle savait faire reste à écrire ailleurs : la **ligne de saisie rapide** — modèle,
 motorisation, boîte, prix, `Entrée` enchaîne — n'a pas d'équivalent dans la modale d'une offre.

@@ -242,13 +242,13 @@ compris. Décrit dans [la spec](docs/spec-voyage-toscane.md). Ce qui reste :
 
 ## 🚗 Locations
 
-La page dort : une offre porte son loueur, son lieu et ses dates, et le prix qui se saisit est celui
-du jour — une location n'avait plus rien à tenir. Ses fichiers et sa collection `rentals` restent en
-place ; le sommeil est décrit dans [la spec](docs/spec-voyage-toscane.md).
+La page est supprimée : une offre porte son loueur, son lieu et ses dates, et le prix qui se saisit
+est celui du jour — une location n'avait plus rien à tenir. Sa collection `rentals` reste dans les
+données pour la reprise ; voir [la spec](docs/spec-voyage-toscane.md).
 
 - **La saisie en série d'offres** <!--t:m3qp--> — 🧩 ui · ⏳ à faire : la grille qui se tapait sous
-  une location ([offer-draft.js](js/views/rentals/offer-draft.js)) s'est endormie avec elle, et la
-  modale d'une offre ne la remplace pas — on recopiait l'écran d'un loueur ligne à ligne, `Entrée`
+  une location (`js/views/rentals/offer-draft.js`, dans l'historique git) est partie avec la page
+  Locations, et la modale d'une offre ne la remplace pas — on recopiait l'écran d'un loueur ligne à ligne, `Entrée`
   enregistrant et rouvrant une ligne vide. À reposer en pied de la liste Offres de l'onglet
   Voitures, le loueur étant une colonne comme les autres.
 
@@ -442,7 +442,7 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   devient le ✎ de la colonne actions, qui ouvre toujours la modale. C'est la revue
   de navigation qui précède la PWA.
 - **La saisie en ligne sur les autres listes** <!--t:d9ce--> — 🧩 ui · 📥 à trier : plus aucune
-  liste ne se tape dans son tableau depuis que la grille des offres dort — voir **La saisie en
+  liste ne se tape dans son tableau depuis que la grille des offres a disparu — voir **La saisie en
   série d'offres**. Reste à trancher où le geste a du sens : il vaut pour ce qu'on relève en série
   — les lieux, les dépenses — et beaucoup moins pour un hébergement, qui porte vingt champs.
 - **Ce qui s'édite en place : une règle plutôt qu'un coup par coup** <!--t:v2ar--> — 🧩 ui ·

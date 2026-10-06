@@ -584,11 +584,8 @@ backlog vers « `js/` legacy supprimé ».
 
 **Encore legacy, et pourquoi :**
 
-- Page **Locations** endormie (journal CLAUDE.md 2026-09-16) : ses fichiers restent sur le disque,
-  volontairement — son formulaire garde le `providerSelectField` legacy (adapté à la nouvelle
-  signature d'`askNewProvider`). Déjà cassée avant cette passe : `offerPriceLabels` et
-  `rentalDatesLabel`, qu'elle appelle, ont disparu en `0dfb035`. Avec React propriétaire de `#app`
-  (Phase 4), la rallumer demande de toute façon un port, plus un simple retour de balises.
+Rien : tous les écrans sont en React. La page **Locations**, déjà hors navigation, est supprimée
+(2026-10-06).
 
 **Fait le 2026-10-04 (lots A–E)** : liste Scénarios (carte de comparaison, bande d'itinéraire —
 avec suppression de toute la chaîne legacy liste/récap), modales `sync`/`valise-composer`/
