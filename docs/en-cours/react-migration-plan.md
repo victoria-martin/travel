@@ -611,10 +611,6 @@ Filtrer des pages). Panneau du jour du Journal
 
 **Manques et points connus :**
 
-- Modale d'étape, champ Activités : cliquer Enregistrer pendant que la recherche a le focus ne fait
-  rien au premier clic — au mousedown le champ perd le focus, la liste de résultats (dans le flux)
-  se vide, le bouton remonte et le mouseup tombe à côté. Même comportement en legacy ; constaté en
-  test automatisé (2026-10-05), pas corrigé.
 - Non vérifié, déduit du CSS : sous 1100px, le fil du trajet et la bannière météo du détail
   scénario collent tous deux à `--view-header-h` ; affichés ensemble, la bannière (z-index 18)
   recouvrirait le fil (15).

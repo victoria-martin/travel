@@ -1,7 +1,7 @@
 import { Icon } from '@/shared/Icon';
 import { TagLabel } from '@/shared/TagLabel';
 import type { Extra, Step } from '@/store/types';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /*
   The step's activities only: expenses and lines shared by a group are attached on the card, where
@@ -17,6 +17,24 @@ export function StepAttractionsField({ payload }: { payload: Step }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pointerIsDown = useRef(false);
+
+  useEffect(() => {
+    const press = () => (pointerIsDown.current = true);
+    const release = () => (pointerIsDown.current = false);
+    document.addEventListener('pointerdown', press, true);
+    document.addEventListener('pointerup', release, true);
+    return () => {
+      document.removeEventListener('pointerdown', press, true);
+      document.removeEventListener('pointerup', release, true);
+    };
+  }, []);
+
+  // Closing on the press would move what lies below the list away from the pointer: wait for the click.
+  const close = () => {
+    if (!pointerIsDown.current) return setIsOpen(false);
+    document.addEventListener('click', () => setIsOpen(false), { once: true });
+  };
 
   const commit = (next: Extra[]) => {
     payload.extras = next;
@@ -98,7 +116,7 @@ export function StepAttractionsField({ payload }: { payload: Step }) {
           placeholder="Chercher une activité…"
           value={query}
           onFocus={() => setIsOpen(true)}
-          onBlur={() => setIsOpen(false)}
+          onBlur={close}
           onChange={(event) => {
             setQuery(event.target.value);
             setActiveIndex(0);
