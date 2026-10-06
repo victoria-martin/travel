@@ -9,7 +9,7 @@ relationnelle, consultable dans une nouvelle page **Découvrir**, avec un bouton
 entrée dans le voyage ouvert. Premier pas du besoin noté dans
 [atelier/notes.json](../../atelier/notes.json) (catalogue partagé multi-client) — démarré ici à scope
 réduit, avant que le multi-tenant réel soit tranché (voir
-[react-migration-plan.md § 9](../en-cours/react-migration-plan.md)).
+[react-migration-plan.md § 9](react-migration-plan.md)).
 
 Décisions actées :
 
@@ -25,7 +25,7 @@ Décisions actées :
   le catalogue.
 - **Pas d'auth/multi-tenant** : le catalogue est public en lecture, « mon voyage » reste le voyage
   ouvert dans l'app. Le multi-tenant réel (comptes, catalogue par client) reste hors scope — c'est
-  le point que l'adaptateur sync ([react-migration-plan.md § 2](../en-cours/react-migration-plan.md)) garde
+  le point que l'adaptateur sync ([react-migration-plan.md § 2](react-migration-plan.md)) garde
   ouvert pour plus tard.
 - **Page à part** : « Découvrir » n'est pas un onglet d'Hébergements — donnée de nature différente
   (catalogue global vs données du voyage), même critère que les autres domaines de l'app

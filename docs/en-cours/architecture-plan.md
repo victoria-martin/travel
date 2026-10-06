@@ -138,7 +138,7 @@ d'ailleurs possible. Changer de backend revient à servir le même schéma.
 
 ## 7. Lien avec la migration React
 
-Partage acté le 2026-10-05 avec [react-migration-plan.md](react-migration-plan.md) :
+Partage acté le 2026-10-05 avec [react-migration-plan.md](../archivé/react-migration-plan.md) :
 
 - **L'affichage** reste à la migration React : les morceaux legacy encore rendus (§ 10 de ce
   plan-là) se finissent en parallèle, dans n'importe quel ordre — ils ne dépendent pas du backend.

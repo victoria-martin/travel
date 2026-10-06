@@ -12,7 +12,7 @@ portent pas — c'est du contenu à saisir, pas du travail à lancer.
 Les statuts sont une liste figée, par ordre de priorité — ⏳ à faire, 💡 idée, 🚧 en cours,
 ⏸️ en attente, 🌙 plus tard, ✅ fait, 🚫 abandonné, 📓 à planifier, 🔍 à étudier. Elle vit dans
 [statuses.js](tools/plan-board/statuses.js) : en ajouter un se fait là, pas à la main ici. Chacun
-porte une couleur de pastille ([pill-variants.js](tools/plan-board/pill-variants.js)), partagée avec
+porte une couleur de pastille ([pill.js](tools/plan-board/pill.js)), partagée avec
 les types.
 
 ## 🗓️ Scénarios
@@ -303,7 +303,7 @@ des offres de location, référencée par le bloc Voiture d'un scénario — jam
 ### Intégration aux scénarios
 
 - **Affichage dans le détail** <!--t:2icu--> — 🧩 ui · 💡 idée : entre deux `step-card`
-  ([step-list.js](js/views/scenarios/detail/step-list.js)), une ligne fine avec le mode, l'horaire
+  ([StepList.tsx](src/domains/scenarios/detail/ScenarioDetailView/StepList.tsx)), une ligne fine avec le mode, l'horaire
   et le prix. C'est le même emplacement que la distance et l'essence de « Plus tard ».
 - **Aller-retour du voyage** <!--t:oujb--> — 🗃️ modèle · 🔍 à étudier : le vol aller et le vol
   retour encadrent le voyage entier, pas une étape. Soit deux transports sans étape rattachée, soit
@@ -382,7 +382,8 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   changer — « Transports » nomme une de ses listes, pas ce que la page range. Suppose **Un onglet
   dans l'adresse** fait, sinon les onglets restent sans lien direct.
 - **Un onglet dans l'adresse** <!--t:f1rq--> — 🧩 ui · ⏳ à faire : l'onglet ouvert d'une page vit
-  dans une globale, hors du hash et des préférences ([tab.js](js/views/transports/tab.js)) — c'est
+  dans l'état local de ses onglets, hors du hash et des préférences
+  ([TransportsView.tsx:19](src/domains/transports/TransportsView.tsx#L19)) — c'est
   le geste en cours, pas un état qu'on retrouve. Mais dès qu'un écran qui avait son adresse devient
   un onglet, il perd le lien direct et le retour arrière. Le hash porterait alors la page et son
   onglet, sur le modèle de `#scenario/<id>` ([router.js](js/router.js)). Préalable à **Transports
@@ -452,27 +453,14 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
   service worker — icône sur l'écran d'accueil, plein écran sans barre d'adresse, hors-ligne
   puisque tout est déjà dans `localStorage`, et l'URL reste partageable. À reprendre une fois la
   navigation revue. Le React Native écarté ici (2026-09, sur un chiffre de 7397 lignes) est
-  reconsidéré par **Migrer l'app sur React**, juste en-dessous.
-- **Migrer l'app sur React** <!--t:rjs2--> — 🏛️ archi · 🧹 refacto · 🚧 en cours : passer `js/`
-  sur React + TypeScript, écran par écran (strangler fig), pour un code plus carré et un futur
-  portage React Native. Plan détaillé dans [docs/en-cours/react-migration-plan.md](docs/en-cours/react-migration-plan.md),
-  sur la branche `react-migration`. Phases 0 à 4 faites : store Zustand, les 8 écrans de la Phase 3
-  portés, et depuis la Phase 4 React possède `#app` en entier (sidebar/router/modale globale/
-  toasts) — `js/` legacy reste en place, cette phase a changé qui possède le DOM, pas combien
-  d'écrans sont encore legacy. Phase 2 (Scénarios détail, dont le DnD) et Phase 5 (nettoyage RN,
-  premier passage) sont closes aussi. **Fait** : tous les formulaires de modale (types de
-  `MODAL_TYPES`, `js/modals/modal.js`) sont portés en React — backlog et patron détaillés dans
-  [docs/archivé/react-migration-modales-plan.md](docs/archivé/react-migration-modales-plan.md).
-  **Fait** : le détail d'un scénario n'a plus aucun bloc legacy, panneau latéral et sheet mobile
-  compris — [docs/archivé/react-migration-scenario-detail-plan.md](docs/archivé/react-migration-scenario-detail-plan.md)
-  et [docs/archivé/react-migration-scenario-side-panel-plan.md](docs/archivé/react-migration-scenario-side-panel-plan.md).
-  **Fait** : les 5 panneaux/modales utilitaires (`valise-composer`, `journal-panel`, `sync`,
-  `settings`, `scenario-panel`) — [docs/en-cours/react-migration-panels-plan.md](docs/en-cours/react-migration-panels-plan.md),
-  qui garde une question ouverte sur le style des phrases. **Fait (2026-10-05)** : plus aucun
-  écran ne passe par du HTML legacy — Carte (itinéraire, ＋ Ville), À faire, panneau du jour du
-  Journal, questions par-dessus une modale ; à vérifier à l'écran via
-  [docs/en-cours/react-migration-a-tester.md](docs/en-cours/react-migration-a-tester.md).
-  **Reste ouvert** : l'horizon final, suppression de `js/` legacy (couche données comprise).
+  reconsidéré par la migration React, faite depuis
+  ([docs/archivé/react-migration-plan.md](docs/archivé/react-migration-plan.md)).
+- **Tester la migration React à l'écran** <!--t:rjs2--> — 🐛 fix · ⏳ à faire : tous les écrans
+  sont en React et le legacy d'affichage est supprimé
+  ([docs/archivé/react-migration-plan.md](docs/archivé/react-migration-plan.md)), mais 59 cases de
+  [docs/en-cours/react-migration-a-tester.md](docs/en-cours/react-migration-a-tester.md) n'ont pas
+  été vues à l'écran. La couche données legacy (`state`, `saveNow`, synchro) part avec le lot 4 de
+  [docs/en-cours/architecture-plan.md](docs/en-cours/architecture-plan.md).
 
 - **Passer le repo en privé et héberger sur Netlify** <!--t:r6wc--> — ⚙️ infra · ⏳ à faire : le
   dépôt est public parce que le site est une GitHub Page ; un repo privé y demanderait GitHub Pro,

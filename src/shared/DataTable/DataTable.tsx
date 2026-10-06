@@ -7,7 +7,7 @@ type SortDir = 'asc' | 'desc';
 type Sort = { key: string; dir: SortDir } | null;
 
 /*
-  Chrome seul (docs/en-cours/react-migration-plan.md § 4) : le contenu de chaque cellule est composé
+  Chrome seul (docs/archivé/react-migration-plan.md § 4) : le contenu de chaque cellule est composé
   par l'appelant via `column.render`. Avec un `kind`, le tri est celui du legacy (js/sort.js) :
   plusieurs niveaux gardés dans prefs.sort, tri par défaut (SORT_DEFAULTS), ordre de vocabulaire,
   et une colonne est triable quand sa colonne legacy (COLUMN_SETS[kind]) l'est. Sans `kind`, un tri

@@ -1,6 +1,6 @@
 /*
   Types dérivés des emptyX() / fonctions de sauvegarde réelles (js/views/**), pas d'une
-  modélisation abstraite — docs/en-cours/react-migration-plan.md § 2. `scenarios`/`steps`/`groups` restent
+  modélisation abstraite — docs/archivé/react-migration-plan.md § 2. `scenarios`/`steps`/`groups` restent
   volontairement moins détaillés : zone en flux (voir PLAN.md, « Deux dates par étape »), affinée
   en Phase 2 quand Scenarios est migré. Champs de statut/type/mode typés `string` : les vocabulaires
   (ACCOMMODATION_TYPES, etc.) restent des dictionnaires legacy pour l'instant, pas des union types.

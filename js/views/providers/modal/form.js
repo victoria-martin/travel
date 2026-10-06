@@ -12,4 +12,4 @@ function emptyProvider() {
   };
 }
 
-// Formulaire : src/domains/transports/modal/ProviderModal.tsx (docs/en-cours/react-migration-plan.md § 4).
+// Formulaire : src/domains/transports/modal/ProviderModal.tsx (docs/archivé/react-migration-plan.md § 4).

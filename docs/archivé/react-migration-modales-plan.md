@@ -3,7 +3,7 @@
 Porter les types de `MODAL_TYPES` ([js/modals/modal.js](../../js/modals/modal.js)) restants en
 composants React, un par un, en suivant exactement le patron déjà établi sur `actual-expense`,
 `import-expenses`, `charge`, `phrase`, `valise-catalogue`, `attraction` (voir
-[react-migration-plan.md](../en-cours/react-migration-plan.md) § 4 pour l'historique).
+[react-migration-plan.md](react-migration-plan.md) § 4 pour l'historique).
 
 **Effort recommandé : medium.** Le travail est répétitif (même recette à chaque type), mais chaque
 modale demande de vérifier précisément les ids de champs contre son `save.js` avant de brancher —

@@ -191,7 +191,7 @@ function deleteCustomPhrase(id) {
   render();
 }
 
-// Formulaire : src/domains/phrases/modal/AddTranslationModal.tsx (docs/en-cours/react-migration-plan.md § 4).
+// Formulaire : src/domains/translations/modal/AddTranslationModal.tsx (docs/archivé/react-migration-plan.md § 4).
 
 // Les phrases en dur (PHRASE_CATEGORIES) et celles ajoutées (phraseCustomItems) partagent
 // l'affichage : une phrase custom porte juste `customId`, qui décide des boutons Modifier/Supprimer.

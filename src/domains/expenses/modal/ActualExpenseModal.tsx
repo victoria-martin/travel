@@ -8,7 +8,7 @@ import { ModalTitle } from '@/shared/modal/ModalTitle';
 import type { ActualExpense } from '@/store/types';
 
 /*
-  Premier formulaire de modale porté en React (pilote, docs/en-cours/react-migration-plan.md § 4) — reste
+  Premier formulaire de modale porté en React (pilote, docs/archivé/react-migration-plan.md § 4) — reste
   volontairement proche du legacy : champs non contrôlés (defaultValue, comme EditableTextCell
   ailleurs), bouton #f-save gardé (submitModal()/Entrée le cliquent programmatiquement, voir
   modal.js) qui délègue à window.saveActualExpense(id), inchangée — elle lit déjà ces mêmes ids

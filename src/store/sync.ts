@@ -1,7 +1,7 @@
 import type { TravelData } from './types';
 
 /*
-  Contrat visé (docs/en-cours/react-migration-plan.md § 2, docs/protocole-sync-sheet.md) — PAS ENCORE
+  Contrat visé (docs/archivé/react-migration-plan.md § 2, docs/protocole-sync-sheet.md) — PAS ENCORE
   implémenté. js/sync.js ne s'y prête pas tel quel : le push y est debouncé (schedulePush) et fait
   une fusion 3-voies entrée par entrée (mergeStates), pas un simple POST. L'écrire ici reviendrait à
   dupliquer ce protocole en parallèle du legacy — deux chemins qui écriraient sur le même Google

@@ -15,7 +15,7 @@ import { markerData } from './MapView/markers';
 
 /*
   Porte js/views/map/{map,markers,leaflet-base}.js — premier découpage platform/web
-  (docs/en-cours/react-migration-plan.md § 5), câblé dans src/shell/MainContent.tsx. Délégués au legacy, pas
+  (docs/archivé/react-migration-plan.md § 5), câblé dans src/shell/MainContent.tsx. Délégués au legacy, pas
   réimplémentés (RouteBuilderPanel, NewCityButton) : état+async dans des globales de module, drag
   HTML5 — dupliquer cette logique n'apporterait rien tant que ce mode n'est pas une priorité à part.
   Le tracé d'un scénario choisi (drawScenarioOnMap) reste aussi délégué : il dépend des

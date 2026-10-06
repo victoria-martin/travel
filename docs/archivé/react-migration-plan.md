@@ -17,12 +17,12 @@ Décisions actées (validées en session) :
 baseRev)`), branché sur Google Sheets comme aujourd'hui. Le jour où un catalogue partagé
   multi-client demande une vraie base relationnelle, seul l'adaptateur change — pas les hooks ni
   les composants. Le backend cible est tranché depuis le 2026-10-05 — Rails + GraphQL, catalogue
-  global référencé par les voyages : voir [architecture-plan.md](architecture-plan.md) et § 9
+  global référencé par les voyages : voir [architecture-plan.md](../en-cours/architecture-plan.md) et § 9
   ci-dessous, une piste parallèle à celle-ci (§ 7). L'adaptateur ne suffira pas seul : la forme des
   données change aussi (architecture-plan.md § 5).
 - **Couche données (2026-10-05)** : elle n'est plus portée sur Zustand ni sur un adaptateur Sheet.
   Le Sheet disparaît au profit d'un backend Rails + GraphQL, et c'est le lot 4 de
-  [architecture-plan.md](architecture-plan.md) qui remplace `window.state`, les mutations legacy
+  [architecture-plan.md](../en-cours/architecture-plan.md) qui remplace `window.state`, les mutations legacy
   et [sync.js](../../js/sync.js). Ce plan-ci ne garde que l'affichage (§ 10). Détail :
   architecture-plan.md § 7.
 - **Build/hébergement cible (2026-10-01)** : `file://`/« ouvrir `index.html` sans rien lancer » est
@@ -38,20 +38,20 @@ Référence du protocole de synchro, inchangé par cette migration : [protocole-
 cible » ci-dessous, décrit le mécanisme des Phases 0-3 (React monté dans `#main` seulement,
 sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état actuel.
 
-- **Un seul root React**, monté une fois dans [src/main.tsx](../src/main.tsx)
+- **Un seul root React**, monté une fois dans [src/main.tsx](../../src/main.tsx)
   (`createRoot(document.getElementById('app')).render(<AppShell />)`), pas par `render()` legacy.
-  [src/shell/AppShell.tsx](../src/shell/AppShell.tsx) assemble Sidebar, MobileNav, MainContent,
+  [src/shell/AppShell.tsx](../../src/shell/AppShell.tsx) assemble Sidebar, MobileNav, MainContent,
   Toast, ModalHost, AskOverlayHost — s'abonne à `useTravelStore()` sans sélecteur pour se re-rendre
   sur **toute** mutation, pas une tranche typée de `state`.
-- **`render()` ([js/render.js](../js/render.js)) ne construit plus rien** : il notifie
+- **`render()` ([js/render.js](../../js/render.js)) ne construit plus rien** : il notifie
   `__reactStateSubscribers`, la même liste que `useTravelStore`, et laisse React se re-rendre
   lui-même. `REACT_VIEWS`/`mountReactView`/`unmountReactView`/`renderMain()`/`mainNode()` ont
   disparu — plus besoin d'un root imbriqué dans `#main` une fois que `#app` entier est React.
   Le point de bascule par vue vit maintenant dans
-  [src/shell/MainContent.tsx](../src/shell/MainContent.tsx) : une table `VIEWS` (même esprit que
+  [src/shell/MainContent.tsx](../../src/shell/MainContent.tsx) : une table `VIEWS` (même esprit que
   l'ancien `REACT_VIEWS`) associe une clé de route à son composant. **2026-10-02** — `scenarios`
   (la liste), dernière vue de `js/router.js` sans entrée, portée sur React
-  ([domains/scenarios/ScenariosView.tsx](../src/domains/scenarios/ScenariosView.tsx)) : toutes les
+  ([domains/scenarios/ScenariosView.tsx](../../src/domains/scenarios/ScenariosView.tsx)) : toutes les
   clés de `VIEWS` ont désormais un composant, le repli `LegacyMarkup` générique dans
   `MainContent.tsx` a disparu avec. Recherche/favoris/scénario choisi/comparer/archivés/actions en
   vrai React ; la bande d'itinéraire (`scenarioRouteBar`, calcul + couleurs de statut, aucune
@@ -73,14 +73,14 @@ sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état 
   jamais revisités par un `render()`. Sûr tant que `#app` était du HTML legacy brut ; plus du tout
   une fois que React possède `#app` et réconcilie ses propres enfants sans connaître ce noeud
   étranger (risque réel de collision lors d'un futur `insertBefore`, pas juste théorique). Unifiés
-  derrière un seul mécanisme, [js/ask-overlay.js](../js/ask-overlay.js)
+  derrière un seul mécanisme, [js/ask-overlay.js](../../js/ask-overlay.js)
   (`showAskOverlay`/`closeAskOverlay`/`activeAsk`) peint par
-  [src/shell/AskOverlayHost.tsx](../src/shell/AskOverlayHost.tsx) — une seule ask active à la fois,
+  [src/shell/AskOverlayHost.tsx](../../src/shell/AskOverlayHost.tsx) — une seule ask active à la fois,
   comme avant. Au passage : l'indicateur « legacy/react » posé en haut à droite de l'écran plus tôt
   dans la session (`body[data-render-mode]`) n'avait plus de sens une fois ce binaire disparu —
   retiré, avec `.nav-legacy-indicator` (CSS mort depuis qu'un essai antérieur de flag par page a
   été abandonné).
-- **`ModalHost` ([src/shell/ModalHost.tsx](../src/shell/ModalHost.tsx)) peint le corps de la
+- **`ModalHost` ([src/shell/ModalHost.tsx](../../src/shell/ModalHost.tsx)) peint le corps de la
   modale via `dangerouslySetInnerHTML`**, pas via l'ancien `appendChild` manuel. Gain inattendu :
   tant que `modal.payload` ne change pas (la saisie est non contrôlée, lue seulement à
   l'enregistrement), `modalBodyHtml()` rend la **même chaîne** à chaque appel → React ne retouche
@@ -104,7 +104,7 @@ sidebar/router/modale encore legacy) — gardé pour l'historique, plus l'état 
 
 Ce qui suit décrit le mécanisme des Phases 0-3, remplacé ci-dessus — gardé pour l'historique.
 
-Le point de bascule était `#main`. [render.js](../js/render.js) séparait le shell (sidebar, rendu
+Le point de bascule était `#main`. [render.js](../../js/render.js) séparait le shell (sidebar, rendu
 une fois dans `render()`) du contenu de la vue (`renderMain()`, qui réécrivait `#main` à chaque
 route) — c'était la frontière dont un strangler fig avait besoin à ce stade.
 
@@ -131,14 +131,15 @@ route) — c'était la frontière dont un strangler fig avait besoin à ce stade
   il sert les deux mondes sans rien savoir d'eux.
 - **Build posé** (branche `react-migration`) : `vite.config.ts` compile `src/main.tsx` en **IIFE**
   (`build.lib`, format `iife`) et non en module — l'app tourne encore en scripts classiques/`file://`
-  (`open index.html`, [technique.json](../atelier/technique.json)), où un `<script type="module">`
+  (`open index.html`, [technique.json](../../atelier/technique.json)), où un `<script type="module">`
   casse sur les imports cross-origin. `react-app.js` s'inclut donc comme un `<script src>` de plus,
   juste avant `js/init.js`. Sortie dans `react-dist/`, gitignoré (c'est un build, pas une source) —
   **pas encore câblé au déploiement** : tant que `react-dist/` n'est pas construit en CI ou chez
   l'hébergeur, le script 404 silencieusement et l'app retombe sur la vue legacy, par construction
   (`REACT_VIEWS` reste `undefined`, `renderMain()` prend la branche `else`). Rejoint **Passer le
   repo en privé et héberger sur Netlify** <!--t:r6wc--> dans PLAN.md, qui donnera un vrai build.
-  Pas encore exécuté dans cette session (`pnpm install` / `pnpm react:build` restent à lancer).
+  Le build tourne depuis le 2026-10-06 dans un workflow GitHub Actions
+  ([pages.yml](../../.github/workflows/pages.yml)) à chaque push sur `main`.
 - **Fin de cible** : cet IIFE reste la solution de transition tant que legacy et React coexistent.
   À la Phase 4, `file://` n'a plus besoin d'être supporté (Décisions actées, en tête de ce
   document) — le build repasse en ESM standard, lancé par un serveur front plutôt qu'en ouvrant le
@@ -149,13 +150,13 @@ route) — c'était la frontière dont un strangler fig avait besoin à ce stade
 Réalisé en Phase 0b, plus restreint que prévu ici au départ — le mécanisme vérifié d'abord, le
 reste au fur et à mesure (voir § 7) :
 
-- **Types** : [store/types.ts](../src/store/types.ts). Dérivés des `emptyX()` / fonctions de
+- **Types** : [store/types.ts](../../src/store/types.ts). Dérivés des `emptyX()` / fonctions de
   sauvegarde réelles (`js/views/**/modal/form.js`, `save.js`), pas d'une modélisation abstraite —
   `atelier/modele.json` datait du 16/09 et plusieurs champs avaient bougé depuis (`Offer` ne porte
   plus `rentalId`/`priceTotal`, `Transport` plus `carrier`). `Scenario`/`Step`/`StepGroup` restent
   volontairement moins détaillés, cette zone étant en flux (PLAN.md, « Deux dates par étape ») —
   affinés en Phase 2.
-- **Store** : [store/useTravelStore.ts](../src/store/useTravelStore.ts) est un miroir Zustand
+- **Store** : [store/useTravelStore.ts](../../src/store/useTravelStore.ts) est un miroir Zustand
   **en lecture seule** de la globale `state` legacy, recopié à chaque re-rendu (le mécanisme de
   notification posé en Phase 0a). Les mutations restent legacy (`upsertX`, `saveNow()`) : le store
   ne devient la seule source que domaine par domaine, quand ses actions sont portées en Phase 1+ —
@@ -164,7 +165,7 @@ reste au fur et à mesure (voir § 7) :
   une propriété de `window` ; seuls `var` et les déclarations de fonction s'y attachent. Si React
   lit une valeur via `window`, le script legacy l'expose explicitement (`window.X = X` juste après
   la déclaration, ou `let X` → `var X` si elle est réassignée ailleurs — `window.X = X` une seule
-  fois deviendrait sinon obsolète) et [types/global.d.ts](../src/types/global.d.ts) décrit son
+  fois deviendrait sinon obsolète) et [types/global.d.ts](../../src/types/global.d.ts) décrit son
   type. **2026-10-02** — masqué tout ce temps par une erreur de build antérieure
   (`process is not defined`, § 1/§ 4 : React/Radix référencent `process.env.NODE_ENV`, jamais
   défini dans un navigateur nu) qui empêchait `react-app.js` de s'exécuter jusqu'au bout — aucun
@@ -174,7 +175,7 @@ reste au fur et à mesure (voir § 7) :
   `ATTRACTION_STATUSES`, `ROUTE_HELP`, `prefs`, `mapFilters`, `routeBuilder` manquaient tous) —
   audité et corrigé en un passage sur tout ce que `global.d.ts` déclare.
 - **2026-10-02 — boucle infinie (React error #185) sur tous les écrans qui lisent le store.**
-  `window.ofCurrentTravel(items)` ([current-travel.js](../js/current-travel.js)) fait un `.filter`,
+  `window.ofCurrentTravel(items)` ([current-travel.js](../../js/current-travel.js)) fait un `.filter`,
   donc renvoie un **nouveau tableau** à chaque appel, même quand son contenu n'a pas changé. Tous
   les sélecteurs Zustand de la forme `useTravelStore((store) => window.ofCurrentTravel(store.data.X))`
   violaient donc le contrat de `useSyncExternalStore` (le `getSnapshot` doit être stable entre deux
@@ -193,14 +194,14 @@ reste au fur et à mesure (voir § 7) :
   rafraîchit arrivait après le premier montage React plutôt qu'avant — `js/render.js` notifie
   maintenant `__reactStateSubscribers` en tout premier dans `render()`. Retirer l'exposition quand
   le dernier consommateur React/legacy est migré ou supprimé en Phase 4.
-- **Synchro** : [store/sync.ts](../src/store/sync.ts) ne contient qu'un type `SyncAdapter`
+- **Synchro** : [store/sync.ts](../../src/store/sync.ts) ne contient qu'un type `SyncAdapter`
   (contrat visé, documenté), **pas d'implémentation**. `js/sync.js` ne s'y prête pas tel quel : le
   push y est debouncé (`schedulePush`) et fait une fusion 3-voies entrée par entrée
   (`mergeStates`), pas un simple POST — l'écrire en parallèle aurait fait deux chemins écrivant sur
   le même Google Sheet, un vrai risque sur les données réelles. Reste une tâche à part, quand
   `js/sync.js` lui-même est porté (Phase 4 ou plus tôt si la bascule DB de
-  [atelier/notes.json](../atelier/notes.json) démarre avant). **2026-10-05** — la bascule démarre : ce
-  portage n'aura pas lieu, voir [architecture-plan.md](architecture-plan.md) § 7.
+  [atelier/notes.json](../../atelier/notes.json) démarre avant). **2026-10-05** — la bascule démarre : ce
+  portage n'aura pas lieu, voir [architecture-plan.md](../en-cours/architecture-plan.md) § 7.
 
 Risque identifié : un accès `state.x` oublié dans du legacy, pendant la période où les deux
 coexistent, lirait une donnée périmée. Pas de garde automatique prévue pour l'instant — à vérifier
@@ -221,21 +222,21 @@ responsabilité ») :
 
 ## 4. Composition — le chrome vs le contenu
 
-- `DataTable` ([shared/DataTable/](../src/shared/DataTable/), remplace `listTable` du legacy, supprimé)
+- `DataTable` ([shared/DataTable/](../../src/shared/DataTable/), remplace `listTable` du legacy, supprimé)
   ne porte que le chrome : tri (un niveau, cycle asc/desc/aucun — pas encore persisté dans prefs ni
   multi-niveaux), rendu des lignes. `columns` reste une table de données comme aujourd'hui
   (`{key, label, sortValue?, render}[]`), chaque cellule est un composant du domaine passé en
   donnée — c'est déjà de la composition, rien à changer là-dessus. Premier consommateur :
-  [domains/cities/CitiesView.tsx](../src/domains/cities/CitiesView.tsx), dont les cellules ont
-  migré dans [domains/attractions/cells.tsx](../src/domains/attractions/cells.tsx) — Attractions et
+  [domains/cities/CitiesView.tsx](../../src/domains/cities/CitiesView.tsx), dont les cellules ont
+  migré dans [domains/attractions/cells.tsx](../../src/domains/attractions/cells.tsx) — Attractions et
   Cities portent la même entité (§ 7, Phase 1). Recherche, colonnes masquables, type/statut
-  éditables, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer) faits. Reste : menu ⋮.
+  éditables, tags éditables, actions de ligne (ouvrir/dupliquer/supprimer) et menu ⋮ faits.
   Code/route en anglais (`cities`), libellé visible resté « Villes » — premier pas de **Nommer les
   vues en anglais** (PLAN.md), fait pour cette vue seule, pas pour les autres.
 - Les interactions complexes utilisent les primitives headless Radix UI avec les classes
   existantes de `styles.css`; les composants métier et le système de style restent écrits dans le
   projet. Ne pas ajouter shadcn/ui, Tailwind ou StyleX pendant la migration. `TagDropdown`
-  ([shared/select/](../src/shared/select/)) utilise `DropdownMenu`; Transports utilise `Tabs` pour
+  ([shared/select/](../../src/shared/select/)) utilise `DropdownMenu`; Transports utilise `Tabs` pour
   ses trois panneaux. Remplacer les autres interactions complexes au fil de leur migration, pas en
   réécrivant en bloc les composants déjà portés.
 - **2026-10-02 — dossier `shared/select/`** : tout composant de menu déroulant (Radix
@@ -243,19 +244,19 @@ responsabilité ») :
   que de les laisser se recréer sous des noms différents à chaque écran. A tout de suite servi :
   `VocabularyDropdown.tsx`, recréé par erreur à l'identique de `TagDropdown.tsx` (déjà renommé plus
   tôt) par la session parallèle qui ignorait le renommage — supprimé, zéro consommateur.
-  `EditableTagsCell` ([shared/cells/](../src/shared/cells/)) utilise aussi `DropdownMenu` en
+  `EditableTagsCell` ([shared/cells/](../../src/shared/cells/)) utilise aussi `DropdownMenu` en
   interne mais reste dans `cells/` : son identité première est une cellule de tableau éditable, le
   menu n'est qu'un détail d'implémentation — à rouvrir si ce découpage s'avère faux à l'usage.
 - **`ModalHost` n'a pas été nécessaire pour les actions de ligne**, tant que la Phase 4 n'avait pas
   donné `#app` à React : `window.openModal(type, id)` / `openSheet(type, id)` /
   `deleteItem(collection, id)` ouvraient l'overlay legacy par-dessus toute la page, hors de l'arbre
   React monté dans `#main` seulement — aucun conflit. **2026-10-02, Phase 4** —
-  [src/shell/ModalHost.tsx](../src/shell/ModalHost.tsx) existe maintenant (§ 1), shell générique
+  [src/shell/ModalHost.tsx](../../src/shell/ModalHost.tsx) existe maintenant (§ 1), shell générique
   (ouverture, dirty-check, fermeture) qui peint `cfg.body(modal)` en `dangerouslySetInnerHTML`
   pour tous les types encore legacy. **Premier formulaire porté en vrai composant React** :
   `actual-expense` (dépense réelle), pilote avant les autres —
-  [domains/expenses/modal/ActualExpenseModal.tsx](../src/domains/expenses/modal/ActualExpenseModal.tsx),
-  branché dans [src/modal-bodies.ts](../src/modal-bodies.ts) (table type → composant,
+  [domains/expenses/modal/ActualExpenseModal.tsx](../../src/domains/expenses/modal/ActualExpenseModal.tsx),
+  branché dans [src/modal-bodies.ts](../../src/modal-bodies.ts) (table type → composant,
   consultée par `ModalHost` à côté du `dangerouslySetInnerHTML` par défaut — un deuxième type,
   `import-expenses`, l'a rejoint depuis). Délibérément proche du legacy, pas une réécriture
   complète : champs **non contrôlés** (`defaultValue`), le bouton `#f-save` délègue toujours à
@@ -284,14 +285,14 @@ responsabilité ») :
   visible, pas encore relié en `Dialog.Title` ; à améliorer si un libellé plus lisible devient
   utile (lecteur d'écran).
 - **2026-10-03 — composants partagés entre formulaires, et deuxième/troisième type portés.**
-  [src/shared/CloseModalButton.tsx](../src/shared/CloseModalButton.tsx) : le bouton « Annuler »,
+  [src/shared/CloseModalButton.tsx](../../src/shared/modal/CloseModalButton.tsx) : le bouton « Annuler »,
   identique dans tous les formulaires legacy (`onclick="dismissModal()"`), sort en commun plutôt
   que répété à chaque port — **appelle `dismissModal()`, pas `closeModal()`** : la distinction
   compte dès qu'un type a `edits: true` (`closeModal()` fermerait en silence une saisie non
   enregistrée, sans redemander). Trouvé une fois en trop sur un composant déjà extrait
   (`import-expenses`, sans incidence pour lui puisqu'il n'a pas `edits: true`) — corrigé avant de
   le réutiliser ailleurs.
-  [src/shared/TagsField.tsx](../src/shared/TagsField.tsx) : port de `tagsField` (js/views/tags-field.js),
+  [src/shared/TagsField.tsx](../../src/shared/form-fields/TagsField.tsx) : port de `tagsField` (js/views/tags-field.js),
   **à ne pas confondre avec `EditableTagsCell`** (shared/cells/) — chrome différent, une cellule de
   tableau ouvre un menu déroulant, un champ de modale affiche tous les tags cochés en ligne avec
   leur croix de retrait, plus un champ libre. Seul composant de formulaire **contrôlé** pour
@@ -300,7 +301,7 @@ responsabilité ») :
   reste muté en parallèle du state local pour que la fonction de sauvegarde déléguée (qui la lit
   directement sur `modal.payload`) voie la bonne valeur.
   `charge` (Charge budgétaire) rejoint `actual-expense` —
-  [domains/fixed-costs/modal/FixedCostModal.tsx](../src/domains/fixed-costs/modal/FixedCostModal.tsx),
+  [domains/fixed-costs/modal/FixedCostModal.tsx](../../src/domains/fixed-costs/modal/FixedCostModal.tsx),
   premier à utiliser `TagsField`.
 - **2026-10-03** — repéré sur `FixedCostModal.tsx` : le balisage `.field`/`<select>`/bouton
   d'enregistrement se réécrivait en clair à chaque formulaire plutôt que de se généraliser dès le
@@ -309,7 +310,7 @@ responsabilité ») :
   `ModalSaveButton`, `ModalTitle` — et les deux formulaires déjà portés les consomment (voir
   CLAUDE.md « Un champ de formulaire de modale vit dans `shared/` »). Troisième type porté avec ces
   briques : `phrase` —
-  [domains/phrases/modal/AddTranslationModal.tsx](../src/domains/phrases/modal/AddTranslationModal.tsx), délégué à
+  [domains/phrases/modal/AddTranslationModal.tsx](../../src/domains/translations/modal/AddTranslationModal.tsx), délégué à
   `window.saveCustomPhrase(id)` inchangée. **Prochain lot** : continuer sur les types restants
   (`attraction`/`accommodation*` utilisent aussi `TagsField`, bon test de réutilisation — attendre
   que la session parallèle finisse d'y ajouter `createdAt` avant d'y toucher ; `voyage`/`step` sont
@@ -320,23 +321,23 @@ responsabilité ») :
 ## 5. Frontière plateforme (préparation RN)
 
 Tout ce qui est spécifique au navigateur part dans `platform/web/`, derrière une interface fine :
-Leaflet ([leaflet-base.js](../js/views/leaflet-base.js), `map/`, `detail-map.js`), le drag & drop
-souris ([drag.js](../js/views/drag.js), `step-drag.js`, `mobile-nav/drag.js`), `window.open`,
+Leaflet ([leaflet-base.js](../../js/views/leaflet-base.js), `map/`, `detail-map.js`), le drag & drop
+souris ([drag.js](../../js/views/drag.js), `step-drag.js`, `mobile-nav/drag.js`), `window.open`,
 `document.startViewTransition`. Rien dans `domains/*/hooks` ni dans `store/` n'importe
 `platform/web` directement — ces hooks reçoivent au besoin une fonction/un composant en argument
 (ex. le composant de carte), jamais l'implémentation Leaflet elle-même. Le jour où RN arrive, seul
 `platform/` se réécrit (`platform/native/`) ; store et hooks ne bougent pas.
 
-**Fait et câblée dans `REACT_VIEWS.carte`** : [platform/web/LeafletMap.tsx](../src/platform/web/LeafletMap.tsx)
+**Fait et câblée dans `REACT_VIEWS.carte`** : [platform/web/LeafletMap.tsx](../../src/platform/web/LeafletMap.tsx)
 est le seul fichier React à toucher `L` (Leaflet global, CDN) — composant pur, son cycle de vie
 (créer/peupler/détruire la carte) est un hook à part
-([LeafletMap/useLeafletMap.ts](../src/platform/web/LeafletMap/useLeafletMap.ts)), ses fonctions
+([LeafletMap/useLeafletMap.ts](../../src/platform/web/LeafletMap/useLeafletMap.ts)), ses fonctions
 impératives (icônes, interaction marqueur) dans
-[LeafletMap/utils.ts](../src/platform/web/LeafletMap/utils.ts) — rien de tout ça dans le composant
+[LeafletMap/utils.ts](../../src/platform/web/LeafletMap/utils.ts) — rien de tout ça dans le composant
 lui-même. Il reçoit `markers: MapMarkerData[]`, un `onMarkerClick` optionnel (mode itinéraire) et
 un `afterMarkers(map)` optionnel (tracé de scénario/itinéraire — la seule fuite assumée de
 l'instance Leaflet brute, pour un dessin que LeafletMap n'a pas à connaître).
-[domains/carte/](../src/domains/carte/) assemble : marqueurs hébergements/lieux/villes, filtre
+[domains/carte/](../../src/domains/carte/) assemble : marqueurs hébergements/lieux/villes, filtre
 (show/hide + favoris), panneau scénario (liste + bascule tous/scénario), bouton itinéraire,
 légende, split-pane, menu ⋮. **Délégués au legacy en HTML injecté** (pas réimplémentés) :
 `RouteBuilderPanel`/`NewCityButton` — état + async dans des globales de module, glisser HTML5,
@@ -360,15 +361,15 @@ entre l'écran et `LeafletMap`) dans `markers.ts`. La règle « rien dans les ho
 sous-système qui en a une aujourd'hui) :
 
 - `@dnd-kit/core`, drag & drop souris des étapes de scénario
-  ([StepList.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepList.tsx),
-  [StepCard.tsx](../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx)) — pointeur/DOM,
+  ([StepList.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/StepList.tsx),
+  [StepCard.tsx](../../src/domains/scenarios/detail/ScenarioDetailView/StepCard.tsx)) — pointeur/DOM,
   RN demande un mécanisme tactile différent (gesture-handler + reanimated, ou une lib dnd RN).
 - `FileReader`, lecture du CSV importé
-  ([ImportExpensesModal.tsx](../src/domains/expenses/modal/ImportExpensesModal.tsx)) — API fichier
+  ([ImportExpensesModal.tsx](../../src/domains/expenses/modal/ImportExpensesModal.tsx)) — API fichier
   du navigateur, RN n'a pas cette classe.
-- `@radix-ui/*` : `Dialog` ([ModalHost.tsx](../src/shell/ModalHost.tsx)), `DropdownMenu`
-  ([TagDropdown.tsx](../src/shared/select/TagDropdown.tsx), consommé par `EditableTagsCell.tsx`),
-  `Tabs` ([TransportsView.tsx](../src/domains/transports/TransportsView.tsx)) — ces primitives
+- `@radix-ui/*` : `Dialog` ([ModalHost.tsx](../../src/shell/ModalHost.tsx)), `DropdownMenu`
+  ([TagDropdown.tsx](../../src/shared/select/TagDropdown.tsx), consommé par `EditableTagsCell.tsx`),
+  `Tabs` ([TransportsView.tsx](../../src/domains/transports/TransportsView.tsx)) — ces primitives
   n'ont pas d'équivalent RN direct (pas de portage 1:1 d'une lib web).
 
 **Ce que `platform/native/` devra fournir**, au minimum : une carte (ex. `react-native-maps`, même
@@ -382,13 +383,13 @@ liste est maintenant posée plutôt qu'à découvrir plus tard.
 l'app mobile actuelle, pas en préparation d'un futur port natif :
 
 - Drag des étapes de scénario : déjà non affiché sous 640px (`.step-drag-handle{display:none}`,
-  [styles.css:3911](../styles.css#L3911)), les boutons `.step-reorder-buttons` restent. Rien à
+  [styles.css:3911](../../styles.css#L3911)), les boutons `.step-reorder-buttons` restent. Rien à
   faire, déjà en place avant ce tour.
 - Import CSV (`FileReader`) : bouton masqué sous 640px (`.import-expenses-btn`, TEMP — commentaire
-  dans [ImportExpensesButton.tsx](../src/domains/expenses/ExpensesView/ImportExpensesButton.tsx)),
+  dans [ImportExpensesButton.tsx](../../src/domains/expenses/ExpensesView/ImportExpensesButton.tsx)),
   pas encore adapté au tactile.
 - Dialog Radix centrée : passe plein écran sous 640px comme `.modal-sheet` le fait déjà sous
-  440px (`.overlay`/`.modal`, [styles.css:1348](../styles.css#L1348)) — exclu de `.modal-ask`/
+  440px (`.overlay`/`.modal`, [styles.css:1348](../../styles.css#L1348)) — exclu de `.modal-ask`/
   `.overlay-ask` (la question de confirmation reste une petite boîte centrée, pas une sheet).
 
 ## 6. Dossiers
@@ -433,9 +434,9 @@ de `#main`), menu ⋮ (texte des boutons) : faits sur les 5 écrans. Tri et filt
 2026-10-05 : `DataTable` prend un `kind` et trie par `sortItems` (niveaux dans `prefs.sort`,
 `SORT_DEFAULTS`, ordre de vocabulaire) ; `SortMenu`/`ListFilterMenu` (`shared/menu/`) éditent les
 mêmes `prefs` que les panneaux legacy — les colonnes legacy (`COLUMN_SETS`) restent la source du tri,
-du filtre et du masquage par défaut, les colonnes React n'en portent que le rendu. Restent, pas bloquants : formulaires
-React si une modale legacy est un jour réécrite ; `SettingsMenu` n'a que la préférence transverse (pas
-`outOfRangeStyleOption`/réglages par page, hors sujet ici).
+du filtre et du masquage par défaut, les colonnes React n'en portent que le rendu. Toutes les modales sont en React depuis (§ 10) ;
+les réglages propres à une page passent par
+[PageSettings.tsx](../../src/shell/SettingsModal/PageSettings.tsx).
 Attractions (`domains/attractions/`) étant la même entité que Cities (`domains/cities/`), leurs
 cellules et leur texte de recherche sont partagés (`attractions/cells.tsx`,
 `attractions/searchAttraction.ts`) — Cities les consomme plutôt que de les dupliquer. Colonnes
@@ -478,16 +479,19 @@ porte que le chrome (icône, titre, lien), le corps de chaque carte est passé e
 `ScenarioCard`/`PackingCard`/`TodoCard`, qui délèguent chacune à un getter legacy (`chosenScenario`,
 `travelPackingItems`, `todoListsOfTravel`/`todoListItems`/`freeTodosOfTravel`) — port complet, rien
 de différé.
-Phrases (`domains/phrases/`) : recherche en `useState` React classique (contrôlé), contrairement à
+Phrases (`domains/translations/`) : recherche en `useState` React classique (contrôlé), contrairement à
 Notes/Infos utiles — ici le champ qui tape n'est pas celui qui se re-rend, un re-render React de la
 liste en dessous ne lui fait perdre ni focus ni curseur, le souci qui forçait le non-contrôlé
 ailleurs ne s'applique pas. Catégories en dur + phrases custom (localStorage, hors `state`/sync —
 `types.ts` du domaine, pas `store/types.ts`), traduction + correction (déléguée à `window.prompt`
-via `editPhraseTranslation`), sélecteur de langue. Restent : style de carte (classique/duo/minimal),
-mode liste/cartes, formulaire d'ajout/édition React.
+via `editPhraseTranslation`), sélecteur de langue. Style de carte (classique/duo/minimal), mode
+liste/cartes et formulaire d'ajout
+([AddTranslationModal.tsx](../../src/domains/translations/modal/AddTranslationModal.tsx)) portés
+depuis (§ 10).
 Valise (`domains/packing/`) : le **catalogue** (page `valise`) est porté ; l'onglet Valise d'un
 scénario aussi depuis (2026-10-04, [react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md)
-§ G5). Composer la valise du voyage (`openSheet('valise-composer')`) reste un overlay legacy (§ 10). `<details>` non contrôlé pour le repli des
+§ G5). Composer la valise du voyage (`openSheet('valise-composer')`) est porté depuis
+([PackingComposerModal.tsx](../../src/domains/packing/modal/PackingComposerModal.tsx), § 10). `<details>` non contrôlé pour le repli des
 groupes (`open` littéral, jamais recalculé — React ne retouche l'attribut que si la prop change
 entre deux rendus, donc un clic utilisateur n'est jamais écrasé) plutôt que de réimplémenter
 `packingClosedGroups` : le repli est un geste de session, jamais persisté, même en legacy.
@@ -496,24 +500,19 @@ entre deux rendus, donc un clic utilisateur n'est jamais écrasé) plutôt que d
 `kind` ([TodoListTable.tsx](../../src/domains/todo/TodoView/TodoListCard/TodoListTable.tsx)).
 Journal (`domains/journal/`) : scénario source + rang de jours cliquables (`DayCards.tsx`) sont de
 vrais composants React. Le panneau du jour — éditeur markdown, dropdown `{}` d'insertion de lieu,
-photos, pastilles planifiées, refs non résolues, panneau carte — reste **entièrement délégué** via
-`LegacyMarkup` (`window.journalDayPanel(scenario, date)`, un seul appel) : tout tourne autour d'un
-unique `<textarea>` et de la position de son caret (`document.getElementById('journal-text')`,
-sélection, insertion au point d'insertion), un bloc profondément impératif sans découpage naturel en
-sous-composants React — même famille que RouteBuilderPanel/NewCityButton/le builder À faire, pas une
-liste ou un formulaire ordinaire. `initJournalMap()` (Leaflet, panneau carte) rappelé dans un
-`useEffect` plutôt qu'un `setTimeout` comme en legacy — le montage React garantit déjà le DOM peint
-avant l'effet.
+photos, pastilles planifiées, refs non résolues, panneau carte — est porté depuis le 2026-10-05
+([JournalDayPanel.tsx](../../src/domains/journal/JournalView/JournalDayPanel.tsx), caret tenu par
+`useJournalEditor`, § 10).
 Dépenses (`domains/expenses/`) : budget prévu, dépenses réelles et calculé-depuis-les-réservations,
 les trois sections portées en React. Budget prévu/Dépenses réelles restent des `<table>` écrites en
 clair plutôt que `DataTable` — des lignes de total et de non-budgétisé s'intercalent entre les
 lignes d'entité, que l'abstraction `DataTable` (une ligne = un item) ne sait pas représenter.
 `LabelCell` (`domains/fixed-costs/cells.tsx`) réutilisé tel quel pour le libellé budgétaire — même
 entité (`FixedCost`) que les listes de charges d'À faire. Nouveau type `ActualExpense`
-([store/types.ts](../src/store/types.ts)) : collection absente du typage, ajoutée par le lot
-« budget vs actual » pendant que la migration portait d'autres écrans. Restent, pas bloquants :
-panneau de tri (`sortPanel`), menu ⋮ complet (seule la préférence transverse `SettingsMenu` est
-reprise, comme partout ailleurs).
+([store/types.ts](../../src/store/types.ts)) : collection absente du typage, ajoutée par le lot
+« budget vs actual » pendant que la migration portait d'autres écrans. Tri porté depuis
+(`SortMenu kind="charges"`, § 10) ; le menu ⋮ ne reprend que la préférence transverse
+`SettingsMenu`, comme partout ailleurs.
 
 **Phase 3 terminée.** Les 8 écrans legacy identifiés sont portés. Le DnD de `StepList.tsx` et la
 Phase 4 (le shell), restés ouverts à ce moment-là, sont faits depuis (voir leurs lignes du tableau).
@@ -521,7 +520,7 @@ Le détail d'un scénario n'a plus aucun `LegacyMarkup` depuis le 2026-10-04 :
 [react-migration-scenario-detail-plan.md](../archivé/react-migration-scenario-detail-plan.md) et
 [react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md).
 
-**Découvrir / catalogue ([architecture-plan.md](architecture-plan.md), lot 2) n'est pas une étape
+**Découvrir / catalogue ([architecture-plan.md](../en-cours/architecture-plan.md), lot 2) n'est pas une étape
 de cette séquence — une piste parallèle.** Son seul prérequis est la Phase 0a (le mécanisme
 `REACT_VIEWS` / mount-unmount), déjà fait : c'est un écran neuf, câblé sur le backend Rails en
 GraphQL, qui ne lit
@@ -550,7 +549,7 @@ préférée malgré tout.
 
 ## 9. Hors scope, pour mémoire
 
-Notes brutes dans [atelier/notes.json](../atelier/notes.json) : plusieurs déclinaisons produit
+Notes brutes dans [atelier/notes.json](../../atelier/notes.json) : plusieurs déclinaisons produit
 (agence de voyage, niches parents/chiens, outil vendu à des travel agents, guide type Fooding) sur
 une même DB partagée — catalogue global d'hébergements/activités/villes, indépendant d'un
 `travelId`, avec import (Booking/Google/Airbnb) et scraping prix/dispo en continu. Tout ça demande
@@ -564,7 +563,7 @@ voyage = copie) — le reste (villes/activités au catalogue, import, scraping, 
 reste hors scope ici.
 
 **2026-10-05** — ce plan catalogue est abandonné avant toute implémentation, remplacé par
-[architecture-plan.md](architecture-plan.md) : monorepo, backend Rails + GraphQL au lieu de Hasura,
+[architecture-plan.md](../en-cours/architecture-plan.md) : monorepo, backend Rails + GraphQL au lieu de Hasura,
 ajout au voyage par référence au lieu d'une copie, données du voyage dans Postgres (le Sheet
 disparaît). Import, scraping et
 multi-tenant y deviennent des lots.
@@ -577,7 +576,7 @@ backlog vers « `js/` legacy supprimé ».
 
 **2026-10-05** — ce backlog ne couvre plus que l'affichage. La couche données legacy (`state`,
 `upsertX`/`saveNow`, `sync.js`, `storage.js`) disparaît avec le lot 4 de
-[architecture-plan.md](architecture-plan.md), pas par un portage ici.
+[architecture-plan.md](../en-cours/architecture-plan.md), pas par un portage ici.
 
 **Encore legacy, et pourquoi :**
 

@@ -50,7 +50,7 @@ function actualExpensesWithoutBudget() {
 }
 
 // Formulaire : src/domains/expenses/modal/ActualExpenseModal.tsx (premier type de modale porté en
-// React, docs/en-cours/react-migration-plan.md § 4) — cette fonction ne reste que pour la sauvegarde, lue
+// React, docs/archivé/react-migration-plan.md § 4) — cette fonction ne reste que pour la sauvegarde, lue
 // par les mêmes ids de champs, peints maintenant par ce composant plutôt que par du HTML en chaîne.
 function saveActualExpense(id) {
   const dateField = document.getElementById('actual-expense-date');

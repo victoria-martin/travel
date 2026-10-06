@@ -1,6 +1,6 @@
 # Phase panneaux — plan d'exécution pour un agent
 
-Porter les 5 derniers types de `MODAL_TYPES` ([js/modals/modal.js](../js/modals/modal.js)) laissés
+Porter les 5 derniers types de `MODAL_TYPES` ([js/modals/modal.js](../../js/modals/modal.js)) laissés
 hors scope par [react-migration-modales-plan.md](../archivé/react-migration-modales-plan.md) : `settings`,
 `valise-composer`, `sync`, `journal-panel`, `scenario-panel`. Même recette, même patron de briques
 partagées — voir ce fichier pour l'historique complet (`attraction`, `voiture`, `transport`,
@@ -32,7 +32,7 @@ sauf si l'utilisatrice dit explicitement d'en faire plusieurs d'un coup.
   porter**, plusieurs bugs de ce type ont déjà été trouvés et corrigés pendant la phase modales
   (`UNSET_CAR_STATUS`, `UNSET_TRANSPORT_STATUS`, `UNSET_ACCOMMODATION_TYPE/STATUS`).
 - Chaque nouveau membre `window.*` lu ou exposé va dans
-  [src/types/global.d.ts](../src/types/global.d.ts).
+  [src/types/global.d.ts](../../src/types/global.d.ts).
 - `#f-save` n'est obligatoire que sur un vrai formulaire ; aucun de ces 5 types n'en a besoin
   (pas de bouton Enregistrer dans leur markup actuel) — garder le bouton de fermeture/validation
   existant tel quel (`Fermer`, `Terminé`, `Connecter`…).
@@ -102,7 +102,7 @@ types, deux absents de l'inventaire vont probablement servir :
 
 3. **`sync`** — ✅ fait (2026-10-04) : [SyncModal.tsx](../../src/shell/SyncModal.tsx), `window.sync`
    exposé dans `sync.js`, bouton « Connecter » écrit en clair avec `id="f-save"` (`ModalSaveButton`
-   porte toujours « Enregistrer »). Description d'origine : [js/sync.js](../js/sync.js) (426 lignes au total, mais `syncForm`/`saveSyncUrl`/
+   porte toujours « Enregistrer »). Description d'origine : [js/sync.js](../../js/sync.js) (426 lignes au total, mais `syncForm`/`saveSyncUrl`/
    `resolveSyncChoice` seulement concernés, ~40 lignes). `sync` est une globale mutable **hors**
    store React (pas dans Zustand, pas dans `state`) : à vérifier avant de coder, mais a priori sans
    risque de réactivité nouveau — `setSyncStatus` ne repeint déjà pas le corps de cette modale en
@@ -118,7 +118,7 @@ types, deux absents de l'inventaire vont probablement servir :
 4. **`journal-panel`** — ✅ fait (2026-10-04) : [JournalPanelModal.tsx](../../src/domains/journal/modal/JournalPanelModal.tsx)
    monte une vraie `LeafletMap` des lieux du jour au lieu de `journalMapBlock` + `initJournalMap`,
    dont le canevas à id fixe aurait doublonné celui du panneau desktop (resté dans
-   `journalDayPanel`, délégué). Description d'origine : [js/views/journal/side-tabs.js](../js/views/journal/side-tabs.js)
+   `journalDayPanel`, délégué). Description d'origine : [js/views/journal/side-tabs.js](../../js/views/journal/side-tabs.js)
    (41 lignes, dont `journalPanelSheet` ~7 lignes). Un seul onglet (`Carte`,
    `journalMapBlock(date)`) : le wrapper (`<h3>{label}</h3>` + bouton Fermer) se porte en JSX,
    `journalMapBlock(date)` reste en `LegacyMarkup` (init Leaflet, hors scope — cf. note RN § 5 de
@@ -128,7 +128,7 @@ types, deux absents de l'inventaire vont probablement servir :
 
 5. **`scenario-panel`** — ✅ fait, **déplacé** dans le lot G6 de
    [react-migration-scenario-side-panel-plan.md](../archivé/react-migration-scenario-side-panel-plan.md) : les
-   corps d'onglet y passent en React, le sheet monte ces composants. Description d'origine : [js/views/scenarios/detail/side-tabs.js](../js/views/scenarios/detail/side-tabs.js)
+   corps d'onglet y passent en React, le sheet monte ces composants. Description d'origine : [js/views/scenarios/detail/side-tabs.js](../../js/views/scenarios/detail/side-tabs.js)
    (98 lignes, dont `scenarioPanelSheet` ~8 lignes). Même wrapper que `journal-panel`, mais 4 onglets
    (Carte, Transports, Argent, Valise) et `tab.body` concatène parfois plusieurs blocs de calcul
    (`scenarioOfferBlock(s) + scenarioTransportsBlock(s) + scenarioExpensesBlock(s) + …`) — tout ça
