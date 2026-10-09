@@ -34,11 +34,10 @@ copie), archivé le 2026-10-05.
   jour (prix, dispo scrapés) et nourrit la base commune (§ 3). Pas de copie.
 - **Toutes les données du voyage passent dans Postgres** : le Google Sheet disparaît. Une seule
   source, une requête par voyage ouvert, multi-tenant possible.
-- **Back office : Administrate, dans le repo backend** (2026-10-09) : la liste et les fiches des
-  lieux du catalogue sont générées depuis les modèles Rails ; les vues (ERB) et le CSS sont copiés
-  dans le repo et se modifient comme n'importe quelle vue. Son style est le sien, distinct de
-  l'app travel. Un front React pourra prendre le relais sur la même API GraphQL si le back office
-  devient une app riche (carte, édition en ligne, glisser-déposer).
+- **Back office : un front React** (2026-10-09, remplace Administrate retenu le même jour) : la
+  maquette validée — fiche en panneau éditée en place, carte, notes recalculées en direct, palette
+  ⌘K — sort du CRUD qu'Administrate génère. Son style est le sien, distinct de l'app travel ; il ne
+  parle qu'à l'API GraphQL. Plan détaillé : [backoffice-plan.md](backoffice-plan.md).
 - **Notes d'inspecteur** (2026-10-09) : un hébergement du catalogue porte des notes par critère,
   saisies dans le back office. Elles ne sont jamais servies à l'app du voyageur : le backend s'en
   sert pour conditionner l'affichage (carte, Découvrir…) et ne renvoie que le résultat filtré.
@@ -57,7 +56,8 @@ Piste, pas une certitude :
 ## 2. Les repos
 
 ```
-travel-backend/      nouveau repo (lot 1) : Rails — API GraphQL, back office Administrate, modèles, jobs, rspec
+travel-backend/      nouveau repo (lot 1) : Rails API only — modèles, GraphQL, jobs, rspec
+travel-backoffice/   proposé (backoffice-plan.md, question 1) : le back office, front React
 travel/              ce repo, inchangé : l'app (index.html, js/, src/, styles/), tools/, apps-script/
 site/, agence/…      plus tard, un repo chacun (fronts publics, outil pour agences)
 
@@ -140,9 +140,9 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
 | Lot | Livrable                                                                                                                                                                                                                                        | Dépend de            |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                                                          | —                    |
-| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé. Pas en mode API only : ce mode retire les sessions, les cookies et le flash dont le back office HTML a besoin                                                          | Q5                   |
+| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé (API only)                                                          | Q5                   |
 | 2   | Catalogue : modèles `Accommodation` et `Attraction`, queries paginées, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur           | Q1, Q2               |
-| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère et leurs poids, liste des critères, style propre ; accès réservé à l'admin                                                              | lot 2, Q4            |
+| 2b  | Back office React : lots BO-0 à BO-7 de [backoffice-plan.md](backoffice-plan.md)                                                              | lot 2, Q4            |
 | 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                                                   | lot 4 (hébergements) |
 | 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_accommodation` / `travel_attraction` | Q3                   |
 | 5   | Auth + multi-tenant                                                                                                                                                                                                                             | Q4                   |
@@ -171,4 +171,4 @@ Partage acté le 2026-10-05 avec [react-migration-plan.md](../archivé/react-mig
   Le lot 4 les remplace directement par GraphQL ; les porter d'abord ferait refaire le même
   travail une fois le Sheet abandonné.
 - **Ordre de démarrage** : lots 1 → 2 → 2b. Ils ne touchent pas au legacy — Découvrir est un
-  écran neuf branché sur GraphQL, le back office vit dans le repo backend.
+  écran neuf branché sur GraphQL, le back office un front à part.

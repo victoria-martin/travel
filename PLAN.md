@@ -360,9 +360,13 @@ rattacher une référence non planifiée, photos, et un onglet Carte du jour —
 - **Créer la page** <!--t:trrm--> — 🖼️ écran · 🔌 intégration · ⚙️ infra · ⏳ à faire : catalogue
   global de lieux servi par le backend Rails + GraphQL, avec un bouton qui ajoute une entrée au
   voyage ouvert. Lots 2 et 3 de [architecture-plan.md](docs/en-cours/architecture-plan.md).
-- **Trancher l'architecture cible** <!--t:k3vz--> — 🏛️ archi · ⏳ à faire : les 6 questions ouvertes
+- **Trancher l'architecture cible** <!--t:k3vz--> — 🏛️ archi · ⏳ à faire : les 5 questions ouvertes
   de [architecture-plan.md § 4](docs/en-cours/architecture-plan.md) — entités et champs du
-  catalogue, hors ligne, auth, hébergement, note d'un lieu. Elles bloquent les lots 1, 2, 4 et 5.
+  catalogue, hors ligne, auth, hébergement. Elles bloquent les lots 1, 2, 2b, 4 et 5.
+- **Back office du catalogue** <!--t:bk7q--> — 🖼️ écran · 🏛️ archi · ⏳ à faire : un front React
+  où l'on crée et tient à jour hébergements et attractions du catalogue, et où se saisissent les
+  notes d'inspecteur par critère. Maquette validée et lots BO-0 à BO-7 dans
+  [backoffice-plan.md](docs/en-cours/backoffice-plan.md).
 
 ## 🧩 Transverse
 
