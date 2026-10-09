@@ -71,25 +71,36 @@ chaque front ──GraphQL──▶ travel-backend ──▶ Postgres
 - `apps-script/` disparaît de ce repo une fois ses scrapers portés dans le backend (§ 5, lot 6) et
   le Sheet abandonné (§ 1).
 
-## 3. Modèle cible : le catalogue possède le lieu, le voyage le référence
+## 3. Modèle cible : le catalogue possède chaque entité, le voyage la référence
+
+**Une table par entité, jamais de table commune** (2026-10-09) : un hébergement et une attraction
+sont des entités différentes, qui divergeront encore (notes d'inspecteur propres aux hébergements,
+horaires et tarifs propres aux attractions, d'autres entités à venir). Le modèle se pense pour ce
+que le catalogue deviendra, pas pour les seuls champs de l'app d'aujourd'hui. Remplace la table
+`place` unique proposée le 2026-10-05.
 
 ```
-catalogue (global)                 voyage (par travelId)
-┌──────────────────────┐           ┌──────────────────────────┐
-│ place                │◄──────────│ travel_place             │
-│  name, type          │  placeId  │  travelId, placeId       │
-│  address, lat/lng    │           │  status, favorite, notes │
-│  links, photos       │           │  price, dates, dispo     │
-│  hours, phone        │           │  tags perso              │
-└──────────────────────┘           └──────────────────────────┘
+catalogue (global)                       voyage (par travelId)
+┌───────────────────────────┐            ┌──────────────────────────────┐
+│ accommodation             │◄───────────│ travel_accommodation         │
+│  name, type, address…     │            │  status, favorite, notes,    │
+│  notes d'inspecteur       │            │  price, dates, dispo         │
+└───────────────────────────┘            └──────────────────────────────┘
+┌───────────────────────────┐            ┌──────────────────────────────┐
+│ attraction                │◄───────────│ travel_attraction            │
+│  name, type, description… │            │  status, favorite,           │
+│  hours, phone             │            │  travel_accommodation        │
+└───────────────────────────┘            └──────────────────────────────┘
+… une table par entité future, avec sa table de liaison au voyage
 ```
 
-- **Découvrir** parcourt les `place` ; « Ajouter au voyage » crée un `travel_place`.
-- **Hébergements / Lieux & activités** listent les `travel_place` du voyage ouvert, joints à leur
-  `place`.
-- **Créer un lieu depuis l'app** (saisie, import collé —
-  [paste-import.js](../../js/views/accommodations/modal/paste-import.js)) crée le `place` au
-  catalogue s'il n'existe pas, puis la référence.
+- **Découvrir** parcourt chaque entité du catalogue ; « Ajouter au voyage » crée la liaison de
+  cette entité (`travel_accommodation`, `travel_attraction`…).
+- **Hébergements / Lieux & activités** listent les liaisons du voyage ouvert, jointes à leur
+  entité du catalogue.
+- **Créer une entité depuis l'app** (saisie, import collé —
+  [paste-import.js](../../js/views/accommodations/modal/paste-import.js)) la crée au catalogue si
+  elle n'existe pas, puis la référence.
 - **On ne charge plus tout** : une requête pour le voyage ouvert, le catalogue paginé et filtré
   côté serveur. Aujourd'hui un seul `sheetGet()` ramène tous les voyages
   ([sync.js:215](../../js/sync.js#L215)), filtrés ensuite dans le navigateur
@@ -99,10 +110,10 @@ Partage proposé des champs actuels
 ([accommodations/modal/form.js](../../js/views/accommodations/modal/form.js),
 [attractions/modal/form.js](../../js/views/attractions/modal/form.js)) — à valider, question 2 :
 
-| Entité      | → `place` (catalogue)                                                                                         | → `travel_place` (voyage)                                                                     | ambigu                                    |
+| Entité      | → catalogue (`accommodation` / `attraction`)                                                                  | → liaison au voyage (`travel_accommodation` / `travel_attraction`)                            | ambigu                                    |
 | ----------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------- |
 | Hébergement | `name`, `type`, `address`, niveaux de lieu, `lat`, `lng`, `link`, `bookingLink`, `mapsLink`                   | `status`, `price`, `dates`, `availableFrom`, `availableTo`, `searchDate`, `notes`, `favorite` | `checkInTime`, `tags`                     |
-| Attraction  | `name`, `type`, `description`, `address`, niveaux de lieu, `lat`, `lng`, `mapsLink`, `link`, `hours`, `phone` | `status`, `accommodationId` (→ un `travel_place`), `favorite`                                 | `budget`, `amountMin`/`amountMax`, `tags` |
+| Attraction  | `name`, `type`, `description`, `address`, niveaux de lieu, `lat`, `lng`, `mapsLink`, `link`, `hours`, `phone` | `status`, `accommodationId` (→ un `travel_accommodation`), `favorite`                         | `budget`, `amountMin`/`amountMax`, `tags` |
 
 ## 4. Questions ouvertes
 
@@ -126,21 +137,21 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
 
 ## 5. Lots
 
-| Lot | Livrable                                                                                                                                                                                                          | Dépend de            |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                            | —                    |
-| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé. Pas en mode API only : ce mode retire les sessions, les cookies et le flash dont le back office HTML a besoin                            | Q5                   |
-| 2   | Catalogue : modèle `Place`, query paginée, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur         | Q1, Q2               |
-| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère et leurs poids, liste des critères, style propre ; accès réservé à l'admin                              | lot 2, Q4            |
-| 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                     | lot 4 (hébergements) |
-| 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_place` | Q3                   |
-| 5   | Auth + multi-tenant                                                                                                                                                                                               | Q4                   |
-| 6   | Imports et scrapers portés d'[apps-script/](../../apps-script/) (Booking, HomeExchange, Airbnb, Google Maps) vers des services et jobs du backend ; scraping prix/dispo récurrent                                 | lot 2                |
-| —   | Front public (Next, piste), dans son propre repo                                                                                                                                                                  | hors scope           |
+| Lot | Livrable                                                                                                                                                                                                                                        | Dépend de            |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                                                          | —                    |
+| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé. Pas en mode API only : ce mode retire les sessions, les cookies et le flash dont le back office HTML a besoin                                                          | Q5                   |
+| 2   | Catalogue : modèles `Accommodation` et `Attraction`, queries paginées, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur           | Q1, Q2               |
+| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère et leurs poids, liste des critères, style propre ; accès réservé à l'admin                                                              | lot 2, Q4            |
+| 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                                                   | lot 4 (hébergements) |
+| 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_accommodation` / `travel_attraction` | Q3                   |
+| 5   | Auth + multi-tenant                                                                                                                                                                                                                             | Q4                   |
+| 6   | Imports et scrapers portés d'[apps-script/](../../apps-script/) (Booking, HomeExchange, Airbnb, Google Maps) vers des services et jobs du backend ; scraping prix/dispo récurrent                                                               | lot 2                |
+| —   | Front public (Next, piste), dans son propre repo                                                                                                                                                                                                | hors scope           |
 
 L'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) a été pensé pour qu'on change de
 source sans toucher aux hooks ni aux composants. Il ne suffira pas au lot 4 : la forme des données
-change elle-même (un hébergement devient `place` + `travel_place`), donc les lecteurs
+change elle-même (un hébergement devient `accommodation` + `travel_accommodation`), donc les lecteurs
 d'Hébergements et de Lieux & activités changent aussi.
 
 ## 6. L'app travel ne connaît que le contrat GraphQL
