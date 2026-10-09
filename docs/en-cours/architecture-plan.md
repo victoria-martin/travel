@@ -39,10 +39,13 @@ copie), archivé le 2026-10-05.
   dans le repo et se modifient comme n'importe quelle vue. Son style est le sien, distinct de
   l'app travel. Un front React pourra prendre le relais sur la même API GraphQL si le back office
   devient une app riche (carte, édition en ligne, glisser-déposer).
-- **Notes d'inspecteur** (2026-10-09) : un hébergement du catalogue porte des notes par critère
-  (qualité, intimité, déco…), saisies dans le back office. Elles ne sont jamais servies à l'app du
-  voyageur : le backend s'en sert pour conditionner l'affichage (carte, Découvrir…) et ne renvoie
-  que le résultat filtré.
+- **Notes d'inspecteur** (2026-10-09) : un hébergement du catalogue porte des notes par critère,
+  saisies dans le back office. Elles ne sont jamais servies à l'app du voyageur : le backend s'en
+  sert pour conditionner l'affichage (carte, Découvrir…) et ne renvoie que le résultat filtré.
+  - Critères de départ : qualité, intimité, déco, propreté, calme, vue, accueil, emplacement. La
+    liste se modifie depuis le back office.
+  - Chaque critère se note de 0 à 10 et porte un poids ; la note globale est la moyenne pondérée.
+  - Pas de note publique (Booking/Google) pour l'instant.
 
 Piste, pas une certitude :
 
@@ -117,10 +120,9 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
    lot 5, et la lecture publique du catalogue en attendant.
 5. **Hébergement du backend** (Render, Fly.io…) et de l'app travel (Netlify, déjà visé par la tâche « Passer le repo en
    privé et héberger sur Netlify » de [PLAN.md](../../PLAN.md)). Bloque : lot 1.
-6. **La note d'un lieu** : tranchée en partie le 2026-10-09 — notes d'inspecteur par critère,
-   saisies au back office, jamais servies au voyageur (§ 1). Reste ouvert : la liste des critères
-   et leur échelle ; une note publique (récupérée de Booking/Google) en plus, ou non. Bloque : le
-   tri par note du lot 2, et le lot 2b.
+6. ~~**La note d'un lieu**~~ — tranchée le 2026-10-09 : notes d'inspecteur par critère, de 0 à 10,
+   note globale pondérée, critères modifiables au back office, pas de note publique pour l'instant
+   (§ 1).
 
 ## 5. Lots
 
@@ -128,8 +130,8 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                            | —                    |
 | 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé. Pas en mode API only : ce mode retire les sessions, les cookies et le flash dont le back office HTML a besoin                            | Q5                   |
-| 2   | Catalogue : modèle `Place`, query paginée, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur         | Q1, Q2, Q6           |
-| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère, style propre ; accès réservé à l'admin                                                                  | lot 2, Q4, Q6        |
+| 2   | Catalogue : modèle `Place`, query paginée, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur         | Q1, Q2               |
+| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère et leurs poids, liste des critères, style propre ; accès réservé à l'admin                              | lot 2, Q4            |
 | 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                     | lot 4 (hébergements) |
 | 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_place` | Q3                   |
 | 5   | Auth + multi-tenant                                                                                                                                                                                               | Q4                   |
