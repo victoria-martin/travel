@@ -34,6 +34,15 @@ copie), archivé le 2026-10-05.
   jour (prix, dispo scrapés) et nourrit la base commune (§ 3). Pas de copie.
 - **Toutes les données du voyage passent dans Postgres** : le Google Sheet disparaît. Une seule
   source, une requête par voyage ouvert, multi-tenant possible.
+- **Back office : Administrate, dans le repo backend** (2026-10-09) : la liste et les fiches des
+  lieux du catalogue sont générées depuis les modèles Rails ; les vues (ERB) et le CSS sont copiés
+  dans le repo et se modifient comme n'importe quelle vue. Son style est le sien, distinct de
+  l'app travel. Un front React pourra prendre le relais sur la même API GraphQL si le back office
+  devient une app riche (carte, édition en ligne, glisser-déposer).
+- **Notes d'inspecteur** (2026-10-09) : un hébergement du catalogue porte des notes par critère
+  (qualité, intimité, déco…), saisies dans le back office. Elles ne sont jamais servies à l'app du
+  voyageur : le backend s'en sert pour conditionner l'affichage (carte, Découvrir…) et ne renvoie
+  que le résultat filtré.
 
 Piste, pas une certitude :
 
@@ -45,7 +54,7 @@ Piste, pas une certitude :
 ## 2. Les repos
 
 ```
-travel-backend/      nouveau repo (lot 1) : Rails API only — modèles, GraphQL, jobs, rspec
+travel-backend/      nouveau repo (lot 1) : Rails — API GraphQL, back office Administrate, modèles, jobs, rspec
 travel/              ce repo, inchangé : l'app (index.html, js/, src/, styles/), tools/, apps-script/
 site/, agence/…      plus tard, un repo chacun (fronts publics, outil pour agences)
 
@@ -108,17 +117,19 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
    lot 5, et la lecture publique du catalogue en attendant.
 5. **Hébergement du backend** (Render, Fly.io…) et de l'app travel (Netlify, déjà visé par la tâche « Passer le repo en
    privé et héberger sur Netlify » de [PLAN.md](../../PLAN.md)). Bloque : lot 1.
-6. **La note d'un lieu** : aucun champ de note n'existe aujourd'hui, ni en `js/` ni en `src/`. Note
-   publique (récupérée de Booking/Google, sur `place`) ou note perso (sur `travel_place`), ou les
-   deux ? Bloque : le tri par note du lot 2.
+6. **La note d'un lieu** : tranchée en partie le 2026-10-09 — notes d'inspecteur par critère,
+   saisies au back office, jamais servies au voyageur (§ 1). Reste ouvert : la liste des critères
+   et leur échelle ; une note publique (récupérée de Booking/Google) en plus, ou non. Bloque : le
+   tri par note du lot 2, et le lot 2b.
 
 ## 5. Lots
 
 | Lot | Livrable                                                                                                                                                                                                          | Dépend de            |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                            | —                    |
-| 1   | Repo `travel-backend` : Rails API only, Postgres, `graphql-ruby`, rspec, déployé                                                                                                                                  | Q5                   |
+| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé. Pas en mode API only : ce mode retire les sessions, les cookies et le flash dont le back office HTML a besoin                            | Q5                   |
 | 2   | Catalogue : modèle `Place`, query paginée, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur         | Q1, Q2, Q6           |
+| 2b  | Back office Administrate : liste et fiche des hébergements du catalogue, notes d'inspecteur par critère, style propre ; accès réservé à l'admin                                                                  | lot 2, Q4, Q6        |
 | 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                     | lot 4 (hébergements) |
 | 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_place` | Q3                   |
 | 5   | Auth + multi-tenant                                                                                                                                                                                               | Q4                   |
@@ -146,5 +157,5 @@ Partage acté le 2026-10-05 avec [react-migration-plan.md](../archivé/react-mig
   `saveNow`), la synchro Sheet ([sync.js](../../js/sync.js)) ne sont **pas** portées sur Zustand.
   Le lot 4 les remplace directement par GraphQL ; les porter d'abord ferait refaire le même
   travail une fois le Sheet abandonné.
-- **Ordre de démarrage** : lots 1 → 2. Ils ne touchent pas au legacy — Découvrir est un écran
-  neuf branché sur GraphQL.
+- **Ordre de démarrage** : lots 1 → 2 → 2b. Ils ne touchent pas au legacy — Découvrir est un
+  écran neuf branché sur GraphQL, le back office vit dans le repo backend.
