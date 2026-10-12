@@ -14,6 +14,8 @@ par entité (§ 3), notes d'inspecteur privées (§ 1).
   d'architecture), avec ses types générés par codegen.
 - **Les notes d'inspecteur ne quittent jamais le back office** : le rôle admin est le seul à lire
   les notes par critère ; la note globale pondérée est calculée par le backend.
+- **Son propre repo, `travel-backoffice`** (2026-10-12).
+- **Un commit à la fin de chaque lot.**
 
 ## 2. L'écran
 
@@ -60,31 +62,33 @@ le voyage d'un voyageur reste dans l'app travel.
 
 | Section              | Champs                                                                      |
 | -------------------- | --------------------------------------------------------------------------- |
-| Identité             | nom, type (vocabulaire)                                                     |
+| Identité             | nom, type (vocabulaire), tags                                               |
 | Localisation         | adresse, ville, province, région, pays, coordonnées (mini-carte), lien Maps |
-| Réservation et liens | lien, lien Booking                                                          |
+| Réservation et liens | lien, lien Booking, prix relevé, heure d'arrivée                            |
 | Photos               | galerie, glisser-déposer (nouveau)                                          |
 | Notes d'inspecteur   | un curseur par critère, note globale pondérée                               |
 | Notes internes       | texte libre de l'équipe (nouveau)                                           |
 | Suivi                | créé le, modifié le, complétude                                             |
 
 Restent dans le voyage, hors back office : statut, favori, dates, disponible du / au, date de
-recherche, notes du voyageur, étape choisie. **À trancher** (question 2 du plan d'architecture) :
-prix, tags, heure d'arrivée.
+recherche, notes du voyageur, étape choisie. Prix, tags et heure d'arrivée existent aux deux
+niveaux : la fiche porte la valeur relevée par l'agence, le voyageur peut la remplacer dans son
+voyage, et l'app travel affiche alors la sienne (§ 3 du plan d'architecture).
 
 ### Attraction — sections de la fiche
 
 | Section         | Champs                                                                      |
 | --------------- | --------------------------------------------------------------------------- |
-| Identité        | nom, type (vocabulaire), description                                        |
+| Identité        | nom, type (vocabulaire), description, tags                                  |
 | Localisation    | adresse, ville, province, région, pays, coordonnées (mini-carte), lien Maps |
-| Infos pratiques | horaires, téléphone, lien                                                   |
+| Infos pratiques | horaires, téléphone, lien, prix mini / maxi                                 |
 | Photos          | galerie (nouveau)                                                           |
 | Notes internes  | texte libre de l'équipe (nouveau)                                           |
 | Suivi           | créé le, modifié le, complétude                                             |
 
-Restent dans le voyage : statut, favori, hébergement rattaché, budget. **À trancher** : prix
-mini / maxi, tags.
+Restent dans le voyage : statut, favori, hébergement rattaché. Prix mini / maxi et tags existent
+aux deux niveaux, la valeur du voyage prime. **À trancher** : le budget (question 2 du plan
+d'architecture).
 
 La fiche se lit par sections repliables avec un sommaire ancré en tête, pour qu'une fiche
 complète reste lisible dans le panneau ; le plein écran les dispose sur deux colonnes.
@@ -94,23 +98,26 @@ complète reste lisible dans le panneau ; le plein écran les dispose sur deux c
 Chaque lot a sa part backend (types, queries et mutations GraphQL réservés à l'admin) et sa part
 front.
 
-| Lot  | Livrable                                                                                               | Dépend de                       |
-| ---- | ------------------------------------------------------------------------------------------------------ | ------------------------------- |
-| BO-0 | Le projet : Vite + React + TypeScript, client Apollo + codegen sur le schéma, routage, connexion admin | lot 1 (backend), Q4, question 1 |
-| BO-1 | La coquille (barre latérale, ⌘K) et la liste des hébergements : colonnes, filtres, pagination backend  | BO-0, lot 2 (modèles)           |
-| BO-2 | La fiche hébergement : sections, édition en place, enregistrement auto, création, plein écran          | BO-1, question 2                |
-| BO-3 | Notes d'inspecteur : critères et poids en Réglages, curseurs, note globale calculée par le backend     | BO-2                            |
-| BO-4 | La carte et les filtres par note                                                                       | BO-3                            |
-| BO-5 | Les attractions, sur les mêmes briques                                                                 | BO-2                            |
-| BO-6 | Les photos                                                                                             | BO-2, question 3                |
-| BO-7 | L'import par lien                                                                                      | BO-2, lot 6 (scrapers)          |
+| Lot  | Livrable                                                                                               | Dépend de              |
+| ---- | ------------------------------------------------------------------------------------------------------ | ---------------------- |
+| BO-0 | Le projet : Vite + React + TypeScript, client Apollo + codegen sur le schéma, routage, connexion admin | lot 1 (backend), Q4    |
+| BO-1 | La coquille (barre latérale, ⌘K) et la liste des hébergements : colonnes, filtres, pagination backend  | BO-0, lot 2 (modèles)  |
+| BO-2 | La fiche hébergement : sections, édition en place, enregistrement auto, création, plein écran          | BO-1                   |
+| BO-3 | Notes d'inspecteur : critères et poids en Réglages, curseurs, note globale calculée par le backend     | BO-2                   |
+| BO-4 | La carte et les filtres par note                                                                       | BO-3                   |
+| BO-5 | Les attractions, sur les mêmes briques                                                                 | BO-2                   |
+| BO-6 | Les photos                                                                                             | BO-2, question 3       |
+| BO-7 | L'import par lien                                                                                      | BO-2, lot 6 (scrapers) |
 
 ## 5. Questions ouvertes
 
-1. **Où vit le back office ?** Recommandation : son propre repo, `travel-backoffice` — cohérent
-   avec « un repo par app » et avec un style à lui, qui retire l'intérêt de réutiliser les
-   composants de l'app travel. Alternative : une section de l'app travel réservée à l'admin.
-   Bloque : BO-0.
-2. **Prix, tags, heure d'arrivée, prix mini / maxi** : décrivent-ils l'entité du catalogue ou le
-   voyage ? (question 2 du plan d'architecture). Bloque : BO-2.
-3. **Stockage des photos** : Active Storage sur quel service (S3, R2…) ? Bloque : BO-6.
+1. ~~**Où vit le back office ?**~~ — tranchée le 2026-10-12 : son propre repo, `travel-backoffice`
+   (§ 1).
+2. ~~**Prix, tags, heure d'arrivée, prix mini / maxi**~~ — tranchée le 2026-10-12 : aux deux
+   niveaux, la valeur du voyage prime (§ 3).
+3. **Stockage des photos** : le plus simple possible pour commencer. Recommandation : Active
+   Storage avec le gem `active_storage-postgresql`, qui range les fichiers dans Postgres — son
+   auteur le réserve au prototypage et aux très petits sites, et sa dernière version date de
+   juillet 2023 : compatibilité avec la version de Rails à vérifier au lot. Passer ensuite à un
+   bucket (S3, R2…) est un changement de configuration d'Active Storage, plus une copie des
+   fichiers déjà stockés. Bloque : BO-6.

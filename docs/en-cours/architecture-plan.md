@@ -57,7 +57,7 @@ Piste, pas une certitude :
 
 ```
 travel-backend/      nouveau repo (lot 1) : Rails API only — modèles, GraphQL, jobs, rspec
-travel-backoffice/   proposé (backoffice-plan.md, question 1) : le back office, front React
+travel-backoffice/   nouveau repo (backoffice-plan.md, BO-0) : le back office, front React
 travel/              ce repo, inchangé : l'app (index.html, js/, src/, styles/), tools/, apps-script/
 site/, agence/…      plus tard, un repo chacun (fronts publics, outil pour agences)
 
@@ -108,12 +108,16 @@ catalogue (global)                       voyage (par travelId)
 
 Partage proposé des champs actuels
 ([accommodations/modal/form.js](../../js/views/accommodations/modal/form.js),
-[attractions/modal/form.js](../../js/views/attractions/modal/form.js)) — à valider, question 2 :
+[attractions/modal/form.js](../../js/views/attractions/modal/form.js)) — question 2 :
 
-| Entité      | → catalogue (`accommodation` / `attraction`)                                                                  | → liaison au voyage (`travel_accommodation` / `travel_attraction`)                            | ambigu                                    |
-| ----------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Hébergement | `name`, `type`, `address`, niveaux de lieu, `lat`, `lng`, `link`, `bookingLink`, `mapsLink`                   | `status`, `price`, `dates`, `availableFrom`, `availableTo`, `searchDate`, `notes`, `favorite` | `checkInTime`, `tags`                     |
-| Attraction  | `name`, `type`, `description`, `address`, niveaux de lieu, `lat`, `lng`, `mapsLink`, `link`, `hours`, `phone` | `status`, `accommodationId` (→ un `travel_accommodation`), `favorite`                         | `budget`, `amountMin`/`amountMax`, `tags` |
+| Entité      | → catalogue (`accommodation` / `attraction`)                                                                  | → liaison au voyage (`travel_accommodation` / `travel_attraction`)                                       | les deux, la valeur du voyage prime |
+| ----------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Hébergement | `name`, `type`, `address`, niveaux de lieu, `lat`, `lng`, `link`, `bookingLink`, `mapsLink`                   | `status`, `dates`, `availableFrom`, `availableTo`, `searchDate`, `notes`, `favorite`                     | `price`, `checkInTime`, `tags`      |
+| Attraction  | `name`, `type`, `description`, `address`, niveaux de lieu, `lat`, `lng`, `mapsLink`, `link`, `hours`, `phone` | `status`, `accommodationId` (→ un `travel_accommodation`), `favorite`, `budget` (à trancher, question 2) | `amountMin`/`amountMax`, `tags`     |
+
+**Les deux niveaux** (2026-10-12) : l'agence saisit au catalogue la valeur qu'elle a relevée ; un
+voyageur qui en voit une autre ailleurs (un autre prix, par exemple) la saisit dans son voyage, et
+l'app travel affiche la sienne quand elle existe.
 
 ## 4. Questions ouvertes
 
@@ -123,8 +127,9 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
    collection `villes`, les modèles de voiture (le catalogue ADEME de
    [consumption-db.js](../../js/views/car-models/consumption-db.js) est déjà global de fait), les
    loueurs (`providers`). Bloque : lot 2 pour le schéma initial, ou extension plus tard.
-2. **Champs ambigus** (colonne « ambigu » du § 3) : décrivent-ils le lieu ou le voyage ? Bloque :
-   lot 2.
+2. **Champs ambigus** — tranchée le 2026-10-12 pour prix, heure d'arrivée, tags et prix mini / maxi
+   : ils existent aux deux niveaux, la valeur du voyage prime (§ 3). Reste : le `budget` d'une
+   attraction, catalogue ou voyage ? Bloque : lot 2.
 3. **Hors ligne** : on garde l'exigence « tout continue sans réseau » (cache Apollo persistant +
    file d'écritures rejouée), ou elle tombe avec le Sheet ? Aujourd'hui, localStorage sert de cache entre deux synchros. Bloque : lot 4.
 4. **Authentification** : dans Rails (Devise/Rodauth + JWT) ou fournisseur externe ? Bloque :
@@ -140,9 +145,9 @@ Chacune porte ma recommandation ; rien n'est codé tant qu'elle n'est pas tranch
 | Lot | Livrable                                                                                                                                                                                                                                        | Dépend de            |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | 0   | ~~Monorepo~~ — abandonné le 2026-10-06, remplacé par un repo par app (§ 1) : l'app travel ne bouge pas                                                                                                                                          | —                    |
-| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé (API only)                                                          | Q5                   |
+| 1   | Repo `travel-backend` : Rails, Postgres, `graphql-ruby`, rspec, déployé (API only)                                                                                                                                                              | Q5                   |
 | 2   | Catalogue : modèles `Accommodation` et `Attraction`, queries paginées, codegen + client Apollo dans l'app travel, page **Découvrir** en lecture seule ; filtres et tri (dont la note) exécutés par le backend, pas dans le navigateur           | Q1, Q2               |
-| 2b  | Back office React : lots BO-0 à BO-7 de [backoffice-plan.md](backoffice-plan.md)                                                              | lot 2, Q4            |
+| 2b  | Back office React : lots BO-0 à BO-7 de [backoffice-plan.md](backoffice-plan.md)                                                                                                                                                                | lot 2, Q4            |
 | 3   | « Ajouter au voyage » depuis Découvrir ; le lieu apparaît dans la page Hébergements du voyage                                                                                                                                                   | lot 4 (hébergements) |
 | 4   | Données du voyage dans Postgres : modèles, import unique depuis le Sheet, l'adaptateur de [src/store/sync.ts](../../src/store/sync.ts) passe sur GraphQL, Hébergements et Lieux & activités lisent `travel_accommodation` / `travel_attraction` | Q3                   |
 | 5   | Auth + multi-tenant                                                                                                                                                                                                                             | Q4                   |
